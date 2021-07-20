@@ -110,7 +110,7 @@ public class Lobby : MonoBehaviour
         }
         */
         ClientCS.allClients = new Dictionary<int, string>();
-        ClientCS.allClients = new Dictionary<int, string>();
+        ClientSS.allClients = new Dictionary<int, ClientSS>();
         // If player is host than close server and network manager
         if(Server.isHost)
         {
@@ -121,12 +121,12 @@ public class Lobby : MonoBehaviour
 
         Destroy(FindObjectOfType<ClientCS>().gameObject);
         Destroy(FindObjectOfType<EventSystem>().gameObject);
+        ClientCS.instance.Disconnect();
         for(int i = 0; i < SceneManager.sceneCount; i++)
         {
             SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().name);
         }
         SceneManager.LoadSceneAsync("ClientMainMenu");
-        //SceneManager.UnloadSceneAsync("");
     }
 
     public void ToggleStartButtonState()

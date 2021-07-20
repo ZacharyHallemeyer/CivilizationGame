@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WorldGeneratorSS : MonoBehaviour
 {
+    public static WorldGeneratorSS instance;
+
     public GameObject tile;
     public GameObject[] allCubes;
     public static TileInfo[,] tiles;
@@ -19,6 +21,19 @@ public class WorldGeneratorSS : MonoBehaviour
     private string[] biomes;
     public string[] biomeOptions;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists, destroying object!");
+            Destroy(this);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,8 +44,6 @@ public class WorldGeneratorSS : MonoBehaviour
             biomeOptions[_index] = _biomeName;
             _index++;
         }
-
-        GenerateEnvironemnt();
     }
 
     private void Update()
@@ -51,7 +64,7 @@ public class WorldGeneratorSS : MonoBehaviour
     /// <summary>
     /// Generates game environment using perlin noise for land and water tiles. Then uses worley noise to change land biomes
     /// </summary>
-    public void GenerateEnvironemnt()
+    public void GenerateWorld()
     {
         tiles = new TileInfo[(int)groundXSize, (int)groundZSize];
         allCubes = new GameObject[(int)groundXSize * (int)groundZSize];
@@ -64,7 +77,7 @@ public class WorldGeneratorSS : MonoBehaviour
             {
                 float value = GeneratePerlinNoise(x, z);
 
-                if (value < waterLevel)
+                if (value <= waterLevel)
                 {
                     GameObject _tile = InstaniateCube(tile, x, z);
                     allCubes[index] = _tile;
@@ -106,6 +119,8 @@ public class WorldGeneratorSS : MonoBehaviour
                 }
             }
         }
+        Debug.Log("World Created");
+        ServerSend.WorldCreated();
     }
 
     public GameObject InstaniateCube(GameObject _cube, float x, float z)

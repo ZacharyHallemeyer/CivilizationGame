@@ -45,10 +45,5 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void StartGenerateWorld()
-    {
-
-    }
-
     #endregion
 }

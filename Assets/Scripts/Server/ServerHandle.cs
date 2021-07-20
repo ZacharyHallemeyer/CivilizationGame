@@ -26,7 +26,7 @@ public class ServerHandle
         ClientSS _client = new ClientSS(_fromClient);
         _client.userName = _username;
         ClientSS.allClients.Add(_fromClient, _client);
-        Server.clients[_fromClient].SendPlayerIntoGame();
+        Server.clients[_fromClient].SendIntoLobby(_username);
     }
 
     /// <summary>
@@ -40,6 +40,7 @@ public class ServerHandle
 
         foreach (ClientSS _client in ClientSS.allClients.Values)
         {
+            Debug.Log(_client.id);
             switch (gameModeName)
             {
                 case "Domination":

@@ -211,9 +211,9 @@ public class ClientSS
         }
     }
 
-    public void SendIntoLobby(string _playerName)
+    public void SendIntoLobby(string _username)
     {
-        userName = _playerName;
+        userName = _username;
         foreach (int _clientId in allClients.Keys)
         {
             ServerSend.SendNewClient(_clientId, this);

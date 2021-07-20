@@ -10,8 +10,9 @@ public enum ServerPackets
 {
     welcome = 1,
     addClient,
-    startTurn,
     playerDisconnected,
+    worldCreated,
+    startTurn,
 }
 
 /// <summary>Sent from client to server.</summary>

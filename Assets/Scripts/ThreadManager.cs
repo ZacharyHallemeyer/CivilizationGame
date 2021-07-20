@@ -20,7 +20,7 @@ public class ThreadManager : MonoBehaviour
         else if (instance != this)
         {
             Debug.Log("Instance already exists, destroying object!");
-            Destroy(gameObject);
+            Destroy(this);
         }
         DontDestroyOnLoad(this);
     }

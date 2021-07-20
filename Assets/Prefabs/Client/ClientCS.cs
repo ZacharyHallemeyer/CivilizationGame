@@ -22,6 +22,8 @@ public class ClientCS : MonoBehaviour
     private static Dictionary<int, PacketHandler> packetHandlers;
     public static Dictionary<int, string> allClients = new Dictionary<int, string>();
 
+    public Lobby lobby;
+
     private void Awake()
     {
         if (instance == null)
@@ -285,11 +287,13 @@ public class ClientCS : MonoBehaviour
         {
             { (int)ServerPackets.welcome, ClientHandle.Welcome },
             { (int)ServerPackets.addClient, ClientHandle.AddClient },
+            { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
+            { (int)ServerPackets.worldCreated, ClientHandle.WorldCreated },
         };
         Debug.Log("Initialized packets.");
     }
 
-    private void Disconnect()
+    public void Disconnect()
     {
         if (isConnected)
         {

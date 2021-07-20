@@ -114,5 +114,13 @@ public class ServerSend
             SendTCPDataToAll(_packet);
         }
     }
+
+    public static void WorldCreated()
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.worldCreated))
+        {
+            SendTCPDataToAll(_packet);
+        }
+    }
     #endregion
 }

@@ -147,7 +147,10 @@ public class MainMenu : MonoBehaviour
         if (__asyncOperation.isDone)
         {
             if (SceneManager.GetActiveScene().name.Substring(6) == "Domination")
-                ClientSend.StartGenerateWorld();
+            {
+                if (WorldGeneratorSS.instance != null)
+                    WorldGeneratorSS.instance.GenerateWorld();
+            }
             UnloadScene(_sceneToUnload);
         }
         else

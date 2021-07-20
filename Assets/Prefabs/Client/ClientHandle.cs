@@ -31,5 +31,25 @@ public class ClientHandle : MonoBehaviour
         string _clientUsername = _packet.ReadString();
 
         ClientCS.allClients.Add(_clientId, _clientUsername);
+        ClientCS.instance.lobby.InitLobbyUI();
+    }
+
+
+    /// <summary>
+    /// Recieve which player disconnected from server and remove from dictionries
+    /// </summary>
+    /// <param name="_packet"> id </param>
+    public static void PlayerDisconnected(Packet _packet)
+    {
+        Debug.Log("Player disconnected called");
+        int _id = _packet.ReadInt();
+
+        ClientCS.allClients.Remove(_id);
+        ClientCS.instance.lobby.InitLobbyUI();
+    }
+
+    public static void WorldCreated(Packet _packet)
+    {
+        ClientCS.instance.lobby.ToggleStartButtonState();
     }
 }
