@@ -25,7 +25,7 @@ public class TroopInfo : MonoBehaviour
     public bool canMoveNextTurn;
     public bool canMultyKill;
 
-    public void FillTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
+    public void InitTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
                               int _id, int _ownerId, int _xCoord, int _zCoord)
     {
         troopName = _troopName;

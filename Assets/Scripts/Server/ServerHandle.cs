@@ -36,6 +36,7 @@ public class ServerHandle
     /// <param name="_packet"> game mode name to send clients into </param>
     public static void SendLobbyIntoGame(int _fromClient, Packet _packet)
     {
+        GameManagerSS.instance.InitPlayerTurnArray();
         string gameModeName = _packet.ReadString();
 
         foreach (ClientSS _client in ClientSS.allClients.Values)
@@ -49,6 +50,7 @@ public class ServerHandle
                     break;
             }
         }
+        ServerSend.PlayerStartTurn(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
     }
 
     public static void EndTurn(int _fromClient, Packet _packet)

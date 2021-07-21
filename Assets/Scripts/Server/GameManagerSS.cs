@@ -22,11 +22,6 @@ public class GameManagerSS : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        InitPlayerTurnArray();
-    }
-
     public void InitPlayerTurnArray()
     {
         foreach(ClientSS _client in ClientSS.allClients.Values)

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerCS : MonoBehaviour
 {
+    public int id;
+    public string username;
+
     public static PlayerCS instance;
     public InputMaster inputMaster;
     public LayerMask whatIsIteractable;
@@ -32,6 +35,7 @@ public class PlayerCS : MonoBehaviour
         }
 
         inputMaster = new InputMaster();
+        cam = FindObjectOfType<Camera>();
     }
 
     private void OnEnable()
@@ -44,9 +48,16 @@ public class PlayerCS : MonoBehaviour
         inputMaster.Disable();
     }
 
+    public void InitPlayer(int _id, string _username)
+    {
+        id = _id;
+        username = _username;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Hello");
         if (inputMaster.Player.Select.triggered)
         {
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());

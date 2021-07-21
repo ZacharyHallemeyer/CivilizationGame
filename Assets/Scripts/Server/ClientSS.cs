@@ -227,6 +227,18 @@ public class ClientSS
         player = NetworkManager.instance.InstantiatePlayer();
         player.InitPlayer(id, userName);
         Server.clients[id].player = player;
+
+        // Send the new player to the new client
+        ServerSend.SpawnPlayer(id, player);
+
+        // Send tile info to new player
+        for(int x = 0; x < WorldGeneratorSS.tiles.GetLength(0); x++)
+        {
+            for(int z = 0; z < WorldGeneratorSS.tiles.GetLength(1); z++)
+            {
+                ServerSend.SendTileInfo(id, WorldGeneratorSS.tiles[x, z], x, z);
+            }
+        }
     }
 
 

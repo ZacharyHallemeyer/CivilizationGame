@@ -82,7 +82,7 @@ public class WorldGeneratorSS : MonoBehaviour
                     GameObject _tile = InstaniateCube(tile, x, z);
                     allCubes[index] = _tile;
                     index++;
-                    _tile.AddComponent<TileInfo>().FillWaterInfo(_tile, x * z + z);
+                    _tile.AddComponent<TileInfo>().InitWaterInfo(_tile, x * z + z);
                     tiles[x, z] = _tile.GetComponent<TileInfo>();
                 }
                 else if (value <= landLevel)
@@ -91,35 +91,11 @@ public class WorldGeneratorSS : MonoBehaviour
                     GameObject _tile = InstaniateCube(tile, x, z);
                     allCubes[index] = _tile;
                     index++;
-                    switch (_biomeType)
-                    {
-                        case "Desert":
-                            _tile.AddComponent<TileInfo>().FillDesertInfo(_tile, x * z + z);
-                            break;
-                        case "Forest":
-                            _tile.AddComponent<TileInfo>().FillForestInfo(_tile, x * z + z);
-                            break;
-                        case "Grassland":
-                            _tile.AddComponent<TileInfo>().FillGrasslandInfo(_tile, x * z + z);
-                            break;
-                        case "RainForest":
-                            _tile.AddComponent<TileInfo>().FillRainForestInfo(_tile, x * z + z);
-                            break;
-                        case "Swamp":
-                            _tile.AddComponent<TileInfo>().FillSwampInfo(_tile, x * z + z);
-                            break;
-                        case "Tundra":
-                            _tile.AddComponent<TileInfo>().FillTundraInfo(_tile, x * z + z);
-                            break;
-                        default:
-                            Debug.Log("Biome not found");
-                            break;
-                    }
+                    _tile.AddComponent<TileInfo>().InitTileInfo(_tile, _biomeType, x * z + z, 0);
                     tiles[x, z] = _tile.GetComponent<TileInfo>();
                 }
             }
         }
-        Debug.Log("World Created");
         ServerSend.WorldCreated();
     }
 

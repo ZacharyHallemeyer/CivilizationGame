@@ -289,6 +289,9 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.addClient, ClientHandle.AddClient },
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
             { (int)ServerPackets.worldCreated, ClientHandle.WorldCreated },
+            { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
+            { (int)ServerPackets.sendTileInfo, ClientHandle.CreateNewTile},
+            { (int)ServerPackets.startTurn, ClientHandle.PlayerStartTurn},
         };
         Debug.Log("Initialized packets.");
     }

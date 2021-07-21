@@ -9,6 +9,7 @@ public static class Constants
         { "Desert", new Dictionary<string, float>
             {
                 { "Temperature", .75f },
+                { "Height", 0 },
                 { "Metal", 10f },
                 { "Wood", 2f },
                 { "Food", 2f },
@@ -16,25 +17,29 @@ public static class Constants
                 { "Money", 2f },
                 { "Morale", 5f },
                 { "Education", 3f },
+                { "MovementCost", 1f },
             }
         },
 
         { "Forest", new Dictionary<string, float>
             {
                 { "Temperature", -.25f },
+                { "Height", 0 },
                 { "Metal", 5f },
                 { "Wood", 5f },
                 { "Food", 10f },
                 { "ManPower", 5f },
                 { "Money", 4f },
                 { "Morale", 3f },
-                { "Education", 3f },
+                { "Education", 1f },
+                { "MovementCost", 1f },
             }
         },
 
         { "Grassland", new Dictionary<string, float>
             {
                 { "Temperature", .1f },
+                { "Height", 0 },
                 { "Metal", 5f },
                 { "Wood", 5f },
                 { "Food", 15f },
@@ -42,12 +47,14 @@ public static class Constants
                 { "Money", 3f },
                 { "Morale", 5f },
                 { "Education", 2f },
+                { "MovementCost", 1f },
             }
         },
 
         { "RainForest", new Dictionary<string, float>
             {
                 { "Temperature", .25f },
+                { "Height", 0 },
                 { "Metal", 2f },
                 { "Wood", 10f },
                 { "Food", 10f },
@@ -55,12 +62,14 @@ public static class Constants
                 { "Money", 2f },
                 { "Morale", 5f },
                 { "Education", 3f },
+                { "MovementCost", 1f },
             }
         },
 
         { "Swamp", new Dictionary<string, float>
             {
                 { "Temperature", .25f },
+                { "Height", 0 },
                 { "Metal", 5f },
                 { "Wood", 5f },
                 { "Food", 5f },
@@ -68,12 +77,14 @@ public static class Constants
                 { "Money", 3f },
                 { "Morale", 5f },
                 { "Education", 2f },
+                { "MovementCost", 2f },
             }
         },
 
         { "Tundra", new Dictionary<string, float>
             {
                 { "Temperature", -.75f },
+                { "Height", 0 },
                 { "Metal", 5f },
                 { "Wood", 2f },
                 { "Food", 2f },
@@ -81,6 +92,7 @@ public static class Constants
                 { "Money", 4f },
                 { "Morale", 5f },
                 { "Education", 1f },
+                { "MovementCost", 1f },
             }
         },
     };

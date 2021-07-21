@@ -53,6 +53,44 @@ public class ClientHandle : MonoBehaviour
         ClientCS.instance.lobby.ToggleStartButtonState();
     }
 
+    public static void SpawnPlayer(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        string _username = _packet.ReadString();
+        int _xSizeOfTiles = _packet.ReadInt();
+        int _zSizeOfTiles = _packet.ReadInt();
+        GameManagerCS.instance.tiles = new TileInfo[_xSizeOfTiles, _zSizeOfTiles];
+
+        // Turn off lobby UI if it has not already
+        if (ClientCS.instance.lobby.lobbyParent.activeInHierarchy)
+            ClientCS.instance.lobby.lobbyParent.SetActive(false);
+        GameManagerCS.instance.SpawnPlayer(_id, _username);
+
+    }
+    
+    public static void CreateNewTile(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        int _ownerId = _packet.ReadInt();
+        int _movementCost = _packet.ReadInt();
+        int _occupyingObjectId = _packet.ReadInt();
+        string _biome = _packet.ReadString();
+        float _temperature = _packet.ReadFloat();
+        float _height = _packet.ReadFloat();
+        bool _isWater = _packet.ReadBool();
+        bool _isRoad = _packet.ReadBool();
+        bool _isCity = _packet.ReadBool();
+        bool _isOccupied = _packet.ReadBool();
+        Vector2 _position = _packet.ReadVector2();
+        int _xIndex = _packet.ReadInt();
+        int _zIndex = _packet.ReadInt();
+        string _name = "ClientTile " + _xIndex + " " + _zIndex;
+
+        GameManagerCS.instance.CreateNewTile(_id, _ownerId, _movementCost, _occupyingObjectId, _biome, _temperature,
+                                            _height, _isWater, _isRoad, _isCity, _isOccupied, _position, _xIndex, _zIndex,
+                                            _name);
+    }
+
     public static void PlayerStartTurn(Packet _packet)
     {
         GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();

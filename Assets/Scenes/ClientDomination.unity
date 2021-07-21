@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -325,7 +325,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTroopIndex: 0
+  playerPrefab: {fileID: 795644783452541475, guid: df0aa68d6704a08479e4a77d1e20a95f,
+    type: 3}
   troopPrefab: {fileID: 0}
+  desertTilePrefab: {fileID: 1364257602559654584, guid: c7421042ab741bb4ab5da135c9cc8c05,
+    type: 3}
+  forestTilePrefab: {fileID: 7624027295002152066, guid: 47960891b7c8e7e45ab0da9df2c193c3,
+    type: 3}
+  grasslandTilePrefab: {fileID: 3838647907912414135, guid: 2882d2d74aeeaaa4fbff4243670b454d,
+    type: 3}
+  rainForestTilePrefab: {fileID: 4837849429224637319, guid: 19f905a8ffc060f41b6a4b0276c43b02,
+    type: 3}
+  swampTilePrefab: {fileID: 939584966464421611, guid: c27fc1a0aa7709b49b01dd91ca8048c0,
+    type: 3}
+  tundraTilePrefab: {fileID: 9049806272573930248, guid: d2731d6e331f1cf47b830548357c530c,
+    type: 3}
+  waterTilePrefab: {fileID: 4863744991225301313, guid: 9865774e06ac05a49abe30cf22ef839e,
+    type: 3}
+  troopNames: []
+  biomeOptions: []
 --- !u!1 &721666771
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,61 +900,6 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!1 &1210212904
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1210212905}
-  - component: {fileID: 1210212906}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1210212905
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1210212904}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1210212906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1210212904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d87a89f116112942b7ea5697f9e2662, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  whatIsIteractable:
-    serializedVersion: 2
-    m_Bits: 0
-  cam: {fileID: 1265466560}
-  _currentSelectedTroopId: 0
-  morale: 0
-  education: 0
-  manPower: 0
-  money: 0
-  metal: 0
-  wood: 0
-  food: 0
 --- !u!1 &1265466558
 GameObject:
   m_ObjectHideFlags: 0

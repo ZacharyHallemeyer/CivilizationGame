@@ -12,6 +12,8 @@ public enum ServerPackets
     addClient,
     playerDisconnected,
     worldCreated,
+    spawnPlayer,
+    sendTileInfo,
     startTurn,
 }
 

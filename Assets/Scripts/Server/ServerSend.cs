@@ -123,6 +123,43 @@ public class ServerSend
         }
     }
 
+    public static void SpawnPlayer(int _toClient, PlayerSS _player)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.spawnPlayer))
+        {
+            _packet.Write(_player.id);
+            _packet.Write(_player.username);
+            _packet.Write(WorldGeneratorSS.tiles.GetLength(0));
+            _packet.Write(WorldGeneratorSS.tiles.GetLength(1));
+
+            SendTCPData(_toClient, _packet);
+        }
+    }
+
+    public static void SendTileInfo(int _toClient, TileInfo _tileInfo, int _xIndex, int _zIndex)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.sendTileInfo))
+        {
+            _packet.Write(_tileInfo.id);
+            _packet.Write(_tileInfo.ownerId);
+            _packet.Write(_tileInfo.movementCost);
+            _packet.Write(_tileInfo.occupyingObjectId);
+            _packet.Write(_tileInfo.biome);
+            _packet.Write(_tileInfo.temperature);
+            _packet.Write(_tileInfo.height);
+            _packet.Write(_tileInfo.isWater);
+            _packet.Write(_tileInfo.isRoad);
+            _packet.Write(_tileInfo.isCity);
+            _packet.Write(_tileInfo.isOccupied);
+            _packet.Write(_tileInfo.position);
+            _packet.Write(_xIndex);
+            _packet.Write(_zIndex);
+
+
+            SendTCPData(_toClient, _packet);
+        }
+    }
+
     public static void PlayerStartTurn(int _playerId)
     {
         using (Packet _packet = new Packet((int)ServerPackets.startTurn))
