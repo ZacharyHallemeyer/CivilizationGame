@@ -5,7 +5,7 @@ using UnityEngine;
 public class TroopInfo : MonoBehaviour
 {
     public GameObject troop;
-    public TroopActionsSS troopActions;
+    public TroopActionsCS troopActions;
     public string troopName;
 
     public int id;
@@ -25,7 +25,34 @@ public class TroopInfo : MonoBehaviour
     public bool canMoveNextTurn;
     public bool canMultyKill;
 
-    public void FillScoutInfo(GameObject _troop, TroopActionsSS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord, int _rotation)
+    public void FillTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
+                              int _id, int _ownerId, int _xCoord, int _zCoord)
+    {
+        troopName = _troopName;
+        troop = _troop;
+        troopActions = _troopActions;
+        troopActions.InitTroopActions(this);
+        id = _id;
+        ownerId = _ownerId;
+        xCoord = _xCoord;
+        zCoord = _zCoord;
+        rotation = 0;
+
+        health = Constants.troopInfoInt[_troopName]["Health"];
+        baseAttack = Constants.troopInfoInt[_troopName]["BaseAttack"];
+        stealthAttack = Constants.troopInfoInt[_troopName]["StealthAttack"];
+        counterAttack = Constants.troopInfoInt[_troopName]["CounterAttack"];
+        baseDefense = Constants.troopInfoInt[_troopName]["BaseDefense"];
+        facingDefense = Constants.troopInfoInt[_troopName]["FacingDefense"];
+        movementCost = Constants.troopInfoInt[_troopName]["MovementCost"];
+        attackRange = Constants.troopInfoInt[_troopName]["AttackRange"];
+        seeRange = Constants.troopInfoInt[_troopName]["SeeRange"];
+        canMoveNextTurn = true;
+        canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
+    }
+
+    public void FillScoutInfo(GameObject _troop, TroopActionsCS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord, 
+                              int _rotation)
     {
         troopName = "Scout";
         troop = _troop;
@@ -52,7 +79,8 @@ public class TroopInfo : MonoBehaviour
         //FillGeneralTroopInfo(3, 1, 0, 0, 5, 3);
     }
 
-    public void FillNormalMilitiaInfo(GameObject _troop, int _id, int _ownerId, int _xCoord, int _zCoord, int _rotation)
+    public void FillNormalMilitiaInfo(GameObject _troop, TroopActionsCS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord,
+                              int _rotation)
     {
         troopName = "NormalMilitia";
         troop = _troop;
@@ -77,7 +105,8 @@ public class TroopInfo : MonoBehaviour
         //FillGeneralTroopInfo(5, 3, 0, 1, 2, 3);
     }
 
-    public void FillAdvancedMilitiaInfo(GameObject _troop, int _id, int _ownerId, int _xCoord, int _zCoord, int _rotation)
+    public void FillAdvancedMilitiaInfo(GameObject _troop, TroopActionsCS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord,
+                              int _rotation)
     {
         troopName = "AdvancedMilitia";
         troop = _troop;
@@ -102,7 +131,8 @@ public class TroopInfo : MonoBehaviour
         //FillGeneralTroopInfo(10, 5, 1, 3, 2, 3);
     }
 
-    public void FillMissileInfo(GameObject _troop, int _id, int _ownerId, int _xCoord, int _zCoord, int _rotation)
+    public void FillMissileInfo(GameObject _troop, TroopActionsCS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord,
+                              int _rotation)
     {
         troopName = "Missle";
         troop = _troop;
@@ -127,7 +157,8 @@ public class TroopInfo : MonoBehaviour
         //FillGeneralTroopInfo(5, 15, 0, 0, 1, 5);
     }
 
-    public void FillDefenseInfo(GameObject _troop, int _id, int _ownerId, int _xCoord, int _zCoord, int _rotation)
+    public void FillDefenseInfo(GameObject _troop, TroopActionsCS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord,
+                              int _rotation)
     {
         troopName = "Defense";
         troop = _troop;
@@ -152,7 +183,8 @@ public class TroopInfo : MonoBehaviour
         //FillGeneralTroopInfo(15, 1, 0, 0, 1, 5);
     }
 
-    public void FillStealthInfo(GameObject _troop, int _id, int _ownerId, int _xCoord, int _zCoord, int _rotation)
+    public void FillStealthInfo(GameObject _troop, TroopActionsCS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord,
+                              int _rotation)
     {
         troopName = "Stealth";
         troop = _troop;
@@ -177,7 +209,8 @@ public class TroopInfo : MonoBehaviour
         //FillGeneralTroopInfo(15, 1, 0, 0, 1, 5);
     }
 
-    public void FillSnipperInfo(GameObject _troop, int _id, int _ownerId, int _xCoord, int _zCoord, int _rotation)
+    public void FillSnipperInfo(GameObject _troop, TroopActionsCS _troopActions, int _id, int _ownerId, int _xCoord, int _zCoord,
+                                int _rotation)
     {
         troopName = "Snipper";
         troop = _troop;

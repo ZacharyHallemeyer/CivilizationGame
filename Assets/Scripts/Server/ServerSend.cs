@@ -122,5 +122,15 @@ public class ServerSend
             SendTCPDataToAll(_packet);
         }
     }
+
+    public static void PlayerStartTurn(int _playerId)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.startTurn))
+        {
+            _packet.Write(GameManagerSS.instance.currentTroopId);
+
+            SendTCPData(_playerId, _packet);
+        }
+    }
     #endregion
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TroopActionsSS : MonoBehaviour
+public class TroopActionsCS : MonoBehaviour
 {
     public GameObject[] objecstToBeReset;
     public int whatIsInteractableValue, whatIsDefaultValue;
@@ -157,7 +157,7 @@ public class TroopActionsSS : MonoBehaviour
 
     public void Attack(TileInfo _tile)
     {
-        TroopInfo _troop = GameManagerSS.foreignTroops[_tile.occupyingObjectId];
+        TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         // Check if attacking troop back
         if (_troop.rotation + 180 == troopInfo.rotation || _troop.rotation - 180 == troopInfo.rotation)
         {

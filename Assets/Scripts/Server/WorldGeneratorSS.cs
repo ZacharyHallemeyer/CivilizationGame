@@ -38,8 +38,8 @@ public class WorldGeneratorSS : MonoBehaviour
     void Start()
     {
         int _index = 0;
-        biomeOptions = new string[BiomeInfo.biomeInfo.Count];
-        foreach(string _biomeName in BiomeInfo.biomeInfo.Keys)
+        biomeOptions = new string[Constants.biomeInfo.Count];
+        foreach(string _biomeName in Constants.biomeInfo.Keys)
         {
             biomeOptions[_index] = _biomeName;
             _index++;

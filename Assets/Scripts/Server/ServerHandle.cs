@@ -40,7 +40,6 @@ public class ServerHandle
 
         foreach (ClientSS _client in ClientSS.allClients.Values)
         {
-            Debug.Log(_client.id);
             switch (gameModeName)
             {
                 case "Domination":
@@ -54,6 +53,14 @@ public class ServerHandle
 
     public static void EndTurn(int _fromClient, Packet _packet)
     {
+        if (GameManagerSS.instance.currentPlayerTurnId + 1 >= GameManagerSS.instance.playerIds.Count)
+            GameManagerSS.instance.currentPlayerTurnId = 0;
+        else
+            GameManagerSS.instance.currentPlayerTurnId++;
 
+        GameManagerSS.instance.currentTroopId = _packet.ReadInt();
+
+        // Start turn for next player
+        ServerSend.PlayerStartTurn(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
     }
 }

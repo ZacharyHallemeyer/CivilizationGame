@@ -131,6 +131,7 @@ public class Server
         {
             { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
             { (int)ClientPackets.startGame, ServerHandle.SendLobbyIntoGame },
+            { (int)ClientPackets.endTurn, ServerHandle.EndTurn },
         };
         Debug.Log("Initialized Server base packets.");
     }

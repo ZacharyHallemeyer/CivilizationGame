@@ -45,5 +45,15 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void EndTurn()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.endTurn))
+        {
+            _packet.Write(GameManagerCS.instance.currentTroopIndex);
+
+            SendTCPData(_packet);
+        }
+    }
+
     #endregion
 }

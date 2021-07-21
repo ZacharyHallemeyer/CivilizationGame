@@ -52,4 +52,11 @@ public class ClientHandle : MonoBehaviour
     {
         ClientCS.instance.lobby.ToggleStartButtonState();
     }
+
+    public static void PlayerStartTurn(Packet _packet)
+    {
+        GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();
+
+        PlayerCS.instance.enabled = true;
+    }
 }
