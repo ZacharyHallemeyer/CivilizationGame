@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerCS : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerCS : MonoBehaviour
     public InputMaster inputMaster;
     public LayerMask whatIsIteractable;
     public Camera cam;
+    public Rigidbody camRB;
 
     public int _currentSelectedTroopId;
 
@@ -23,6 +25,12 @@ public class PlayerCS : MonoBehaviour
     public int wood = 0;
     public int food = 0;
 
+    // Camera movement
+    public Mouse mouse;
+    public bool isRotating = false;
+    public Vector3 originRotation;
+    public Vector3 differenceRotation;
+    public float camForce, camCounterForce;
 
     private void Awake()
     {
@@ -36,6 +44,9 @@ public class PlayerCS : MonoBehaviour
 
         inputMaster = new InputMaster();
         cam = FindObjectOfType<Camera>();
+        camRB = cam.GetComponent<Rigidbody>();
+        mouse = Mouse.current;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void OnEnable()
@@ -57,8 +68,7 @@ public class PlayerCS : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Hello");
-        if (inputMaster.Player.Select.triggered)
+        if (inputMaster.Player.Select.ReadValue<float>() != 0)
         {
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());
             if (Physics.Raycast(_ray, out RaycastHit _hit, whatIsIteractable))
@@ -81,14 +91,90 @@ public class PlayerCS : MonoBehaviour
                 }
             }
         }
-        if(inputMaster.Player.Rotate.triggered)
-        {
+
+        if (inputMaster.Player.Rotate.triggered) ;
             //GameManager.ownedTroops[_currentSelectedTroopId].troopActions.Rotate(1);
-        }
         if(inputMaster.Player.EndTurn.triggered)
         {
             enabled = false;
             ClientSend.EndTurn();
         }
+        if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)
+            ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
+
+        // Move Camera
+        MoveCamera(inputMaster.Player.Move.ReadValue<Vector2>());
+
+        // Rotate Camera
+        if (inputMaster.Player.RightClick.ReadValue<float>() != 0 && camRB.velocity.magnitude < 1f)
+        {
+            differenceRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
+            if (!isRotating)
+            {
+                isRotating = true;
+                originRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
+            }
+        }
+        else
+            isRotating = false;
+
+        if (isRotating)
+        {
+            if (differenceRotation.x - originRotation.x > .01)
+            {
+                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                                               cam.transform.localEulerAngles.y + 1f,
+                                                               cam.transform.localEulerAngles.z);
+            }
+            else if(differenceRotation.x - originRotation.x < -.01)
+            {
+                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                                   cam.transform.localEulerAngles.y - 1f,
+                                                   cam.transform.localEulerAngles.z);
+            }
+        }
+    }
+
+    public void ModifyCameraZoom(float value)
+    {
+        value /= 500;
+        Debug.Log(value);
+        value = Mathf.Clamp(value, -1, 1);
+        float _newX = cam.transform.position.x;
+        float _newY = Mathf.Clamp(value + cam.transform.position.y, 3, 50);
+        float _newZ = cam.transform.position.z;
+        cam.transform.position = new Vector3(_newX, _newY, _newZ);
+    }
+
+    public void MoveCamera(Vector2 _direction)
+    {
+        Vector3 _camOrientationRight = new Vector3(cam.transform.right.x, 0, cam.transform.right.z);
+        Vector3 _camOrientationForward = new Vector3(cam.transform.forward.x, 0, cam.transform.forward.z);
+        camRB.AddForce(_camOrientationRight * _direction.x * camForce * Time.deltaTime, ForceMode.Impulse);
+        camRB.AddForce(_camOrientationForward * _direction.y * camForce * Time.deltaTime, ForceMode.Impulse);
+
+        if(camRB.velocity.magnitude != 0)
+        {
+            camRB.AddForce(-camRB.velocity * camCounterForce * Time.deltaTime);
+        }
     }
 }
+
+
+/*
+else
+{
+    differencePosition = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
+    if (!isDragging)
+    {
+        isDragging = true;
+        originPosition = cam.ScreenToViewportPoint(mouse.position.ReadValue());
+    }
+}
+
+        if (isDragging)
+        {
+            Vector3 _move = originPosition - differencePosition;
+            cam.transform.position = new Vector3(_move.x, cam.transform.position.y, _move.x);
+        }
+*/

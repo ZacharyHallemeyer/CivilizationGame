@@ -7,9 +7,17 @@
             "actions": [
                 {
                     "name": "Select",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "56e5a17f-6e7d-4666-93d6-a0013dbc86ba",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RightClick",
+                    "type": "Value",
+                    "id": "e3cda124-accd-4359-86a5-5424b3f24299",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
                 },
@@ -34,6 +42,22 @@
                     "type": "Button",
                     "id": "765ec0c3-73fe-4fff-b178-3044e6463318",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Scrool",
+                    "type": "Value",
+                    "id": "6b3d8f79-f029-4716-8c01-5d5ff9945b1c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "6bc35cc1-5d38-482f-abb0-aa4253f61ff5",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
                 }
@@ -63,17 +87,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8d292f6e-d218-4e38-b0bc-535f3cd2fbe0",
-                    "path": "<VirtualMouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Mouse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "357c18e1-f36a-40dd-b7d4-20cbc9d859ee",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
@@ -82,6 +95,94 @@
                     "action": "EndTurn",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9f8bdc10-e7ba-4dc2-809f-9720e6f00765",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Scrool",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0019cefa-260a-4055-80f5-d8bd5cedabb8",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8d292f6e-d218-4e38-b0bc-535f3cd2fbe0",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "WASD",
+                    "id": "2329ce68-0d05-41e7-a45c-003cdb1a8418",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "d3fc7668-725f-4fdc-9bb1-ff64e632740f",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "c7718853-73ff-4cce-a4e5-23ea18504aac",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "b2782150-2686-44d0-ad03-1d865f8076db",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "f6fdec88-9bec-46e6-ba81-1dad84ff293c",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

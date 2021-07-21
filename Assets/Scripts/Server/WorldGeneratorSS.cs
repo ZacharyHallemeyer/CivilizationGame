@@ -80,6 +80,7 @@ public class WorldGeneratorSS : MonoBehaviour
                 if (value <= waterLevel)
                 {
                     GameObject _tile = InstaniateCube(tile, x, z);
+                    _tile.transform.parent = transform;
                     allCubes[index] = _tile;
                     index++;
                     _tile.AddComponent<TileInfo>().InitWaterInfo(_tile, x * z + z);
@@ -89,6 +90,7 @@ public class WorldGeneratorSS : MonoBehaviour
                 {
                     string _biomeType = biomes[GenerateWorleyNoise(x, z)];
                     GameObject _tile = InstaniateCube(tile, x, z);
+                    _tile.transform.parent = transform;
                     allCubes[index] = _tile;
                     index++;
                     _tile.AddComponent<TileInfo>().InitTileInfo(_tile, _biomeType, x * z + z, 0);

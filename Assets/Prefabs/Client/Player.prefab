@@ -47,8 +47,9 @@ MonoBehaviour:
   username: 
   whatIsIteractable:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   cam: {fileID: 0}
+  camRB: {fileID: 0}
   _currentSelectedTroopId: 0
   morale: 0
   education: 0
@@ -57,3 +58,8 @@ MonoBehaviour:
   metal: 0
   wood: 0
   food: 0
+  isRotating: 0
+  originRotation: {x: 0, y: 0, z: 0}
+  differenceRotation: {x: 0, y: 0, z: 0}
+  camForce: 50
+  camCounterForce: 200

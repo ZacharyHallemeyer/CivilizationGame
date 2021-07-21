@@ -89,6 +89,7 @@ public class GameManagerCS : MonoBehaviour
                     break;
             }
         }
+        _tile.transform.parent = transform;
         TileInfo _tileInfo = _tile.AddComponent<TileInfo>();
         _tile.name = _name;
         _tileInfo.tile = _tile;
