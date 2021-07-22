@@ -326,9 +326,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   starCount: 100
   currentTroopIndex: 0
+  isAllTroopInfoReceived: 0
+  isAllTileInfoReceived: 0
+  isAllCityInfoReceived: 0
+  modifiedTroopInfo: []
+  modifiedTileInfo: []
+  modifiedCityInfo: []
   playerPrefab: {fileID: 795644783452541475, guid: df0aa68d6704a08479e4a77d1e20a95f,
     type: 3}
-  troopPrefab: {fileID: 0}
+  troopPrefab: {fileID: 4779611018383367299, guid: fd9fb87db79df1b47b7803e96a572cb6,
+    type: 3}
   starPrefab: {fileID: 4427113777878196774, guid: 1025e2eac4e5ae841b782374f3a07600,
     type: 3}
   desertTilePrefab: {fileID: 1364257602559654584, guid: c7421042ab741bb4ab5da135c9cc8c05,
@@ -1426,6 +1433,9 @@ MonoBehaviour:
   port: 26950
   myId: 0
   lobby: {fileID: 878983592}
+  modifiedTroopInfo: []
+  modifiedTileInfo: []
+  modifiedCityInfo: []
 --- !u!1 &1900670368
 GameObject:
   m_ObjectHideFlags: 0

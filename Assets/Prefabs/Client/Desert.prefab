@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1364257602559654585}
   m_Layer: 0
   m_Name: Desert
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

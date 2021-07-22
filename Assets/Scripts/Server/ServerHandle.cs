@@ -83,8 +83,15 @@ public class ServerHandle
         _troop.movementCost = _packet.ReadInt();
         _troop.attackRange = _packet.ReadInt();
         _troop.seeRange = _packet.ReadInt();
+        _troop.lastTroopAttackedId = _packet.ReadInt();
+        _troop.lastHurtById = _packet.ReadInt();
+        _troop.canMoveNextTurn = _packet.ReadBool();
+        _troop.canMultyKill = _packet.ReadBool();
+        string _command = _packet.ReadString();
 
-        GameManagerSS.instance.modifiedTroopInfo.Add(_troop);
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop.GetComponent<TroopInfo>(), _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
     public static void RecieveTileInfo(int _fromClient, Packet _packet)
@@ -104,8 +111,11 @@ public class ServerHandle
         _tile.isCity = _packet.ReadBool();
         _tile.isOccupied = _packet.ReadBool();
         _tile.occupyingObjectId = _packet.ReadInt();
+        string _command = _packet.ReadString();
 
-        GameManagerSS.instance.modifiedTileInfo.Add(_tile);
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile.GetComponent<TileInfo>(), _command} };
+        GameManagerSS.instance.modifiedTileInfo.Add(_tileData);
     }
 
     public static void RecieveCityInfo(int _fromClient, Packet _packet)
@@ -132,8 +142,11 @@ public class ServerHandle
         _city.wood = _packet.ReadInt();
         _city.food = _packet.ReadInt();
         _city.ownerShipRange = _packet.ReadInt();
+        string _command = _packet.ReadString();
 
-        GameManagerSS.instance.modifiedCityInfo.Add(_city);
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+            { {_city.GetComponent<CityInfo>(), _command} };
+        GameManagerSS.instance.modifiedCityInfo.Add(_cityData);
     }
 
     public static void EndTurn(int _fromClient, Packet _packet)

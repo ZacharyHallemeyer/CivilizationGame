@@ -114,8 +114,15 @@ public class ClientHandle : MonoBehaviour
         _troop.movementCost = _packet.ReadInt();
         _troop.attackRange = _packet.ReadInt();
         _troop.seeRange = _packet.ReadInt();
+        _troop.lastTroopAttackedId = _packet.ReadInt();
+        _troop.lastHurtById = _packet.ReadInt();
+        _troop.canMoveNextTurn = _packet.ReadBool();
+        _troop.canMultyKill= _packet.ReadBool();
+        string _command = _packet.ReadString();
 
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troop);
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop.GetComponent<TroopInfo>(), _command} };
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
 
     }
 
@@ -134,8 +141,11 @@ public class ClientHandle : MonoBehaviour
         _tile.isCity = _packet.ReadBool();
         _tile.isOccupied = _packet.ReadBool();
         _tile.occupyingObjectId = _packet.ReadInt();
+        string _command = _packet.ReadString();
 
-        GameManagerCS.instance.modifiedTileInfo.Add(_tile);
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile.GetComponent<TileInfo>(), _command} };
+        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
     }
 
     public static void RecieveModifiedCityInfo(Packet _packet)
@@ -146,6 +156,12 @@ public class ClientHandle : MonoBehaviour
             GameManagerCS.instance.isAllCityInfoReceived = true;
             return;
         }
+        string _command = _packet.ReadString();
+
+        /*
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+            { {_city.GetComponent<CityInfo>(), _command} };
+        */
     }
 
     public static void PlayerStartTurn(Packet _packet)

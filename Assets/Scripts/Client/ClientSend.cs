@@ -47,26 +47,34 @@ public class ClientSend : MonoBehaviour
 
     public static void SendEndOfTurnData()
     {
-        foreach(TroopInfo _troop in GameManagerCS.instance.modifiedTroopInfo)
+        foreach(Dictionary<TroopInfo, string> _troopDict in GameManagerCS.instance.modifiedTroopInfo)
         {
-            using (Packet _packet = new Packet((int)ClientPackets.endTurnTroopData))
+            foreach(TroopInfo _troop in _troopDict.Keys)
             {
-                _packet.Write(_troop.id);
-                _packet.Write(_troop.ownerId);
-                _packet.Write(_troop.xCoord);
-                _packet.Write(_troop.zCoord);
-                _packet.Write(_troop.rotation);
-                _packet.Write(_troop.health);
-                _packet.Write(_troop.baseAttack);
-                _packet.Write(_troop.stealthAttack);
-                _packet.Write(_troop.counterAttack);
-                _packet.Write(_troop.baseDefense);
-                _packet.Write(_troop.facingDefense);
-                _packet.Write(_troop.movementCost);
-                _packet.Write(_troop.attackRange);
-                _packet.Write(_troop.seeRange);
+                using (Packet _packet = new Packet((int)ClientPackets.endTurnTroopData))
+                {
+                    _packet.Write(_troop.id);
+                    _packet.Write(_troop.ownerId);
+                    _packet.Write(_troop.xCoord);
+                    _packet.Write(_troop.zCoord);
+                    _packet.Write(_troop.rotation);
+                    _packet.Write(_troop.health);
+                    _packet.Write(_troop.baseAttack);
+                    _packet.Write(_troop.stealthAttack);
+                    _packet.Write(_troop.counterAttack);
+                    _packet.Write(_troop.baseDefense);
+                    _packet.Write(_troop.facingDefense);
+                    _packet.Write(_troop.movementCost);
+                    _packet.Write(_troop.attackRange);
+                    _packet.Write(_troop.seeRange);
+                    _packet.Write(_troop.lastTroopAttackedId);
+                    _packet.Write(_troop.lastHurtById);
+                    _packet.Write(_troop.canMoveNextTurn);
+                    _packet.Write(_troop.canMultyKill);
+                    _packet.Write(_troopDict[_troop]);
 
-                SendTCPData(_packet);
+                    SendTCPData(_packet);
+                }
             }
         }
         using (Packet _packet = new Packet((int)ClientPackets.endTurnTroopData))
@@ -76,18 +84,22 @@ public class ClientSend : MonoBehaviour
         }
 
 
-        foreach (TileInfo _tile in GameManagerCS.instance.modifiedTileInfo)
+        foreach (Dictionary<TileInfo, string> _tileDict in GameManagerCS.instance.modifiedTileInfo)
         {
-            using (Packet _packet = new Packet((int)ClientPackets.endTurnTileData))
+            foreach(TileInfo _tile in _tileDict.Keys)
             {
-                _packet.Write(_tile.id);
-                _packet.Write(_tile.ownerId);
-                _packet.Write(_tile.isRoad);
-                _packet.Write(_tile.isCity);
-                _packet.Write(_tile.isOccupied);
-                _packet.Write(_tile.occupyingObjectId);
+                using (Packet _packet = new Packet((int)ClientPackets.endTurnTileData))
+                {
+                    _packet.Write(_tile.id);
+                    _packet.Write(_tile.ownerId);
+                    _packet.Write(_tile.isRoad);
+                    _packet.Write(_tile.isCity);
+                    _packet.Write(_tile.isOccupied);
+                    _packet.Write(_tile.occupyingObjectId);
+                    _packet.Write(_tileDict[_tile]);
 
-                SendTCPData(_packet);
+                    SendTCPData(_packet);
+                }
             }
         }
         using (Packet _packet = new Packet((int)ClientPackets.endTurnTileData))
@@ -97,26 +109,30 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
 
-        foreach (CityInfo _city in GameManagerCS.instance.modifiedCityInfo)
+        foreach (Dictionary<CityInfo, string> _cityDict in GameManagerCS.instance.modifiedCityInfo)
         {
-            using (Packet _packet = new Packet((int)ClientPackets.endTurnCityData))
+            foreach (CityInfo _city in _cityDict.Keys)
             {
-                _packet.Write(_city.id);
-                _packet.Write(_city.ownerId);
-                _packet.Write(_city.isBeingConquered);
-                _packet.Write(_city.isOccupied);
-                _packet.Write(_city.isConstructingBuilding);
-                _packet.Write(_city.isTrainingTroops);
-                _packet.Write(_city.morale);
-                _packet.Write(_city.education);
-                _packet.Write(_city.manPower);
-                _packet.Write(_city.money);
-                _packet.Write(_city.metal);
-                _packet.Write(_city.wood);
-                _packet.Write(_city.food);
-                _packet.Write(_city.ownerShipRange);
+                using (Packet _packet = new Packet((int)ClientPackets.endTurnCityData))
+                {
+                    _packet.Write(_city.id);
+                    _packet.Write(_city.ownerId);
+                    _packet.Write(_city.isBeingConquered);
+                    _packet.Write(_city.isOccupied);
+                    _packet.Write(_city.isConstructingBuilding);
+                    _packet.Write(_city.isTrainingTroops);
+                    _packet.Write(_city.morale);
+                    _packet.Write(_city.education);
+                    _packet.Write(_city.manPower);
+                    _packet.Write(_city.money);
+                    _packet.Write(_city.metal);
+                    _packet.Write(_city.wood);
+                    _packet.Write(_city.food);
+                    _packet.Write(_city.ownerShipRange);
+                    _packet.Write(_cityDict[_city]);
 
-                SendTCPData(_packet);
+                    SendTCPData(_packet);
+                }
             }
         }
         using (Packet _packet = new Packet((int)ClientPackets.endTurnCityData))

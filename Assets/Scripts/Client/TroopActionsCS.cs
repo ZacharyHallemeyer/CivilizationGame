@@ -6,7 +6,7 @@ public class TroopActionsCS : MonoBehaviour
 {
     public GameObject[] objecstToBeReset;
     public int whatIsInteractableValue, whatIsDefaultValue;
-    public string moveableTileTag = "MoveableTile", defaultTileTag = "Tile";
+    private string moveableTileTag = "MoveableTile", defaultTileTag = "Tile";
     public TroopInfo troopInfo;
 
     public void InitTroopActions(TroopInfo _troopInfo)
@@ -21,7 +21,7 @@ public class TroopActionsCS : MonoBehaviour
         int _index = 0;
         objecstToBeReset = new GameObject[troopInfo.movementCost];
         // Rotation troop is facing
-        int _rotation = (int)troopInfo.rotation;
+        int _rotation = troopInfo.rotation;
 
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
         switch (_rotation)
@@ -29,9 +29,9 @@ public class TroopActionsCS : MonoBehaviour
             case 0:
                 for (int z = troopInfo.zCoord + 1; z < troopInfo.zCoord + troopInfo.movementCost + 1; z++)
                 {
-                    TileInfo _tile = WorldGeneratorSS.tiles[troopInfo.xCoord, z];
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
+                        TileInfo _tile = WorldGeneratorSS.tiles[troopInfo.xCoord, z];
                         if (_tile.isOccupied == true)
                         {
                             if (_tile.occupyingObjectId != troopInfo.ownerId)
@@ -55,9 +55,9 @@ public class TroopActionsCS : MonoBehaviour
             case 90:
                 for (int x = troopInfo.xCoord + 1; x < troopInfo.xCoord + troopInfo.movementCost + 1; x++)
                 {
-                    TileInfo _tile = WorldGeneratorSS.tiles[x, troopInfo.zCoord];
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
+                        TileInfo _tile = WorldGeneratorSS.tiles[x, troopInfo.zCoord];
                         _tile.tile.layer = whatIsInteractableValue;
                         _tile.tile.tag = moveableTileTag;
                         objecstToBeReset[_index] = _tile.tile;
@@ -68,9 +68,9 @@ public class TroopActionsCS : MonoBehaviour
             case 180:
                 for (int z = troopInfo.zCoord - 1; z > troopInfo.zCoord - troopInfo.movementCost - 1; z--)
                 {
-                    TileInfo _tile = WorldGeneratorSS.tiles[troopInfo.xCoord, z];
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
+                        TileInfo _tile = WorldGeneratorSS.tiles[troopInfo.xCoord, z];
                         _tile.tile.layer = whatIsInteractableValue;
                         _tile.tile.tag = moveableTileTag;
                         objecstToBeReset[_index] = _tile.tile;
@@ -81,9 +81,9 @@ public class TroopActionsCS : MonoBehaviour
             case 270:
                 for (int x = troopInfo.xCoord - 1; x > troopInfo.xCoord - troopInfo.movementCost - 1; x--)
                 {
-                    TileInfo _tile = WorldGeneratorSS.tiles[x, troopInfo.zCoord];
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
+                        TileInfo _tile = WorldGeneratorSS.tiles[x, troopInfo.zCoord];
                         _tile.tile.layer = whatIsInteractableValue;
                         _tile.tile.tag = moveableTileTag;
                         objecstToBeReset[_index] = _tile.tile;
@@ -112,6 +112,9 @@ public class TroopActionsCS : MonoBehaviour
         troopInfo.troop.transform.position = new Vector3(troopInfo.xCoord, troopInfo.troop.transform.position.y,
                                                          troopInfo.zCoord);
         _newTile.isOccupied = true;
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {troopInfo, "Move"} };
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
         ResetAlteredTiles();
     }
 
@@ -137,6 +140,9 @@ public class TroopActionsCS : MonoBehaviour
                 troopInfo.rotation += 90;
         }
         troopInfo.troop.transform.localRotation = Quaternion.Euler(0, troopInfo.rotation, 0);
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {troopInfo, "Rotate"} };
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
         ResetAlteredTiles();
         CreateInteractableTiles();
     }
@@ -160,10 +166,18 @@ public class TroopActionsCS : MonoBehaviour
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         // Check if attacking troop back
         if (_troop.rotation + 180 == troopInfo.rotation || _troop.rotation - 180 == troopInfo.rotation)
-        {
             _troop.health -= troopInfo.stealthAttack - _troop.baseDefense;
-        }
         else
+        {
             _troop.health -= troopInfo.baseAttack - _troop.facingDefense;
+            troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
+        }
+        troopInfo.lastTroopAttackedId = _troop.id;
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {troopInfo, "Attack"} };
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, "Hurt"} };
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 }

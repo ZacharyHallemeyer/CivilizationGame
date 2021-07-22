@@ -161,38 +161,45 @@ public class ServerSend
 
     public static void SendModifiedTroop(int _playerId)
     {
-        foreach(TroopInfo _troop in GameManagerSS.instance.modifiedTroopInfo)
+        foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerSS.instance.modifiedTroopInfo)
         {
-            // Remove troop from list and remove component once troop info has been sent to call clients
-            if(_troop.ownerId == ClientCS.instance.myId)
+            foreach(TroopInfo _troop in _troopDict.Keys)
             {
-                GameManagerSS.instance.modifiedTroopInfo.Remove(_troop);
-                GameManagerSS.instance.RemoveModifiedTroop(_troop);
-                break;
-            }
-            else
-            {
-                using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
+                // Remove troop from list and remove component once troop info has been sent to call clients
+                if(_troop.ownerId == ClientCS.instance.myId)
                 {
-                    _packet.Write(_troop.id);
-                    _packet.Write(_troop.ownerId);
-                    _packet.Write(_troop.xCoord);
-                    _packet.Write(_troop.zCoord);
-                    _packet.Write(_troop.rotation);
-                    _packet.Write(_troop.health);
-                    _packet.Write(_troop.baseAttack);
-                    _packet.Write(_troop.stealthAttack);
-                    _packet.Write(_troop.counterAttack);
-                    _packet.Write(_troop.baseDefense);
-                    _packet.Write(_troop.facingDefense);
-                    _packet.Write(_troop.movementCost);
-                    _packet.Write(_troop.attackRange);
-                    _packet.Write(_troop.seeRange);
+                    GameManagerSS.instance.modifiedTroopInfo.Remove(_troopDict);
+                    GameManagerSS.instance.RemoveModifiedTroop(_troop);
+                    break;
+                }
+                else
+                {
+                    using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
+                    {
+                        _packet.Write(_troop.id);
+                        _packet.Write(_troop.ownerId);
+                        _packet.Write(_troop.xCoord);
+                        _packet.Write(_troop.zCoord);
+                        _packet.Write(_troop.rotation);
+                        _packet.Write(_troop.health);
+                        _packet.Write(_troop.baseAttack);
+                        _packet.Write(_troop.stealthAttack);
+                        _packet.Write(_troop.counterAttack);
+                        _packet.Write(_troop.baseDefense);
+                        _packet.Write(_troop.facingDefense);
+                        _packet.Write(_troop.movementCost);
+                        _packet.Write(_troop.attackRange);
+                        _packet.Write(_troop.seeRange);
+                        _packet.Write(_troop.lastTroopAttackedId);
+                        _packet.Write(_troop.lastHurtById);
+                        _packet.Write(_troop.canMoveNextTurn);
+                        _packet.Write(_troop.canMultyKill);
+                        _packet.Write(_troopDict[_troop]);
 
-                    SendTCPData(_playerId, _packet);
+                        SendTCPData(_playerId, _packet);
+                    }
                 }
             }
-
         }
         using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
         {
@@ -204,30 +211,33 @@ public class ServerSend
 
     public static void SendModifiedTile(int _playerId)
     {
-        foreach (TileInfo _tile in GameManagerSS.instance.modifiedTileInfo)
+        foreach (Dictionary<TileInfo, string> _tileDict in GameManagerSS.instance.modifiedTileInfo)
         {
-            // Remove troop from list and remove component once troop info has been sent to call clients
-            if (_tile.ownerId == ClientCS.instance.myId)
+            foreach (TileInfo _tile in _tileDict.Keys)
             {
-                GameManagerSS.instance.modifiedTileInfo.Remove(_tile);
-                GameManagerSS.instance.RemoveModifiedTile(_tile);
-                break;
-            }
-            else
-            {
-                using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTileInfo))
+                // Remove troop from list and remove component once troop info has been sent to call clients
+                if (_tile.ownerId == ClientCS.instance.myId)
                 {
-                    _packet.Write(_tile.id);
-                    _packet.Write(_tile.ownerId);
-                    _packet.Write(_tile.isRoad);
-                    _packet.Write(_tile.isCity);
-                    _packet.Write(_tile.isOccupied);
-                    _packet.Write(_tile.occupyingObjectId);
+                    GameManagerSS.instance.modifiedTileInfo.Remove(_tileDict);
+                    GameManagerSS.instance.RemoveModifiedTile(_tile);
+                    break;
+                }
+                else
+                {
+                    using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTileInfo))
+                    {
+                        _packet.Write(_tile.id);
+                        _packet.Write(_tile.ownerId);
+                        _packet.Write(_tile.isRoad);
+                        _packet.Write(_tile.isCity);
+                        _packet.Write(_tile.isOccupied);
+                        _packet.Write(_tile.occupyingObjectId);
+                        _packet.Write(_tileDict[_tile]);
 
-                    SendTCPData(_playerId, _packet);
+                        SendTCPData(_playerId, _packet);
+                    }
                 }
             }
-
         }
         using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTileInfo))
         {

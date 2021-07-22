@@ -68,6 +68,12 @@ public class PlayerCS : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // TESTING
+        if (inputMaster.Player.Testing.triggered)
+            GameManagerCS.instance.InstantiateTroop(id, "Scout", Random.Range(0, 10), Random.Range(0, 10), 0);
+
+        // TESTING END
+
         if (inputMaster.Player.Select.ReadValue<float>() != 0)
         {
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());
@@ -75,32 +81,37 @@ public class PlayerCS : MonoBehaviour
             {
                 if (_hit.collider.CompareTag("Troop"))
                 {
-                    int _id = _hit.collider.GetComponent<TroopInfo>().id;
-                    _currentSelectedTroopId = _id;
-                    //GameManager.ownedTroops[_id].troopActions.CreateInteractableTiles();
+                    TroopInfo _troop = _hit.collider.GetComponent<TroopInfo>();
+                    if (_troop.ownerId == id)
+                    {
+                        _currentSelectedTroopId = _troop.id;
+                        GameManagerCS.instance.troops[_troop.id].troopActions.CreateInteractableTiles();
+                    }
                 }
                 else if (_hit.collider.CompareTag("MoveableTile"))
                 {
-                    //TileInfo _tileInfo = TileGenerator.tiles[(int)_hit.transform.position.x, (int)_hit.transform.position.z];
-                    //GameManager.ownedTroops[_currentSelectedTroopId].troopActions.MoveToNewTile(_tileInfo);
+                    TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x, 
+                                                                      (int)_hit.transform.position.z];
+                    GameManagerCS.instance.troops[_currentSelectedTroopId].troopActions.MoveToNewTile(_tileInfo);
                 }
                 else if (_hit.collider.CompareTag("AttackableTile"))
                 {
-                    //TileInfo _tileInfo = TileGenerator.tiles[(int)_hit.transform.position.x, (int)_hit.transform.position.z];
-                    //GameManager.ownedTroops[_currentSelectedTroopId].troopActions.Attack(_tileInfo);
+                    TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x,
+                                                                      (int)_hit.transform.position.z];
+                    GameManagerCS.instance.troops[_currentSelectedTroopId].troopActions.Attack(_tileInfo);
                 }
             }
         }
 
-        if (inputMaster.Player.Rotate.triggered) ;
-            //GameManager.ownedTroops[_currentSelectedTroopId].troopActions.Rotate(1);
-        if(inputMaster.Player.EndTurn.triggered)
+        if (inputMaster.Player.Rotate.triggered && _currentSelectedTroopId >= 0)        // Rotate current selected troop
+            GameManagerCS.instance.troops[_currentSelectedTroopId].troopActions.Rotate(1);
+        if (inputMaster.Player.EndTurn.triggered)        // End Turn
         {
             enabled = false;
             ClientSend.SendEndOfTurnData();
             GameManagerCS.instance.ClearModifiedData();
         }
-        if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)
+        if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)       // Zoom Camera in and out
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
 
         // Move Camera

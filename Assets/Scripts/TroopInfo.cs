@@ -21,6 +21,8 @@ public class TroopInfo : MonoBehaviour
     public int movementCost;
     public int attackRange;
     public int seeRange;
+    public int lastTroopAttackedId;
+    public int lastHurtById;
 
     public bool canMoveNextTurn;
     public bool canMultyKill;

@@ -14,9 +14,9 @@ public class GameManagerCS : MonoBehaviour
     public TileInfo[,] tiles;
 
     public bool isAllTroopInfoReceived = false, isAllTileInfoReceived = false, isAllCityInfoReceived = false;
-    public List<TroopInfo> modifiedTroopInfo = new List<TroopInfo>();
-    public List<TileInfo> modifiedTileInfo = new List<TileInfo>();
-    public List<CityInfo> modifiedCityInfo = new List<CityInfo>();
+    public List<Dictionary<TroopInfo, string>> modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
+    public List<Dictionary<TileInfo, string>> modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
+    public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
 
     public GameObject playerPrefab;
     public GameObject troopPrefab;
@@ -118,14 +118,17 @@ public class GameManagerCS : MonoBehaviour
         tiles[_xIndex, _zIndex] = _tileInfo;
     }
 
-    public void InstantiateTroop(int _ownerId, int _id, string _troopName,int _xCoord, int _zCoord, int _rotation)
+    public void InstantiateTroop(int _ownerId, string _troopName,int _xCoord, int _zCoord, int _rotation)
     {
         GameObject _troop = Instantiate(troopPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
-        TroopActionsCS _troopActions = new TroopActionsCS();
-        _troop.AddComponent<TroopInfo>().InitTroopInfo(_troopName, _troop, _troopActions, _id, _ownerId, _xCoord, _zCoord);
+        TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
+        _troop.AddComponent<TroopInfo>().InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, _xCoord, _zCoord);
        
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop.GetComponent<TroopInfo>(), "Spawn"} };
+        modifiedTroopInfo.Add(_troopData);
     }
 
     public void AddCityResources()
@@ -195,20 +198,23 @@ public class GameManagerCS : MonoBehaviour
 
     public void ClearModifiedData()
     {
-        foreach(TroopInfo _troop in modifiedTroopInfo)
+        foreach(Dictionary<TroopInfo, string> _troopDict in modifiedTroopInfo)
         {
-            Destroy(_troop);
+            foreach (TroopInfo _troop in _troopDict.Keys)
+                Destroy(_troop);
         }
-        modifiedTroopInfo = new List<TroopInfo>();
-        foreach(TileInfo _tile in modifiedTileInfo)
+        modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
+        foreach(Dictionary<TileInfo, string> _tileDict in modifiedTileInfo)
         {
-            Destroy(_tile);
+            foreach (TileInfo _tile in _tileDict.Keys)
+                Destroy(_tile);
         }
-        modifiedTileInfo = new List<TileInfo>();
-        foreach(CityInfo _city in modifiedCityInfo)
+        modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
+        foreach(Dictionary<CityInfo, string> _cityDict in modifiedCityInfo)
         {
-            Destroy(_city);
+            foreach (CityInfo _city in _cityDict.Keys)
+                Destroy(_city);
         }
-        modifiedCityInfo = new List<CityInfo>();
+        modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
     }
 }

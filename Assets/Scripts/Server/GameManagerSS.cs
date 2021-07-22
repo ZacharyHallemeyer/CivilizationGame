@@ -12,9 +12,9 @@ public class GameManagerSS : MonoBehaviour
     public List<int> playerIds;
 
     public bool isAllTroopInfoReceived = false, isAllTileInfoReceived = false, isAllCityInfoReceived = false;
-    public List<TroopInfo> modifiedTroopInfo = new List<TroopInfo>();
-    public List<TileInfo> modifiedTileInfo = new List<TileInfo>();
-    public List<CityInfo> modifiedCityInfo = new List<CityInfo>();
+    public List<Dictionary<TroopInfo, string>> modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
+    public List<Dictionary<TileInfo, string>> modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
+    public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
 
     private void Awake()
     {
