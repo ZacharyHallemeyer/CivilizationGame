@@ -14,6 +14,9 @@ public enum ServerPackets
     worldCreated,
     spawnPlayer,
     sendTileInfo,
+    sendModifiedTroopInfo,
+    sendModifiedTileInfo,
+    sendModifiedCityInfo,
     startTurn,
 }
 
@@ -22,6 +25,9 @@ public enum ClientPackets
 {
     welcomeReceived = 1,
     startGame,
+    endTurnTroopData,
+    endTurnTileData,
+    endTurnCityData,
     endTurn,
 }
 

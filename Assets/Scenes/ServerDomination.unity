@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -211,9 +211,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tile: {fileID: 7715327627315077237, guid: 4db03b61577ad3243870498e0118850e, type: 3}
   allCubes: []
-  groundXSize: 50
-  groundZSize: 50
-  scale: 30
+  groundXSize: 100
+  groundZSize: 100
+  scale: 10
   xPerlinOffset: 0
   yPerlinOffset: 0
   waterLevel: 0.25
@@ -232,9 +232,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29accaf1c7f515b46884bdd2652acedc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedTroopIndex: 0
-  foreignTroopIndex: 0
-  troopPrefab: {fileID: 0}
+  currentTroopId: 0
+  currentPlayerTurnId: 0
+  playerIds: 
+  isAllTroopInfoReceived: 1
+  isAllTileInfoReceived: 1
+  isAllCityInfoReceived: 1
+  modifiedTroopInfo: []
+  modifiedTileInfo: []
+  modifiedCityInfo: []
 --- !u!4 &800202103
 Transform:
   m_ObjectHideFlags: 0

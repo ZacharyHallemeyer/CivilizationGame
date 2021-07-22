@@ -97,7 +97,8 @@ public class PlayerCS : MonoBehaviour
         if(inputMaster.Player.EndTurn.triggered)
         {
             enabled = false;
-            ClientSend.EndTurn();
+            ClientSend.SendEndOfTurnData();
+            GameManagerCS.instance.ClearModifiedData();
         }
         if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
@@ -138,7 +139,6 @@ public class PlayerCS : MonoBehaviour
     public void ModifyCameraZoom(float value)
     {
         value /= 500;
-        Debug.Log(value);
         value = Mathf.Clamp(value, -1, 1);
         float _newX = cam.transform.position.x;
         float _newY = Mathf.Clamp(value + cam.transform.position.y, 3, 50);

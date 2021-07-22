@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CityInfo
+public class CityInfo : MonoBehaviour
 {
     // resource variables
     public float morale;

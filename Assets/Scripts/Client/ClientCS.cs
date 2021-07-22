@@ -24,6 +24,10 @@ public class ClientCS : MonoBehaviour
 
     public Lobby lobby;
 
+    public List<TroopInfo> modifiedTroopInfo = new List<TroopInfo>();
+    public List<TileInfo> modifiedTileInfo = new List<TileInfo>();
+    public List<CityInfo> modifiedCityInfo = new List<CityInfo>();
+
     private void Awake()
     {
         if (instance == null)
@@ -291,6 +295,9 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.worldCreated, ClientHandle.WorldCreated },
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.sendTileInfo, ClientHandle.CreateNewTile},
+            { (int)ServerPackets.sendModifiedTroopInfo, ClientHandle.RecieveModifiedTroopInfo},
+            { (int)ServerPackets.sendModifiedTileInfo, ClientHandle.RecieveModifiedTileInfo},
+            { (int)ServerPackets.sendModifiedCityInfo, ClientHandle.RecieveModifiedCityInfo},
             { (int)ServerPackets.startTurn, ClientHandle.PlayerStartTurn},
         };
         Debug.Log("Initialized packets.");

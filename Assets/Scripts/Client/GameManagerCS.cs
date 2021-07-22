@@ -6,13 +6,21 @@ public class GameManagerCS : MonoBehaviour
 {
     public static GameManagerCS instance;
 
+    public int starCount = 100;
+
     public int currentTroopIndex = 0;
     public Dictionary<int, TroopInfo> troops = new Dictionary<int, TroopInfo>();
     public Dictionary<int, CityInfo> cities = new Dictionary<int, CityInfo>();
     public TileInfo[,] tiles;
 
+    public bool isAllTroopInfoReceived = false, isAllTileInfoReceived = false, isAllCityInfoReceived = false;
+    public List<TroopInfo> modifiedTroopInfo = new List<TroopInfo>();
+    public List<TileInfo> modifiedTileInfo = new List<TileInfo>();
+    public List<CityInfo> modifiedCityInfo = new List<CityInfo>();
+
     public GameObject playerPrefab;
     public GameObject troopPrefab;
+    public GameObject starPrefab; 
     public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
                       tundraTilePrefab, waterTilePrefab;
 
@@ -45,6 +53,7 @@ public class GameManagerCS : MonoBehaviour
     {
         GameObject _player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         _player.GetComponent<PlayerCS>().InitPlayer(_id, _username);
+        CreateStars();
     }
 
     public void CreateNewTile(int _id, int _ownerId, int _movementCost, int _occupyingObjectId, string _biome,
@@ -130,5 +139,76 @@ public class GameManagerCS : MonoBehaviour
                 PlayerCS.instance.food += _city.foodResourcesPerTurn;
             }
         }
+    }
+
+    public void CreateStars()
+    {
+        for(int i = 0; i < starCount; i++)
+        {
+            MeshRenderer _starMesh = Instantiate(starPrefab, RandomStarPosition(), Quaternion.identity).GetComponent<MeshRenderer>();
+        }
+    }
+
+    public Vector3 RandomStarPosition()
+    {
+        Vector3 _position = Vector3.zero;
+        int _lengthX = tiles.GetLength(0) * 2;
+        int _lengthZ = tiles.GetLength(1) * 2;
+        // Random side to spawn
+        switch (Random.Range(0, 7))
+        {
+            case 0:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 1:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 2:
+                _position = new Vector3(-_lengthX - _lengthX, Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 3:
+                _position = new Vector3(_lengthX + _lengthX, Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 4:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ), -_lengthZ - _lengthZ);
+                break;
+            case 5:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ), _lengthZ + _lengthZ);
+                break;
+            default:
+                break;
+        }
+
+        return _position;
+    }
+
+    public void WaitAndStartTurn(Packet _packet)
+    {
+        StartCoroutine(WaitAndCallStartTurn(_packet));
+    }
+
+    private IEnumerator WaitAndCallStartTurn(Packet _packet)
+    {
+        yield return new WaitForSeconds(.1f);
+        ClientHandle.PlayerStartTurn(_packet);
+    }
+
+    public void ClearModifiedData()
+    {
+        foreach(TroopInfo _troop in modifiedTroopInfo)
+        {
+            Destroy(_troop);
+        }
+        modifiedTroopInfo = new List<TroopInfo>();
+        foreach(TileInfo _tile in modifiedTileInfo)
+        {
+            Destroy(_tile);
+        }
+        modifiedTileInfo = new List<TileInfo>();
+        foreach(CityInfo _city in modifiedCityInfo)
+        {
+            Destroy(_city);
+        }
+        modifiedCityInfo = new List<CityInfo>();
     }
 }

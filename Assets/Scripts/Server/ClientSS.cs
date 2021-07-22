@@ -241,7 +241,6 @@ public class ClientSS
         }
     }
 
-
     /// <summary>Disconnects the client and stops all network traffic.</summary>
     private void Disconnect()
     {

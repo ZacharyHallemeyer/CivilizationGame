@@ -91,8 +91,74 @@ public class ClientHandle : MonoBehaviour
                                             _name);
     }
 
+    public static void RecieveModifiedTroopInfo(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        if(_id == -1)
+        {
+            GameManagerCS.instance.isAllTroopInfoReceived = true;
+            return;
+        }
+        TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
+        _troop.id = _id;
+        _troop.ownerId = _packet.ReadInt();
+        _troop.xCoord = _packet.ReadInt();
+        _troop.zCoord = _packet.ReadInt();
+        _troop.rotation = _packet.ReadInt();
+        _troop.health = _packet.ReadInt();
+        _troop.baseAttack = _packet.ReadInt();
+        _troop.stealthAttack = _packet.ReadInt();
+        _troop.counterAttack = _packet.ReadInt();
+        _troop.baseDefense = _packet.ReadInt();
+        _troop.facingDefense = _packet.ReadInt();
+        _troop.movementCost = _packet.ReadInt();
+        _troop.attackRange = _packet.ReadInt();
+        _troop.seeRange = _packet.ReadInt();
+
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troop);
+
+    }
+
+    public static void RecieveModifiedTileInfo(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        if (_id == -1)
+        {
+            GameManagerCS.instance.isAllTileInfoReceived = true;
+            return;
+        }
+        TileInfo _tile = GameManagerCS.instance.gameObject.AddComponent<TileInfo>();
+        _tile.id = _id;
+        _tile.ownerId = _packet.ReadInt();
+        _tile.isRoad = _packet.ReadBool();
+        _tile.isCity = _packet.ReadBool();
+        _tile.isOccupied = _packet.ReadBool();
+        _tile.occupyingObjectId = _packet.ReadInt();
+
+        GameManagerCS.instance.modifiedTileInfo.Add(_tile);
+    }
+
+    public static void RecieveModifiedCityInfo(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        if (_id == -1)
+        {
+            GameManagerCS.instance.isAllCityInfoReceived = true;
+            return;
+        }
+    }
+
     public static void PlayerStartTurn(Packet _packet)
     {
+        if (!(GameManagerCS.instance.isAllTroopInfoReceived && GameManagerCS.instance.isAllTileInfoReceived
+            && GameManagerCS.instance.isAllCityInfoReceived))
+        {
+            GameManagerCS.instance.WaitAndStartTurn(_packet);
+            return;
+        }
+        GameManagerCS.instance.isAllTroopInfoReceived = false;
+        GameManagerCS.instance.isAllTileInfoReceived = false;
+        GameManagerCS.instance.isAllCityInfoReceived = false;
         GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();
 
         PlayerCS.instance.enabled = true;
