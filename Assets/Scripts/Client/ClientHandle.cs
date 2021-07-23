@@ -167,7 +167,6 @@ public class ClientHandle : MonoBehaviour
 
     public static void PlayerStartTurn(Packet _packet)
     {
-        Debug.Log("Player start turn has been called");
         if (!(GameManagerCS.instance.isAllTroopInfoReceived && GameManagerCS.instance.isAllTileInfoReceived
             && GameManagerCS.instance.isAllCityInfoReceived))
         {
@@ -178,7 +177,7 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.isAllTileInfoReceived = false;
         GameManagerCS.instance.isAllCityInfoReceived = false;
         GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();
-        Debug.Log("Index: " + GameManagerCS.instance.currentTroopIndex);
+        //Debug.Log("Current Troop Index: " + GameManagerCS.instance.currentTroopIndex);
 
         GameManagerCS.instance.PlayPastMoves();
 

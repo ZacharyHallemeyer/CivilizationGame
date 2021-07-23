@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ServerSend
 {
@@ -162,15 +163,15 @@ public class ServerSend
     public static void SendModifiedTroop(int _playerId)
     {
         List<Dictionary<TroopInfo, string>> _itemsToRemove = new List<Dictionary<TroopInfo, string>>();
-        List<TroopInfo> _itemsToDestroy = new List<TroopInfo>();
+        List<TroopInfo> _itemsToDestroy = new  List<TroopInfo>();
         foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerSS.instance.modifiedTroopInfo)
         {
             foreach(TroopInfo _troop in _troopDict.Keys)
             {
-                Debug.Log("Troop owner id: " + _troop.ownerId + " checking id: " + GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
                 // Remove troop from list and remove component once troop info has been sent to call clients
                 if(_troop.ownerId == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
+                    Debug.Log("Troop: " + _troop.id + " to be removed");
                     _itemsToRemove.Add(_troopDict);
                     _itemsToDestroy.Add(_troop);
                 }

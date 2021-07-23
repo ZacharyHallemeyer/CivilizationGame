@@ -69,7 +69,7 @@ public class ServerHandle
 
         TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
 
-        Debug.Log("Troop Id recieved: " + _id);
+        Debug.Log("Troop Id recieved from client: " + _id);
         _troop.id = _id;
         _troop.ownerId = _packet.ReadInt();
         _troop.xCoord = _packet.ReadInt();
@@ -91,7 +91,7 @@ public class ServerHandle
         string _command = _packet.ReadString();
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_troop.GetComponent<TroopInfo>(), _command} };
+            { {_troop, _command} };
         GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
