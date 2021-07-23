@@ -20,9 +20,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Select"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""56e5a17f-6e7d-4666-93d6-a0013dbc86ba"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },

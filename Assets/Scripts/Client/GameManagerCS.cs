@@ -27,6 +27,7 @@ public class GameManagerCS : MonoBehaviour
     public string[] troopNames;
     public string[] biomeOptions;
 
+    // Set instance or destroy if instance already exist
     private void Awake()
     {
         if (instance == null)
@@ -38,6 +39,7 @@ public class GameManagerCS : MonoBehaviour
         }
     }
 
+    // Init needed data
     private void Start()
     {
         int _index = 0;
@@ -49,6 +51,11 @@ public class GameManagerCS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spawns player controller
+    /// </summary>
+    /// <param name="_id"> client id </param>
+    /// <param name="_username"> client username </param>
     public void SpawnPlayer(int _id, string _username)
     {
         GameObject _player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
@@ -56,6 +63,24 @@ public class GameManagerCS : MonoBehaviour
         CreateStars();
     }
 
+    /// <summary>
+    /// Spawn new tile w/ tile data from server and visual style to represent what kind of biome the tile is
+    /// </summary>
+    /// <param name="_id"> Tile id </param>
+    /// <param name="_ownerId"> Tile ownerId </param>
+    /// <param name="_movementCost"> Tile movementCost </param>
+    /// <param name="_occupyingObjectId"> Tile occupyingObjectId </param>
+    /// <param name="_biome"> Tile biome </param>
+    /// <param name="_temp"> Tile temperature </param>
+    /// <param name="_height"> Tile height </param>
+    /// <param name="_isWater"> Tile isWater </param>
+    /// <param name="_isRoad"> Tile isRoad </param>
+    /// <param name="_isCity"> Tile isCity </param>
+    /// <param name="_isOccupied"> Tile isOccupied </param>
+    /// <param name="_position"> Tile position </param>
+    /// <param name="_xIndex"> Tile xIndex </param>
+    /// <param name="_zIndex"> Tile zIndex </param>
+    /// <param name="_name"> Tile name </param>
     public void CreateNewTile(int _id, int _ownerId, int _movementCost, int _occupyingObjectId, string _biome,
                               float _temp, float _height, bool _isWater, bool _isRoad, bool _isCity, bool _isOccupied,
                               Vector2 _position, int _xIndex, int _zIndex, string _name)
@@ -113,12 +138,22 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.isRoad = _isRoad;
         _tileInfo.isCity = _isCity;
         _tileInfo.isOccupied = _isOccupied;
+        _tileInfo.xIndex = _xIndex;
+        _tileInfo.yIndex = _zIndex;
         _tileInfo.position = _position;
 
         tiles[_xIndex, _zIndex] = _tileInfo;
     }
 
-    public void InstantiateTroop(int _ownerId, string _troopName,int _xCoord, int _zCoord, int _rotation)
+    /// <summary>
+    /// Spawn new troop
+    /// </summary>
+    /// <param name="_ownerId"> client id that wants to spawn new troop </param>
+    /// <param name="_troopName"> troop name to use when grabbing init troop data </param>
+    /// <param name="_xCoord"> x coord to spawn troop </param>
+    /// <param name="_zCoord"> z coord to spawn troop </param>
+    /// <param name="_rotation"> rotation of new troop </param>
+    public void InstantiateTroop(int _ownerId, string _troopName, int _xCoord, int _zCoord, int _rotation)
     {
         GameObject _troop = Instantiate(troopPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
@@ -129,6 +164,13 @@ public class GameManagerCS : MonoBehaviour
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {_troop.GetComponent<TroopInfo>(), "Spawn"} };
         modifiedTroopInfo.Add(_troopData);
+
+        TileInfo _tile = tiles[_xCoord, _zCoord];
+        _tile.isOccupied = true;
+        _tile.occupyingObjectId = _troop.GetComponent<TroopInfo>().id;
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile, "Update"} };
+        modifiedTileInfo.Add(_tileData);
     }
 
     public void InstantiateTroop(TroopInfo _troopInfoToCopy)
@@ -140,6 +182,43 @@ public class GameManagerCS : MonoBehaviour
         _troopInfo.InitTroopInfo(_troopInfoToCopy, _troop, _troopActions);
 
         troops.Add(_troopInfo.id, _troopInfo);
+    }
+
+    /// <summary>
+    /// Move troop to new tile and update modified troop and tile dicts
+    /// Does NOT update modified troop and tile dicts.
+    /// </summary>
+    /// <param name="_newTile"></param>
+    public void MoveTroopToNewTile(TroopInfo _troopInfo)
+    {
+        troops[_troopInfo.id].xCoord = _troopInfo.xCoord;
+        troops[_troopInfo.id].zCoord = _troopInfo.zCoord;
+        troops[_troopInfo.id].troop.transform.position = new Vector3(troops[_troopInfo.id].xCoord,
+                                                            troops[_troopInfo.id].troop.transform.position.y,
+                                                            troops[_troopInfo.id].zCoord);
+    }
+
+    /// <summary>
+    /// Rotate troop based on troop passed through parems 
+    /// Does NOT update modified troop and tile dicts.
+    /// </summary>
+    /// <param name="_troopInfo"> Troop to rotate </param>
+    public void RotateTroop(TroopInfo _troopInfo)
+    {
+        troops[_troopInfo.id].rotation = _troopInfo.rotation;
+        troops[_troopInfo.id].troop.transform.localRotation = Quaternion.Euler(0, troops[_troopInfo.id].rotation, 0);
+    }
+
+    /// <summary>
+    /// Updates tile info
+    /// Does NOT update modified troop and tile dicts.
+    /// </summary>
+    /// <param name="_tile"> tile to update </param>
+    public void UpdateTileInfo(TileInfo _tile)
+    {
+        //Debug.Log("Update called with: " + _tile.id);
+        //Debug.Log(_tile.isOccupied);
+        tiles[_tile.xIndex, _tile.yIndex].CopyTileInfo(_tile);
     }
 
     public void AddCityResources()
@@ -159,7 +238,8 @@ public class GameManagerCS : MonoBehaviour
     {
         for(int i = 0; i < starCount; i++)
         {
-            MeshRenderer _starMesh = Instantiate(starPrefab, RandomStarPosition(), Quaternion.identity).GetComponent<MeshRenderer>();
+            Transform _starMesh = Instantiate(starPrefab, RandomStarPosition(), Quaternion.identity).GetComponent<Transform>();
+            _starMesh.transform.parent = transform;
         }
     }
 
@@ -209,25 +289,8 @@ public class GameManagerCS : MonoBehaviour
 
     public void ClearModifiedData()
     {
-        /*
-        foreach(Dictionary<TroopInfo, string> _troopDict in modifiedTroopInfo)
-        {
-            foreach (TroopInfo _troop in _troopDict.Keys)
-                Destroy(_troop);
-        }
-        */
         modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
-        foreach(Dictionary<TileInfo, string> _tileDict in modifiedTileInfo)
-        {
-            foreach (TileInfo _tile in _tileDict.Keys)
-                Destroy(_tile);
-        }
         modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
-        foreach(Dictionary<CityInfo, string> _cityDict in modifiedCityInfo)
-        {
-            foreach (CityInfo _city in _cityDict.Keys)
-                Destroy(_city);
-        }
         modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
     }
 
@@ -244,10 +307,10 @@ public class GameManagerCS : MonoBehaviour
                         InstantiateTroop(_troop);
                         break;
                     case "Move":
-
+                        MoveTroopToNewTile(_troop);
                         break;
                     case "Rotate":
-
+                        RotateTroop(_troop);
                         break;
                     case "Attack":
 
@@ -262,9 +325,27 @@ public class GameManagerCS : MonoBehaviour
                         Debug.LogError("Could not find troop action: " + _troopDict[_troop]);
                         break;
                 }
-
+            }
+        } 
+        //Debug.Log("TILES");
+        foreach(Dictionary<TileInfo, string> _tileDict in modifiedTileInfo)
+        {
+            //Debug.Log("Tils info iteration: ");
+            foreach(TileInfo _tile in _tileDict.Keys)
+            {
+                //Debug.Log("Command: " + _tileDict[_tile]);
+                switch (_tileDict[_tile])
+                {
+                    case "Update":
+                        UpdateTileInfo(_tile);
+                        break;
+                    default:
+                        Debug.LogError("Could not find tile action: " + _tileDict[_tile]);
+                        break;
+                }
             }
         }
+
         ClearModifiedData();
 
         PlayerCS.instance.enabled = true;

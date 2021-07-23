@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class Server
 {
-    public static bool isHost = false;
     public static int MaxPlayers { get; private set; }
     public static int Port { get; private set; }
     public static Dictionary<int, ClientSS> clients = new Dictionary<int, ClientSS>();
@@ -22,7 +21,6 @@ public class Server
     /// <param name="_port">The port to start the server on.</param>
     public static void Start(int _maxPlayers, int _port)
     {
-        isHost = true;
         MaxPlayers = _maxPlayers;
         Port = _port;
 
@@ -136,7 +134,7 @@ public class Server
             { (int)ClientPackets.endTurnCityData, ServerHandle.RecieveCityInfo },
             { (int)ClientPackets.endTurn, ServerHandle.EndTurn },
         };
-        Debug.Log("Initialized Server base packets.");
+        //Debug.Log("Initialized Server base packets.");
     }
 
     /// <summary>

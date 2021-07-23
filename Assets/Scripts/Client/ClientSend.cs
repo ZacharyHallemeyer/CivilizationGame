@@ -45,15 +45,18 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sends all end of turn data to server. This includes modified troop, tile, and city info
+    /// </summary>
     public static void SendEndOfTurnData()
     {
-        foreach(Dictionary<TroopInfo, string> _troopDict in GameManagerCS.instance.modifiedTroopInfo)
+        // Send all modfified troop info to player
+        foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerCS.instance.modifiedTroopInfo)
         {
             foreach(TroopInfo _troop in _troopDict.Keys)
             {
                 using (Packet _packet = new Packet((int)ClientPackets.endTurnTroopData))
                 {
-                    Debug.Log("Sending troop id: " + _troop.id);
                     _packet.Write(_troop.id);
                     _packet.Write(_troop.ownerId);
                     _packet.Write(_troop.xCoord);
@@ -78,17 +81,20 @@ public class ClientSend : MonoBehaviour
                 }
             }
         }
+        // Write -1 for id so client knows when all data has been recieved
         using (Packet _packet = new Packet((int)ClientPackets.endTurnTroopData))
         {
             _packet.Write(-1);
             SendTCPData(_packet);
         }
 
-
+        //Debug.Log("Sending " + GameManagerCS.instance.modifiedTileInfo.Count + " amount of tiles");
+        // Send all modfified tile info to player
         foreach (Dictionary<TileInfo, string> _tileDict in GameManagerCS.instance.modifiedTileInfo)
         {
             foreach(TileInfo _tile in _tileDict.Keys)
             {
+                Debug.Log("Sending Tile " + _tile.id+ " to server");
                 using (Packet _packet = new Packet((int)ClientPackets.endTurnTileData))
                 {
                     _packet.Write(_tile.id);
@@ -97,12 +103,15 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_tile.isCity);
                     _packet.Write(_tile.isOccupied);
                     _packet.Write(_tile.occupyingObjectId);
+                    _packet.Write(_tile.xIndex);
+                    _packet.Write(_tile.yIndex);
                     _packet.Write(_tileDict[_tile]);
 
                     SendTCPData(_packet);
                 }
             }
         }
+        // Write -1 for id so client knows when all data has been recieved
         using (Packet _packet = new Packet((int)ClientPackets.endTurnTileData))
         {
             _packet.Write(-1);
@@ -110,6 +119,7 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
 
+        // Send all modfified city info to player
         foreach (Dictionary<CityInfo, string> _cityDict in GameManagerCS.instance.modifiedCityInfo)
         {
             foreach (CityInfo _city in _cityDict.Keys)
@@ -136,6 +146,7 @@ public class ClientSend : MonoBehaviour
                 }
             }
         }
+        // Write -1 for id so client knows when all data has been recieved
         using (Packet _packet = new Packet((int)ClientPackets.endTurnCityData))
         {
             _packet.Write(-1);
@@ -148,6 +159,9 @@ public class ClientSend : MonoBehaviour
         EndTurn();
     }
 
+    /// <summary>
+    /// Tells the server to end turn for current player
+    /// </summary>
     public static void EndTurn()
     {
         using (Packet _packet = new Packet((int)ClientPackets.endTurn))

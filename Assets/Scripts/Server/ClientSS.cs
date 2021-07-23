@@ -211,6 +211,10 @@ public class ClientSS
         }
     }
 
+    /// <summary>
+    /// Sends new client into lobby
+    /// </summary>
+    /// <param name="_username"> new client username </param>
     public void SendIntoLobby(string _username)
     {
         userName = _username;
@@ -222,6 +226,9 @@ public class ClientSS
         }
     }
 
+    /// <summary>
+    /// Sends new player into game by telling client to spawn player controller and sends all tile info to client
+    /// </summary>
     public void SendPlayerIntoGame()
     {
         player = NetworkManager.instance.InstantiatePlayer();
@@ -236,7 +243,7 @@ public class ClientSS
         {
             for(int z = 0; z < WorldGeneratorSS.tiles.GetLength(1); z++)
             {
-                ServerSend.SendTileInfo(id, WorldGeneratorSS.tiles[x, z], x, z);
+                ServerSend.SendTileInfo(id, WorldGeneratorSS.tiles[x, z]);
             }
         }
     }

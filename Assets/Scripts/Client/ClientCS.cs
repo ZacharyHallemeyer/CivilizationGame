@@ -300,7 +300,7 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.sendModifiedCityInfo, ClientHandle.RecieveModifiedCityInfo},
             { (int)ServerPackets.startTurn, ClientHandle.PlayerStartTurn},
         };
-        Debug.Log("Initialized packets.");
+        //Debug.Log("Initialized packets.");
     }
 
     public void Disconnect()

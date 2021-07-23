@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bd2e45538a0d0c3468db12d37566c899, type: 2}
+  - {fileID: 2100000, guid: 716cb64fbe7988f41a5cd2a03cfa5229, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,8 +110,6 @@ MonoBehaviour:
   objecstToBeReset: []
   whatIsInteractableValue: 0
   whatIsDefaultValue: 0
-  moveableTileTag: MoveableTile
-  defaultTileTag: Tile
   troopInfo: {fileID: 0}
 --- !u!1 &4967855635168848423
 GameObject:
@@ -172,7 +170,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10756, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8eba53274d641f649ac909e2d36b1dcc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

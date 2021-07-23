@@ -32,6 +32,7 @@ public class PlayerCS : MonoBehaviour
     public Vector3 differenceRotation;
     public float camForce, camCounterForce;
 
+    // Set instance and needed variables
     private void Awake()
     {
         if (instance == null)
@@ -59,13 +60,16 @@ public class PlayerCS : MonoBehaviour
         inputMaster.Disable();
     }
 
+    /// <summary>
+    /// Init player info including id and username
+    /// </summary>
     public void InitPlayer(int _id, string _username)
     {
         id = _id;
         username = _username;
     }
 
-    // Update is called once per frame
+    // Read player input and start actions based on this input
     void Update()
     {
         // TESTING
@@ -74,7 +78,7 @@ public class PlayerCS : MonoBehaviour
 
         // TESTING END
 
-        if (inputMaster.Player.Select.ReadValue<float>() != 0)
+        if (inputMaster.Player.Select.triggered)
         {
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());
             if (Physics.Raycast(_ray, out RaycastHit _hit, whatIsIteractable))
@@ -84,6 +88,7 @@ public class PlayerCS : MonoBehaviour
                     TroopInfo _troop = _hit.collider.GetComponent<TroopInfo>();
                     if (_troop.ownerId == id)
                     {
+                        Debug.Log("Called from here");
                         _currentSelectedTroopId = _troop.id;
                         GameManagerCS.instance.troops[_troop.id].troopActions.CreateInteractableTiles();
                     }
@@ -92,19 +97,30 @@ public class PlayerCS : MonoBehaviour
                 {
                     TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x, 
                                                                       (int)_hit.transform.position.z];
-                    GameManagerCS.instance.troops[_currentSelectedTroopId].troopActions.MoveToNewTile(_tileInfo);
+                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+                    {
+                        _troop.troopActions.MoveToNewTile(_tileInfo);
+                    }
                 }
                 else if (_hit.collider.CompareTag("AttackableTile"))
                 {
                     TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x,
                                                                       (int)_hit.transform.position.z];
-                    GameManagerCS.instance.troops[_currentSelectedTroopId].troopActions.Attack(_tileInfo);
+                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+                    {
+                        _troop.troopActions.Attack(_tileInfo);
+                    }
                 }
             }
         }
 
         if (inputMaster.Player.Rotate.triggered && _currentSelectedTroopId >= 0)        // Rotate current selected troop
-            GameManagerCS.instance.troops[_currentSelectedTroopId].troopActions.Rotate(1);
+        {
+            if(GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+            {
+                _troop.troopActions.Rotate(1);
+            }
+        }
         if (inputMaster.Player.EndTurn.triggered)        // End Turn
         {
             enabled = false;
@@ -130,6 +146,7 @@ public class PlayerCS : MonoBehaviour
         else
             isRotating = false;
 
+        // Rotate camera if player wants to
         if (isRotating)
         {
             if (differenceRotation.x - originRotation.x > .01)
@@ -147,6 +164,10 @@ public class PlayerCS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Zoom in and out depending on value
+    /// </summary>
+    /// <param name="value"> value to zoom in and out </param>
     public void ModifyCameraZoom(float value)
     {
         value /= 500;
@@ -157,6 +178,10 @@ public class PlayerCS : MonoBehaviour
         cam.transform.position = new Vector3(_newX, _newY, _newZ);
     }
 
+    /// <summary>
+    /// Move camera using physics and provide counter movement if velocity is not 0
+    /// </summary>
+    /// <param name="_direction"></param>
     public void MoveCamera(Vector2 _direction)
     {
         Vector3 _camOrientationRight = new Vector3(cam.transform.right.x, 0, cam.transform.right.z);

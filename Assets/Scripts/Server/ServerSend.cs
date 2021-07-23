@@ -116,6 +116,9 @@ public class ServerSend
         }
     }
 
+    /// <summary>
+    /// Tells host cient when world has been fully created 
+    /// </summary>
     public static void WorldCreated()
     {
         using (Packet _packet = new Packet((int)ServerPackets.worldCreated))
@@ -124,6 +127,11 @@ public class ServerSend
         }
     }
 
+    /// <summary>
+    /// Spawn player controller on client side
+    /// </summary>
+    /// <param name="_toClient"> client to sent player data to </param>
+    /// <param name="_player"> player data needed to send to client </param>
     public static void SpawnPlayer(int _toClient, PlayerSS _player)
     {
         using (Packet _packet = new Packet((int)ServerPackets.spawnPlayer))
@@ -137,7 +145,14 @@ public class ServerSend
         }
     }
 
-    public static void SendTileInfo(int _toClient, TileInfo _tileInfo, int _xIndex, int _zIndex)
+    /// <summary>
+    /// Send all tile data to player at start of game
+    /// </summary>
+    /// <param name="_toClient"> client id to send tile data </param>
+    /// <param name="_tileInfo"> the tile info to send </param>
+    /// <param name="_xIndex"> x index of tile when stored in 2 dim array </param>
+    /// <param name="_zIndex"> y index of tile when stored in 2 dim array </param>
+    public static void SendTileInfo(int _toClient, TileInfo _tileInfo)
     {
         using (Packet _packet = new Packet((int)ServerPackets.sendTileInfo))
         {
@@ -153,13 +168,17 @@ public class ServerSend
             _packet.Write(_tileInfo.isCity);
             _packet.Write(_tileInfo.isOccupied);
             _packet.Write(_tileInfo.position);
-            _packet.Write(_xIndex);
-            _packet.Write(_zIndex);
+            _packet.Write(_tileInfo.xIndex);
+            _packet.Write(_tileInfo.yIndex);
 
             SendTCPData(_toClient, _packet);
         }
     }
 
+    /// <summary>
+    /// Send all modified troop data to new player
+    /// </summary>
+    /// <param name="_playerId"> client id that this data is being sent to </param>
     public static void SendModifiedTroop(int _playerId)
     {
         List<Dictionary<TroopInfo, string>> _itemsToRemove = new List<Dictionary<TroopInfo, string>>();
@@ -171,7 +190,6 @@ public class ServerSend
                 // Remove troop from list and remove component once troop info has been sent to call clients
                 if(_troop.ownerId == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
-                    Debug.Log("Troop: " + _troop.id + " to be removed");
                     _itemsToRemove.Add(_troopDict);
                     _itemsToDestroy.Add(_troop);
                 }
@@ -179,7 +197,6 @@ public class ServerSend
                 {
                     using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
                     {
-                        Debug.Log("Troop id sending from server " + _troop.id);
                         _packet.Write(_troop.id);
                         _packet.Write(_troop.ownerId);
                         _packet.Write(_troop.xCoord);
@@ -205,13 +222,15 @@ public class ServerSend
                 }
             }
         }
+        // Write -1 for id so client knows when all data has been recieved
         using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
         {
             _packet.Write(-1);
 
             SendTCPData(_playerId, _packet);
         }
-        foreach(Dictionary<TroopInfo, string> _itemToRemove in _itemsToRemove)
+        // Remove all unnecessary data
+        foreach (Dictionary<TroopInfo, string> _itemToRemove in _itemsToRemove)
         {
             GameManagerSS.instance.modifiedTroopInfo.Remove(_itemToRemove);
         }
@@ -221,21 +240,27 @@ public class ServerSend
         }
     }
 
+    /// <summary>
+    /// Send all modified tile data to new player
+    /// </summary>
+    /// <param name="_playerId"> client id that this data is being sent to </param>
     public static void SendModifiedTile(int _playerId)
     {
+        List<Dictionary<TileInfo, string>> _itemsToRemove = new List<Dictionary<TileInfo, string>>();
+        List<TileInfo> _itemsToDestroy = new List<TileInfo>();
         foreach (Dictionary<TileInfo, string> _tileDict in GameManagerSS.instance.modifiedTileInfo)
         {
             foreach (TileInfo _tile in _tileDict.Keys)
             {
                 // Remove troop from list and remove component once troop info has been sent to call clients
-                if (_tile.ownerId == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
+                if (_tile.idOfPlayerThatSentInfo == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
-                    GameManagerSS.instance.modifiedTileInfo.Remove(_tileDict);
-                    GameManagerSS.instance.RemoveModifiedTile(_tile);
-                    break;
+                    _itemsToRemove.Add(_tileDict);
+                    _itemsToDestroy.Add(_tile);
                 }
                 else
                 {
+                    //Debug.Log("Sending tile " + _tile.id + " to client");
                     using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTileInfo))
                     {
                         _packet.Write(_tile.id);
@@ -244,6 +269,8 @@ public class ServerSend
                         _packet.Write(_tile.isCity);
                         _packet.Write(_tile.isOccupied);
                         _packet.Write(_tile.occupyingObjectId);
+                        _packet.Write(_tile.xIndex);
+                        _packet.Write(_tile.yIndex);
                         _packet.Write(_tileDict[_tile]);
 
                         SendTCPData(_playerId, _packet);
@@ -251,11 +278,21 @@ public class ServerSend
                 }
             }
         }
+        // Write -1 for id so client knows when all data has been recieved
         using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTileInfo))
         {
             _packet.Write(-1);
 
             SendTCPData(_playerId, _packet);
+        }
+        // Remove all unnecessary data
+        foreach (Dictionary<TileInfo, string> _itemToRemove in _itemsToRemove)
+        {
+            GameManagerSS.instance.modifiedTileInfo.Remove(_itemToRemove);
+        }
+        foreach (TileInfo _itemToDestroy in _itemsToDestroy)
+        {
+            GameManagerSS.instance.RemoveModifiedTile(_itemToDestroy);
         }
     }
 

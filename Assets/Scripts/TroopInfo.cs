@@ -27,6 +27,9 @@ public class TroopInfo : MonoBehaviour
     public bool canMoveNextTurn;
     public bool canMultyKill;
 
+    /// <summary>
+    /// Init troop info for new troop
+    /// </summary>
     public void InitTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
                               int _id, int _ownerId, int _xCoord, int _zCoord)
     {
@@ -53,6 +56,12 @@ public class TroopInfo : MonoBehaviour
         canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
     }
     
+    /// <summary>
+    /// Copy existing troop info
+    /// </summary>
+    /// <param name="_troopInfo"> Troop info </param>
+    /// <param name="_troop"> troop gameobject </param>
+    /// <param name="_troopActions"> troop actions component </param>
     public void InitTroopInfo(TroopInfo _troopInfo, GameObject _troop, TroopActionsCS _troopActions)
     {
         troopName = _troopInfo.name;

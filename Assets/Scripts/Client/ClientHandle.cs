@@ -48,11 +48,19 @@ public class ClientHandle : MonoBehaviour
         ClientCS.instance.lobby.InitLobbyUI();
     }
 
+    /// <summary>
+    /// Toggle lobby start button to allow host to start game
+    /// </summary>
+    /// <param name="_packet"></param>
     public static void WorldCreated(Packet _packet)
     {
         ClientCS.instance.lobby.ToggleStartButtonState();
     }
 
+    /// <summary>
+    /// Spawn player controller and init needed values
+    /// </summary>
+    /// <param name="_packet"> Packet from server </param>
     public static void SpawnPlayer(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -68,6 +76,10 @@ public class ClientHandle : MonoBehaviour
 
     }
     
+    /// <summary>
+    /// Recieve new tile info from client and call spawn tile function
+    /// </summary>
+    /// <param name="_packet"> Packet containing new tile info </param>
     public static void CreateNewTile(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -91,16 +103,19 @@ public class ClientHandle : MonoBehaviour
                                             _name);
     }
 
+    /// <summary>
+    /// Recieve modified troop data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
     public static void RecieveModifiedTroopInfo(Packet _packet)
     {
         int _id = _packet.ReadInt();
-        if(_id == -1)
+        if(_id == -1)       // If the id is equal to -1 then all data has been recieved
         {
             GameManagerCS.instance.isAllTroopInfoReceived = true;
             return;
         }
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
-        Debug.Log("Recieved troop id: " + _id);
         _troop.id = _id;
         _troop.ownerId = _packet.ReadInt();
         _troop.xCoord = _packet.ReadInt();
@@ -123,14 +138,20 @@ public class ClientHandle : MonoBehaviour
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {_troop, _command} };
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        // Add data to dictionary to be used when displaying past moves
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);  
 
     }
 
+    /// <summary>
+    /// Recieve modified tile data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified tile info </param>
     public static void RecieveModifiedTileInfo(Packet _packet)
     {
         int _id = _packet.ReadInt();
-        if (_id == -1)
+        //Debug.Log("Recieved tile " + _id + " from server");
+        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
         {
             GameManagerCS.instance.isAllTileInfoReceived = true;
             return;
@@ -142,45 +163,54 @@ public class ClientHandle : MonoBehaviour
         _tile.isCity = _packet.ReadBool();
         _tile.isOccupied = _packet.ReadBool();
         _tile.occupyingObjectId = _packet.ReadInt();
+        _tile.xIndex = _packet.ReadInt();
+        _tile.yIndex = _packet.ReadInt();
         string _command = _packet.ReadString();
 
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-            { {_tile.GetComponent<TileInfo>(), _command} };
-        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
+            { {_tile, _command} };
+        // Add data to dictionary to be used when displaying past moves
+        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);  
     }
 
+    /// <summary>
+    /// Recieve modified city data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified city info </param>
     public static void RecieveModifiedCityInfo(Packet _packet)
     {
         int _id = _packet.ReadInt();
-        if (_id == -1)
+        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
         {
             GameManagerCS.instance.isAllCityInfoReceived = true;
             return;
         }
         string _command = _packet.ReadString();
 
+        // Add data to dictionary to be used when displaying past moves
         /*
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-            { {_city.GetComponent<CityInfo>(), _command} };
+            { {_city, _command} };
         */
     }
 
+    /// <summary>
+    /// Start player turn once all data is recieved and all past moves are completed
+    /// </summary>
+    /// <param name="_packet"></param>
     public static void PlayerStartTurn(Packet _packet)
     {
         if (!(GameManagerCS.instance.isAllTroopInfoReceived && GameManagerCS.instance.isAllTileInfoReceived
             && GameManagerCS.instance.isAllCityInfoReceived))
         {
-            GameManagerCS.instance.WaitAndStartTurn(_packet);
+            GameManagerCS.instance.WaitAndStartTurn(_packet);       // If all data is not recieved wait and try again
             return;
         }
         GameManagerCS.instance.isAllTroopInfoReceived = false;
         GameManagerCS.instance.isAllTileInfoReceived = false;
         GameManagerCS.instance.isAllCityInfoReceived = false;
         GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();
-        //Debug.Log("Current Troop Index: " + GameManagerCS.instance.currentTroopIndex);
 
         GameManagerCS.instance.PlayPastMoves();
-
-        //PlayerCS.instance.enabled = true;
     }
 }

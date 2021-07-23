@@ -16,6 +16,7 @@ public class GameManagerSS : MonoBehaviour
     public List<Dictionary<TileInfo, string>> modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
     public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
 
+    // Set instance or destroy if instance already exist
     private void Awake()
     {
         if (instance == null)
@@ -27,7 +28,10 @@ public class GameManagerSS : MonoBehaviour
         }
     }
 
-    public void InitPlayerTurnArray()
+    /// <summary>
+    /// Creates player turn order in the form of a list
+    /// </summary>
+    public void InitPlayerTurnList()
     {
         foreach(ClientSS _client in ClientSS.allClients.Values)
         {
@@ -35,6 +39,11 @@ public class GameManagerSS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Wait and call end turn
+    /// </summary>
+    /// <param name="_fromClient"> client that data is being recieved from </param>
+    /// <param name="_packet"> Packet sent from client </param>
     public void WaitAndEndTurn(int _fromClient, Packet _packet)
     {
         StartCoroutine(WaitAndCallEndTurn(_fromClient, _packet));
@@ -46,17 +55,29 @@ public class GameManagerSS : MonoBehaviour
         ServerHandle.EndTurn(_fromClient, _packet);
     }
 
+    /// <summary>
+    /// Remove Troop info from GameManager instance
+    /// </summary>
+    /// <param name="_troop"> troop to remove </param>
     public void RemoveModifiedTroop(TroopInfo _troop)
     {
         Destroy(_troop);
     }
 
+    /// <summary>
+    /// Remove Tile info from GameManager instance
+    /// </summary>
+    /// <param name="_tile"> tile to remove </param>
     public void RemoveModifiedTile(TileInfo _tile)
     {
         Destroy(_tile);
     }
 
-    public void RemoveModifiedCity(TroopInfo _troop)
+    /// <summary>
+    /// Remove City info from GameManager instance
+    /// </summary>
+    /// <param name="_city"> city to remove </param>
+    public void RemoveModifiedCity(CityInfo _city)
     {
 
     }

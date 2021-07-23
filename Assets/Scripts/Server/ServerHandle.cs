@@ -38,7 +38,7 @@ public class ServerHandle
     /// <param name="_packet"> game mode name to send clients into </param>
     public static void SendLobbyIntoGame(int _fromClient, Packet _packet)
     {
-        GameManagerSS.instance.InitPlayerTurnArray();
+        GameManagerSS.instance.InitPlayerTurnList();
         string gameModeName = _packet.ReadString();
 
         foreach (ClientSS _client in ClientSS.allClients.Values)
@@ -58,10 +58,15 @@ public class ServerHandle
         ServerSend.PlayerStartTurn(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
     }
 
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
     public static void RecieveTroopInfo(int _fromClient, Packet _packet)
     {
         int _id = _packet.ReadInt();
-        if(_id == -1)
+        if(_id == -1)       // If the id is equal to -1 then all data has been recieved
         {
             GameManagerSS.instance.isAllTroopInfoReceived = true;
             return;
@@ -69,7 +74,6 @@ public class ServerHandle
 
         TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
 
-        Debug.Log("Troop Id recieved from client: " + _id);
         _troop.id = _id;
         _troop.ownerId = _packet.ReadInt();
         _troop.xCoord = _packet.ReadInt();
@@ -92,13 +96,19 @@ public class ServerHandle
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {_troop, _command} };
-        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
     }
 
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
     public static void RecieveTileInfo(int _fromClient, Packet _packet)
     {
         int _id = _packet.ReadInt();
-        if (_id == -1)
+        //Debug.Log("Recieved tile " + _id + " from client");
+        if (_id == -1)          // If the id is equal to -1 then all data has been recieved
         {
             GameManagerSS.instance.isAllTileInfoReceived = true;
             return;
@@ -112,17 +122,25 @@ public class ServerHandle
         _tile.isCity = _packet.ReadBool();
         _tile.isOccupied = _packet.ReadBool();
         _tile.occupyingObjectId = _packet.ReadInt();
+        _tile.xIndex = _packet.ReadInt();
+        _tile.yIndex = _packet.ReadInt();
         string _command = _packet.ReadString();
+        _tile.idOfPlayerThatSentInfo = _fromClient;
 
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-            { {_tile.GetComponent<TileInfo>(), _command} };
-        GameManagerSS.instance.modifiedTileInfo.Add(_tileData);
+            { {_tile, _command} };
+        GameManagerSS.instance.modifiedTileInfo.Add(_tileData);     // Add data to dictionary that will be sent to all clients
     }
 
+    /// <summary>
+    /// Recieve all modified city data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> client id that this data is being sent from </param>
+    /// <param name="_packet"> Packet from client </param>
     public static void RecieveCityInfo(int _fromClient, Packet _packet)
     {
         int _id = _packet.ReadInt();
-        if (_id == -1)
+        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
         {
             GameManagerSS.instance.isAllCityInfoReceived = true;
             return;
@@ -146,22 +164,29 @@ public class ServerHandle
         string _command = _packet.ReadString();
 
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-            { {_city.GetComponent<CityInfo>(), _command} };
-        GameManagerSS.instance.modifiedCityInfo.Add(_cityData);
+            { {_city, _command} };
+        GameManagerSS.instance.modifiedCityInfo.Add(_cityData);     // Add data to dictionary that will be sent to all clients
     }
 
+    /// <summary>
+    /// End turn for current player and start turn for new player after all data have been recieved from client.
+    /// If server has not recieved all data then wait .1 seconds
+    /// </summary>
+    /// <param name="_fromClient"> Client id that wants to end turn </param>
+    /// <param name="_packet"> Packet from client </param>
     public static void EndTurn(int _fromClient, Packet _packet)
     {
         if(!(GameManagerSS.instance.isAllTroopInfoReceived && GameManagerSS.instance.isAllTileInfoReceived 
             && GameManagerSS.instance.isAllCityInfoReceived))
         {
-            GameManagerSS.instance.WaitAndEndTurn(_fromClient, _packet);
+            GameManagerSS.instance.WaitAndEndTurn(_fromClient, _packet);    // Wait if all data has not been recieved
             return;
         }
         GameManagerSS.instance.isAllTroopInfoReceived = false;
         GameManagerSS.instance.isAllTileInfoReceived = false;
         GameManagerSS.instance.isAllCityInfoReceived = false;
 
+        // Chose next player to start turn
         if (GameManagerSS.instance.currentPlayerTurnId + 1 >= GameManagerSS.instance.playerIds.Count)
             GameManagerSS.instance.currentPlayerTurnId = 0;
         else

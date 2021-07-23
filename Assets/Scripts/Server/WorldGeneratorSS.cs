@@ -21,6 +21,7 @@ public class WorldGeneratorSS : MonoBehaviour
     private string[] biomes;
     public string[] biomeOptions;
 
+    // Set instance or destroy if instance already exist
     private void Awake()
     {
         if (instance == null)
@@ -46,21 +47,6 @@ public class WorldGeneratorSS : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        /*
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            foreach (GameObject _cube in allCubes)
-            {
-                Destroy(_cube);
-            }
-            index = 0;
-            GenerateEnvironemnt();
-        }
-        */
-    }
-
     /// <summary>
     /// Generates game environment using perlin noise for land and water tiles. Then uses worley noise to change land biomes
     /// </summary>
@@ -83,7 +69,7 @@ public class WorldGeneratorSS : MonoBehaviour
                     _tile.transform.parent = transform;
                     allCubes[index] = _tile;
                     index++;
-                    _tile.AddComponent<TileInfo>().InitWaterInfo(_tile, x * z + z);
+                    _tile.AddComponent<TileInfo>().InitWaterInfo(_tile, x * (int)groundXSize + z);
                     tiles[x, z] = _tile.GetComponent<TileInfo>();
                 }
                 else if (value <= landLevel)
@@ -93,7 +79,7 @@ public class WorldGeneratorSS : MonoBehaviour
                     _tile.transform.parent = transform;
                     allCubes[index] = _tile;
                     index++;
-                    _tile.AddComponent<TileInfo>().InitTileInfo(_tile, _biomeType, x * z + z, 0);
+                    _tile.AddComponent<TileInfo>().InitTileInfo(_tile, _biomeType, x * (int)groundXSize + z, 0, x, z);
                     tiles[x, z] = _tile.GetComponent<TileInfo>();
                 }
             }
