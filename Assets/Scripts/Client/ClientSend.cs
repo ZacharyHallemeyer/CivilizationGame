@@ -53,6 +53,7 @@ public class ClientSend : MonoBehaviour
             {
                 using (Packet _packet = new Packet((int)ClientPackets.endTurnTroopData))
                 {
+                    Debug.Log("Sending troop id: " + _troop.id);
                     _packet.Write(_troop.id);
                     _packet.Write(_troop.ownerId);
                     _packet.Write(_troop.xCoord);

@@ -100,6 +100,7 @@ public class ClientHandle : MonoBehaviour
             return;
         }
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
+        Debug.Log("Recieved troop id: " + _id);
         _troop.id = _id;
         _troop.ownerId = _packet.ReadInt();
         _troop.xCoord = _packet.ReadInt();
@@ -121,7 +122,7 @@ public class ClientHandle : MonoBehaviour
         string _command = _packet.ReadString();
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_troop.GetComponent<TroopInfo>(), _command} };
+            { {_troop, _command} };
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
 
     }
@@ -166,6 +167,7 @@ public class ClientHandle : MonoBehaviour
 
     public static void PlayerStartTurn(Packet _packet)
     {
+        Debug.Log("Player start turn has been called");
         if (!(GameManagerCS.instance.isAllTroopInfoReceived && GameManagerCS.instance.isAllTileInfoReceived
             && GameManagerCS.instance.isAllCityInfoReceived))
         {
@@ -176,7 +178,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.isAllTileInfoReceived = false;
         GameManagerCS.instance.isAllCityInfoReceived = false;
         GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();
+        Debug.Log("Index: " + GameManagerCS.instance.currentTroopIndex);
 
-        PlayerCS.instance.enabled = true;
+        GameManagerCS.instance.PlayPastMoves();
+
+        //PlayerCS.instance.enabled = true;
     }
 }

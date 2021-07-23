@@ -131,6 +131,17 @@ public class GameManagerCS : MonoBehaviour
         modifiedTroopInfo.Add(_troopData);
     }
 
+    public void InstantiateTroop(TroopInfo _troopInfoToCopy)
+    {
+        GameObject _troop = Instantiate(troopPrefab, new Vector3(_troopInfoToCopy.xCoord, 1, _troopInfoToCopy.zCoord),
+                                        Quaternion.identity);
+        TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
+        TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
+        _troopInfo.InitTroopInfo(_troopInfoToCopy, _troop, _troopActions);
+
+        troops.Add(_troopInfo.id, _troopInfo);
+    }
+
     public void AddCityResources()
     {
         foreach(CityInfo _city in cities.Values)
@@ -198,11 +209,13 @@ public class GameManagerCS : MonoBehaviour
 
     public void ClearModifiedData()
     {
+        /*
         foreach(Dictionary<TroopInfo, string> _troopDict in modifiedTroopInfo)
         {
             foreach (TroopInfo _troop in _troopDict.Keys)
                 Destroy(_troop);
         }
+        */
         modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
         foreach(Dictionary<TileInfo, string> _tileDict in modifiedTileInfo)
         {
@@ -216,5 +229,44 @@ public class GameManagerCS : MonoBehaviour
                 Destroy(_city);
         }
         modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
+    }
+
+    public void PlayPastMoves()
+    {
+        // Update/Show Other Player troop movements/actions
+        foreach (Dictionary<TroopInfo, string> _troopDict in modifiedTroopInfo)
+        {
+            foreach (TroopInfo _troop in _troopDict.Keys)
+            {
+                switch (_troopDict[_troop])
+                {
+                    case "Spawn":
+                        InstantiateTroop(_troop);
+                        break;
+                    case "Move":
+
+                        break;
+                    case "Rotate":
+
+                        break;
+                    case "Attack":
+
+                        break;
+                    case "Hurt":
+
+                        break;
+                    case "Die":
+
+                        break;
+                    default:
+                        Debug.LogError("Could not find troop action: " + _troopDict[_troop]);
+                        break;
+                }
+
+            }
+        }
+        ClearModifiedData();
+
+        PlayerCS.instance.enabled = true;
     }
 }

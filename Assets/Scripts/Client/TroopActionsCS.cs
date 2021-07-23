@@ -180,4 +180,19 @@ public class TroopActionsCS : MonoBehaviour
             { {_troop, "Hurt"} };
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
+
+    #region Troop Animations
+
+    public void AttackAnim()
+    {
+
+    }
+
+    public void MoveAnim()
+    {
+
+    }
+
+    #endregion
+
 }

@@ -161,21 +161,24 @@ public class ServerSend
 
     public static void SendModifiedTroop(int _playerId)
     {
+        List<Dictionary<TroopInfo, string>> _itemsToRemove = new List<Dictionary<TroopInfo, string>>();
+        List<TroopInfo> _itemsToDestroy = new List<TroopInfo>();
         foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerSS.instance.modifiedTroopInfo)
         {
             foreach(TroopInfo _troop in _troopDict.Keys)
             {
+                Debug.Log("Troop owner id: " + _troop.ownerId + " checking id: " + GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
                 // Remove troop from list and remove component once troop info has been sent to call clients
-                if(_troop.ownerId == ClientCS.instance.myId)
+                if(_troop.ownerId == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
-                    GameManagerSS.instance.modifiedTroopInfo.Remove(_troopDict);
-                    GameManagerSS.instance.RemoveModifiedTroop(_troop);
-                    break;
+                    _itemsToRemove.Add(_troopDict);
+                    _itemsToDestroy.Add(_troop);
                 }
                 else
                 {
                     using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
                     {
+                        Debug.Log("Troop id sending from server " + _troop.id);
                         _packet.Write(_troop.id);
                         _packet.Write(_troop.ownerId);
                         _packet.Write(_troop.xCoord);
@@ -207,6 +210,14 @@ public class ServerSend
 
             SendTCPData(_playerId, _packet);
         }
+        foreach(Dictionary<TroopInfo, string> _itemToRemove in _itemsToRemove)
+        {
+            GameManagerSS.instance.modifiedTroopInfo.Remove(_itemToRemove);
+        }
+        foreach(TroopInfo _itemToDestroy in _itemsToDestroy)
+        {
+            GameManagerSS.instance.RemoveModifiedTroop(_itemToDestroy);
+        }
     }
 
     public static void SendModifiedTile(int _playerId)
@@ -216,7 +227,7 @@ public class ServerSend
             foreach (TileInfo _tile in _tileDict.Keys)
             {
                 // Remove troop from list and remove component once troop info has been sent to call clients
-                if (_tile.ownerId == ClientCS.instance.myId)
+                if (_tile.ownerId == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
                     GameManagerSS.instance.modifiedTileInfo.Remove(_tileDict);
                     GameManagerSS.instance.RemoveModifiedTile(_tile);

@@ -69,6 +69,7 @@ public class ServerHandle
 
         TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
 
+        Debug.Log("Troop Id recieved: " + _id);
         _troop.id = _id;
         _troop.ownerId = _packet.ReadInt();
         _troop.xCoord = _packet.ReadInt();
