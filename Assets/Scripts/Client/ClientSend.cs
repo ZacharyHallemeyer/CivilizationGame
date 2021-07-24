@@ -50,7 +50,7 @@ public class ClientSend : MonoBehaviour
     /// </summary>
     public static void SendEndOfTurnData()
     {
-        // Send all modfified troop info to player
+        // Send all modfified troop info to Server
         foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerCS.instance.modifiedTroopInfo)
         {
             foreach(TroopInfo _troop in _troopDict.Keys)
@@ -88,8 +88,7 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
 
-        //Debug.Log("Sending " + GameManagerCS.instance.modifiedTileInfo.Count + " amount of tiles");
-        // Send all modfified tile info to player
+        // Send all modfified tile info to Server
         foreach (Dictionary<TileInfo, string> _tileDict in GameManagerCS.instance.modifiedTileInfo)
         {
             foreach(TileInfo _tile in _tileDict.Keys)
@@ -119,7 +118,7 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
 
-        // Send all modfified city info to player
+        // Send all modfified city info to Server
         foreach (Dictionary<CityInfo, string> _cityDict in GameManagerCS.instance.modifiedCityInfo)
         {
             foreach (CityInfo _city in _cityDict.Keys)
@@ -128,10 +127,6 @@ public class ClientSend : MonoBehaviour
                 {
                     _packet.Write(_city.id);
                     _packet.Write(_city.ownerId);
-                    _packet.Write(_city.isBeingConquered);
-                    _packet.Write(_city.isOccupied);
-                    _packet.Write(_city.isConstructingBuilding);
-                    _packet.Write(_city.isTrainingTroops);
                     _packet.Write(_city.morale);
                     _packet.Write(_city.education);
                     _packet.Write(_city.manPower);
@@ -140,6 +135,15 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_city.wood);
                     _packet.Write(_city.food);
                     _packet.Write(_city.ownerShipRange);
+                    _packet.Write(_city.woodResourcesPerTurn);
+                    _packet.Write(_city.metalResourcesPerTurn);
+                    _packet.Write(_city.foodResourcesPerTurn);
+                    _packet.Write(_city.isBeingConquered);
+                    _packet.Write(_city.isOccupied);
+                    _packet.Write(_city.isConstructingBuilding);
+                    _packet.Write(_city.occupyingObjectId);
+                    _packet.Write(_city.xIndex);
+                    _packet.Write(_city.zIndex);
                     _packet.Write(_cityDict[_city]);
 
                     SendTCPData(_packet);
@@ -166,6 +170,7 @@ public class ClientSend : MonoBehaviour
         using (Packet _packet = new Packet((int)ClientPackets.endTurn))
         {
             _packet.Write(GameManagerCS.instance.currentTroopIndex);
+            _packet.Write(GameManagerCS.instance.currentCityIndex);
 
             SendTCPData(_packet);
         }

@@ -297,11 +297,64 @@ public class ServerSend
 
     public static void SendModifiedCity(int _playerId)
     {
+        List<Dictionary<CityInfo, string>> _itemsToRemove = new List<Dictionary<CityInfo, string>>();
+        List<CityInfo> _itemsToDestroy = new List<CityInfo>();
+        foreach (Dictionary<CityInfo, string> _cityDict in GameManagerSS.instance.modifiedCityInfo)
+        {
+            foreach (CityInfo _city in _cityDict.Keys)
+            {
+                // Remove troop from list and remove component once troop info has been sent to call clients
+                if (_city.idOfPlayerThatSentInfo == 
+                        GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
+                {
+                    _itemsToRemove.Add(_cityDict);
+                    _itemsToDestroy.Add(_city);
+                }
+                else
+                {
+                    //Debug.Log("Sending tile " + _tile.id + " to client");
+                    using (Packet _packet = new Packet((int)ServerPackets.sendModifiedCityInfo))
+                    {
+                        _packet.Write(_city.id);
+                        _packet.Write(_city.ownerId);
+                        _packet.Write(_city.morale);
+                        _packet.Write(_city.education);
+                        _packet.Write(_city.manPower);
+                        _packet.Write(_city.money);
+                        _packet.Write(_city.metal);
+                        _packet.Write(_city.wood);
+                        _packet.Write(_city.food);
+                        _packet.Write(_city.ownerShipRange);
+                        _packet.Write(_city.woodResourcesPerTurn);
+                        _packet.Write(_city.metalResourcesPerTurn);
+                        _packet.Write(_city.foodResourcesPerTurn);
+                        _packet.Write(_city.isBeingConquered);
+                        _packet.Write(_city.isOccupied);
+                        _packet.Write(_city.isConstructingBuilding);
+                        _packet.Write(_city.occupyingObjectId);
+                        _packet.Write(_city.xIndex);
+                        _packet.Write(_city.zIndex);
+                        _packet.Write(_cityDict[_city]);
+
+                        SendTCPData(_playerId, _packet);
+                    }
+                }
+            }
+        }
         using (Packet _packet = new Packet((int)ServerPackets.sendModifiedCityInfo))
         {
             _packet.Write(-1);
 
             SendTCPData(_playerId, _packet);
+        }
+        // Remove all unnecessary data
+        foreach (Dictionary<CityInfo, string> _itemToRemove in _itemsToRemove)
+        {
+            GameManagerSS.instance.modifiedCityInfo.Remove(_itemToRemove);
+        }
+        foreach (CityInfo _itemToDestroy in _itemsToDestroy)
+        {
+            GameManagerSS.instance.RemoveModifiedCity(_itemToDestroy);
         }
     }
 
@@ -310,6 +363,7 @@ public class ServerSend
         using (Packet _packet = new Packet((int)ServerPackets.startTurn))
         {
             _packet.Write(GameManagerSS.instance.currentTroopId);
+            _packet.Write(GameManagerSS.instance.currentCityId);
 
             SendTCPData(_playerId, _packet);
         }

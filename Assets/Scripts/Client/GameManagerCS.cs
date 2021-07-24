@@ -8,9 +8,10 @@ public class GameManagerCS : MonoBehaviour
 
     public int starCount = 100;
 
-    public int currentTroopIndex = 0;
+    public int currentTroopIndex = 0, currentCityIndex;
     public Dictionary<int, TroopInfo> troops = new Dictionary<int, TroopInfo>();
     public Dictionary<int, CityInfo> cities = new Dictionary<int, CityInfo>();
+    //public List<CityInfo> cities = new List<CityInfo>();
     public TileInfo[,] tiles;
 
     public bool isAllTroopInfoReceived = false, isAllTileInfoReceived = false, isAllCityInfoReceived = false;
@@ -19,13 +20,16 @@ public class GameManagerCS : MonoBehaviour
     public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
 
     public GameObject playerPrefab;
-    public GameObject troopPrefab;
+    public GameObject localTroopPrefab, remoteTroopPrefab;
     public GameObject starPrefab; 
     public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
                       tundraTilePrefab, waterTilePrefab;
+    public GameObject cityPrefab;
 
     public string[] troopNames;
     public string[] biomeOptions;
+
+    #region Set Up Functions
 
     // Set instance or destroy if instance already exist
     private void Awake()
@@ -62,6 +66,52 @@ public class GameManagerCS : MonoBehaviour
         _player.GetComponent<PlayerCS>().InitPlayer(_id, _username);
         CreateStars();
     }
+
+    public void CreateStars()
+    {
+        for (int i = 0; i < starCount; i++)
+        {
+            Transform _starMesh = Instantiate(starPrefab, RandomStarPosition(), Quaternion.identity).GetComponent<Transform>();
+            _starMesh.transform.parent = transform;
+        }
+    }
+
+    public Vector3 RandomStarPosition()
+    {
+        Vector3 _position = Vector3.zero;
+        int _lengthX = tiles.GetLength(0) * 2;
+        int _lengthZ = tiles.GetLength(1) * 2;
+        // Random side to spawn
+        switch (Random.Range(0, 7))
+        {
+            case 0:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 1:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 2:
+                _position = new Vector3(-_lengthX - _lengthX, Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 3:
+                _position = new Vector3(_lengthX + _lengthX, Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ));
+                break;
+            case 4:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ), -_lengthZ - _lengthZ);
+                break;
+            case 5:
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ), _lengthZ + _lengthZ);
+                break;
+            default:
+                break;
+        }
+
+        return _position;
+    }
+
+    #endregion
+
+    #region Tiles
 
     /// <summary>
     /// Spawn new tile w/ tile data from server and visual style to represent what kind of biome the tile is
@@ -146,6 +196,20 @@ public class GameManagerCS : MonoBehaviour
     }
 
     /// <summary>
+    /// Updates tile info
+    /// Does NOT update modified troop and tile dicts.
+    /// </summary>
+    /// <param name="_tile"> tile to update </param>
+    public void UpdateTileInfo(TileInfo _tile)
+    {
+        tiles[_tile.xIndex, _tile.yIndex].CopyTileInfo(_tile);
+    }
+    
+    #endregion
+
+    #region Troop
+
+    /// <summary>
     /// Spawn new troop
     /// </summary>
     /// <param name="_ownerId"> client id that wants to spawn new troop </param>
@@ -155,7 +219,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_rotation"> rotation of new troop </param>
     public void InstantiateTroop(int _ownerId, string _troopName, int _xCoord, int _zCoord, int _rotation)
     {
-        GameObject _troop = Instantiate(troopPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
+        GameObject _troop = Instantiate(localTroopPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         _troop.AddComponent<TroopInfo>().InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, _xCoord, _zCoord);
        
@@ -173,9 +237,14 @@ public class GameManagerCS : MonoBehaviour
         modifiedTileInfo.Add(_tileData);
     }
 
+    /// <summary>
+    /// Spawn new troop
+    /// Does NOT update modified troop dicts.
+    /// </summary>
+    /// <param name="_troopInfoToCopy"> Existing troop spawn and init </param>
     public void InstantiateTroop(TroopInfo _troopInfoToCopy)
     {
-        GameObject _troop = Instantiate(troopPrefab, new Vector3(_troopInfoToCopy.xCoord, 1, _troopInfoToCopy.zCoord),
+        GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_troopInfoToCopy.xCoord, 1, _troopInfoToCopy.zCoord),
                                         Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
@@ -188,7 +257,7 @@ public class GameManagerCS : MonoBehaviour
     /// Move troop to new tile and update modified troop and tile dicts
     /// Does NOT update modified troop and tile dicts.
     /// </summary>
-    /// <param name="_newTile"></param>
+    /// <param name="_troopInfo"></param>
     public void MoveTroopToNewTile(TroopInfo _troopInfo)
     {
         troops[_troopInfo.id].xCoord = _troopInfo.xCoord;
@@ -219,14 +288,51 @@ public class GameManagerCS : MonoBehaviour
         troops[_troopInfo.id].CopyTroopInfo(_troopInfo);
     }
 
+    #endregion
+
+    #region City
+
     /// <summary>
-    /// Updates tile info
-    /// Does NOT update modified troop and tile dicts.
+    /// Spawns new city and updates modified cities dict.
     /// </summary>
-    /// <param name="_tile"> tile to update </param>
-    public void UpdateTileInfo(TileInfo _tile)
+    /// <param name="_xCoord"> x coord to spawn city </param>
+    /// <param name="_zCoord"> z coord to spawn city </param>
+    public void SpawnCity(int _xIndex, int _zIndex)
     {
-        tiles[_tile.xIndex, _tile.yIndex].CopyTileInfo(_tile);
+        if (tiles[_xIndex, _zIndex].isWater) return;
+        int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
+        int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
+        string _biomeName = tiles[_xIndex, _zIndex].biome;
+        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
+        CityInfo _cityInfo = _city.AddComponent<CityInfo>();
+        _cityInfo.InitCity(_biomeName, _city, currentCityIndex, ClientCS.instance.myId, _xIndex, _zIndex);
+
+        cities.Add(currentCityIndex, _cityInfo);
+        currentCityIndex++;
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+        { {_cityInfo, "Spawn" } };
+        modifiedCityInfo.Add(_cityData);
+    }
+
+    /// <summary>
+    /// Spawns city with existing city data
+    /// Does NOT update modified cities dict.
+    /// </summary>
+    /// <param name="_cityInfoToSpawn"> city to spawn </param>
+    public void SpawnCity(CityInfo _cityInfoToSpawn)
+    {
+        int _xCoord = (int)tiles[_cityInfoToSpawn.xIndex, _cityInfoToSpawn.zIndex].position.x;
+        int _zCoord = (int)tiles[_cityInfoToSpawn.xIndex, _cityInfoToSpawn.zIndex].position.y;
+        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, 1, _zCoord),
+                           Quaternion.identity);
+        CityInfo _cityInfo = _city.AddComponent<CityInfo>();
+        _cityInfo.InitExistingCity(_cityInfoToSpawn, _city);
+
+    }
+    
+    public void UpdateCityInfo(CityInfo _cityToCopy)
+    {
+        cities[_cityToCopy.id].CopyCityInfo(_cityToCopy);
     }
 
     public void AddCityResources()
@@ -242,47 +348,9 @@ public class GameManagerCS : MonoBehaviour
         }
     }
 
-    public void CreateStars()
-    {
-        for(int i = 0; i < starCount; i++)
-        {
-            Transform _starMesh = Instantiate(starPrefab, RandomStarPosition(), Quaternion.identity).GetComponent<Transform>();
-            _starMesh.transform.parent = transform;
-        }
-    }
+    #endregion 
 
-    public Vector3 RandomStarPosition()
-    {
-        Vector3 _position = Vector3.zero;
-        int _lengthX = tiles.GetLength(0) * 2;
-        int _lengthZ = tiles.GetLength(1) * 2;
-        // Random side to spawn
-        switch (Random.Range(0, 7))
-        {
-            case 0:
-                _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
-                break;
-            case 1:
-                _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
-                break;
-            case 2:
-                _position = new Vector3(-_lengthX - _lengthX, Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ));
-                break;
-            case 3:
-                _position = new Vector3(_lengthX + _lengthX, Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ));
-                break;
-            case 4:
-                _position = new Vector3(Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ), -_lengthZ - _lengthZ);
-                break;
-            case 5:
-                _position = new Vector3(Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ), _lengthZ + _lengthZ);
-                break;
-            default:
-                break;
-        }
-
-        return _position;
-    }
+    #region Turn Functions
 
     public void WaitAndStartTurn(Packet _packet)
     {
@@ -344,15 +412,13 @@ public class GameManagerCS : MonoBehaviour
                         Debug.LogError("Could not find troop action: " + _troopDict[_troop]);
                         break;
                 }
+                Destroy(_troop);
             }
         } 
-        //Debug.Log("TILES");
         foreach(Dictionary<TileInfo, string> _tileDict in modifiedTileInfo)
         {
-            //Debug.Log("Tils info iteration: ");
             foreach(TileInfo _tile in _tileDict.Keys)
             {
-                //Debug.Log("Command: " + _tileDict[_tile]);
                 switch (_tileDict[_tile])
                 {
                     case "Update":
@@ -362,11 +428,32 @@ public class GameManagerCS : MonoBehaviour
                         Debug.LogError("Could not find tile action: " + _tileDict[_tile]);
                         break;
                 }
+                Destroy(_tile);
             }
         }
-
+        foreach (Dictionary<CityInfo, string> _cityDict in modifiedCityInfo)
+        {
+            foreach (CityInfo _city in _cityDict.Keys)
+            {
+                switch (_cityDict[_city])
+                {
+                    case "Spawn":
+                        SpawnCity(_city);
+                        break;
+                    case "Update":
+                        UpdateCityInfo(_city);
+                        break;
+                    default:
+                        Debug.LogError("Could not find tile action: " + _cityDict[_city]);
+                        break;
+                }
+                Destroy(_city);
+            }
+        }
         ClearModifiedData();
 
         PlayerCS.instance.enabled = true;
     }
+
+    #endregion
 }

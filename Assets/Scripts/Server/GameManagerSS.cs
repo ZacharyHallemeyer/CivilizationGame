@@ -6,7 +6,7 @@ public class GameManagerSS : MonoBehaviour
 {
     public static GameManagerSS instance;
 
-    public int currentTroopId = 0;
+    public int currentTroopId = 0, currentCityId = 0;
     public int currentPlayerTurnId = 0;
 
     public List<int> playerIds;

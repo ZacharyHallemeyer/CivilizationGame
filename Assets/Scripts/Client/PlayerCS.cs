@@ -74,7 +74,10 @@ public class PlayerCS : MonoBehaviour
     {
         // TESTING
         if (inputMaster.Player.Testing.triggered)
-            GameManagerCS.instance.InstantiateTroop(id, "Scout", Random.Range(0, 10), Random.Range(0, 10), 0);
+        {
+            //GameManagerCS.instance.InstantiateTroop(id, "Scout", Random.Range(0, 10), Random.Range(0, 10), 0);
+            GameManagerCS.instance.SpawnCity(Random.Range(0, 10), Random.Range(0, 10));
+        }
 
         // TESTING END
 
@@ -94,7 +97,7 @@ public class PlayerCS : MonoBehaviour
                 }
                 else if (_hit.collider.CompareTag("MoveableTile"))
                 {
-                    TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x, 
+                    TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x,
                                                                       (int)_hit.transform.position.z];
                     if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
                     {
@@ -130,9 +133,6 @@ public class PlayerCS : MonoBehaviour
         if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)       // Zoom Camera in and out
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
 
-        // Move Camera
-        MoveCamera(inputMaster.Player.Move.ReadValue<Vector2>());
-
         // Rotate Camera
         if (inputMaster.Player.RightClick.ReadValue<float>() != 0 && camRB.velocity.magnitude < 1f)
         {
@@ -162,6 +162,12 @@ public class PlayerCS : MonoBehaviour
                                                    cam.transform.localEulerAngles.z);
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        // Move Camera
+        MoveCamera(inputMaster.Player.Move.ReadValue<Vector2>());
     }
 
     /// <summary>

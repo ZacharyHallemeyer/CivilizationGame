@@ -326,6 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   starCount: 100
   currentTroopIndex: 0
+  currentCityIndex: 0
   isAllTroopInfoReceived: 0
   isAllTileInfoReceived: 0
   isAllCityInfoReceived: 0
@@ -348,6 +349,8 @@ MonoBehaviour:
   tundraTilePrefab: {fileID: 9049806272573930248, guid: d2731d6e331f1cf47b830548357c530c,
     type: 3}
   waterTilePrefab: {fileID: 4863744991225301313, guid: 9865774e06ac05a49abe30cf22ef839e,
+    type: 3}
+  cityPrefab: {fileID: 5041866256424340271, guid: acd0eadc9b8a47a43b1994e5357f3829,
     type: 3}
   troopNames: []
   biomeOptions: []

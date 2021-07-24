@@ -24,7 +24,7 @@ public class Server
         MaxPlayers = _maxPlayers;
         Port = _port;
 
-        Debug.Log("Starting server...");
+        //Debug.Log("Starting server...");
         InitializeServerData();
 
         tcpListener = new TcpListener(IPAddress.Any, Port);
@@ -34,7 +34,7 @@ public class Server
         udpListener = new UdpClient(Port);
         udpListener.BeginReceive(UDPReceiveCallback, null);
 
-        Debug.Log($"Server started on port {Port}.");
+        //Debug.Log($"Server started on port {Port}.");
     }
 
     /// <summary>Handles new TCP connections.</summary>
@@ -42,7 +42,7 @@ public class Server
     {
         TcpClient _client = tcpListener.EndAcceptTcpClient(_result);
         tcpListener.BeginAcceptTcpClient(TCPConnectCallback, null);
-        Debug.Log($"Incoming connection from {_client.Client.RemoteEndPoint}...");
+        //Debug.Log($"Incoming connection from {_client.Client.RemoteEndPoint}...");
 
         for (int i = 1; i <= MaxPlayers; i++)
         {
@@ -53,7 +53,7 @@ public class Server
             }
         }
 
-        Debug.Log($"{_client.Client.RemoteEndPoint} failed to connect: Server full!");
+        //Debug.Log($"{_client.Client.RemoteEndPoint} failed to connect: Server full!");
     }
 
     /// <summary>Receives incoming UDP data.</summary>

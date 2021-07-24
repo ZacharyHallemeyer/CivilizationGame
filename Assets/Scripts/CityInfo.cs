@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CityInfo : MonoBehaviour
 {
+    public GameObject city;
+
     // resource variables
     public float morale;
     public float education;
@@ -12,7 +14,7 @@ public class CityInfo : MonoBehaviour
     public int metal;
     public int wood;
     public int food;
-    public int ownerShipRange;
+    public int ownerShipRange = 1;
 
     // resource increase variables
     public int woodResourcesPerTurn;
@@ -24,16 +26,89 @@ public class CityInfo : MonoBehaviour
     public bool isOccupied;                 // tile is being occupied by troop owned by city owner
     public bool isConstructingBuilding;
     public bool isTrainingTroops;
+    public int occupyingObjectId;
+    public int xIndex;                      // x index for tile that city is on
+    public int zIndex;                      // z index for tile that city is on
 
     // Identity variables
     public int id;
     public int ownerId;
+    public int idOfPlayerThatSentInfo;
 
-    public void InitCity(string _biomeName)
+    public void InitCity(string _biomeName, GameObject _cityObject, int _id, int _ownerId, int _xIndex, int _zIndex)
     {
-        morale = Constants.biomeInfo[_biomeName]["Moral"];
-        education = Constants.biomeInfo[_biomeName]["Education"];
-        manPower = (int)Constants.biomeInfo[_biomeName]["ManPower"];
-        money = (int)Constants.biomeInfo[_biomeName]["Money"];
+        city = _cityObject;
+
+        id = _id;
+        ownerId = _ownerId;
+        morale = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]);
+        education = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]);
+        manPower = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingManPower"]);
+        money = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoney"]);
+        food = (int)Constants.biomeInfo[_biomeName]["Food"];
+        metal = (int)Constants.biomeInfo[_biomeName]["Metal"];
+        wood = (int)Constants.biomeInfo[_biomeName]["Wood"];
+
+        woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
+        metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
+        foodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingFoodResourcesPerTurn"]);
+
+        xIndex = _xIndex;
+        zIndex = _zIndex;
+    }
+
+    public void InitExistingCity(CityInfo _city, GameObject _cityObject)
+    {
+        city = _cityObject;
+
+        id = _city.id;
+        ownerId = _city.ownerId;
+        ownerShipRange = _city.ownerShipRange;
+
+        isBeingConquered = _city.isBeingConquered;
+        isOccupied = _city.isOccupied;
+        isConstructingBuilding = _city.isConstructingBuilding;
+        isTrainingTroops = _city.isTrainingTroops;
+        occupyingObjectId = _city.occupyingObjectId;
+
+        morale = _city.morale;
+        education = _city.education;
+        manPower = _city.manPower;
+        money = _city.money;
+        food = _city.food;
+        metal = _city.metal;
+        wood = _city.wood;
+
+        woodResourcesPerTurn = _city.woodResourcesPerTurn;
+        metalResourcesPerTurn = _city.metalResourcesPerTurn;
+        foodResourcesPerTurn = _city.foodResourcesPerTurn;
+
+        xIndex = _city.xIndex;
+        zIndex = _city.zIndex;
+    }
+
+    public void CopyCityInfo(CityInfo _cityToCopy)
+    {
+        id = _cityToCopy.id;
+        ownerId = _cityToCopy.ownerId;
+        ownerShipRange = _cityToCopy.ownerShipRange;
+
+        isBeingConquered = _cityToCopy.isBeingConquered;
+        isOccupied = _cityToCopy.isOccupied;
+        isConstructingBuilding = _cityToCopy.isConstructingBuilding;
+        isTrainingTroops= _cityToCopy.isTrainingTroops;
+        occupyingObjectId = _cityToCopy.occupyingObjectId;
+
+        morale = _cityToCopy.morale;
+        education = _cityToCopy.education;
+        manPower = _cityToCopy.manPower;
+        money = _cityToCopy.money;
+        food = _cityToCopy.food;
+        metal = _cityToCopy.metal;
+        wood = _cityToCopy.wood;
+
+        woodResourcesPerTurn = _cityToCopy.woodResourcesPerTurn;
+        metalResourcesPerTurn = _cityToCopy.metalResourcesPerTurn;
+        foodResourcesPerTurn = _cityToCopy.foodResourcesPerTurn;
     }
 }

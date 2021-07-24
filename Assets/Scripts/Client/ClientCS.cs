@@ -311,7 +311,7 @@ public class ClientCS : MonoBehaviour
             tcp.socket.Close();
             udp.socket.Close();
 
-            Debug.Log("Diconnected from server.");
+            //Debug.Log("Diconnected from server.");
         }
     }
 }

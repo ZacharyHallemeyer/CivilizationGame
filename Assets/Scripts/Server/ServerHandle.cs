@@ -17,7 +17,7 @@ public class ServerHandle
         int _clientIdCheck = _packet.ReadInt();
         string _username = _packet.ReadString();
 
-        Debug.Log($"{Server.clients[_fromClient].tcp.socket.Client.RemoteEndPoint} connected successfully and is now player {_fromClient}.");
+        //Debug.Log($"{Server.clients[_fromClient].tcp.socket.Client.RemoteEndPoint} connected successfully and is now player {_fromClient}.");
         if (_fromClient != _clientIdCheck)
         {
             Debug.Log($"Player \"{_username}\" (ID: {_fromClient}) has assumed the wrong client ID ({_clientIdCheck})!");
@@ -150,10 +150,6 @@ public class ServerHandle
 
         _city.id = _id;
         _city.ownerId = _packet.ReadInt();
-        _city.isBeingConquered = _packet.ReadBool();
-        _city.isOccupied = _packet.ReadBool();
-        _city.isConstructingBuilding = _packet.ReadBool();
-        _city.isTrainingTroops = _packet.ReadBool();
         _city.morale = _packet.ReadFloat();
         _city.education = _packet.ReadFloat();
         _city.manPower = _packet.ReadInt();
@@ -162,7 +158,17 @@ public class ServerHandle
         _city.wood = _packet.ReadInt();
         _city.food = _packet.ReadInt();
         _city.ownerShipRange = _packet.ReadInt();
+        _city.woodResourcesPerTurn = _packet.ReadInt();
+        _city.metalResourcesPerTurn = _packet.ReadInt();
+        _city.foodResourcesPerTurn = _packet.ReadInt();
+        _city.isBeingConquered = _packet.ReadBool();
+        _city.isOccupied = _packet.ReadBool();
+        _city.isConstructingBuilding = _packet.ReadBool();
+        _city.occupyingObjectId = _packet.ReadInt();
+        _city.xIndex = _packet.ReadInt();
+        _city.zIndex = _packet.ReadInt();
         string _command = _packet.ReadString();
+        _city.idOfPlayerThatSentInfo = _fromClient;
 
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
             { {_city, _command} };
@@ -194,6 +200,7 @@ public class ServerHandle
             GameManagerSS.instance.currentPlayerTurnId++;
 
         GameManagerSS.instance.currentTroopId = _packet.ReadInt();
+        GameManagerSS.instance.currentCityId = _packet.ReadInt();
 
         // Start turn for next player
         ServerSend.SendModifiedTroop(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
