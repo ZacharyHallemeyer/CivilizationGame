@@ -27,6 +27,8 @@ public class TroopInfo : MonoBehaviour
     public bool canMoveNextTurn;
     public bool canMultyKill;
 
+    public int idOfPlayerThatSentInfo;
+
     /// <summary>
     /// Init troop info for new troop
     /// </summary>
@@ -74,6 +76,28 @@ public class TroopInfo : MonoBehaviour
         zCoord = _troopInfo.zCoord;
         rotation = _troopInfo.rotation;
 
+        health = _troopInfo.health;
+        baseAttack = _troopInfo.baseAttack;
+        stealthAttack = _troopInfo.stealthAttack;
+        counterAttack = _troopInfo.counterAttack;
+        baseDefense = _troopInfo.baseDefense;
+        facingDefense = _troopInfo.facingDefense;
+        movementCost = _troopInfo.movementCost;
+        attackRange = _troopInfo.attackRange;
+        seeRange = _troopInfo.seeRange;
+        lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
+        lastHurtById = _troopInfo.lastHurtById;
+        canMoveNextTurn = _troopInfo.canMoveNextTurn;
+        canMultyKill = _troopInfo.canMultyKill;
+    }
+
+    public void CopyTroopInfo(TroopInfo _troopInfo)
+    {
+        id = _troopInfo.id;
+        ownerId = _troopInfo.ownerId;
+        xCoord = _troopInfo.xCoord;
+        zCoord = _troopInfo.zCoord;
+        rotation = _troopInfo.rotation;
         health = _troopInfo.health;
         baseAttack = _troopInfo.baseAttack;
         stealthAttack = _troopInfo.stealthAttack;

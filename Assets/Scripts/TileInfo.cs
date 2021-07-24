@@ -52,12 +52,14 @@ public class TileInfo : MonoBehaviour
         yIndex = _tileToCopy.yIndex;
     }
 
-    public void InitWaterInfo(GameObject _tile, int _id)
+    public void InitWaterInfo(GameObject _tile, int _id, int _xIndex, int _yIndex)
     {
         tile = _tile;
         id = _id;
         isWater = true;
         biome = "Water";
         position = new Vector2((int)_tile.transform.position.x, (int)_tile.transform.position.z);
+        xIndex = _xIndex;
+        yIndex = _yIndex;
     }
 }

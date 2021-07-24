@@ -210,14 +210,22 @@ public class GameManagerCS : MonoBehaviour
     }
 
     /// <summary>
+    /// Updates troop with the same id of parem 
+    /// Does NOT update modified troop and tile dicts.
+    /// </summary>
+    /// <param name="_troopInfo"> Troop to rotate </param>
+    public void UpdateTroopInfo(TroopInfo _troopInfo)
+    {
+        troops[_troopInfo.id].CopyTroopInfo(_troopInfo);
+    }
+
+    /// <summary>
     /// Updates tile info
     /// Does NOT update modified troop and tile dicts.
     /// </summary>
     /// <param name="_tile"> tile to update </param>
     public void UpdateTileInfo(TileInfo _tile)
     {
-        //Debug.Log("Update called with: " + _tile.id);
-        //Debug.Log(_tile.isOccupied);
         tiles[_tile.xIndex, _tile.yIndex].CopyTileInfo(_tile);
     }
 
@@ -294,6 +302,17 @@ public class GameManagerCS : MonoBehaviour
         modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
     }
 
+    public void ResetTroops()
+    {
+        foreach(TroopInfo _troop in troops.Values)
+        {
+            if(_troop.ownerId == ClientCS.instance.myId)
+            {
+                _troop.movementCost = Constants.troopInfoInt[_troop.troopName]["MovementCost"];
+            }
+        }
+    }
+
     public void PlayPastMoves()
     {
         // Update/Show Other Player troop movements/actions
@@ -313,10 +332,10 @@ public class GameManagerCS : MonoBehaviour
                         RotateTroop(_troop);
                         break;
                     case "Attack":
-
+                        UpdateTroopInfo(_troop);
                         break;
                     case "Hurt":
-
+                        UpdateTroopInfo(_troop);
                         break;
                     case "Die":
 

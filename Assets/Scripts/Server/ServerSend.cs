@@ -188,7 +188,7 @@ public class ServerSend
             foreach(TroopInfo _troop in _troopDict.Keys)
             {
                 // Remove troop from list and remove component once troop info has been sent to call clients
-                if(_troop.ownerId == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
+                if(_troop.idOfPlayerThatSentInfo == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
                     _itemsToRemove.Add(_troopDict);
                     _itemsToDestroy.Add(_troop);
@@ -216,7 +216,6 @@ public class ServerSend
                         _packet.Write(_troop.canMoveNextTurn);
                         _packet.Write(_troop.canMultyKill);
                         _packet.Write(_troopDict[_troop]);
-
                         SendTCPData(_playerId, _packet);
                     }
                 }

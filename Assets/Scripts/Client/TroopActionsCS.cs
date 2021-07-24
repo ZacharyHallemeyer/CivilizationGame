@@ -27,7 +27,6 @@ public class TroopActionsCS : MonoBehaviour
     {
         if (troopInfo.movementCost <= 0)
             return;
-        Debug.Log("Create Interactable tiles called");
         int _index = 0;
         objecstToBeReset = new GameObject[troopInfo.movementCost];
         // Rotation troop is facing
@@ -42,6 +41,7 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
                         TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xCoord, z];
+                        if (_tile.isWater) break;
                         if (_tile.isOccupied != true)
                         {
                             if (_tile.occupyingObjectId != troopInfo.ownerId)
@@ -68,6 +68,7 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
                         TileInfo _tile = GameManagerCS.instance.tiles[x, troopInfo.zCoord];
+                        if (_tile.isWater) break;
                         if (_tile.isOccupied != true)
                         {
                             if (_tile.occupyingObjectId != troopInfo.ownerId)
@@ -94,6 +95,7 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
                         TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xCoord, z];
+                        if (_tile.isWater) break;
                         if (_tile.isOccupied != true)
                         {
                             if (_tile.occupyingObjectId != troopInfo.ownerId)
@@ -120,6 +122,7 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
                         TileInfo _tile = GameManagerCS.instance.tiles[x, troopInfo.zCoord];
+                        if (_tile.isWater) break;
                         if (_tile.isOccupied != true)
                         {
                             if (_tile.occupyingObjectId != troopInfo.ownerId)

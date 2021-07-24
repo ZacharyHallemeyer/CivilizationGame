@@ -93,6 +93,7 @@ public class ServerHandle
         _troop.canMoveNextTurn = _packet.ReadBool();
         _troop.canMultyKill = _packet.ReadBool();
         string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {_troop, _command} };

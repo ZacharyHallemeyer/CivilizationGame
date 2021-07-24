@@ -94,7 +94,7 @@ public class ClientSend : MonoBehaviour
         {
             foreach(TileInfo _tile in _tileDict.Keys)
             {
-                Debug.Log("Sending Tile " + _tile.id+ " to server");
+                //Debug.Log("Sending Tile " + _tile.id+ " to server");
                 using (Packet _packet = new Packet((int)ClientPackets.endTurnTileData))
                 {
                     _packet.Write(_tile.id);
@@ -155,7 +155,6 @@ public class ClientSend : MonoBehaviour
         }
 
         // TODO City and tile info
-
         EndTurn();
     }
 

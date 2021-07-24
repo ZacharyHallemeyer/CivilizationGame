@@ -69,7 +69,7 @@ public class WorldGeneratorSS : MonoBehaviour
                     _tile.transform.parent = transform;
                     allCubes[index] = _tile;
                     index++;
-                    _tile.AddComponent<TileInfo>().InitWaterInfo(_tile, x * (int)groundXSize + z);
+                    _tile.AddComponent<TileInfo>().InitWaterInfo(_tile, x * (int)groundXSize + z, x, z);
                     tiles[x, z] = _tile.GetComponent<TileInfo>();
                 }
                 else if (value <= landLevel)
