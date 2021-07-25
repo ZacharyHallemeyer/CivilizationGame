@@ -12,6 +12,9 @@ public class TileInfo : MonoBehaviour
     public float temperature;       // Range -1 to 1
     public float height;            // Range -1 to 1
     public bool isWater = false;
+    public bool isFood = false;
+    public bool isWood = false;
+    public bool isMetal = false;
     public bool isRoad = false;
     public bool isCity = false;
     public bool isOccupied = false;
@@ -20,6 +23,8 @@ public class TileInfo : MonoBehaviour
     public int yIndex;
     public Vector2 position;
     public int idOfPlayerThatSentInfo;
+
+    public GameObject resourceObject;
 
     public void InitTileInfo(GameObject _tile, string _biomeName, int _id, int _ownerId, int _xIndex, int _yIndex)
     {

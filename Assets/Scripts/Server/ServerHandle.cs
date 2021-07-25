@@ -162,7 +162,6 @@ public class ServerHandle
         _city.metalResourcesPerTurn = _packet.ReadInt();
         _city.foodResourcesPerTurn = _packet.ReadInt();
         _city.isBeingConquered = _packet.ReadBool();
-        _city.isOccupied = _packet.ReadBool();
         _city.isConstructingBuilding = _packet.ReadBool();
         _city.occupyingObjectId = _packet.ReadInt();
         _city.xIndex = _packet.ReadInt();

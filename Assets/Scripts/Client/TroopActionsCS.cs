@@ -25,40 +25,20 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void CreateInteractableTiles()
     {
-        if (troopInfo.movementCost <= 0)
-            return;
+        if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
         int _index = 0;
         objecstToBeReset = new GameObject[troopInfo.movementCost];
-        // Rotation troop is facing
-        int _rotation = troopInfo.rotation;
 
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
-        switch (_rotation)
+        switch (troopInfo.rotation)
         {
             case 0:
                 for (int z = troopInfo.zCoord + 1; z < troopInfo.zCoord + troopInfo.movementCost + 1; z++)
                 {
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
-                        TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xCoord, z];
-                        if (_tile.isWater) break;
-                        if (_tile.isOccupied != true)
-                        {
-                            if (_tile.occupyingObjectId != troopInfo.ownerId)
-                            {
-                                _tile.tile.layer = whatIsInteractableValue;
-                                _tile.tile.tag = moveableTileTag;
-                                objecstToBeReset[_index] = _tile.tile;
-                                _index++;
-                            }
-                        }
-                        else
-                        {
-                            _tile.tile.layer = whatIsInteractableValue;
-                            _tile.tile.tag = attackableTileTag;
-                            objecstToBeReset[_index] = _tile.tile;
-                            _index++;
-                        }
+                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        _index++;
                     }
                 }
                 break;
@@ -67,25 +47,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
-                        TileInfo _tile = GameManagerCS.instance.tiles[x, troopInfo.zCoord];
-                        if (_tile.isWater) break;
-                        if (_tile.isOccupied != true)
-                        {
-                            if (_tile.occupyingObjectId != troopInfo.ownerId)
-                            {
-                                _tile.tile.layer = whatIsInteractableValue;
-                                _tile.tile.tag = moveableTileTag;
-                                objecstToBeReset[_index] = _tile.tile;
-                                _index++;
-                            }
-                        }
-                        else
-                        {
-                            _tile.tile.layer = whatIsInteractableValue;
-                            _tile.tile.tag = attackableTileTag;
-                            objecstToBeReset[_index] = _tile.tile;
-                            _index++;
-                        }
+                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        _index++;
                     }
                 }
                 break;
@@ -94,25 +57,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
-                        TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xCoord, z];
-                        if (_tile.isWater) break;
-                        if (_tile.isOccupied != true)
-                        {
-                            if (_tile.occupyingObjectId != troopInfo.ownerId)
-                            {
-                                _tile.tile.layer = whatIsInteractableValue;
-                                _tile.tile.tag = moveableTileTag;
-                                objecstToBeReset[_index] = _tile.tile;
-                                _index++;
-                            }
-                        }
-                        else
-                        {
-                            _tile.tile.layer = whatIsInteractableValue;
-                            _tile.tile.tag = attackableTileTag;
-                            objecstToBeReset[_index] = _tile.tile;
-                            _index++;
-                        }
+                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        _index++;
                     }
                 }
                 break;
@@ -121,25 +67,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
-                        TileInfo _tile = GameManagerCS.instance.tiles[x, troopInfo.zCoord];
-                        if (_tile.isWater) break;
-                        if (_tile.isOccupied != true)
-                        {
-                            if (_tile.occupyingObjectId != troopInfo.ownerId)
-                            {
-                                _tile.tile.layer = whatIsInteractableValue;
-                                _tile.tile.tag = moveableTileTag;
-                                objecstToBeReset[_index] = _tile.tile;
-                                _index++;
-                            }
-                        }
-                        else
-                        {
-                            _tile.tile.layer = whatIsInteractableValue;
-                            _tile.tile.tag = attackableTileTag;
-                            objecstToBeReset[_index] = _tile.tile;
-                            _index++;
-                        }
+                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        _index++;
                     }
                 }
                 break;
@@ -147,6 +76,28 @@ public class TroopActionsCS : MonoBehaviour
             default:
                 Debug.LogError("Troop " + troopInfo.id + " rotation is not compatible");
                 break;
+        }
+    }
+
+    public void CreateInteractableTilesHelper(TileInfo _tile, int _index)
+    {
+        if (_tile.isWater) return;
+        if (_tile.isOccupied != true)
+        {
+            if (_tile.occupyingObjectId != troopInfo.ownerId)
+            {
+                _tile.tile.layer = whatIsInteractableValue;
+                _tile.tile.tag = moveableTileTag;
+                objecstToBeReset[_index] = _tile.tile;
+                _index++;
+            }
+        }
+        else
+        {
+            _tile.tile.layer = whatIsInteractableValue;
+            _tile.tile.tag = attackableTileTag;
+            objecstToBeReset[_index] = _tile.tile;
+            _index++;
         }
     }
 
@@ -200,6 +151,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void Rotate(int _rotateValue)
     {
+        if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
         // rotate counter clockwise
         if (_rotateValue == -1)
         {

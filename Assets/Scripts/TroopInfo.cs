@@ -6,6 +6,7 @@ public class TroopInfo : MonoBehaviour
 {
     public GameObject troop;
     public TroopActionsCS troopActions;
+    public BoxCollider boxCollider;
     public string troopName;
 
     public int id;
@@ -25,6 +26,7 @@ public class TroopInfo : MonoBehaviour
     public int lastHurtById;
 
     public bool canMoveNextTurn;
+    public bool canAttack;
     public bool canMultyKill;
 
     public int idOfPlayerThatSentInfo;
@@ -51,10 +53,47 @@ public class TroopInfo : MonoBehaviour
         counterAttack = Constants.troopInfoInt[_troopName]["CounterAttack"];
         baseDefense = Constants.troopInfoInt[_troopName]["BaseDefense"];
         facingDefense = Constants.troopInfoInt[_troopName]["FacingDefense"];
+        //movementCost = Constants.troopInfoInt[_troopName]["MovementCost"];
+        movementCost = 0;
+        attackRange = Constants.troopInfoInt[_troopName]["AttackRange"];
+        seeRange = Constants.troopInfoInt[_troopName]["SeeRange"];
+        canMoveNextTurn = true;
+        canAttack = false;
+        canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
+        if (GetComponent<BoxCollider>() != null)
+        {
+            boxCollider = GetComponent<BoxCollider>();
+            boxCollider.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Init troop info for new troop and set values for troop to be used this round
+    /// </summary>
+    public void InitTroopInfoForUseThisRound(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
+                              int _id, int _ownerId, int _xCoord, int _zCoord)
+    {
+        troopName = _troopName;
+        troop = _troop;
+        troopActions = _troopActions;
+        troopActions.InitTroopActions(this);
+        id = _id;
+        ownerId = _ownerId;
+        xCoord = _xCoord;
+        zCoord = _zCoord;
+        rotation = 0;
+
+        health = Constants.troopInfoInt[_troopName]["Health"];
+        baseAttack = Constants.troopInfoInt[_troopName]["BaseAttack"];
+        stealthAttack = Constants.troopInfoInt[_troopName]["StealthAttack"];
+        counterAttack = Constants.troopInfoInt[_troopName]["CounterAttack"];
+        baseDefense = Constants.troopInfoInt[_troopName]["BaseDefense"];
+        facingDefense = Constants.troopInfoInt[_troopName]["FacingDefense"];
         movementCost = Constants.troopInfoInt[_troopName]["MovementCost"];
         attackRange = Constants.troopInfoInt[_troopName]["AttackRange"];
         seeRange = Constants.troopInfoInt[_troopName]["SeeRange"];
         canMoveNextTurn = true;
+        canAttack = true;
         canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
     }
     

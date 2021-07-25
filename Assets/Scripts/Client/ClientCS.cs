@@ -295,6 +295,7 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.worldCreated, ClientHandle.WorldCreated },
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.sendTileInfo, ClientHandle.CreateNewTile},
+            { (int)ServerPackets.sendNeutralCityInfo, ClientHandle.CreateNeutralCity},
             { (int)ServerPackets.sendModifiedTroopInfo, ClientHandle.RecieveModifiedTroopInfo},
             { (int)ServerPackets.sendModifiedTileInfo, ClientHandle.RecieveModifiedTileInfo},
             { (int)ServerPackets.sendModifiedCityInfo, ClientHandle.RecieveModifiedCityInfo},

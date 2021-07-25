@@ -352,84 +352,16 @@ MonoBehaviour:
     type: 3}
   waterTilePrefab: {fileID: 4863744991225301313, guid: 9865774e06ac05a49abe30cf22ef839e,
     type: 3}
+  foodResourcePrefab: {fileID: 8762745414850308920, guid: faa64b91a0ab6aa409d109f01cf0b68d,
+    type: 3}
+  woodResourcePrefab: {fileID: 3428461880488753228, guid: a025e24b89c01624eb977c511aa815b3,
+    type: 3}
+  metalResourcePrefab: {fileID: 2021692155742003851, guid: 651be119ff258f543933335e20397d05,
+    type: 3}
   cityPrefab: {fileID: 5041866256424340271, guid: acd0eadc9b8a47a43b1994e5357f3829,
     type: 3}
   troopNames: []
   biomeOptions: []
---- !u!1001 &327016077
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041866256424340271, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_Name
-      value: City
-      objectReference: {fileID: 0}
-    - target: {fileID: 5181333442781039340, guid: acd0eadc9b8a47a43b1994e5357f3829,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: acd0eadc9b8a47a43b1994e5357f3829, type: 3}
 --- !u!1 &565576647
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,7 +703,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &878983592
 MonoBehaviour:
   m_ObjectHideFlags: 0

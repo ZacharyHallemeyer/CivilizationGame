@@ -90,6 +90,9 @@ public class ClientHandle : MonoBehaviour
         float _temperature = _packet.ReadFloat();
         float _height = _packet.ReadFloat();
         bool _isWater = _packet.ReadBool();
+        bool _isFood = _packet.ReadBool();
+        bool _isWood = _packet.ReadBool();
+        bool _isMetal = _packet.ReadBool();
         bool _isRoad = _packet.ReadBool();
         bool _isCity = _packet.ReadBool();
         bool _isOccupied = _packet.ReadBool();
@@ -99,8 +102,33 @@ public class ClientHandle : MonoBehaviour
         string _name = "ClientTile " + _xIndex + " " + _zIndex;
 
         GameManagerCS.instance.CreateNewTile(_id, _ownerId, _movementCost, _occupyingObjectId, _biome, _temperature,
-                                            _height, _isWater, _isRoad, _isCity, _isOccupied, _position, _xIndex, _zIndex,
+                                            _height, _isWater, _isFood, _isWood, _isMetal, _isRoad, _isCity, _isOccupied, _position, _xIndex, _zIndex,
                                             _name);
+    }
+
+    public static void CreateNeutralCity(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        Debug.Log("Recieved city "+_id+" from server");
+        int _ownerId = _packet.ReadInt();
+        float _morale = _packet.ReadFloat();
+        float _education = _packet.ReadFloat();
+        int _manPower = _packet.ReadInt();
+        int _money = _packet.ReadInt();
+        int _metal = _packet.ReadInt();
+        int _wood = _packet.ReadInt();
+        int _food = _packet.ReadInt();
+        int _ownerShipRange = _packet.ReadInt();
+        int _woodResourcePerTurn = _packet.ReadInt();
+        int _metalResourcePerTurn = _packet.ReadInt();
+        int _foodResourcePerTurn = _packet.ReadInt();
+        int  _xIndex = _packet.ReadInt();
+        int  _zIndex = _packet.ReadInt();
+
+        GameManagerCS.instance.CreateNewNeutralCity(_id, _ownerId, _morale, _education, _manPower, _money, _metal, _wood, _food,
+                                                    _ownerShipRange, _woodResourcePerTurn, _metalResourcePerTurn, _foodResourcePerTurn,
+                                                    _xIndex, _zIndex);
+
     }
 
     /// <summary>
@@ -200,7 +228,6 @@ public class ClientHandle : MonoBehaviour
         _city.metalResourcesPerTurn = _packet.ReadInt();
         _city.foodResourcesPerTurn = _packet.ReadInt();
         _city.isBeingConquered = _packet.ReadBool();
-        _city.isOccupied = _packet.ReadBool();
         _city.isConstructingBuilding = _packet.ReadBool();
         _city.occupyingObjectId = _packet.ReadInt();
         _city.xIndex = _packet.ReadInt();

@@ -24,6 +24,7 @@ public class GameManagerCS : MonoBehaviour
     public GameObject starPrefab; 
     public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
                       tundraTilePrefab, waterTilePrefab;
+    public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab;
     public GameObject cityPrefab;
 
     public string[] troopNames;
@@ -139,8 +140,9 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_zIndex"> Tile zIndex </param>
     /// <param name="_name"> Tile name </param>
     public void CreateNewTile(int _id, int _ownerId, int _movementCost, int _occupyingObjectId, string _biome,
-                              float _temp, float _height, bool _isWater, bool _isRoad, bool _isCity, bool _isOccupied,
-                              Vector2 _position, int _xIndex, int _zIndex, string _name)
+                              float _temp, float _height, bool _isWater, bool _isFood, bool _isWood, bool _isMetal, 
+                              bool _isRoad, bool _isCity, bool _isOccupied, Vector2 _position, int _xIndex, int _zIndex, 
+                              string _name)
     {
         GameObject _tile = null;
         if(_isWater)
@@ -192,6 +194,9 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.temperature = _temp;
         _tileInfo.height = _height;
         _tileInfo.isWater = _isWater;
+        _tileInfo.isFood = _isFood;
+        _tileInfo.isWood = _isWood;
+        _tileInfo.isMetal = _isMetal;
         _tileInfo.isRoad = _isRoad;
         _tileInfo.isCity = _isCity;
         _tileInfo.isOccupied = _isOccupied;
@@ -200,6 +205,14 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.position = _position;
 
         tiles[_xIndex, _zIndex] = _tileInfo;
+
+        // Spawn appropriate resource object
+        if (_tileInfo.isFood)
+            _tileInfo.resourceObject = Instantiate(foodResourcePrefab, new Vector3(_position.x, .725f, _position.y), Quaternion.identity);
+        if (_tileInfo.isWood)
+            _tileInfo.resourceObject = Instantiate(woodResourcePrefab, new Vector3(_position.x, .725f, _position.y), Quaternion.identity);
+        if (_tileInfo.isMetal)
+            _tileInfo.resourceObject = Instantiate(metalResourcePrefab, new Vector3(_position.x, .725f, _position.y), Quaternion.identity);
     }
 
     /// <summary>
@@ -295,9 +308,51 @@ public class GameManagerCS : MonoBehaviour
         troops[_troopInfo.id].CopyTroopInfo(_troopInfo);
     }
 
+    /// <summary>
+    /// Reset player's troop to default start turn values for start of next turn
+    /// </summary>
+    public void ResetTroops()
+    {
+        foreach (TroopInfo _troop in troops.Values)
+        {
+            if (_troop.ownerId == ClientCS.instance.myId)
+            {
+                _troop.movementCost = Constants.troopInfoInt[_troop.troopName]["MovementCost"];
+                _troop.canAttack = true;
+                _troop.boxCollider.enabled = true;
+            }
+        }
+    }
+
     #endregion
 
     #region City
+
+    public void CreateNewNeutralCity(int _id, int _ownerId, float _moral, float _education, int _manPower, int _money, int _metal,
+                                     int _wood, int _food, int _ownerShipRange, int _woodResourcesPerTurn, int _metalResourcesPerTurn,
+                                     int _foodResourcesPerTurn, int _xIndex, int _zIndex)
+    {
+        int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
+        int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
+        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord), Quaternion.identity);
+        CityInfo _cityInfo = _city.AddComponent<CityInfo>();
+        _cityInfo.city = _city;
+        _cityInfo.id = _id;
+        _cityInfo.ownerId = _ownerId;
+        _cityInfo.morale = _moral;
+        _cityInfo.education = _education;
+        _cityInfo.manPower = _manPower;
+        _cityInfo.money = _money;
+        _cityInfo.metal = _metal;
+        _cityInfo.wood = _wood;
+        _cityInfo.food = _food;
+        _cityInfo.ownerShipRange = _ownerShipRange;
+        _cityInfo.woodResourcesPerTurn = _woodResourcesPerTurn;
+        _cityInfo.metalResourcesPerTurn = _metalResourcesPerTurn;
+        _cityInfo.foodResourcesPerTurn = _foodResourcesPerTurn;
+        _cityInfo.xIndex = _xIndex;
+        _cityInfo.zIndex = _zIndex;
+    }
 
     /// <summary>
     /// Spawns new city and updates modified cities dict.
@@ -310,17 +365,25 @@ public class GameManagerCS : MonoBehaviour
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
         string _biomeName = tiles[_xIndex, _zIndex].biome;
-        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
+        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord), Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
         CityActionsCS _cityActions = _city.GetComponent<CityActionsCS>();
         _cityInfo.InitCity(_biomeName, _city, currentCityIndex, ClientCS.instance.myId, _xIndex, _zIndex, _cityActions);
         _cityActions.InitCityActions(_cityInfo);
 
+        // Update city dicts
         cities.Add(currentCityIndex, _cityInfo);
         currentCityIndex++;
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
         { {_cityInfo, "Spawn" } };
         modifiedCityInfo.Add(_cityData);
+
+        // Update tile
+        TileInfo _tile = tiles[_xIndex, _zIndex];
+        _tile.isCity = true;
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+        { { _tile, "Update"} };
+        modifiedTileInfo.Add(_tileData);
     }
 
     /// <summary>
@@ -332,7 +395,7 @@ public class GameManagerCS : MonoBehaviour
     {
         int _xCoord = (int)tiles[_cityInfoToSpawn.xIndex, _cityInfoToSpawn.zIndex].position.x;
         int _zCoord = (int)tiles[_cityInfoToSpawn.xIndex, _cityInfoToSpawn.zIndex].position.y;
-        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, 1, _zCoord),
+        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord),
                            Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
         _cityInfo.InitExistingCity(_cityInfoToSpawn, _city);
@@ -357,6 +420,17 @@ public class GameManagerCS : MonoBehaviour
         }
     }
 
+    public void ResetCities()
+    {
+        foreach (CityInfo _city in cities.Values)
+        {
+            if (_city.ownerId == ClientCS.instance.myId)
+            {
+                _city.isTrainingTroops = false;
+            }
+        }
+    }
+
     #endregion 
 
     #region Turn Functions
@@ -377,17 +451,6 @@ public class GameManagerCS : MonoBehaviour
         modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
         modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
         modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
-    }
-
-    public void ResetTroops()
-    {
-        foreach(TroopInfo _troop in troops.Values)
-        {
-            if(_troop.ownerId == ClientCS.instance.myId)
-            {
-                _troop.movementCost = Constants.troopInfoInt[_troop.troopName]["MovementCost"];
-            }
-        }
     }
 
     public void PlayPastMoves()
@@ -461,6 +524,7 @@ public class GameManagerCS : MonoBehaviour
         }
         ClearModifiedData();
 
+        AddCityResources();
         PlayerCS.instance.enabled = true;
     }
 

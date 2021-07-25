@@ -55,6 +55,7 @@ public class ClientSend : MonoBehaviour
         {
             foreach(TroopInfo _troop in _troopDict.Keys)
             {
+                //Debug.Log("Sending troop " + _troop.id + " to server");
                 using (Packet _packet = new Packet((int)ClientPackets.endTurnTroopData))
                 {
                     _packet.Write(_troop.id);
@@ -139,7 +140,6 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_city.metalResourcesPerTurn);
                     _packet.Write(_city.foodResourcesPerTurn);
                     _packet.Write(_city.isBeingConquered);
-                    _packet.Write(_city.isOccupied);
                     _packet.Write(_city.isConstructingBuilding);
                     _packet.Write(_city.occupyingObjectId);
                     _packet.Write(_city.xIndex);

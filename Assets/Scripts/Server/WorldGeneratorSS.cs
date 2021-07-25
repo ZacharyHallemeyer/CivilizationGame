@@ -8,7 +8,8 @@ public class WorldGeneratorSS : MonoBehaviour
 
     public GameObject tile;
     public GameObject[] allCubes;
-    public static TileInfo[,] tiles;
+    public TileInfo[,] tiles;
+    public List<CityInfo> neutralCities;
 
     private int index = 0;
 
@@ -20,6 +21,9 @@ public class WorldGeneratorSS : MonoBehaviour
     private Vector3[] worleyPoints;
     private string[] biomes;
     public string[] biomeOptions;
+
+    public int amountOfFoodTiles = 15, amountofWoodTiles = 15, amountOfMetalTiles = 15;
+    public int amountOfNeutralCities = 15;
 
     // Set instance or destroy if instance already exist
     private void Awake()
@@ -84,6 +88,72 @@ public class WorldGeneratorSS : MonoBehaviour
                 }
             }
         }
+        int _xIndex, _zIndex, _infiniteLoopCatcher;
+        TileInfo _tileInfo;
+        // Init food and resource tiles
+        for (int i = 0; i < amountOfFoodTiles; i++)
+        {
+            _infiniteLoopCatcher = 0;
+            do
+            {
+                _xIndex = Random.Range(0, (int)groundXSize);
+                _zIndex = Random.Range(0, (int)groundZSize);
+                _tileInfo = tiles[_xIndex, _zIndex];
+                _infiniteLoopCatcher++;
+                if (_infiniteLoopCatcher > 1000) break;
+            }
+            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
+            _tileInfo.isFood = true;
+        }
+        for(int i = 0; i < amountofWoodTiles; i++)
+        {
+            _infiniteLoopCatcher = 0;
+            do
+            {
+                _xIndex = Random.Range(0, (int)groundXSize);
+                _zIndex = Random.Range(0, (int)groundZSize);
+                _tileInfo = tiles[_xIndex, _zIndex];
+                _infiniteLoopCatcher++;
+                if (_infiniteLoopCatcher > 1000) break;
+            }
+            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
+            _tileInfo.isWood = true;
+        }
+        for(int i = 0; i < amountOfMetalTiles; i++)
+        {
+            _infiniteLoopCatcher = 0;
+            do
+            {
+                _xIndex = Random.Range(0, (int)groundXSize);
+                _zIndex = Random.Range(0, (int)groundZSize);
+                _tileInfo = tiles[_xIndex, _zIndex];
+                _infiniteLoopCatcher++;
+                if (_infiniteLoopCatcher > 1000) break;
+            }
+            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
+            _tileInfo.isMetal = true;
+        }
+
+        // Create neutral cities
+        for(int i = 0; i < amountOfNeutralCities; i++)
+        {
+            _infiniteLoopCatcher = 0;
+            do
+            {
+                _xIndex = Random.Range(0, (int)groundXSize);
+                _zIndex = Random.Range(0, (int)groundZSize);
+                _tileInfo = tiles[_xIndex, _zIndex];
+                _infiniteLoopCatcher++;
+                if (_infiniteLoopCatcher > 1000) break;
+            }
+            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
+            _tileInfo.isCity = true;
+            CityInfo _city = gameObject.AddComponent<CityInfo>();
+            _city.InitCityServerSide(_tileInfo.biome, GameManagerSS.instance.currentCityId, -1, _xIndex, _zIndex);
+            GameManagerSS.instance.currentCityId++;
+            neutralCities.Add(_city);
+        }
+
         ServerSend.WorldCreated();
     }
 

@@ -24,7 +24,7 @@ public class CityInfo : MonoBehaviour
 
     // Status variables
     public bool isBeingConquered;           // tile is being occupied by troop not owned by city owner
-    public bool isOccupied;                 // tile is being occupied by troop owned by city owner
+    //public bool isOccupied;                 // tile is being occupied by troop owned by city owner
     public bool isConstructingBuilding;
     public bool isTrainingTroops;
     public int occupyingObjectId;
@@ -61,6 +61,26 @@ public class CityInfo : MonoBehaviour
         cityActions = _cityActions;
     }
 
+    public void InitCityServerSide(string _biomeName, int _id, int _ownerId, int _xIndex, int _zIndex)
+    {
+        id = _id;
+        ownerId = _ownerId;
+        morale = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]);
+        education = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]);
+        manPower = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingManPower"]);
+        money = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoney"]);
+        food = (int)Constants.biomeInfo[_biomeName]["Food"];
+        metal = (int)Constants.biomeInfo[_biomeName]["Metal"];
+        wood = (int)Constants.biomeInfo[_biomeName]["Wood"];
+
+        woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
+        metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
+        foodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingFoodResourcesPerTurn"]);
+
+        xIndex = _xIndex;
+        zIndex = _zIndex;
+    }
+
     public void InitExistingCity(CityInfo _city, GameObject _cityObject)
     {
         city = _cityObject;
@@ -70,7 +90,6 @@ public class CityInfo : MonoBehaviour
         ownerShipRange = _city.ownerShipRange;
 
         isBeingConquered = _city.isBeingConquered;
-        isOccupied = _city.isOccupied;
         isConstructingBuilding = _city.isConstructingBuilding;
         isTrainingTroops = _city.isTrainingTroops;
         occupyingObjectId = _city.occupyingObjectId;
@@ -98,7 +117,6 @@ public class CityInfo : MonoBehaviour
         ownerShipRange = _cityToCopy.ownerShipRange;
 
         isBeingConquered = _cityToCopy.isBeingConquered;
-        isOccupied = _cityToCopy.isOccupied;
         isConstructingBuilding = _cityToCopy.isConstructingBuilding;
         isTrainingTroops= _cityToCopy.isTrainingTroops;
         occupyingObjectId = _cityToCopy.occupyingObjectId;

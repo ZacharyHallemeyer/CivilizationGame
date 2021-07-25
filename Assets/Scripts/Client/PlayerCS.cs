@@ -138,6 +138,7 @@ public class PlayerCS : MonoBehaviour
             enabled = false;
             ClientSend.SendEndOfTurnData();
             GameManagerCS.instance.ResetTroops();
+            GameManagerCS.instance.ResetCities();
             GameManagerCS.instance.ClearModifiedData();
         }
         if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)       // Zoom Camera in and out

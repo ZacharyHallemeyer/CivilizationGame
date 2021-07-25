@@ -14,6 +14,7 @@ public enum ServerPackets
     worldCreated,
     spawnPlayer,
     sendTileInfo,
+    sendNeutralCityInfo,
     sendModifiedTroopInfo,
     sendModifiedTileInfo,
     sendModifiedCityInfo,

@@ -138,20 +138,18 @@ public class ServerSend
         {
             _packet.Write(_player.id);
             _packet.Write(_player.username);
-            _packet.Write(WorldGeneratorSS.tiles.GetLength(0));
-            _packet.Write(WorldGeneratorSS.tiles.GetLength(1));
+            _packet.Write(WorldGeneratorSS.instance.tiles.GetLength(0));
+            _packet.Write(WorldGeneratorSS.instance.tiles.GetLength(1));
 
             SendTCPData(_toClient, _packet);
         }
     }
 
     /// <summary>
-    /// Send all tile data to player at start of game
+    /// Send all tile data to client at start of game
     /// </summary>
     /// <param name="_toClient"> client id to send tile data </param>
     /// <param name="_tileInfo"> the tile info to send </param>
-    /// <param name="_xIndex"> x index of tile when stored in 2 dim array </param>
-    /// <param name="_zIndex"> y index of tile when stored in 2 dim array </param>
     public static void SendTileInfo(int _toClient, TileInfo _tileInfo)
     {
         using (Packet _packet = new Packet((int)ServerPackets.sendTileInfo))
@@ -164,12 +162,45 @@ public class ServerSend
             _packet.Write(_tileInfo.temperature);
             _packet.Write(_tileInfo.height);
             _packet.Write(_tileInfo.isWater);
+            _packet.Write(_tileInfo.isFood);
+            _packet.Write(_tileInfo.isWood);
+            _packet.Write(_tileInfo.isMetal);
             _packet.Write(_tileInfo.isRoad);
             _packet.Write(_tileInfo.isCity);
             _packet.Write(_tileInfo.isOccupied);
             _packet.Write(_tileInfo.position);
             _packet.Write(_tileInfo.xIndex);
             _packet.Write(_tileInfo.yIndex);
+
+            SendTCPData(_toClient, _packet);
+        }
+    }
+
+    /// <summary>
+    /// Send all neutral city data to client at start of game
+    /// </summary>
+    /// <param name="_toClient"> client id to send city data </param>
+    /// <param name="_cityInfo"> the city data to send </param>
+    public static void SendNeutralCityInfo(int _toClient, CityInfo _cityInfo)
+    {
+        Debug.Log("Sending city " + _cityInfo.id + " to client " + _toClient);
+        using (Packet _packet = new Packet((int)ServerPackets.sendNeutralCityInfo))
+        {
+            _packet.Write(_cityInfo.id);
+            _packet.Write(_cityInfo.ownerId);
+            _packet.Write(_cityInfo.morale);
+            _packet.Write(_cityInfo.education);
+            _packet.Write(_cityInfo.manPower);
+            _packet.Write(_cityInfo.money);
+            _packet.Write(_cityInfo.metal);
+            _packet.Write(_cityInfo.wood);
+            _packet.Write(_cityInfo.food);
+            _packet.Write(_cityInfo.ownerShipRange);
+            _packet.Write(_cityInfo.woodResourcesPerTurn);
+            _packet.Write(_cityInfo.metalResourcesPerTurn);
+            _packet.Write(_cityInfo.foodResourcesPerTurn);
+            _packet.Write(_cityInfo.xIndex);
+            _packet.Write(_cityInfo.zIndex);
 
             SendTCPData(_toClient, _packet);
         }
@@ -329,7 +360,6 @@ public class ServerSend
                         _packet.Write(_city.metalResourcesPerTurn);
                         _packet.Write(_city.foodResourcesPerTurn);
                         _packet.Write(_city.isBeingConquered);
-                        _packet.Write(_city.isOccupied);
                         _packet.Write(_city.isConstructingBuilding);
                         _packet.Write(_city.occupyingObjectId);
                         _packet.Write(_city.xIndex);

@@ -32,8 +32,13 @@ public class CityActionsCS : MonoBehaviour
 
     public void SpawnTroop(string _troopName)
     {
+        if (GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied || cityInfo.isTrainingTroops) return;
+        cityInfo.isTrainingTroops = true;
         int _xCoord = (int)GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].position.x;
         int _zCoord = (int)GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].position.y;
         GameManagerCS.instance.SpawnTroop(ClientCS.instance.myId, _troopName, _xCoord, _zCoord, 0);
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+        { { cityInfo, "SpawnTroop"} };
+        GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
     }
 }
