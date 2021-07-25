@@ -1260,11 +1260,10 @@ GameObject:
   - component: {fileID: 5041866256424340267}
   - component: {fileID: 5041866256424340266}
   - component: {fileID: 5041866256424340265}
-  - component: {fileID: 5041866256424340264}
   - component: {fileID: 5662312970431921208}
   m_Layer: 8
   m_Name: City
-  m_TagString: City
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1331,19 +1330,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &5041866256424340264
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5041866256424340271}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5662312970431921208
 MonoBehaviour:
   m_ObjectHideFlags: 0

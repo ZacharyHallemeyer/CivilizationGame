@@ -5,6 +5,7 @@ using UnityEngine;
 public class TileInfo : MonoBehaviour
 {
     public GameObject tile;
+    public GameObject moveUI;
     public int id;
     public int ownerId;
     public int movementCost;
@@ -19,6 +20,7 @@ public class TileInfo : MonoBehaviour
     public bool isCity = false;
     public bool isOccupied = false;
     public int occupyingObjectId = -1;
+    public int cityId = -1;
     public int xIndex;
     public int yIndex;
     public Vector2 position;
@@ -39,6 +41,30 @@ public class TileInfo : MonoBehaviour
         yIndex = _yIndex;
     }
 
+    public void InitWaterInfo(GameObject _tile, int _id, int _xIndex, int _yIndex)
+    {
+        tile = _tile;
+        id = _id;
+        isWater = true;
+        biome = "Water";
+        position = new Vector2((int)_tile.transform.position.x, (int)_tile.transform.position.z);
+        xIndex = _xIndex;
+        yIndex = _yIndex;
+    }
+
+    public void UpdateTileInfo(TileInfo _tileToCopy)
+    {
+        id = _tileToCopy.id;
+        ownerId = _tileToCopy.ownerId;
+        isRoad = _tileToCopy.isRoad;
+        isCity = _tileToCopy.isCity;
+        isOccupied = _tileToCopy.isOccupied;
+        occupyingObjectId = _tileToCopy.occupyingObjectId;
+        xIndex = _tileToCopy.xIndex;
+        yIndex = _tileToCopy.yIndex;
+        cityId = _tileToCopy.cityId;
+    }
+
     public void CopyTileInfo(TileInfo _tileToCopy)
     {
         id = _tileToCopy.id;
@@ -49,22 +75,15 @@ public class TileInfo : MonoBehaviour
         movementCost = _tileToCopy.movementCost;
         position = _tileToCopy.position;
         isWater = _tileToCopy.isWater;
+        isFood = _tileToCopy.isFood;
+        isWood = _tileToCopy.isWood;
+        isMetal = _tileToCopy.isMetal;
         isRoad = _tileToCopy.isRoad;
         isCity = _tileToCopy.isCity;
         isOccupied = _tileToCopy.isOccupied;
         occupyingObjectId = _tileToCopy.occupyingObjectId;
         xIndex = _tileToCopy.xIndex;
         yIndex = _tileToCopy.yIndex;
-    }
-
-    public void InitWaterInfo(GameObject _tile, int _id, int _xIndex, int _yIndex)
-    {
-        tile = _tile;
-        id = _id;
-        isWater = true;
-        biome = "Water";
-        position = new Vector2((int)_tile.transform.position.x, (int)_tile.transform.position.z);
-        xIndex = _xIndex;
-        yIndex = _yIndex;
+        cityId = _tileToCopy.cityId;
     }
 }

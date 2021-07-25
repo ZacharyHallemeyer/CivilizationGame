@@ -142,7 +142,7 @@ public class GameManagerCS : MonoBehaviour
     public void CreateNewTile(int _id, int _ownerId, int _movementCost, int _occupyingObjectId, string _biome,
                               float _temp, float _height, bool _isWater, bool _isFood, bool _isWood, bool _isMetal, 
                               bool _isRoad, bool _isCity, bool _isOccupied, Vector2 _position, int _xIndex, int _zIndex, 
-                              string _name)
+                              int _cityId, string _name)
     {
         GameObject _tile = null;
         if(_isWater)
@@ -184,6 +184,7 @@ public class GameManagerCS : MonoBehaviour
         }
         _tile.transform.parent = transform;
         TileInfo _tileInfo = _tile.AddComponent<TileInfo>();
+        _tileInfo.moveUI = _tile.transform.GetChild(0).gameObject;  // Get move UI
         _tile.name = _name;
         _tileInfo.tile = _tile;
         _tileInfo.id = _id;
@@ -202,6 +203,7 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.isOccupied = _isOccupied;
         _tileInfo.xIndex = _xIndex;
         _tileInfo.yIndex = _zIndex;
+        _tileInfo.cityId = _cityId;
         _tileInfo.position = _position;
 
         tiles[_xIndex, _zIndex] = _tileInfo;
@@ -222,7 +224,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_tile"> tile to update </param>
     public void UpdateTileInfo(TileInfo _tile)
     {
-        tiles[_tile.xIndex, _tile.yIndex].CopyTileInfo(_tile);
+        tiles[_tile.xIndex, _tile.yIndex].UpdateTileInfo(_tile);
     }
     
     #endregion
@@ -332,6 +334,7 @@ public class GameManagerCS : MonoBehaviour
                                      int _wood, int _food, int _ownerShipRange, int _woodResourcesPerTurn, int _metalResourcesPerTurn,
                                      int _foodResourcesPerTurn, int _xIndex, int _zIndex)
     {
+        tiles[_xIndex, _zIndex].tile.tag = "City"; 
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
         GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord), Quaternion.identity);
@@ -352,6 +355,8 @@ public class GameManagerCS : MonoBehaviour
         _cityInfo.foodResourcesPerTurn = _foodResourcesPerTurn;
         _cityInfo.xIndex = _xIndex;
         _cityInfo.zIndex = _zIndex;
+        Debug.Log("New City id: " + _cityInfo.id);
+        cities.Add(_cityInfo.id, _cityInfo);
     }
 
     /// <summary>
@@ -362,6 +367,7 @@ public class GameManagerCS : MonoBehaviour
     public void SpawnCity(int _xIndex, int _zIndex)
     {
         if (tiles[_xIndex, _zIndex].isWater) return;
+        tiles[_xIndex, _zIndex].tile.tag = "City";
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
         string _biomeName = tiles[_xIndex, _zIndex].biome;
@@ -370,10 +376,9 @@ public class GameManagerCS : MonoBehaviour
         CityActionsCS _cityActions = _city.GetComponent<CityActionsCS>();
         _cityInfo.InitCity(_biomeName, _city, currentCityIndex, ClientCS.instance.myId, _xIndex, _zIndex, _cityActions);
         _cityActions.InitCityActions(_cityInfo);
+        cities.Add(_cityInfo.id, _cityInfo);
 
         // Update city dicts
-        cities.Add(currentCityIndex, _cityInfo);
-        currentCityIndex++;
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
         { {_cityInfo, "Spawn" } };
         modifiedCityInfo.Add(_cityData);
@@ -381,9 +386,11 @@ public class GameManagerCS : MonoBehaviour
         // Update tile
         TileInfo _tile = tiles[_xIndex, _zIndex];
         _tile.isCity = true;
+        _tile.cityId = currentCityIndex;
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
         { { _tile, "Update"} };
         modifiedTileInfo.Add(_tileData);
+        currentCityIndex++;
     }
 
     /// <summary>
@@ -395,15 +402,19 @@ public class GameManagerCS : MonoBehaviour
     {
         int _xCoord = (int)tiles[_cityInfoToSpawn.xIndex, _cityInfoToSpawn.zIndex].position.x;
         int _zCoord = (int)tiles[_cityInfoToSpawn.xIndex, _cityInfoToSpawn.zIndex].position.y;
+        tiles[_cityInfoToSpawn.xIndex, _cityInfoToSpawn.zIndex].tile.tag = "City";
         GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord),
                            Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
         _cityInfo.InitExistingCity(_cityInfoToSpawn, _city);
+        cities.Add(_cityInfo.id, _cityInfo);
 
     }
     
     public void UpdateCityInfo(CityInfo _cityToCopy)
     {
+        Debug.Log(cities[_cityToCopy.id]);
+        Debug.Log(_cityToCopy);
         cities[_cityToCopy.id].CopyCityInfo(_cityToCopy);
     }
 
@@ -515,12 +526,29 @@ public class GameManagerCS : MonoBehaviour
                     case "Update":
                         UpdateCityInfo(_city);
                         break;
+                    case "TrainTroop":
+                        //UpdateCityInfo(_city);
+                        break;
+                    case "Conquer":
+                        UpdateCityInfo(_city);
+                        break;
+                    case "SpawnTroop":
+                        //UpdateCityInfo(_city);
+                        break;
                     default:
-                        Debug.LogError("Could not find tile action: " + _cityDict[_city]);
+                        Debug.LogError("Could not find city action: " + _cityDict[_city]);
                         break;
                 }
                 Destroy(_city);
             }
+        }
+
+        foreach(CityInfo _city in cities.Values)
+        {
+            if (_city.isBeingConquered)
+                _city.isAbleToBeConquered = true;
+            else
+                _city.isAbleToBeConquered = false;
         }
         ClearModifiedData();
 

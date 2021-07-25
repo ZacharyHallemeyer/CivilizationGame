@@ -105,6 +105,7 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_tile.occupyingObjectId);
                     _packet.Write(_tile.xIndex);
                     _packet.Write(_tile.yIndex);
+                    _packet.Write(_tile.cityId);
                     _packet.Write(_tileDict[_tile]);
 
                     SendTCPData(_packet);

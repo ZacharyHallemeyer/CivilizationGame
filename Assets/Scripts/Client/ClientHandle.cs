@@ -99,17 +99,17 @@ public class ClientHandle : MonoBehaviour
         Vector2 _position = _packet.ReadVector2();
         int _xIndex = _packet.ReadInt();
         int _zIndex = _packet.ReadInt();
+        int _cityId = _packet.ReadInt();
         string _name = "ClientTile " + _xIndex + " " + _zIndex;
 
         GameManagerCS.instance.CreateNewTile(_id, _ownerId, _movementCost, _occupyingObjectId, _biome, _temperature,
                                             _height, _isWater, _isFood, _isWood, _isMetal, _isRoad, _isCity, _isOccupied, _position, _xIndex, _zIndex,
-                                            _name);
+                                            _cityId ,_name);
     }
 
     public static void CreateNeutralCity(Packet _packet)
     {
         int _id = _packet.ReadInt();
-        Debug.Log("Recieved city "+_id+" from server");
         int _ownerId = _packet.ReadInt();
         float _morale = _packet.ReadFloat();
         float _education = _packet.ReadFloat();
@@ -193,6 +193,7 @@ public class ClientHandle : MonoBehaviour
         _tile.occupyingObjectId = _packet.ReadInt();
         _tile.xIndex = _packet.ReadInt();
         _tile.yIndex = _packet.ReadInt();
+        _tile.cityId = _packet.ReadInt();
         string _command = _packet.ReadString();
 
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()

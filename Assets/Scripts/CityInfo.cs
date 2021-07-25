@@ -23,10 +23,11 @@ public class CityInfo : MonoBehaviour
     public int foodResourcesPerTurn;
 
     // Status variables
-    public bool isBeingConquered;           // tile is being occupied by troop not owned by city owner
+    public bool isBeingConquered = false;           // tile is being occupied by troop not owned by city owner
+    public bool isAbleToBeConquered = false;
     //public bool isOccupied;                 // tile is being occupied by troop owned by city owner
-    public bool isConstructingBuilding;
-    public bool isTrainingTroops;
+    public bool isConstructingBuilding = false;
+    public bool isTrainingTroops = false;
     public int occupyingObjectId;
     public int xIndex;                      // x index for tile that city is on
     public int zIndex;                      // z index for tile that city is on
@@ -132,5 +133,11 @@ public class CityInfo : MonoBehaviour
         woodResourcesPerTurn = _cityToCopy.woodResourcesPerTurn;
         metalResourcesPerTurn = _cityToCopy.metalResourcesPerTurn;
         foodResourcesPerTurn = _cityToCopy.foodResourcesPerTurn;
+    }
+
+    public void InitConqueredCity()
+    {
+        cityActions = gameObject.GetComponent<CityActionsCS>();
+        cityActions.InitCityActions(this);
     }
 }

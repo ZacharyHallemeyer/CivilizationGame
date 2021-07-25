@@ -14,8 +14,8 @@ public class PlayerCS : MonoBehaviour
     public Camera cam;
     public Rigidbody camRB;
 
-    public int _currentSelectedTroopId;
-    public int _currentSelectedCityId;
+    private int _currentSelectedTroopId = -1;
+    private int _currentSelectedCityId = -1;
 
     // Stats
     public float morale = 0;
@@ -116,13 +116,42 @@ public class PlayerCS : MonoBehaviour
                 }
                 else if(_hit.collider.CompareTag("City"))
                 {
-                    CityInfo _city = _hit.collider.GetComponent<CityInfo>();
-                    if(_city.ownerId == id)
+                    TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
+                    CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
+                    if (_cityInfo.ownerId == id  && _currentSelectedTroopId == -1)
                     {
-                        _currentSelectedCityId = _city.id;
-                        GameManagerCS.instance.cities[_city.id].cityActions.ToggleQuickMenu();
+                        _currentSelectedCityId = _cityInfo.id;
+                        GameManagerCS.instance.cities[_cityInfo.id].cityActions.ToggleQuickMenu();
                     }
-                }    
+                }
+                else if(_hit.collider.CompareTag("MoveableCity"))
+                {
+                    TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
+                    CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
+                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+                    {
+                        _troop.troopActions.MoveOntoCity(_tileInfo, _cityInfo);
+                    }
+                }
+                else if(_hit.collider.CompareTag("ConquerableCity"))
+                {
+                    TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
+                    CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
+                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+                    {
+                        _troop.troopActions.ConquerCity(_tileInfo, _cityInfo);
+                    }
+                }
+                else
+                {
+                    _currentSelectedTroopId = -1;
+                    _currentSelectedCityId = -1;
+                }
+            }
+            else
+            {
+                _currentSelectedTroopId = -1;
+                _currentSelectedCityId = -1;
             }
         }
 
@@ -136,6 +165,8 @@ public class PlayerCS : MonoBehaviour
         if (inputMaster.Player.EndTurn.triggered)        // End Turn
         {
             enabled = false;
+            _currentSelectedCityId = -1;
+            _currentSelectedTroopId = -1;
             ClientSend.SendEndOfTurnData();
             GameManagerCS.instance.ResetTroops();
             GameManagerCS.instance.ResetCities();

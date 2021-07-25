@@ -171,6 +171,7 @@ public class ServerSend
             _packet.Write(_tileInfo.position);
             _packet.Write(_tileInfo.xIndex);
             _packet.Write(_tileInfo.yIndex);
+            _packet.Write(_tileInfo.cityId);
 
             SendTCPData(_toClient, _packet);
         }
@@ -183,7 +184,6 @@ public class ServerSend
     /// <param name="_cityInfo"> the city data to send </param>
     public static void SendNeutralCityInfo(int _toClient, CityInfo _cityInfo)
     {
-        Debug.Log("Sending city " + _cityInfo.id + " to client " + _toClient);
         using (Packet _packet = new Packet((int)ServerPackets.sendNeutralCityInfo))
         {
             _packet.Write(_cityInfo.id);
@@ -301,6 +301,7 @@ public class ServerSend
                         _packet.Write(_tile.occupyingObjectId);
                         _packet.Write(_tile.xIndex);
                         _packet.Write(_tile.yIndex);
+                        _packet.Write(_tile.cityId);
                         _packet.Write(_tileDict[_tile]);
 
                         SendTCPData(_playerId, _packet);

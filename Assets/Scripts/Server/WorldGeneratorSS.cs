@@ -148,10 +148,13 @@ public class WorldGeneratorSS : MonoBehaviour
             }
             while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
             _tileInfo.isCity = true;
+            _tileInfo.cityId = GameManagerSS.instance.currentCityId;
             CityInfo _city = gameObject.AddComponent<CityInfo>();
             _city.InitCityServerSide(_tileInfo.biome, GameManagerSS.instance.currentCityId, -1, _xIndex, _zIndex);
-            GameManagerSS.instance.currentCityId++;
             neutralCities.Add(_city);
+            GameManagerSS.instance.currentCityId++;
+            Debug.Log(i);
+            Debug.Log(GameManagerSS.instance.currentCityId);
         }
 
         ServerSend.WorldCreated();

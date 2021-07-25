@@ -125,6 +125,7 @@ public class ServerHandle
         _tile.occupyingObjectId = _packet.ReadInt();
         _tile.xIndex = _packet.ReadInt();
         _tile.yIndex = _packet.ReadInt();
+        _tile.cityId = _packet.ReadInt();
         string _command = _packet.ReadString();
         _tile.idOfPlayerThatSentInfo = _fromClient;
 

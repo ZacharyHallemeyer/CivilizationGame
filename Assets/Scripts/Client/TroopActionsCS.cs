@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class TroopActionsCS : MonoBehaviour
 {
-    public GameObject[] objecstToBeReset;
+    public TileInfo[] objecstToBeReset;
     public int whatIsInteractableValue, whatIsDefaultValue;
     private string moveableTileTag = "MoveableTile", attackableTileTag = "AttackableTile", defaultTileTag = "Tile";
+    private string conquerableCityTag = "ConquerableCity", cityTag = "City", moveableCityTag = "MoveableCity";
     public TroopInfo troopInfo;
 
     /// <summary>
@@ -27,7 +28,7 @@ public class TroopActionsCS : MonoBehaviour
     {
         if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
         int _index = 0;
-        objecstToBeReset = new GameObject[troopInfo.movementCost];
+        objecstToBeReset = new TileInfo[troopInfo.movementCost];
 
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
         switch (troopInfo.rotation)
@@ -35,7 +36,7 @@ public class TroopActionsCS : MonoBehaviour
             case 0:
                 for (int z = troopInfo.zCoord + 1; z < troopInfo.zCoord + troopInfo.movementCost + 1; z++)
                 {
-                    if (CheckTileExists(troopInfo.xCoord, z))
+                    if (CheckTileExists(troopInfo.xCoord, z)) 
                     {
                         CreateInteractableTilesHelper(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
                         _index++;
@@ -77,28 +78,54 @@ public class TroopActionsCS : MonoBehaviour
                 Debug.LogError("Troop " + troopInfo.id + " rotation is not compatible");
                 break;
         }
+
+        // Check if can standing on and can conquer acity
+        TileInfo _tileInfo = GameManagerCS.instance.tiles[troopInfo.xCoord, troopInfo.zCoord];
+        if(_tileInfo.isCity)
+        {
+            CityInfo _city = GameManagerCS.instance.cities[_tileInfo.cityId];
+            if (_city.ownerId != troopInfo.ownerId)
+            {
+                if (_city.isAbleToBeConquered)
+                {
+                    _tileInfo.tile.layer = whatIsInteractableValue;
+                    _tileInfo.tile.tag = conquerableCityTag;
+                }
+            }
+        }
     }
 
     public void CreateInteractableTilesHelper(TileInfo _tile, int _index)
     {
         if (_tile.isWater) return;
-        if (_tile.isOccupied != true)
+        if(_tile.isCity)
+        {
+            Debug.Log(_tile.cityId);
+            Debug.Log(GameManagerCS.instance.cities[_tile.cityId]);
+            Debug.Log(GameManagerCS.instance.cities[_tile.cityId].ownerId);
+            if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
+            {
+                _tile.tile.layer = whatIsInteractableValue;
+                _tile.tile.tag = moveableCityTag;
+                _tile.moveUI.SetActive(true);
+            }
+        }
+        else if (_tile.isOccupied != true)
         {
             if (_tile.occupyingObjectId != troopInfo.ownerId)
             {
                 _tile.tile.layer = whatIsInteractableValue;
                 _tile.tile.tag = moveableTileTag;
-                objecstToBeReset[_index] = _tile.tile;
-                _index++;
+                _tile.moveUI.SetActive(true);
             }
         }
         else
         {
             _tile.tile.layer = whatIsInteractableValue;
             _tile.tile.tag = attackableTileTag;
-            objecstToBeReset[_index] = _tile.tile;
-            _index++;
+            _tile.moveUI.SetActive(true);
         }
+        objecstToBeReset[_index] = _tile;
     }
 
     /// <summary>
@@ -146,6 +173,15 @@ public class TroopActionsCS : MonoBehaviour
         CreateInteractableTiles();
     }
 
+    public void MoveOntoCity(TileInfo _tile, CityInfo _city)
+    {
+        _city.isBeingConquered = true;
+
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+        { { _city, "Update" } };
+        MoveToNewTile(_tile);
+    }
+
     /// <summary>
     /// pass in -1 for troop to rotate counter clockwise and 1 to rotate clockwise and update modified troop and tile dicts.
     /// </summary>
@@ -182,15 +218,40 @@ public class TroopActionsCS : MonoBehaviour
     public void ResetAlteredTiles()
     {
         if (objecstToBeReset == null) return;
-        foreach (GameObject _tile in objecstToBeReset)
+        foreach (TileInfo _tile in objecstToBeReset)
         {
             if (_tile != null)
             {
-                _tile.layer = whatIsDefaultValue;
-                _tile.tag = defaultTileTag;
+                if(_tile.isCity)
+                {
+                    _tile.tile.layer = whatIsDefaultValue;
+                    _tile.tile.tag = cityTag;
+                    _tile.moveUI.SetActive(false);
+                }
+                else
+                {
+                    _tile.tile.layer = whatIsDefaultValue;
+                    _tile.tile.tag = defaultTileTag;
+                    _tile.moveUI.SetActive(false);
+                }
             }
         }
         objecstToBeReset = null;
+    }
+
+    public void ConquerCity(TileInfo _tile, CityInfo _city)
+    {
+        _tile.tile.tag = cityTag;
+        troopInfo.movementCost = 0;
+        troopInfo.canAttack = false;
+        _city.isAbleToBeConquered = false;
+        _city.isBeingConquered = false;
+
+        _city.ownerId = troopInfo.ownerId;
+        _city.InitConqueredCity();
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+        { { _city, "Conquer" } };
+        GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
     }
 
     /// <summary>
