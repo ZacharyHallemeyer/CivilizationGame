@@ -53,6 +53,13 @@ public class GameManagerCS : MonoBehaviour
             biomeOptions[_index] = _biomeName;
             _index++;
         }
+        _index = 0;
+        troopNames = new string[Constants.troopInfoInt.Count];
+        foreach (string _troopName in Constants.troopInfoInt.Keys)
+        {
+            troopNames[_index] = _troopName; 
+            _index++;
+        }
     }
 
     /// <summary>
@@ -217,7 +224,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_xCoord"> x coord to spawn troop </param>
     /// <param name="_zCoord"> z coord to spawn troop </param>
     /// <param name="_rotation"> rotation of new troop </param>
-    public void InstantiateTroop(int _ownerId, string _troopName, int _xCoord, int _zCoord, int _rotation)
+    public void SpawnTroop(int _ownerId, string _troopName, int _xCoord, int _zCoord, int _rotation)
     {
         GameObject _troop = Instantiate(localTroopPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
@@ -242,7 +249,7 @@ public class GameManagerCS : MonoBehaviour
     /// Does NOT update modified troop dicts.
     /// </summary>
     /// <param name="_troopInfoToCopy"> Existing troop spawn and init </param>
-    public void InstantiateTroop(TroopInfo _troopInfoToCopy)
+    public void SpawnTroop(TroopInfo _troopInfoToCopy)
     {
         GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_troopInfoToCopy.xCoord, 1, _troopInfoToCopy.zCoord),
                                         Quaternion.identity);
@@ -305,7 +312,9 @@ public class GameManagerCS : MonoBehaviour
         string _biomeName = tiles[_xIndex, _zIndex].biome;
         GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
-        _cityInfo.InitCity(_biomeName, _city, currentCityIndex, ClientCS.instance.myId, _xIndex, _zIndex);
+        CityActionsCS _cityActions = _city.GetComponent<CityActionsCS>();
+        _cityInfo.InitCity(_biomeName, _city, currentCityIndex, ClientCS.instance.myId, _xIndex, _zIndex, _cityActions);
+        _cityActions.InitCityActions(_cityInfo);
 
         cities.Add(currentCityIndex, _cityInfo);
         currentCityIndex++;
@@ -391,7 +400,7 @@ public class GameManagerCS : MonoBehaviour
                 switch (_troopDict[_troop])
                 {
                     case "Spawn":
-                        InstantiateTroop(_troop);
+                        SpawnTroop(_troop);
                         break;
                     case "Move":
                         MoveTroopToNewTile(_troop);

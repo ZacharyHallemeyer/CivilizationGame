@@ -5,6 +5,7 @@ using UnityEngine;
 public class CityInfo : MonoBehaviour
 {
     public GameObject city;
+    public CityActionsCS cityActions;
 
     // resource variables
     public float morale;
@@ -35,7 +36,8 @@ public class CityInfo : MonoBehaviour
     public int ownerId;
     public int idOfPlayerThatSentInfo;
 
-    public void InitCity(string _biomeName, GameObject _cityObject, int _id, int _ownerId, int _xIndex, int _zIndex)
+    public void InitCity(string _biomeName, GameObject _cityObject, int _id, int _ownerId, int _xIndex, int _zIndex, 
+                         CityActionsCS _cityActions)
     {
         city = _cityObject;
 
@@ -55,6 +57,8 @@ public class CityInfo : MonoBehaviour
 
         xIndex = _xIndex;
         zIndex = _zIndex;
+
+        cityActions = _cityActions;
     }
 
     public void InitExistingCity(CityInfo _city, GameObject _cityObject)

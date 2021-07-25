@@ -15,6 +15,7 @@ public class PlayerCS : MonoBehaviour
     public Rigidbody camRB;
 
     public int _currentSelectedTroopId;
+    public int _currentSelectedCityId;
 
     // Stats
     public float morale = 0;
@@ -113,6 +114,15 @@ public class PlayerCS : MonoBehaviour
                         _troop.troopActions.Attack(_tileInfo);
                     }
                 }
+                else if(_hit.collider.CompareTag("City"))
+                {
+                    CityInfo _city = _hit.collider.GetComponent<CityInfo>();
+                    if(_city.ownerId == id)
+                    {
+                        _currentSelectedCityId = _city.id;
+                        GameManagerCS.instance.cities[_city.id].cityActions.ToggleQuickMenu();
+                    }
+                }    
             }
         }
 

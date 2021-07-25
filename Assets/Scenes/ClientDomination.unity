@@ -332,7 +332,9 @@ MonoBehaviour:
   isAllCityInfoReceived: 0
   playerPrefab: {fileID: 795644783452541475, guid: df0aa68d6704a08479e4a77d1e20a95f,
     type: 3}
-  troopPrefab: {fileID: 4779611018383367299, guid: fd9fb87db79df1b47b7803e96a572cb6,
+  localTroopPrefab: {fileID: 4779611018383367299, guid: fd9fb87db79df1b47b7803e96a572cb6,
+    type: 3}
+  remoteTroopPrefab: {fileID: 4779611018383367299, guid: f6a296b67fa42f84795b2d5594bdae07,
     type: 3}
   starPrefab: {fileID: 4427113777878196774, guid: 1025e2eac4e5ae841b782374f3a07600,
     type: 3}
@@ -354,6 +356,80 @@ MonoBehaviour:
     type: 3}
   troopNames: []
   biomeOptions: []
+--- !u!1001 &327016077
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340267, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041866256424340271, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_Name
+      value: City
+      objectReference: {fileID: 0}
+    - target: {fileID: 5181333442781039340, guid: acd0eadc9b8a47a43b1994e5357f3829,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: acd0eadc9b8a47a43b1994e5357f3829, type: 3}
 --- !u!1 &565576647
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,7 +771,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &878983592
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -131,7 +131,7 @@ public static class Constants
                 { "SeeRange", 3},
             }
         },
-        { "NormalMilitia", new Dictionary<string, int>
+        { "Militia", new Dictionary<string, int>
             {
                 { "Rotation", 0 },
                 { "Health", 5},
@@ -145,7 +145,7 @@ public static class Constants
                 { "SeeRange", 2},
             }
         },
-        { "AdvancedMilitia", new Dictionary<string, int>
+        { "Army", new Dictionary<string, int>
             {
                 { "Rotation", 0 },
                 { "Health", 10},
@@ -224,12 +224,12 @@ public static class Constants
                 { "CanMultyKill", false},
             }
         },
-        { "NormalMilitia", new Dictionary<string, bool>
+        { "Militia", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
             }
         },
-        { "AdvancedMilitia", new Dictionary<string, bool>
+        { "Army", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
             }

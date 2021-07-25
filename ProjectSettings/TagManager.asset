@@ -8,6 +8,7 @@ TagManager:
   - AttackableTile
   - Tile
   - MoveableTile
+  - City
   layers:
   - Default
   - TransparentFX
