@@ -50,7 +50,8 @@ MonoBehaviour:
     m_Bits: 256
   cam: {fileID: 0}
   camRB: {fileID: 0}
-  _currentSelectedTroopId: 0
+  _currentSelectedTroopId: -1
+  _currentSelectedCityId: -1
   morale: 0
   education: 0
   manPower: 0

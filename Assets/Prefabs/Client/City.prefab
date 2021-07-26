@@ -1343,6 +1343,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quickMenuContainer: {fileID: 5181333442781039340}
+  mainContainer: {fileID: 2344962564343029580}
+  troopContainer: {fileID: 7357744625053894234}
+  constructContainer: {fileID: 2203586023580604882}
+  statsContainer: {fileID: 5865016261313437186}
   cityInfo: {fileID: 0}
 --- !u!1 &5069810690454512244
 GameObject:

@@ -98,11 +98,9 @@ public class TroopActionsCS : MonoBehaviour
     public void CreateInteractableTilesHelper(TileInfo _tile, int _index)
     {
         if (_tile.isWater) return;
+        /*
         if(_tile.isCity)
         {
-            Debug.Log(_tile.cityId);
-            Debug.Log(GameManagerCS.instance.cities[_tile.cityId]);
-            Debug.Log(GameManagerCS.instance.cities[_tile.cityId].ownerId);
             if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
             {
                 _tile.tile.layer = whatIsInteractableValue;
@@ -110,7 +108,7 @@ public class TroopActionsCS : MonoBehaviour
                 _tile.moveUI.SetActive(true);
             }
         }
-        else if (_tile.isOccupied != true)
+        if (_tile.isOccupied != true)
         {
             if (_tile.occupyingObjectId != troopInfo.ownerId)
             {
@@ -124,6 +122,34 @@ public class TroopActionsCS : MonoBehaviour
             _tile.tile.layer = whatIsInteractableValue;
             _tile.tile.tag = attackableTileTag;
             _tile.moveUI.SetActive(true);
+        }
+        */
+        if(_tile.isOccupied)
+        {
+            if(_tile.occupyingObjectId != troopInfo.ownerId)
+            {
+                _tile.tile.layer = whatIsInteractableValue;
+                _tile.tile.tag = attackableTileTag;
+                _tile.moveUI.SetActive(true);
+            }
+        }
+        else
+        {
+            if (_tile.isCity)
+            {
+                if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
+                {
+                    _tile.tile.layer = whatIsInteractableValue;
+                    _tile.tile.tag = moveableCityTag;
+                    _tile.moveUI.SetActive(true);
+                }
+            }
+            else
+            {
+                _tile.tile.layer = whatIsInteractableValue;
+                _tile.tile.tag = moveableTileTag;
+                _tile.moveUI.SetActive(true);
+            }
         }
         objecstToBeReset[_index] = _tile;
     }
@@ -252,6 +278,7 @@ public class TroopActionsCS : MonoBehaviour
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
         { { _city, "Conquer" } };
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
+        ResetAlteredTiles();
     }
 
     /// <summary>

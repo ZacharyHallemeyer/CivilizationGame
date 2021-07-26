@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CityActionsCS : MonoBehaviour
 {
-    public GameObject quickMenuContainer;
+    public GameObject quickMenuContainer, mainContainer, troopContainer, constructContainer, statsContainer;
     public CityInfo cityInfo;
 
     public void InitCityActions(CityInfo _cityInfo)
@@ -30,6 +30,14 @@ public class CityActionsCS : MonoBehaviour
         quickMenuContainer.SetActive(true);
     }
 
+    public void ResetQuickMenu()
+    {
+        mainContainer.SetActive(true);
+        troopContainer.SetActive(false);
+        constructContainer.SetActive(false);
+        statsContainer.SetActive(false);
+    }
+
     public void SpawnTroop(string _troopName)
     {
         if (GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied || cityInfo.isTrainingTroops) return;
@@ -40,5 +48,7 @@ public class CityActionsCS : MonoBehaviour
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
         { { cityInfo, "SpawnTroop"} };
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
+        ResetQuickMenu();
+        HideQuickMenu();
     }
 }

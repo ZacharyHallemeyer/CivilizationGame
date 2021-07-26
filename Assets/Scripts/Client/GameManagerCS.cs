@@ -337,7 +337,7 @@ public class GameManagerCS : MonoBehaviour
         tiles[_xIndex, _zIndex].tile.tag = "City"; 
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
-        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord), Quaternion.identity);
+        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .625f, _zCoord), Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
         _cityInfo.city = _city;
         _cityInfo.id = _id;
@@ -355,7 +355,6 @@ public class GameManagerCS : MonoBehaviour
         _cityInfo.foodResourcesPerTurn = _foodResourcesPerTurn;
         _cityInfo.xIndex = _xIndex;
         _cityInfo.zIndex = _zIndex;
-        Debug.Log("New City id: " + _cityInfo.id);
         cities.Add(_cityInfo.id, _cityInfo);
     }
 
@@ -371,7 +370,7 @@ public class GameManagerCS : MonoBehaviour
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
         string _biomeName = tiles[_xIndex, _zIndex].biome;
-        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord), Quaternion.identity);
+        GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .625f, _zCoord), Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
         CityActionsCS _cityActions = _city.GetComponent<CityActionsCS>();
         _cityInfo.InitCity(_biomeName, _city, currentCityIndex, ClientCS.instance.myId, _xIndex, _zIndex, _cityActions);

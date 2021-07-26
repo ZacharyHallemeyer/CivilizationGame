@@ -153,8 +153,6 @@ public class WorldGeneratorSS : MonoBehaviour
             _city.InitCityServerSide(_tileInfo.biome, GameManagerSS.instance.currentCityId, -1, _xIndex, _zIndex);
             neutralCities.Add(_city);
             GameManagerSS.instance.currentCityId++;
-            Debug.Log(i);
-            Debug.Log(GameManagerSS.instance.currentCityId);
         }
 
         ServerSend.WorldCreated();

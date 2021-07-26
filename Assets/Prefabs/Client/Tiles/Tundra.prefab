@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5622056522803852820}
   - component: {fileID: 4145457240260537746}
   - component: {fileID: 2260787066624683186}
-  - component: {fileID: 7426430556364450352}
   m_Layer: 0
   m_Name: MoveUI
   m_TagString: Untagged
@@ -80,19 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &7426430556364450352
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5108344599376167597}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9049806272573930248
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +90,7 @@ GameObject:
   - component: {fileID: 9049806272573930252}
   - component: {fileID: 9049806272573930255}
   - component: {fileID: 9049806272573930254}
-  - component: {fileID: 9049806272573930249}
+  - component: {fileID: 823681450830569843}
   m_Layer: 0
   m_Name: Tundra
   m_TagString: Tile
@@ -174,7 +160,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &9049806272573930249
+--- !u!65 &823681450830569843
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

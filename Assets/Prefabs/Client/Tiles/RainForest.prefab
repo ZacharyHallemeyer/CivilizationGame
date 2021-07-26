@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4837849429224637315}
   - component: {fileID: 4837849429224637312}
   - component: {fileID: 4837849429224637313}
-  - component: {fileID: 4837849429224637318}
+  - component: {fileID: 6110101268542978486}
   m_Layer: 0
   m_Name: RainForest
   m_TagString: Tile
@@ -81,7 +81,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &4837849429224637318
+--- !u!65 &6110101268542978486
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,7 +105,6 @@ GameObject:
   - component: {fileID: 1696019005647031546}
   - component: {fileID: 8166629248013055182}
   - component: {fileID: 1167960755970388030}
-  - component: {fileID: 5705803038748761293}
   m_Layer: 0
   m_Name: MoveUI
   m_TagString: Untagged
@@ -174,16 +173,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &5705803038748761293
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6571360298058101294}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
