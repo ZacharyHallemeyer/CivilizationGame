@@ -178,29 +178,84 @@ public class ServerSend
     }
 
     /// <summary>
+    /// Send all tile data to client at start of game
+    /// </summary>
+    /// <param name="_toClient"> client id to send tile data </param>
+    /// <param name="_tileInfo"> the tile info to send </param>
+    public static void SendTileInfo(int _toClient, TileInfo[,] _tiles)
+    {
+        for (int x = 0; x < _tiles.GetLength(0); x++)
+        {
+            for (int z = 0; z < _tiles.GetLength(1); z++)
+            {
+                using (Packet _packet = new Packet((int)ServerPackets.sendTileInfo))
+                {
+                    TileInfo _tile = _tiles[x, z];
+                    _packet.Write(_tile.id);
+                    _packet.Write(_tile.ownerId);
+                    _packet.Write(_tile.movementCost);
+                    _packet.Write(_tile.occupyingObjectId);
+                    _packet.Write(_tile.biome);
+                    _packet.Write(_tile.temperature);
+                    _packet.Write(_tile.height);
+                    _packet.Write(_tile.isWater);
+                    _packet.Write(_tile.isFood);
+                    _packet.Write(_tile.isWood);
+                    _packet.Write(_tile.isMetal);
+                    _packet.Write(_tile.isRoad);
+                    _packet.Write(_tile.isCity);
+                    _packet.Write(_tile.isOccupied);
+                    _packet.Write(_tile.position);
+                    _packet.Write(_tile.xIndex);
+                    _packet.Write(_tile.yIndex);
+                    _packet.Write(_tile.cityId);
+
+                    SendTCPData(_toClient, _packet);
+                }
+            }
+        }
+        using (Packet _packet = new Packet((int)ServerPackets.sendTileInfo))
+        {
+            _packet.Write(-1);
+
+            SendTCPData(_toClient, _packet);
+        }
+    }
+
+    /// <summary>
     /// Send all neutral city data to client at start of game
     /// </summary>
     /// <param name="_toClient"> client id to send city data </param>
     /// <param name="_cityInfo"> the city data to send </param>
-    public static void SendNeutralCityInfo(int _toClient, CityInfo _cityInfo)
+    public static void SendNeutralCityInfo(int _toClient, List<CityInfo> _neutralCities)
     {
+        for(int i = 0; i < _neutralCities.Count; i++)
+        {
+            using (Packet _packet = new Packet((int)ServerPackets.sendNeutralCityInfo))
+            {
+                CityInfo _city = _neutralCities[i];
+                _packet.Write(_city.id);
+                _packet.Write(_city.ownerId);
+                _packet.Write(_city.morale);
+                _packet.Write(_city.education);
+                _packet.Write(_city.manPower);
+                _packet.Write(_city.money);
+                _packet.Write(_city.metal);
+                _packet.Write(_city.wood);
+                _packet.Write(_city.food);
+                _packet.Write(_city.ownerShipRange);
+                _packet.Write(_city.woodResourcesPerTurn);
+                _packet.Write(_city.metalResourcesPerTurn);
+                _packet.Write(_city.foodResourcesPerTurn);
+                _packet.Write(_city.xIndex);
+                _packet.Write(_city.zIndex);
+
+                SendTCPData(_toClient, _packet);
+            }
+        }
         using (Packet _packet = new Packet((int)ServerPackets.sendNeutralCityInfo))
         {
-            _packet.Write(_cityInfo.id);
-            _packet.Write(_cityInfo.ownerId);
-            _packet.Write(_cityInfo.morale);
-            _packet.Write(_cityInfo.education);
-            _packet.Write(_cityInfo.manPower);
-            _packet.Write(_cityInfo.money);
-            _packet.Write(_cityInfo.metal);
-            _packet.Write(_cityInfo.wood);
-            _packet.Write(_cityInfo.food);
-            _packet.Write(_cityInfo.ownerShipRange);
-            _packet.Write(_cityInfo.woodResourcesPerTurn);
-            _packet.Write(_cityInfo.metalResourcesPerTurn);
-            _packet.Write(_cityInfo.foodResourcesPerTurn);
-            _packet.Write(_cityInfo.xIndex);
-            _packet.Write(_cityInfo.zIndex);
+            _packet.Write(-1);
 
             SendTCPData(_toClient, _packet);
         }

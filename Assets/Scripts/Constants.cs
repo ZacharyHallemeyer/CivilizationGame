@@ -215,6 +215,20 @@ public static class Constants
                 { "SeeRange", 2},
             }
         },
+        { "King", new Dictionary<string, int>
+            {
+                { "Rotation", 0 },
+                { "Health", 20 },
+                { "BaseAttack", 10},
+                { "StealthAttack", 10},
+                { "CounterAttack", 10},
+                { "BaseDefense", 3},
+                { "FacingDefense", 5},
+                { "MovementCost", 3},
+                { "AttackRange", 1},
+                { "SeeRange", 2},
+            }
+        },
     };
 
     public static Dictionary<string, Dictionary<string, bool>> troopInfoBool = new Dictionary<string, Dictionary<string, bool>>
@@ -250,6 +264,11 @@ public static class Constants
             }
         },
         { "Snipper", new Dictionary<string, bool>
+            {
+                { "CanMultyKill", false},
+            }
+        },
+        { "King", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
             }

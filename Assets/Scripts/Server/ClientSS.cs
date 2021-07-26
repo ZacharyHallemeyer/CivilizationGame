@@ -239,17 +239,9 @@ public class ClientSS
         ServerSend.SpawnPlayer(id, player);
 
         // Send tile info to new player
-        for(int x = 0; x < WorldGeneratorSS.instance.tiles.GetLength(0); x++)
-        {
-            for(int z = 0; z < WorldGeneratorSS.instance.tiles.GetLength(1); z++)
-            {
-                ServerSend.SendTileInfo(id, WorldGeneratorSS.instance.tiles[x, z]);
-            }
-        }
-        for(int i = 0; i < WorldGeneratorSS.instance.neutralCities.Count; i++)
-        {
-            ServerSend.SendNeutralCityInfo(id, WorldGeneratorSS.instance.neutralCities[i]);
-        }
+        ServerSend.SendTileInfo(id, WorldGeneratorSS.instance.tiles);
+        // Send neutral cities to new player
+        ServerSend.SendNeutralCityInfo(id, WorldGeneratorSS.instance.neutralCities);
     }
 
     /// <summary>Disconnects the client and stops all network traffic.</summary>

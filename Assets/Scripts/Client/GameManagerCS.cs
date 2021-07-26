@@ -1,19 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManagerCS : MonoBehaviour
 {
     public static GameManagerCS instance;
+
+    public bool recievedAllNewTileData = false, recievedAllNewNeutralCityData = false;
 
     public int starCount = 100;
 
     public int currentTroopIndex = 0, currentCityIndex;
     public Dictionary<int, TroopInfo> troops = new Dictionary<int, TroopInfo>();
     public Dictionary<int, CityInfo> cities = new Dictionary<int, CityInfo>();
-    //public List<CityInfo> cities = new List<CityInfo>();
     public TileInfo[,] tiles;
-
     public bool isAllTroopInfoReceived = false, isAllTileInfoReceived = false, isAllCityInfoReceived = false;
     public List<Dictionary<TroopInfo, string>> modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
     public List<Dictionary<TileInfo, string>> modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
@@ -29,6 +30,9 @@ public class GameManagerCS : MonoBehaviour
 
     public string[] troopNames;
     public string[] biomeOptions;
+
+    public GameObject startScreenUI, startButtonObject;
+    public Button startButton;
 
     #region Set Up Functions
 
@@ -73,6 +77,8 @@ public class GameManagerCS : MonoBehaviour
         GameObject _player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         _player.GetComponent<PlayerCS>().InitPlayer(_id, _username);
         CreateStars();
+        // Spawn King
+        //SpawnTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
     }
 
     public void CreateStars()
@@ -275,6 +281,17 @@ public class GameManagerCS : MonoBehaviour
         troops.Add(_troopInfo.id, _troopInfo);
     }
 
+    public void ToggleSpawnKingButton()
+    {
+        if (!(recievedAllNewNeutralCityData && recievedAllNewTileData)) return;
+        startButton.enabled = true;
+    }
+
+    public void SpawnKing()
+    {
+        SpawnTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
+    }
+
     /// <summary>
     /// Move troop to new tile and update modified troop and tile dicts
     /// Does NOT update modified troop and tile dicts.
@@ -365,7 +382,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_zCoord"> z coord to spawn city </param>
     public void SpawnCity(int _xIndex, int _zIndex)
     {
-        if (tiles[_xIndex, _zIndex].isWater) return;
+        if (tiles[_xIndex, _zIndex].isWater || tiles[_xIndex, _zIndex].isCity) return;
         tiles[_xIndex, _zIndex].tile.tag = "City";
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;

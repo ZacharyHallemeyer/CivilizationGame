@@ -72,6 +72,8 @@ public class ClientHandle : MonoBehaviour
         // Turn off lobby UI if it has not already
         if (ClientCS.instance.lobby.lobbyParent.activeInHierarchy)
             ClientCS.instance.lobby.lobbyParent.SetActive(false);
+        // Turn on spawn king UI
+        GameManagerCS.instance.startScreenUI.SetActive(true);
         GameManagerCS.instance.SpawnPlayer(_id, _username);
 
     }
@@ -83,6 +85,12 @@ public class ClientHandle : MonoBehaviour
     public static void CreateNewTile(Packet _packet)
     {
         int _id = _packet.ReadInt();
+        if(_id == -1)
+        {
+            GameManagerCS.instance.recievedAllNewTileData = true;
+            GameManagerCS.instance.ToggleSpawnKingButton();
+            return;
+        }
         int _ownerId = _packet.ReadInt();
         int _movementCost = _packet.ReadInt();
         int _occupyingObjectId = _packet.ReadInt();
@@ -110,6 +118,12 @@ public class ClientHandle : MonoBehaviour
     public static void CreateNeutralCity(Packet _packet)
     {
         int _id = _packet.ReadInt();
+        if (_id == -1)
+        {
+            GameManagerCS.instance.recievedAllNewNeutralCityData = true;
+            GameManagerCS.instance.ToggleSpawnKingButton();
+            return;
+        }
         int _ownerId = _packet.ReadInt();
         float _morale = _packet.ReadFloat();
         float _education = _packet.ReadFloat();
@@ -178,7 +192,6 @@ public class ClientHandle : MonoBehaviour
     public static void RecieveModifiedTileInfo(Packet _packet)
     {
         int _id = _packet.ReadInt();
-        //Debug.Log("Recieved tile " + _id + " from server");
         if (_id == -1)      // If the id is equal to -1 then all data has been recieved
         {
             GameManagerCS.instance.isAllTileInfoReceived = true;

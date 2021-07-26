@@ -93,6 +93,7 @@ public class PlayerCS : MonoBehaviour
                     TroopInfo _troop = _hit.collider.GetComponent<TroopInfo>();
                     if (_troop.ownerId == id)
                     {
+                        _troop.troopActions.ShowQuickMenu();
                         _currentSelectedTroopId = _troop.id;
                         GameManagerCS.instance.troops[_troop.id].troopActions.CreateInteractableTiles();
                     }
@@ -129,6 +130,7 @@ public class PlayerCS : MonoBehaviour
                     if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.MoveOntoCity(_tileInfo, _cityInfo);
                 }
+                /*
                 else if(_hit.collider.CompareTag("ConquerableCity"))
                 {
                     TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
@@ -136,6 +138,7 @@ public class PlayerCS : MonoBehaviour
                     if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.ConquerCity(_tileInfo, _cityInfo);
                 }
+                */
                 else
                 {
                     ResetAlteredTiles();
@@ -161,9 +164,9 @@ public class PlayerCS : MonoBehaviour
         if (inputMaster.Player.EndTurn.triggered)        // End Turn
         {
             enabled = false;
+            ResetAlteredTiles();
             _currentSelectedCityId = -1;
             _currentSelectedTroopId = -1;
-            ResetAlteredTiles();
             ClientSend.SendEndOfTurnData();
             GameManagerCS.instance.ResetTroops();
             GameManagerCS.instance.ResetCities();

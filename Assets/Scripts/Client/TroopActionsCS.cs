@@ -10,6 +10,10 @@ public class TroopActionsCS : MonoBehaviour
     private string conquerableCityTag = "ConquerableCity", cityTag = "City", moveableCityTag = "MoveableCity";
     public TroopInfo troopInfo;
 
+    // Quick Menu
+    public GameObject quickMenuContainer, mainContainer, mainKingContainer;
+
+    #region Set Up
     /// <summary>
     /// Init troop action variables
     /// </summary>
@@ -20,6 +24,9 @@ public class TroopActionsCS : MonoBehaviour
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
         troopInfo = _troopInfo;
     }
+    #endregion
+
+    #region Interactable Tiles
 
     /// <summary>
     /// Sets tiles to iteractable if troop can reach them
@@ -117,6 +124,11 @@ public class TroopActionsCS : MonoBehaviour
                     _tile.tile.tag = moveableCityTag;
                     _tile.moveUI.SetActive(true);
                 }
+                else
+                {
+                    // Prevent troops from moving onto a city that is training troops 
+                    if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops) return;
+                }
             }
             else
             {
@@ -138,11 +150,43 @@ public class TroopActionsCS : MonoBehaviour
     }
 
     /// <summary>
+    /// Reset tile tags and layermasks to default values
+    /// </summary>
+    public void ResetAlteredTiles()
+    {
+        if (objecstToBeReset == null) return;
+        foreach (TileInfo _tile in objecstToBeReset)
+        {
+            if (_tile != null)
+            {
+                if (_tile.isCity)
+                {
+                    _tile.tile.layer = whatIsDefaultValue;
+                    _tile.tile.tag = cityTag;
+                    _tile.moveUI.SetActive(false);
+                }
+                else
+                {
+                    _tile.tile.layer = whatIsDefaultValue;
+                    _tile.tile.tag = defaultTileTag;
+                    _tile.moveUI.SetActive(false);
+                }
+            }
+        }
+        objecstToBeReset = null;
+    }
+
+    #endregion
+
+    #region Movement
+
+    /// <summary>
     /// Move troop to new tile and update modified troop and tile dicts.
     /// </summary>
     /// <param name="_newTile"></param>
     public void MoveToNewTile(TileInfo _newTile)
     {
+        HideQuickMenu();
         // Update old tile
         TileInfo _oldTile = GameManagerCS.instance.tiles[troopInfo.xCoord, troopInfo.zCoord];
         _oldTile.isOccupied = false;
@@ -218,31 +262,16 @@ public class TroopActionsCS : MonoBehaviour
         CreateInteractableTiles();
     }
 
-    /// <summary>
-    /// Reset tile tags and layermasks to default values
-    /// </summary>
-    public void ResetAlteredTiles()
+    #endregion
+
+    #region Actions
+
+    public void ConquerCity()
     {
-        if (objecstToBeReset == null) return;
-        foreach (TileInfo _tile in objecstToBeReset)
-        {
-            if (_tile != null)
-            {
-                if(_tile.isCity)
-                {
-                    _tile.tile.layer = whatIsDefaultValue;
-                    _tile.tile.tag = cityTag;
-                    _tile.moveUI.SetActive(false);
-                }
-                else
-                {
-                    _tile.tile.layer = whatIsDefaultValue;
-                    _tile.tile.tag = defaultTileTag;
-                    _tile.moveUI.SetActive(false);
-                }
-            }
-        }
-        objecstToBeReset = null;
+        HideQuickMenu();
+        TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xCoord, troopInfo.zCoord];
+        CityInfo _city = GameManagerCS.instance.cities[_tile.cityId];
+        ConquerCity(_tile, _city);
     }
 
     public void ConquerCity(TileInfo _tile, CityInfo _city)
@@ -267,6 +296,7 @@ public class TroopActionsCS : MonoBehaviour
     /// <param name="_tile"></param>
     public void Attack(TileInfo _tile)
     {
+        HideQuickMenu();
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         bool _attackedFromTheBack = _troop.rotation + 180 == troopInfo.rotation || _troop.rotation - 180 == troopInfo.rotation;
         // Check if attacking troop back
@@ -293,6 +323,41 @@ public class TroopActionsCS : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Troop Quick Menu
+
+    public void ToggleQuickMenu()
+    {
+        if (quickMenuContainer.activeInHierarchy)
+            HideQuickMenu();
+        else
+            ShowQuickMenu();
+    }
+
+    public void HideQuickMenu()
+    {
+        ResetQuickMenu();
+    }
+
+    public void ShowQuickMenu()
+    {
+        quickMenuContainer.SetActive(true);
+        if (troopInfo.troopName == "King")
+            mainKingContainer.SetActive(true);
+        else
+            mainContainer.SetActive(true);
+    }
+
+    public void ResetQuickMenu()
+    {
+        quickMenuContainer.SetActive(false);
+        mainContainer.SetActive(false);
+        mainKingContainer.SetActive(false);
+    }
+
+    #endregion
+
     #region Troop Animations
 
     public void AttackAnim()
@@ -303,6 +368,17 @@ public class TroopActionsCS : MonoBehaviour
     public void MoveAnim()
     {
 
+    }
+
+    #endregion
+
+    #region King Actions
+
+    public void CreateCity()
+    {
+        // Conditions
+
+        GameManagerCS.instance.SpawnCity(troopInfo.xCoord, troopInfo.zCoord);
     }
 
     #endregion
