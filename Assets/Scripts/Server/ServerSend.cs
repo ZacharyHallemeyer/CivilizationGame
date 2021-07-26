@@ -344,7 +344,6 @@ public class ServerSend
                 }
                 else
                 {
-                    //Debug.Log("Sending tile " + _tile.id + " to client");
                     using (Packet _packet = new Packet((int)ServerPackets.sendModifiedCityInfo))
                     {
                         _packet.Write(_city.id);

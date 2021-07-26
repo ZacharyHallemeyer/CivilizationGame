@@ -270,7 +270,7 @@ public class GameManagerCS : MonoBehaviour
                                         Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
-        _troopInfo.InitTroopInfo(_troopInfoToCopy, _troop, _troopActions);
+        _troopInfo.CopyTroopInfo(_troopInfoToCopy, _troop, _troopActions);
 
         troops.Add(_troopInfo.id, _troopInfo);
     }
@@ -307,7 +307,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_troopInfo"> Troop to rotate </param>
     public void UpdateTroopInfo(TroopInfo _troopInfo)
     {
-        troops[_troopInfo.id].CopyTroopInfo(_troopInfo);
+        troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
     }
 
     /// <summary>
@@ -412,9 +412,7 @@ public class GameManagerCS : MonoBehaviour
     
     public void UpdateCityInfo(CityInfo _cityToCopy)
     {
-        Debug.Log(cities[_cityToCopy.id]);
-        Debug.Log(_cityToCopy);
-        cities[_cityToCopy.id].CopyCityInfo(_cityToCopy);
+        cities[_cityToCopy.id].UpdateCityInfo(_cityToCopy);
     }
 
     public void AddCityResources()
@@ -436,7 +434,7 @@ public class GameManagerCS : MonoBehaviour
         {
             if (_city.ownerId == ClientCS.instance.myId)
             {
-                _city.isTrainingTroops = false;
+                //_city.isTrainingTroops = false;
             }
         }
     }
@@ -517,6 +515,10 @@ public class GameManagerCS : MonoBehaviour
         {
             foreach (CityInfo _city in _cityDict.Keys)
             {
+                if(_city.ownerId == ClientCS.instance.myId)
+                {
+                    Debug.Log("Found in first loop with value " + _city.isTrainingTroops);
+                }
                 switch (_cityDict[_city])
                 {
                     case "Spawn":
@@ -541,6 +543,7 @@ public class GameManagerCS : MonoBehaviour
                 Destroy(_city);
             }
         }
+        ClearModifiedData();
 
         foreach(CityInfo _city in cities.Values)
         {
@@ -548,8 +551,15 @@ public class GameManagerCS : MonoBehaviour
                 _city.isAbleToBeConquered = true;
             else
                 _city.isAbleToBeConquered = false;
+            if(_city.ownerId == ClientCS.instance.myId)
+            {
+                if(_city.isTrainingTroops)
+                {
+                    _city.isTrainingTroops = false;
+                    _city.cityActions.SpawnTroop();
+                }
+            }
         }
-        ClearModifiedData();
 
         AddCityResources();
         PlayerCS.instance.enabled = true;

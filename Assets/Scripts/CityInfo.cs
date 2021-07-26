@@ -111,6 +111,29 @@ public class CityInfo : MonoBehaviour
         zIndex = _city.zIndex;
     }
 
+    public void UpdateCityInfo(CityInfo _cityToCopy)
+    {
+        id = _cityToCopy.id;
+        ownerId = _cityToCopy.ownerId;
+        ownerShipRange = _cityToCopy.ownerShipRange;
+
+        isBeingConquered = _cityToCopy.isBeingConquered;
+        isConstructingBuilding = _cityToCopy.isConstructingBuilding;
+        occupyingObjectId = _cityToCopy.occupyingObjectId;
+
+        morale = _cityToCopy.morale;
+        education = _cityToCopy.education;
+        manPower = _cityToCopy.manPower;
+        money = _cityToCopy.money;
+        food = _cityToCopy.food;
+        metal = _cityToCopy.metal;
+        wood = _cityToCopy.wood;
+
+        woodResourcesPerTurn = _cityToCopy.woodResourcesPerTurn;
+        metalResourcesPerTurn = _cityToCopy.metalResourcesPerTurn;
+        foodResourcesPerTurn = _cityToCopy.foodResourcesPerTurn;
+    }
+
     public void CopyCityInfo(CityInfo _cityToCopy)
     {
         id = _cityToCopy.id;

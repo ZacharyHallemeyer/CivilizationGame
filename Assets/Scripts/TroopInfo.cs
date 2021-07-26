@@ -32,45 +32,9 @@ public class TroopInfo : MonoBehaviour
     public int idOfPlayerThatSentInfo;
 
     /// <summary>
-    /// Init troop info for new troop
-    /// </summary>
-    public void InitTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
-                              int _id, int _ownerId, int _xCoord, int _zCoord)
-    {
-        troopName = _troopName;
-        troop = _troop;
-        troopActions = _troopActions;
-        troopActions.InitTroopActions(this);
-        id = _id;
-        ownerId = _ownerId;
-        xCoord = _xCoord;
-        zCoord = _zCoord;
-        rotation = 0;
-
-        health = Constants.troopInfoInt[_troopName]["Health"];
-        baseAttack = Constants.troopInfoInt[_troopName]["BaseAttack"];
-        stealthAttack = Constants.troopInfoInt[_troopName]["StealthAttack"];
-        counterAttack = Constants.troopInfoInt[_troopName]["CounterAttack"];
-        baseDefense = Constants.troopInfoInt[_troopName]["BaseDefense"];
-        facingDefense = Constants.troopInfoInt[_troopName]["FacingDefense"];
-        //movementCost = Constants.troopInfoInt[_troopName]["MovementCost"];
-        movementCost = 0;
-        attackRange = Constants.troopInfoInt[_troopName]["AttackRange"];
-        seeRange = Constants.troopInfoInt[_troopName]["SeeRange"];
-        canMoveNextTurn = true;
-        canAttack = false;
-        canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
-        if (GetComponent<BoxCollider>() != null)
-        {
-            boxCollider = GetComponent<BoxCollider>();
-            boxCollider.enabled = false;
-        }
-    }
-
-    /// <summary>
     /// Init troop info for new troop and set values for troop to be used this round
     /// </summary>
-    public void InitTroopInfoForUseThisRound(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
+    public void InitTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
                               int _id, int _ownerId, int _xCoord, int _zCoord)
     {
         troopName = _troopName;
@@ -95,15 +59,56 @@ public class TroopInfo : MonoBehaviour
         canMoveNextTurn = true;
         canAttack = true;
         canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
+
+        if (GetComponent<BoxCollider>() != null)
+        {
+            boxCollider = GetComponent<BoxCollider>();
+            boxCollider.enabled = true;
+        }
     }
-    
+
+    /// <summary>
+    /// Init troop info for new troop that can not be used first round
+    /// </summary>
+    public void InitTroopInfoDisabledFtrstTurn(string _troopName, GameObject _troop, TroopActionsCS _troopActions,
+                              int _id, int _ownerId, int _xCoord, int _zCoord)
+    {
+        troopName = _troopName;
+        troop = _troop;
+        troopActions = _troopActions;
+        troopActions.InitTroopActions(this);
+        id = _id;
+        ownerId = _ownerId;
+        xCoord = _xCoord;
+        zCoord = _zCoord;
+        rotation = 0;
+
+        health = Constants.troopInfoInt[_troopName]["Health"];
+        baseAttack = Constants.troopInfoInt[_troopName]["BaseAttack"];
+        stealthAttack = Constants.troopInfoInt[_troopName]["StealthAttack"];
+        counterAttack = Constants.troopInfoInt[_troopName]["CounterAttack"];
+        baseDefense = Constants.troopInfoInt[_troopName]["BaseDefense"];
+        facingDefense = Constants.troopInfoInt[_troopName]["FacingDefense"];
+        movementCost = 0;
+        attackRange = Constants.troopInfoInt[_troopName]["AttackRange"];
+        seeRange = Constants.troopInfoInt[_troopName]["SeeRange"];
+        canMoveNextTurn = true;
+        canAttack = false;
+        canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
+        if (GetComponent<BoxCollider>() != null)
+        {
+            boxCollider = GetComponent<BoxCollider>();
+            boxCollider.enabled = false;
+        }
+    }
+
     /// <summary>
     /// Copy existing troop info
     /// </summary>
     /// <param name="_troopInfo"> Troop info </param>
     /// <param name="_troop"> troop gameobject </param>
     /// <param name="_troopActions"> troop actions component </param>
-    public void InitTroopInfo(TroopInfo _troopInfo, GameObject _troop, TroopActionsCS _troopActions)
+    public void CopyTroopInfo(TroopInfo _troopInfo, GameObject _troop, TroopActionsCS _troopActions)
     {
         troopName = _troopInfo.name;
         troop = _troop;
@@ -130,7 +135,11 @@ public class TroopInfo : MonoBehaviour
         canMultyKill = _troopInfo.canMultyKill;
     }
 
-    public void CopyTroopInfo(TroopInfo _troopInfo)
+    /// <summary>
+    /// Update troop info with another troop info values (used for updating troops for data coming from server)
+    /// </summary>
+    /// <param name="_troopInfo"></param>
+    public void UpdateTroopInfo(TroopInfo _troopInfo)
     {
         id = _troopInfo.id;
         ownerId = _troopInfo.ownerId;

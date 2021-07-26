@@ -98,35 +98,9 @@ public class TroopActionsCS : MonoBehaviour
     public void CreateInteractableTilesHelper(TileInfo _tile, int _index)
     {
         if (_tile.isWater) return;
-        /*
-        if(_tile.isCity)
-        {
-            if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
-            {
-                _tile.tile.layer = whatIsInteractableValue;
-                _tile.tile.tag = moveableCityTag;
-                _tile.moveUI.SetActive(true);
-            }
-        }
-        if (_tile.isOccupied != true)
-        {
-            if (_tile.occupyingObjectId != troopInfo.ownerId)
-            {
-                _tile.tile.layer = whatIsInteractableValue;
-                _tile.tile.tag = moveableTileTag;
-                _tile.moveUI.SetActive(true);
-            }
-        }
-        else
-        {
-            _tile.tile.layer = whatIsInteractableValue;
-            _tile.tile.tag = attackableTileTag;
-            _tile.moveUI.SetActive(true);
-        }
-        */
         if(_tile.isOccupied)
         {
-            if(_tile.occupyingObjectId != troopInfo.ownerId)
+            if(GameManagerCS.instance.troops[_tile.occupyingObjectId].ownerId != troopInfo.ownerId)
             {
                 _tile.tile.layer = whatIsInteractableValue;
                 _tile.tile.tag = attackableTileTag;
@@ -173,6 +147,12 @@ public class TroopActionsCS : MonoBehaviour
         TileInfo _oldTile = GameManagerCS.instance.tiles[troopInfo.xCoord, troopInfo.zCoord];
         _oldTile.isOccupied = false;
         _oldTile.occupyingObjectId = -1;
+        if(_oldTile.isCity)
+        {
+            CityInfo _city = GameManagerCS.instance.cities[_oldTile.cityId];
+            _city.isBeingConquered = false;
+            _city.isAbleToBeConquered = false;
+        }
 
         // Move troop
         troopInfo.xCoord = (int)_newTile.position.x;
