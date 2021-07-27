@@ -275,6 +275,7 @@ public class TroopActionsCS : MonoBehaviour
 
         // Update new tile
         troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.yIndex - _oldTile.yIndex);
+        if (troopInfo.movementCost < 0) troopInfo.movementCost = 0;
         _newTile.isOccupied = true;
         _newTile.occupyingObjectId = troopInfo.id;
         // Add Troopdata to send to server
@@ -390,6 +391,28 @@ public class TroopActionsCS : MonoBehaviour
             { {troopInfo, "Hurt"} };
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
         }
+
+        // troop killed the other troop
+        if(_troop.health <= 0)
+        {
+            _tile.isOccupied = false;
+            _troop.troop.SetActive(false);
+            GameManagerCS.instance.troops.Remove(_troop.id);
+            GameManagerCS.instance.objectsToDestroy.Add(_troop.troop);
+            _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, "Die"} };
+            GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+
+            if (_tile.isCity)
+                MoveOntoCity(_tile, GameManagerCS.instance.cities[_tile.cityId]);
+            else
+                MoveToNewTile(_tile);
+        }
+    }
+
+    public void Die()
+    {
+
     }
 
     #endregion
@@ -468,7 +491,7 @@ public class TroopActionsCS : MonoBehaviour
                 if (CheckTileExists(x, z))
                 {
                     TileInfo _tile = GameManagerCS.instance.tiles[x, z];
-                    if (_tile.isFood || _tile.isWood || _tile.isFood)
+                    if (_tile.isFood || _tile.isWood || _tile.isMetal)
                         _tooFarFromNearestResource = false;
                 }
             }

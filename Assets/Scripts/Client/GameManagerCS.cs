@@ -7,7 +7,7 @@ public class GameManagerCS : MonoBehaviour
 {
     public static GameManagerCS instance;
 
-    public bool recievedAllNewTileData = false, recievedAllNewNeutralCityData = false;
+    public bool recievedAllNewTileData = false, recievedAllNewNeutralCityData = false, isTurn = false;
 
     public int starCount = 100;
 
@@ -19,6 +19,7 @@ public class GameManagerCS : MonoBehaviour
     public List<Dictionary<TroopInfo, string>> modifiedTroopInfo = new List<Dictionary<TroopInfo, string>>();
     public List<Dictionary<TileInfo, string>> modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
     public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
+    public List<GameObject> objectsToDestroy = new List<GameObject>();
 
     public GameObject playerPrefab;
     public GameObject localTroopPrefab, remoteTroopPrefab;
@@ -296,7 +297,9 @@ public class GameManagerCS : MonoBehaviour
     /// </summary>
     public void SpawnKing()
     {
+        if (!isTurn) return;
         SpawnTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
+        startScreenUI.SetActive(false);
     }
 
     /// <summary>
@@ -332,6 +335,13 @@ public class GameManagerCS : MonoBehaviour
     public void UpdateTroopInfo(TroopInfo _troopInfo)
     {
         troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
+    }
+
+    public void RemoveTroopInfo(TroopInfo _troopInfo)
+    {
+        _troopInfo.troop.SetActive(false);
+        troops.Remove(_troopInfo.id);
+        objectsToDestroy.Add(_troopInfo.troop);
     }
 
     /// <summary>
@@ -500,6 +510,13 @@ public class GameManagerCS : MonoBehaviour
         modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
     }
 
+    public void DestroyObjectsToDestroyAtEndOfTurn()
+    {
+        foreach (GameObject _object in objectsToDestroy)
+            Destroy(_object);
+        objectsToDestroy = new List<GameObject>();
+    }
+
     public void PlayPastMoves()
     {
         // Update/Show Other Player troop movements/actions
@@ -525,7 +542,7 @@ public class GameManagerCS : MonoBehaviour
                         UpdateTroopInfo(_troop);
                         break;
                     case "Die":
-
+                        RemoveTroopInfo(troops[_troop.id]);
                         break;
                     default:
                         Debug.LogError("Could not find troop action: " + _troopDict[_troop]);

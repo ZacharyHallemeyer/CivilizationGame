@@ -266,6 +266,7 @@ public class ClientHandle : MonoBehaviour
             GameManagerCS.instance.WaitAndStartTurn(_packet);       // If all data is not recieved wait and try again
             return;
         }
+        GameManagerCS.instance.isTurn = true;
         GameManagerCS.instance.isAllTroopInfoReceived = false;
         GameManagerCS.instance.isAllTileInfoReceived = false;
         GameManagerCS.instance.isAllCityInfoReceived = false;

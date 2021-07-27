@@ -130,15 +130,6 @@ public class PlayerCS : MonoBehaviour
                     if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.MoveOntoCity(_tileInfo, _cityInfo);
                 }
-                /*
-                else if(_hit.collider.CompareTag("ConquerableCity"))
-                {
-                    TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
-                    CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
-                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
-                        _troop.troopActions.ConquerCity(_tileInfo, _cityInfo);
-                }
-                */
                 else
                 {
                     ResetAlteredTiles();
@@ -171,6 +162,8 @@ public class PlayerCS : MonoBehaviour
             GameManagerCS.instance.ResetTroops();
             GameManagerCS.instance.ResetCities();
             GameManagerCS.instance.ClearModifiedData();
+            GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
+            GameManagerCS.instance.isTurn = false;
         }
         if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)       // Zoom Camera in and out
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
