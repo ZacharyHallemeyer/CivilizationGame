@@ -190,6 +190,14 @@ public class GameManagerCS : MonoBehaviour
                     break;
             }
         }
+        // Change tile color just a little bit
+        MeshRenderer _tileMeshRender = _tile.GetComponent<MeshRenderer>();
+        _tileMeshRender.material.color = new Color(_tileMeshRender.material.color.r + Random.Range(-.1f, .1f),
+                                                    _tileMeshRender.material.color.g + Random.Range(-.1f, .1f),
+                                                    _tileMeshRender.material.color.b + Random.Range(-.1f, .1f),
+                                                    _tileMeshRender.material.color.a);
+        // End of changing tile color
+
         _tile.transform.parent = transform;
         TileInfo _tileInfo = _tile.AddComponent<TileInfo>();
         _tileInfo.moveUI = _tile.transform.GetChild(0).gameObject;  // Get move UI

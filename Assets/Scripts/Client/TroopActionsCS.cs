@@ -48,7 +48,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xCoord, z)) 
                     {
-                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index))
+                            break;
                         _index++;
                     }
                 }
@@ -58,7 +59,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
-                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        if(!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index))
+                            break;
                         _index++;
                     }
                 }
@@ -68,7 +70,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
-                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        if(!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index))
+                            break;
                         _index++;
                     }
                 }
@@ -78,7 +81,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
-                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        if(!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index))
+                            break;
                         _index++;
                     }
                 }
@@ -155,10 +159,15 @@ public class TroopActionsCS : MonoBehaviour
         }
     }
 
-    // set tile tags and layer for troop to be able to move onto them
-    public void CreateInteractableTilesHelperMovement(TileInfo _tile, int _index)
+    /// <summary>
+    /// set tile tags and layer for troop to be able to move onto them
+    /// returns true if the tile resolves to interactable
+    /// </summary>
+    /// <param name="_tile"> tile to be modified </param>
+    /// <param name="_index"> current index of objectsToBeReset array </param>
+    public bool CreateInteractableTilesHelperMovement(TileInfo _tile, int _index)
     {
-        if (_tile.isWater || _tile.isOccupied) return;
+        if (_tile.isWater || _tile.isOccupied) return false;
         if (_tile.isCity)
         {
             if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
@@ -170,7 +179,7 @@ public class TroopActionsCS : MonoBehaviour
             else
             {
                 // Prevent troops from moving onto a city that is training troops 
-                if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops) return;
+                if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops) return false;
             }
         }
         else
@@ -180,6 +189,7 @@ public class TroopActionsCS : MonoBehaviour
             _tile.moveUI.SetActive(true);
         }
         objecstToBeReset[_index] = _tile;
+        return true;
     }
 
     // set tile tags and layer for troop to be able to attack troop on said tile

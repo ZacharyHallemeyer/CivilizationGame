@@ -12,30 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
   m_Name: ColorAdjustments
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.56
+    m_Value: 0.42
   contrast:
     m_OverrideState: 1
-    m_Value: 21.7
+    m_Value: 4.9
     min: -100
     max: 100
   colorFilter:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
   hueShift:
-    m_OverrideState: 1
-    m_Value: 0
+    m_OverrideState: 0
+    m_Value: 4
     min: -180
     max: 180
   saturation:
     m_OverrideState: 1
-    m_Value: 100
+    m_Value: 21.7
     min: -100
     max: 100
 --- !u!114 &11400000
@@ -72,11 +72,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: {x: 0.9410667, y: 1, z: 0.95355004, w: -0.15128592}
   gamma:
-    m_OverrideState: 0
-    m_Value: {x: 1, y: 1, z: 1, w: 0.3933434}
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1, z: 1, w: 1}
   gain:
-    m_OverrideState: 0
-    m_Value: {x: 1, y: 1, z: 1, w: 0.10590014}
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1, z: 1, w: 1}
 --- !u!114 &2604604009514020006
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   threshold:
     m_OverrideState: 1
-    m_Value: 0.85
+    m_Value: 1.28
     min: 0
   intensity:
     m_OverrideState: 1
@@ -110,7 +110,7 @@ MonoBehaviour:
     min: 0
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0, g: 0.34342098, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
