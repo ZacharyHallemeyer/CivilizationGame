@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TroopActionsCS : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class TroopActionsCS : MonoBehaviour
 
     // Quick Menu
     public GameObject quickMenuContainer, mainContainer, mainKingContainer;
+    public Button createCityButton, conquerMainCityButton, conquerKingCityButton;
 
     #region Set Up
     /// <summary>
@@ -35,8 +37,9 @@ public class TroopActionsCS : MonoBehaviour
     {
         if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
         int _index = 0;
-        objecstToBeReset = new TileInfo[troopInfo.movementCost];
+        objecstToBeReset = new TileInfo[troopInfo.movementCost + troopInfo.attackRange];
 
+        // Create moveable tiles
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
         switch (troopInfo.rotation)
         {
@@ -45,7 +48,7 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xCoord, z)) 
                     {
-                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
                         _index++;
                     }
                 }
@@ -55,7 +58,7 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
-                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
                         _index++;
                     }
                 }
@@ -65,7 +68,7 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xCoord, z))
                     {
-                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
                         _index++;
                     }
                 }
@@ -75,7 +78,57 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zCoord))
                     {
-                        CreateInteractableTilesHelper(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        _index++;
+                    }
+                }
+                break;
+
+            default:
+                Debug.LogError("Troop " + troopInfo.id + " rotation is not compatible");
+                break;
+        }     
+
+        // Create attackable tiles
+        // Add/Minus 1 to for loop conditions to not include tile troop is currently on
+        switch (troopInfo.rotation)
+        {
+            case 0:
+                for (int z = troopInfo.zCoord + 1; z < troopInfo.zCoord + troopInfo.attackRange + 1; z++)
+                {
+                    if (CheckTileExists(troopInfo.xCoord, z)) 
+                    {
+                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        _index++;
+                    }
+                }
+                break;
+            case 90:
+                for (int x = troopInfo.xCoord + 1; x < troopInfo.xCoord + troopInfo.attackRange + 1; x++)
+                {
+                    if (CheckTileExists(x, troopInfo.zCoord))
+                    {
+                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
+                        _index++;
+                    }
+                }
+                break;
+            case 180:
+                for (int z = troopInfo.zCoord - 1; z > troopInfo.zCoord - troopInfo.attackRange - 1; z--)
+                {
+                    if (CheckTileExists(troopInfo.xCoord, z))
+                    {
+                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xCoord, z], _index);
+                        _index++;
+                    }
+                }
+                break;
+            case 270:
+                for (int x = troopInfo.xCoord - 1; x > troopInfo.xCoord - troopInfo.attackRange - 1; x--)
+                {
+                    if (CheckTileExists(x, troopInfo.zCoord))
+                    {
+                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zCoord], _index);
                         _index++;
                     }
                 }
@@ -102,43 +155,49 @@ public class TroopActionsCS : MonoBehaviour
         }
     }
 
-    public void CreateInteractableTilesHelper(TileInfo _tile, int _index)
+    // set tile tags and layer for troop to be able to move onto them
+    public void CreateInteractableTilesHelperMovement(TileInfo _tile, int _index)
+    {
+        if (_tile.isWater || _tile.isOccupied) return;
+        if (_tile.isCity)
+        {
+            if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
+            {
+                _tile.tile.layer = whatIsInteractableValue;
+                _tile.tile.tag = moveableCityTag;
+                _tile.moveUI.SetActive(true);
+            }
+            else
+            {
+                // Prevent troops from moving onto a city that is training troops 
+                if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops) return;
+            }
+        }
+        else
+        {
+            _tile.tile.layer = whatIsInteractableValue;
+            _tile.tile.tag = moveableTileTag;
+            _tile.moveUI.SetActive(true);
+        }
+        objecstToBeReset[_index] = _tile;
+    }
+
+    // set tile tags and layer for troop to be able to attack troop on said tile
+    public void CreateInteractableTilesHelperAttack(TileInfo _tile, int _index)
     {
         if (_tile.isWater) return;
-        if(_tile.isOccupied)
+        if (_tile.isOccupied)
         {
-            if(GameManagerCS.instance.troops[_tile.occupyingObjectId].ownerId != troopInfo.ownerId)
+            if (GameManagerCS.instance.troops[_tile.occupyingObjectId].ownerId != troopInfo.ownerId)
             {
                 _tile.tile.layer = whatIsInteractableValue;
                 _tile.tile.tag = attackableTileTag;
                 _tile.moveUI.SetActive(true);
             }
         }
-        else
-        {
-            if (_tile.isCity)
-            {
-                if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
-                {
-                    _tile.tile.layer = whatIsInteractableValue;
-                    _tile.tile.tag = moveableCityTag;
-                    _tile.moveUI.SetActive(true);
-                }
-                else
-                {
-                    // Prevent troops from moving onto a city that is training troops 
-                    if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops) return;
-                }
-            }
-            else
-            {
-                _tile.tile.layer = whatIsInteractableValue;
-                _tile.tile.tag = moveableTileTag;
-                _tile.moveUI.SetActive(true);
-            }
-        }
         objecstToBeReset[_index] = _tile;
     }
+
 
     /// <summary>
     /// Returns true if the provided coords of represent a real tile
@@ -344,7 +403,11 @@ public class TroopActionsCS : MonoBehaviour
     {
         quickMenuContainer.SetActive(true);
         if (troopInfo.troopName == "King")
+        {
             mainKingContainer.SetActive(true);
+            if (!CanCreateCity())
+                createCityButton.enabled = false;
+        }
         else
             mainContainer.SetActive(true);
     }
@@ -354,6 +417,7 @@ public class TroopActionsCS : MonoBehaviour
         quickMenuContainer.SetActive(false);
         mainContainer.SetActive(false);
         mainKingContainer.SetActive(false);
+        createCityButton.enabled = true;
     }
 
     #endregion
@@ -374,9 +438,91 @@ public class TroopActionsCS : MonoBehaviour
 
     #region King Actions
 
+    /// <summary>
+    /// Returns true is the conditions to create a city resolve to true
+    /// </summary>
+    public bool CanCreateCity()
+    {
+        bool _tooFarFromNearestOwnedCity = true, _tooFarFromNearestResource = true;
+        bool _playerOwnsCities = false;
+
+        // Check if there is an owned city in a certain max distance and return if there are none
+        for (int x = troopInfo.xCoord - GameManagerCS.instance.maxDistanceFromResource;
+            x <= troopInfo.xCoord + GameManagerCS.instance.maxDistanceFromResource;
+            x++)
+        {
+            for (int z = troopInfo.zCoord - GameManagerCS.instance.maxDistanceFromResource;
+                z <= troopInfo.zCoord + GameManagerCS.instance.maxDistanceFromResource;
+                z++)
+            {
+                if (CheckTileExists(x, z))
+                {
+                    TileInfo _tile = GameManagerCS.instance.tiles[x, z];
+                    if (_tile.isFood || _tile.isWood || _tile.isFood)
+                        _tooFarFromNearestResource = false;
+                }
+            }
+        }
+        if (_tooFarFromNearestResource) return false;
+
+
+        // Check if a city is too close and return if there is one
+        for (int x = troopInfo.xCoord - GameManagerCS.instance.minDistanceBetweenCities;
+            x <= troopInfo.xCoord + GameManagerCS.instance.minDistanceBetweenCities;
+            x++)
+        {
+            for (int z = troopInfo.zCoord - GameManagerCS.instance.minDistanceBetweenCities;
+                z <= troopInfo.zCoord + GameManagerCS.instance.minDistanceBetweenCities;
+                z++)
+            {
+                if(CheckTileExists(x, z))
+                {
+                    if (GameManagerCS.instance.tiles[x, z].isCity)
+                        return false;
+                }
+            }
+        }
+
+        // If player does not own city then return true only after checking if resources are close enough and other cities are far enough away
+        foreach(CityInfo _city in GameManagerCS.instance.cities.Values)
+        {
+            if (_city.ownerId == troopInfo.ownerId)
+                _playerOwnsCities = true;
+        }
+        if (!_playerOwnsCities) return true;
+
+        // Check if there is an owned city in a certain max distance and return if there are none
+        for (int x = troopInfo.xCoord - GameManagerCS.instance.maxDistanceBetweenCities;
+            x <= troopInfo.xCoord + GameManagerCS.instance.maxDistanceBetweenCities;
+            x++)
+        {
+            for (int z = troopInfo.zCoord - GameManagerCS.instance.maxDistanceBetweenCities;
+                z <= troopInfo.zCoord + GameManagerCS.instance.maxDistanceBetweenCities;
+                z++)
+            {
+                if (CheckTileExists(x, z))
+                {
+                    TileInfo _tile = GameManagerCS.instance.tiles[x, z];
+                    if (_tile.isCity)
+                    {
+                        if(GameManagerCS.instance.cities[_tile.cityId].ownerId == troopInfo.ownerId)
+                            _tooFarFromNearestOwnedCity = false;
+                    }
+                }
+            }
+        }
+        if (_tooFarFromNearestOwnedCity) return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Create city 
+    /// This function is called through troop quick menu
+    /// </summary>
     public void CreateCity()
     {
-        // Conditions
+        if (!CanCreateCity()) return;
 
         GameManagerCS.instance.SpawnCity(troopInfo.xCoord, troopInfo.zCoord);
     }

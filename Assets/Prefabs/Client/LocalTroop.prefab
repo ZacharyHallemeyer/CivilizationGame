@@ -1036,6 +1036,9 @@ MonoBehaviour:
   quickMenuContainer: {fileID: 5346594275940789123}
   mainContainer: {fileID: 5356447501384015743}
   mainKingContainer: {fileID: 1239425117183171000}
+  createCityButton: {fileID: 8221452008795021262}
+  conquerMainCityButton: {fileID: 0}
+  conquerKingCityButton: {fileID: 0}
 --- !u!1 &4967855635168848423
 GameObject:
   m_ObjectHideFlags: 0

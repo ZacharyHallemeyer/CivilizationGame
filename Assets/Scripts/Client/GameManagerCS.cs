@@ -34,6 +34,8 @@ public class GameManagerCS : MonoBehaviour
     public GameObject startScreenUI, startButtonObject;
     public Button startButton;
 
+    public int minDistanceBetweenCities = 5, maxDistanceBetweenCities = 15, maxDistanceFromResource = 5;
+
     #region Set Up Functions
 
     // Set instance or destroy if instance already exist
@@ -281,12 +283,9 @@ public class GameManagerCS : MonoBehaviour
         troops.Add(_troopInfo.id, _troopInfo);
     }
 
-    public void ToggleSpawnKingButton()
-    {
-        if (!(recievedAllNewNeutralCityData && recievedAllNewTileData)) return;
-        startButton.enabled = true;
-    }
-
+    /// <summary>
+    /// Spawn King troop
+    /// </summary>
     public void SpawnKing()
     {
         SpawnTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
@@ -343,10 +342,23 @@ public class GameManagerCS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enable spawn king button
+    /// </summary>
+    public void ToggleSpawnKingButton()
+    {
+        if (!(recievedAllNewNeutralCityData && recievedAllNewTileData)) return;
+        startButton.enabled = true;
+    }
+
     #endregion
 
     #region City
 
+    /// <summary>
+    /// Create New neutral city
+    /// Does NOT update modified cities dict.
+    /// </summary>
     public void CreateNewNeutralCity(int _id, int _ownerId, float _moral, float _education, int _manPower, int _money, int _metal,
                                      int _wood, int _food, int _ownerShipRange, int _woodResourcesPerTurn, int _metalResourcesPerTurn,
                                      int _foodResourcesPerTurn, int _xIndex, int _zIndex)
@@ -447,6 +459,7 @@ public class GameManagerCS : MonoBehaviour
 
     public void ResetCities()
     {
+        /*
         foreach (CityInfo _city in cities.Values)
         {
             if (_city.ownerId == ClientCS.instance.myId)
@@ -454,6 +467,7 @@ public class GameManagerCS : MonoBehaviour
                 //_city.isTrainingTroops = false;
             }
         }
+        */
     }
 
     #endregion 
@@ -562,6 +576,7 @@ public class GameManagerCS : MonoBehaviour
         }
         ClearModifiedData();
 
+        // Start of turn city stuff
         foreach(CityInfo _city in cities.Values)
         {
             if (_city.isBeingConquered)
