@@ -256,11 +256,14 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_xCoord"> x coord to spawn troop </param>
     /// <param name="_zCoord"> z coord to spawn troop </param>
     /// <param name="_rotation"> rotation of new troop </param>
-    public void SpawnTroop(int _ownerId, string _troopName, int _xCoord, int _zCoord, int _rotation)
+    public void SpawnTroop(int _ownerId, string _troopName, int _xIndex, int _zIndex, int _rotation)
     {
+        int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
+        int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
         GameObject _troop = Instantiate(localTroopPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
-        _troop.AddComponent<TroopInfo>().InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, _xCoord, _zCoord);
+        _troop.AddComponent<TroopInfo>().InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, 
+                                                        _xIndex, _zIndex);
        
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;
@@ -268,7 +271,7 @@ public class GameManagerCS : MonoBehaviour
             { {_troop.GetComponent<TroopInfo>(), "Spawn"} };
         modifiedTroopInfo.Add(_troopData);
 
-        TileInfo _tile = tiles[_xCoord, _zCoord];
+        TileInfo _tile = tiles[_xIndex, _zIndex];
         _tile.isOccupied = true;
         _tile.occupyingObjectId = _troop.GetComponent<TroopInfo>().id;
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
@@ -283,7 +286,9 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_troopInfoToCopy"> Existing troop spawn and init </param>
     public void SpawnTroop(TroopInfo _troopInfoToCopy)
     {
-        GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_troopInfoToCopy.xCoord, 1, _troopInfoToCopy.zCoord),
+        int _xCoord = (int)tiles[_troopInfoToCopy.xIndex, _troopInfoToCopy.zIndex].position.x;
+        int _zCoord = (int)tiles[_troopInfoToCopy.xIndex, _troopInfoToCopy.zIndex].position.y;
+        GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_xCoord, 1, _zCoord),
                                         Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
@@ -309,11 +314,13 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_troopInfo"></param>
     public void MoveTroopToNewTile(TroopInfo _troopInfo)
     {
-        troops[_troopInfo.id].xCoord = _troopInfo.xCoord;
-        troops[_troopInfo.id].zCoord = _troopInfo.zCoord;
-        troops[_troopInfo.id].troop.transform.position = new Vector3(troops[_troopInfo.id].xCoord,
+        troops[_troopInfo.id].xIndex = _troopInfo.xIndex;
+        troops[_troopInfo.id].zIndex = _troopInfo.zIndex;
+        int _xCoord = (int)tiles[_troopInfo.xIndex, _troopInfo.zIndex].position.x;
+        int _zCoord = (int)tiles[_troopInfo.xIndex, _troopInfo.zIndex].position.y;
+        troops[_troopInfo.id].troop.transform.position = new Vector3(_xCoord,
                                                             troops[_troopInfo.id].troop.transform.position.y,
-                                                            troops[_troopInfo.id].zCoord);
+                                                            _zCoord);
     }
 
     /// <summary>

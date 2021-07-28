@@ -211,6 +211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tile: {fileID: 7715327627315077237, guid: 4db03b61577ad3243870498e0118850e, type: 3}
   allCubes: []
+  neutralCities: []
   groundXSize: 100
   groundZSize: 100
   scale: 10
@@ -220,6 +221,10 @@ MonoBehaviour:
   landLevel: 1
   worleyPointCount: 250
   biomeOptions: []
+  amountOfFoodTiles: 15
+  amountofWoodTiles: 15
+  amountOfMetalTiles: 15
+  amountOfNeutralCities: 15
 --- !u!114 &800202102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,14 +238,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTroopId: 0
+  currentCityId: 0
   currentPlayerTurnId: 0
   playerIds: 
   isAllTroopInfoReceived: 1
   isAllTileInfoReceived: 1
   isAllCityInfoReceived: 1
-  modifiedTroopInfo: []
-  modifiedTileInfo: []
-  modifiedCityInfo: []
 --- !u!4 &800202103
 Transform:
   m_ObjectHideFlags: 0

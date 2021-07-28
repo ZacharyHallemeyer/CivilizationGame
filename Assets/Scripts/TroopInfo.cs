@@ -11,7 +11,7 @@ public class TroopInfo : MonoBehaviour
 
     public int id;
     public int ownerId;
-    public int xCoord, zCoord;
+    public int xIndex, zIndex;
     public int rotation = 0;
     public int baseDefense;
     public int facingDefense;
@@ -35,7 +35,7 @@ public class TroopInfo : MonoBehaviour
     /// Init troop info for new troop and set values for troop to be used this round
     /// </summary>
     public void InitTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
-                              int _id, int _ownerId, int _xCoord, int _zCoord)
+                              int _id, int _ownerId, int _xIndex, int _zIndex)
     {
         troopName = _troopName;
         troop = _troop;
@@ -43,8 +43,8 @@ public class TroopInfo : MonoBehaviour
         troopActions.InitTroopActions(this);
         id = _id;
         ownerId = _ownerId;
-        xCoord = _xCoord;
-        zCoord = _zCoord;
+        xIndex = _xIndex;
+        zIndex = _zIndex;
         rotation = 0;
 
         health = Constants.troopInfoInt[_troopName]["Health"];
@@ -71,7 +71,7 @@ public class TroopInfo : MonoBehaviour
     /// Init troop info for new troop that can not be used first round
     /// </summary>
     public void InitTroopInfoDisabledFtrstTurn(string _troopName, GameObject _troop, TroopActionsCS _troopActions,
-                              int _id, int _ownerId, int _xCoord, int _zCoord)
+                              int _id, int _ownerId, int _xIndex, int _zIndex)
     {
         troopName = _troopName;
         troop = _troop;
@@ -79,8 +79,8 @@ public class TroopInfo : MonoBehaviour
         troopActions.InitTroopActions(this);
         id = _id;
         ownerId = _ownerId;
-        xCoord = _xCoord;
-        zCoord = _zCoord;
+        xIndex = _xIndex;
+        zIndex = _zIndex;
         rotation = 0;
 
         health = Constants.troopInfoInt[_troopName]["Health"];
@@ -116,8 +116,8 @@ public class TroopInfo : MonoBehaviour
         troopActions.InitTroopActions(this);
         id = _troopInfo.id;
         ownerId = _troopInfo.ownerId;
-        xCoord = _troopInfo.xCoord;
-        zCoord = _troopInfo.zCoord;
+        xIndex = _troopInfo.xIndex;
+        zIndex = _troopInfo.zIndex;
         rotation = _troopInfo.rotation;
 
         health = _troopInfo.health;
@@ -143,8 +143,8 @@ public class TroopInfo : MonoBehaviour
     {
         id = _troopInfo.id;
         ownerId = _troopInfo.ownerId;
-        xCoord = _troopInfo.xCoord;
-        zCoord = _troopInfo.zCoord;
+        xIndex = _troopInfo.xIndex;
+        zIndex = _troopInfo.zIndex;
         rotation = _troopInfo.rotation;
         health = _troopInfo.health;
         baseAttack = _troopInfo.baseAttack;

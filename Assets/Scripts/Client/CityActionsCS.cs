@@ -53,7 +53,7 @@ public class CityActionsCS : MonoBehaviour
     {
         int _xCoord = (int)GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].position.x;
         int _zCoord = (int)GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].position.y;
-        GameManagerCS.instance.SpawnTroop(ClientCS.instance.myId, currentTroopTraining, _xCoord, _zCoord, 0);
+        GameManagerCS.instance.SpawnTroop(ClientCS.instance.myId, currentTroopTraining, cityInfo.xIndex, cityInfo.zIndex, 0);
         /*
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
         { { cityInfo, "SpawnTroop"} };

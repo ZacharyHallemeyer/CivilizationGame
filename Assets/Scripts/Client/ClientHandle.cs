@@ -160,8 +160,8 @@ public class ClientHandle : MonoBehaviour
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
         _troop.id = _id;
         _troop.ownerId = _packet.ReadInt();
-        _troop.xCoord = _packet.ReadInt();
-        _troop.zCoord = _packet.ReadInt();
+        _troop.xIndex = _packet.ReadInt();
+        _troop.zIndex = _packet.ReadInt();
         _troop.rotation = _packet.ReadInt();
         _troop.health = _packet.ReadInt();
         _troop.baseAttack = _packet.ReadInt();

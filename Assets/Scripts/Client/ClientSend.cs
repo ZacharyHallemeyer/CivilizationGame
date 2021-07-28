@@ -59,8 +59,8 @@ public class ClientSend : MonoBehaviour
                 {
                     _packet.Write(_troop.id);
                     _packet.Write(_troop.ownerId);
-                    _packet.Write(_troop.xCoord);
-                    _packet.Write(_troop.zCoord);
+                    _packet.Write(_troop.xIndex);
+                    _packet.Write(_troop.zIndex);
                     _packet.Write(_troop.rotation);
                     _packet.Write(_troop.health);
                     _packet.Write(_troop.baseAttack);
