@@ -27,6 +27,7 @@ public class TileInfo : MonoBehaviour
     public int idOfPlayerThatSentInfo;
 
     public GameObject resourceObject;
+    public GameObject ownerShipVisualObject;
 
     public void InitTileInfo(GameObject _tile, string _biomeName, int _id, int _ownerId, int _xIndex, int _yIndex)
     {

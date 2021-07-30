@@ -28,6 +28,7 @@ public class GameManagerCS : MonoBehaviour
                       tundraTilePrefab, waterTilePrefab;
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab;
     public GameObject cityPrefab;
+    public GameObject ownershipObjectPrefab;
 
     public string[] troopNames;
     public string[] biomeOptions;
@@ -229,11 +230,18 @@ public class GameManagerCS : MonoBehaviour
 
         // Spawn appropriate resource object
         if (_tileInfo.isFood)
-            _tileInfo.resourceObject = Instantiate(foodResourcePrefab, new Vector3(_position.x, .725f, _position.y), Quaternion.identity);
+            _tileInfo.resourceObject = Instantiate(foodResourcePrefab, new Vector3(_position.x, foodResourcePrefab.transform.position.y, 
+                                                                                    _position.y), foodResourcePrefab.transform.localRotation);
         if (_tileInfo.isWood)
-            _tileInfo.resourceObject = Instantiate(woodResourcePrefab, new Vector3(_position.x, .725f, _position.y), Quaternion.identity);
+            _tileInfo.resourceObject = Instantiate(woodResourcePrefab, new Vector3(_position.x, woodResourcePrefab.transform.position.y,
+                                                                                    _position.y), woodResourcePrefab.transform.localRotation);
         if (_tileInfo.isMetal)
-            _tileInfo.resourceObject = Instantiate(metalResourcePrefab, new Vector3(_position.x, .725f, _position.y), Quaternion.identity);
+            _tileInfo.resourceObject = Instantiate(metalResourcePrefab, new Vector3(_position.x, metalResourcePrefab.transform.position.y,
+                                                                                    _position.y), metalResourcePrefab.transform.localRotation);
+        // Spawn tile ownership object
+        _tileInfo.ownerShipVisualObject = Instantiate(ownershipObjectPrefab, new Vector3(_position.x, ownershipObjectPrefab.transform.position.y,
+                                                                                         _position.y), Quaternion.identity);
+        _tileInfo.ownerShipVisualObject.SetActive(false);
     }
 
     /// <summary>
@@ -245,7 +253,17 @@ public class GameManagerCS : MonoBehaviour
     {
         tiles[_tile.xIndex, _tile.yIndex].UpdateTileInfo(_tile);
     }
-    
+
+    /// <summary>
+    /// Updates tile's owner and displays it through visual object
+    /// </summary>
+    /// <param name="_tile"></param>
+    public void UpdateOwnedTileInfo(TileInfo _tile)
+    {
+        tiles[_tile.xIndex, _tile.yIndex].ownerShipVisualObject.SetActive(true);
+        UpdateTileInfo(_tile);
+    }
+
     #endregion
 
     #region Troop
@@ -445,9 +463,27 @@ public class GameManagerCS : MonoBehaviour
         TileInfo _tile = tiles[_xIndex, _zIndex];
         _tile.isCity = true;
         _tile.cityId = currentCityIndex;
-        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+        _tile.ownerId = _cityInfo.ownerId
+;       Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
         { { _tile, "Update"} };
         modifiedTileInfo.Add(_tileData);
+
+        for(int x = _xIndex - _cityInfo.ownerShipRange; x < _xIndex + _cityInfo.ownerShipRange + 1; x++)
+        {
+            for(int z = _zIndex - _cityInfo.ownerShipRange; z < _zIndex + _cityInfo.ownerShipRange + 1; z++)
+            {
+                if(x >= 0 && x < tiles.GetLength(0)
+                 && z >= 0 && z < tiles.GetLength(1))
+                {
+                    _tile = tiles[x, z];
+                    _tile.ownerId = _cityInfo.ownerId;
+                    _tile.ownerShipVisualObject.SetActive(true);
+                    _tileData = new Dictionary<TileInfo, string>()
+                    { { _tile, "Owned"} };
+                    modifiedTileInfo.Add(_tileData);
+                }
+            }
+        }
         currentCityIndex++;
     }
 
@@ -583,6 +619,9 @@ public class GameManagerCS : MonoBehaviour
                 {
                     case "Update":
                         UpdateTileInfo(_tile);
+                        break;
+                    case "Owned":
+                        UpdateOwnedTileInfo(_tile);
                         break;
                     default:
                         Debug.LogError("Could not find tile action: " + _tileDict[_tile]);

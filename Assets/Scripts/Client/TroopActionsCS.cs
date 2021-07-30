@@ -273,6 +273,7 @@ public class TroopActionsCS : MonoBehaviour
 
         // Move troop while doing the move animation
         StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
+        PlayerCS.instance.isAnimInProgress = true;
 
         // Update new tile
         troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.yIndex - _oldTile.yIndex);
@@ -321,6 +322,7 @@ public class TroopActionsCS : MonoBehaviour
             Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {troopInfo, "Move"} };
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+            PlayerCS.instance.isAnimInProgress = false;
         }
     }
 
@@ -388,6 +390,25 @@ public class TroopActionsCS : MonoBehaviour
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
         { { _city, "Conquer" } };
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
+
+        Dictionary<TileInfo, string> _tileData;
+        for (int x = _city.xIndex - _city.ownerShipRange; x < _city.xIndex + _city.ownerShipRange + 1; x++)
+        {
+            for (int z = _city.zIndex - _city.ownerShipRange; z < _city.zIndex + _city.ownerShipRange + 1; z++)
+            {
+                if (x >= 0 && x < GameManagerCS.instance.tiles.GetLength(0)
+                 && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1))
+                {
+                    _tile = GameManagerCS.instance.tiles[x, z];
+                    _tile.ownerId = _city.ownerId;
+                    _tile.ownerShipVisualObject.SetActive(true);
+                    _tileData = new Dictionary<TileInfo, string>()
+                    { { _tile, "Owned"} };
+                    GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
+                }
+            }
+        }
+
         ResetAlteredTiles();
     }
 

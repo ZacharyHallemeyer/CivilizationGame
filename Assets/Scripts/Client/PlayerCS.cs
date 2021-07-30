@@ -33,6 +33,9 @@ public class PlayerCS : MonoBehaviour
     public Vector3 differenceRotation;
     public float camForce, camCounterForce;
 
+    // Status variables
+    public bool isAnimInProgress = false;
+
     // Set instance and needed variables
     private void Awake()
     {
@@ -73,15 +76,15 @@ public class PlayerCS : MonoBehaviour
     // Read player input and start actions based on this input
     void Update()
     {
+        if (isAnimInProgress) return;
         // TESTING
         if (inputMaster.Player.Testing.triggered)
         {
             //GameManagerCS.instance.InstantiateTroop(id, "Scout", Random.Range(0, 10), Random.Range(0, 10), 0);
-            GameManagerCS.instance.SpawnCity(Random.Range(0, 10), Random.Range(0, 10));
+            //GameManagerCS.instance.SpawnCity(Random.Range(0, 10), Random.Range(0, 10));
         }
 
         // TESTING END
-
         if (inputMaster.Player.Select.triggered)
         {
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());
@@ -91,7 +94,6 @@ public class PlayerCS : MonoBehaviour
                 {
                     ResetAlteredTiles();
                     TroopInfo _troop = _hit.collider.GetComponent<TroopInfo>();
-                    Debug.Log(_hit.collider.name);
                     if (_troop.ownerId == id)
                     {
                         _troop.troopActions.ShowQuickMenu();
