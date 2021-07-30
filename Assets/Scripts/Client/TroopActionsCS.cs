@@ -623,5 +623,4 @@ public class TroopActionsCS : MonoBehaviour
     }
 
     #endregion
-
 }

@@ -212,8 +212,8 @@ MonoBehaviour:
   tile: {fileID: 7715327627315077237, guid: 4db03b61577ad3243870498e0118850e, type: 3}
   allCubes: []
   neutralCities: []
-  groundXSize: 100
-  groundZSize: 100
+  groundXSize: 50
+  groundZSize: 50
   scale: 10
   xPerlinOffset: 0
   yPerlinOffset: 0

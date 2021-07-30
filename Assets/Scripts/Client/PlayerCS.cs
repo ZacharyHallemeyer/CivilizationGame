@@ -18,13 +18,13 @@ public class PlayerCS : MonoBehaviour
     public int _currentSelectedCityId = -1;
 
     // Stats
-    public float morale = 0;
-    public float education = 0;
-    public int manPower = 0;
-    public int money = 0;
-    public int metal = 0;
-    public int wood = 0;
-    public int food = 0;
+    public float morale = 1;
+    public float education = 1;
+    public int population = 1;
+    public int money = 100;
+    public int metal = 1;
+    public int wood = 1;
+    public int food = 1;
 
     // Camera movement
     public Mouse mouse;
@@ -91,6 +91,7 @@ public class PlayerCS : MonoBehaviour
                 {
                     ResetAlteredTiles();
                     TroopInfo _troop = _hit.collider.GetComponent<TroopInfo>();
+                    Debug.Log(_hit.collider.name);
                     if (_troop.ownerId == id)
                     {
                         _troop.troopActions.ShowQuickMenu();

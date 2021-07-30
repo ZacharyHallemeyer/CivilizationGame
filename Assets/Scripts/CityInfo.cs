@@ -21,6 +21,8 @@ public class CityInfo : MonoBehaviour
     public int woodResourcesPerTurn;
     public int metalResourcesPerTurn;
     public int foodResourcesPerTurn;
+    public int moneyResourcesPerTurn;
+    public int populationResourcesPerTurn;
 
     // Status variables
     public bool isBeingConquered = false;           // tile is being occupied by troop not owned by city owner

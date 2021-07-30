@@ -37,6 +37,8 @@ public class GameManagerCS : MonoBehaviour
 
     public int minDistanceBetweenCities = 5, maxDistanceBetweenCities = 15, maxDistanceFromResource = 5;
 
+    public PlayerUI playerUI;
+
     #region Set Up Functions
 
     // Set instance or destroy if instance already exist
@@ -303,6 +305,9 @@ public class GameManagerCS : MonoBehaviour
     public void SpawnKing()
     {
         if (!isTurn) return;
+        playerUI.playerUIContainer.SetActive(true);
+        playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
+                                  PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
         SpawnTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
         startScreenUI.SetActive(false);
     }
@@ -469,7 +474,7 @@ public class GameManagerCS : MonoBehaviour
         cities[_cityToCopy.id].UpdateCityInfo(_cityToCopy);
     }
 
-    public void AddCityResources()
+    public void AddCityResourcesAtStartOfTurn()
     {
         foreach(CityInfo _city in cities.Values)
         {
@@ -480,6 +485,18 @@ public class GameManagerCS : MonoBehaviour
                 PlayerCS.instance.food += _city.foodResourcesPerTurn;
             }
         }
+        playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
+                                  PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
+    }
+
+    public void AddCityResources(int _foodAmount, int _woodAmount, int _metalAmount)
+    {
+        PlayerCS.instance.food += _foodAmount;
+        PlayerCS.instance.wood += _woodAmount;
+        PlayerCS.instance.metal += _metalAmount;
+
+        playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
+                                  PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
     }
 
     public void ResetCities()
@@ -625,7 +642,7 @@ public class GameManagerCS : MonoBehaviour
             }
         }
 
-        AddCityResources();
+        AddCityResourcesAtStartOfTurn();
         PlayerCS.instance.enabled = true;
     }
 

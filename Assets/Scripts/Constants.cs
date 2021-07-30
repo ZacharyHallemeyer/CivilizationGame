@@ -19,8 +19,10 @@ public static class Constants
                 { "MaxStartingEducation", 3f },
                 { "MovementCost", 1f },
                 { "MaxStartingWoodResourcesPerTurn", 1f },
-                { "MaxStartingMetalResourcesPerTurn", 1f },
+                { "MaxStartingMetalResourcesPerTurn", 2f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
+                { "MaxStartingMoneyResourcesPerTurn", 100f },
+                { "MaxStartingPopulationResourcesPerTurn", 5f },
             }
         },
 
@@ -39,6 +41,8 @@ public static class Constants
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
+                { "MaxStartingMoneyResourcesPerTurn", 100f },
+                { "MaxStartingPopulationResourcesPerTurn", 10f },
             }
         },
 
@@ -57,6 +61,8 @@ public static class Constants
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
+                { "MaxStartingMoneyResourcesPerTurn", 100f },
+                { "MaxStartingPopulationResourcesPerTurn", 10f },
             }
         },
 
@@ -75,6 +81,8 @@ public static class Constants
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
+                { "MaxStartingMoneyResourcesPerTurn", 50f },
+                { "MaxStartingPopulationResourcesPerTurn", 20f },
             }
         },
 
@@ -93,6 +101,8 @@ public static class Constants
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
+                { "MaxStartingMoneyResourcesPerTurn", 100f },
+                { "MaxStartingPopulationResourcesPerTurn", 5f },
             }
         },
 
@@ -111,6 +121,8 @@ public static class Constants
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
+                { "MaxStartingMoneyResourcesPerTurn", 200f },
+                { "MaxStartingPopulationResourcesPerTurn", 5f },
             }
         },
     };
@@ -272,6 +284,239 @@ public static class Constants
             {
                 { "CanMultyKill", false},
             }
+        },
+    };
+
+    public static Dictionary<string, Dictionary<string, int>> prices = new Dictionary<string, Dictionary<string, int>>()
+    {
+        { "Lumberyard" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Farm" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Mine" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Housing" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "School" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Library" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Lab" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Dome" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Road" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Wall" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Scout" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            }
+        },
+        { "Militia" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Army" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Missle" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Defense" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Snipper" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Stealth" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+    };
+
+    public static Dictionary<string, Dictionary<string, int>> buildingResourceGain = new Dictionary<string, Dictionary<string, int>>()
+    {
+        { "Lumberyard" , new Dictionary<string, int> 
+            {
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Farm" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Mine" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Housing" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "School" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Library" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Lab" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
+        },
+        { "Dome" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 10 },
+                { "Population", 10 },
+            } 
         },
     };
 }
