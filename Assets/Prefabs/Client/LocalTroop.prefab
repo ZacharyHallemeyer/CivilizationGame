@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1116131314490721394}
   - component: {fileID: 3382802491852905766}
   m_Layer: 8
-  m_Name: ConquerCity
+  m_Name: ConquerCityKing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1037,8 +1037,8 @@ MonoBehaviour:
   mainContainer: {fileID: 5356447501384015743}
   mainKingContainer: {fileID: 1239425117183171000}
   createCityButton: {fileID: 8221452008795021262}
-  conquerMainCityButton: {fileID: 0}
-  conquerKingCityButton: {fileID: 0}
+  conquerMainCityButton: {fileID: 3820900009885143345}
+  conquerKingCityButton: {fileID: 3382802491852905766}
 --- !u!1 &4967855635168848423
 GameObject:
   m_ObjectHideFlags: 0
@@ -1582,7 +1582,7 @@ GameObject:
   - component: {fileID: 5519752096622208401}
   - component: {fileID: 3820900009885143345}
   m_Layer: 8
-  m_Name: ConquerCity
+  m_Name: ConquerCityMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

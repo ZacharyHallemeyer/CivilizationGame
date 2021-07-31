@@ -547,6 +547,8 @@ MonoBehaviour:
   maxDistanceBetweenCities: 15
   maxDistanceFromResource: 5
   playerUI: {fileID: 734692421}
+  whatIsInteractableValue: 0
+  whatIsDefaultValue: 0
 --- !u!1 &313555650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1456,7 +1458,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &734692420
 Transform:
   m_ObjectHideFlags: 0
@@ -1484,7 +1486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 551e6dd11cbdb094c81b2bfb99c1bc91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerUIContainer: {fileID: 734692419}
+  playerUIContainer: {fileID: 1725616854}
   foodText: {fileID: 1547368914}
   woodText: {fileID: 1800542907}
   metalText: {fileID: 194169077}
@@ -3265,7 +3267,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1725616855
 RectTransform:
   m_ObjectHideFlags: 0

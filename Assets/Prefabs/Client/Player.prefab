@@ -50,11 +50,11 @@ MonoBehaviour:
     m_Bits: 256
   cam: {fileID: 0}
   camRB: {fileID: 0}
-  _currentSelectedTroopId: -1
-  _currentSelectedCityId: -1
-  morale: 1
-  education: 1
-  population: 1
+  currentSelectedTroopId: -1
+  currentSelectedCityId: -1
+  morale: 0
+  education: 0
+  population: 5
   money: 100
   metal: 1
   wood: 1
@@ -64,3 +64,4 @@ MonoBehaviour:
   differenceRotation: {x: 0, y: 0, z: 0}
   camForce: 50
   camCounterForce: 200
+  isAnimInProgress: 0

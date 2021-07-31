@@ -13,14 +13,15 @@ public class PlayerCS : MonoBehaviour
     public LayerMask whatIsIteractable;
     public Camera cam;
     public Rigidbody camRB;
+    private PlayerUI playerUI;
 
     public int currentSelectedTroopId = -1;
     public int currentSelectedCityId  = -1;
 
     // Stats
-    public float morale = 1;
-    public float education = 1;
-    public int population = 1;
+    public float morale = 0;
+    public float education = 0;
+    public int population = 5;
     public int money = 100;
     public int metal = 1;
     public int wood = 1;
@@ -50,6 +51,7 @@ public class PlayerCS : MonoBehaviour
         inputMaster = new InputMaster();
         cam = FindObjectOfType<Camera>();
         camRB = cam.GetComponent<Rigidbody>();
+        playerUI = FindObjectOfType<PlayerUI>().GetComponent<PlayerUI>();
         mouse = Mouse.current;
         Cursor.lockState = CursorLockMode.Confined;
     }
@@ -257,6 +259,23 @@ public class PlayerCS : MonoBehaviour
         {
             camRB.AddForce(-camRB.velocity * camCounterForce * Time.deltaTime);
         }
+    }
+
+    public void ResetMoraleAndEducation()
+    {
+        morale = 0;
+        education = 0;
+
+        foreach (CityInfo _city in GameManagerCS.instance.cities.Values)
+        {
+            if (_city.ownerId == ClientCS.instance.myId && !_city.isBeingConquered)
+            {
+                morale += _city.morale;
+                education += _city.education;
+            }
+        }
+        playerUI.SetMoraleAmount(morale);
+        playerUI.SetEducationText(education);
     }
 }
 

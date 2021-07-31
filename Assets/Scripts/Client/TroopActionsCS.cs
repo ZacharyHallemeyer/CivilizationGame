@@ -505,15 +505,49 @@ public class TroopActionsCS : MonoBehaviour
 
     public void ShowQuickMenu()
     {
+        DisplayerPossibleActions();
         quickMenuContainer.SetActive(true);
         if (troopInfo.troopName == "King")
         {
             mainKingContainer.SetActive(true);
-            if (!CanCreateCity())
-                createCityButton.enabled = false;
         }
         else
             mainContainer.SetActive(true);
+    }
+
+    public void DisplayerPossibleActions()
+    {
+        // Check if troop can conquer a city
+        TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
+        if(_tile.isCity )
+        {
+            CityInfo _city = GameManagerCS.instance.cities[_tile.cityId];
+            if(_city.isAbleToBeConquered)
+            {
+                Debug.Log("City is able to be conquered");
+                if (troopInfo.troopName == "King")
+                    conquerKingCityButton.enabled = true;
+                else
+                    conquerMainCityButton.enabled = true;
+            }
+            else
+            {
+                conquerKingCityButton.enabled = false;
+                conquerMainCityButton.enabled = false;
+            }
+        }
+        else
+        {
+            conquerKingCityButton.enabled = false;
+            conquerMainCityButton.enabled = false;
+        }
+        if(troopInfo.troopName == "King")
+        {
+            if (!CanCreateCity())
+                createCityButton.enabled = false;
+            else
+                createCityButton.enabled = true;
+        }
     }
 
     public void ResetQuickMenu()

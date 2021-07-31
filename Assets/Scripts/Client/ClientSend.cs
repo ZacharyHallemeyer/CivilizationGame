@@ -141,6 +141,8 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_city.woodResourcesPerTurn);
                     _packet.Write(_city.metalResourcesPerTurn);
                     _packet.Write(_city.foodResourcesPerTurn);
+                    _packet.Write(_city.moneyResourcesPerTurn);
+                    _packet.Write(_city.populationResourcesPerTurn);
                     _packet.Write(_city.isBeingConquered);
                     _packet.Write(_city.isConstructingBuilding);
                     _packet.Write(_city.occupyingObjectId);

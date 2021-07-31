@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CityActionsCS : MonoBehaviour
 {
     public GameObject quickMenuContainer, mainContainer, troopContainer, constructContainer, statsContainer;
     public CityInfo cityInfo;
+
+    // Buttons
+    public Button scoutButton, militiaButton, armyButton, missleButton, defenseButton, stealthButton, snipperButton;
+    public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton;
 
     public string currentTroopTraining, currentBuidlingToBuild;
 
@@ -47,6 +52,48 @@ public class CityActionsCS : MonoBehaviour
         statsContainer.SetActive(false);
     }
 
+    public void DisplayPossibleBuildings()
+    {
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["LumberYard"]))
+            lumberYardButton.enabled = true;
+        else 
+            lumberYardButton.enabled=  false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Farm"]))
+            farmButton.enabled = true;
+        else
+            farmButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Mine"]))
+            mineButton.enabled = true;
+        else
+            mineButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Housing"]))
+            housingButton.enabled = true;
+        else
+            housingButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["School"]))
+            schoolButton.enabled = true;
+        else
+            schoolButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Library"]))
+            libraryButton.enabled = true;
+        else
+            libraryButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Dome"]))
+            domeButton.enabled = true;
+        else
+            domeButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Market"]))
+            marketButton.enabled = true;
+        else
+            marketButton.enabled = false;
+    }
+
+    public bool DoesPlayerHaveEnoughResources(PlayerCS _player, Dictionary<string, int> _priceDict)
+    {
+        return _player.food >= _priceDict["Food"] && _player.metal >= _priceDict["Metal"] && _player.wood >= _priceDict["Wood"] &&
+               _player.money >= _priceDict["Money"] && _player.population >= _priceDict["Population"];
+    }
+
     public void StartTrainTroop(string _troopName)
     {
         if (GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied || cityInfo.isTrainingTroops) return;
@@ -73,6 +120,21 @@ public class CityActionsCS : MonoBehaviour
 
     public void BuildBuilding(TileInfo _tileInfo)
     {
+        // Update resource per turn
+        cityInfo.foodResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Food"];
+        cityInfo.metalResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Metal"];
+        cityInfo.woodResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Wood"];
+        cityInfo.moneyResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Money"];
+        cityInfo.populationResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Population"];
+        cityInfo.morale += Constants.buildingResourceGain[currentBuidlingToBuild]["Morale"];
+        cityInfo.education += Constants.buildingResourceGain[currentBuidlingToBuild]["Education"];
+        PlayerCS.instance.ResetMoraleAndEducation();
+        // Subtract resource cost
+        PlayerCS.instance.food -= Constants.prices[currentBuidlingToBuild]["Food"];
+        PlayerCS.instance.wood -= Constants.prices[currentBuidlingToBuild]["Wood"];
+        PlayerCS.instance.metal -= Constants.prices[currentBuidlingToBuild]["Metal"];
+        PlayerCS.instance.money -= Constants.prices[currentBuidlingToBuild]["Money"];
+        PlayerCS.instance.population -= Constants.prices[currentBuidlingToBuild]["Population"];
         GameManagerCS.instance.SpawnBuilding(currentBuidlingToBuild, _tileInfo);
         ResetAlteredObjects();
     }

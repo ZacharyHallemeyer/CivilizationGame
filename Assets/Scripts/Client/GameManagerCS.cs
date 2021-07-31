@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class GameManagerCS : MonoBehaviour
 {
@@ -415,7 +416,8 @@ public class GameManagerCS : MonoBehaviour
     /// </summary>
     public void CreateNewNeutralCity(int _id, int _ownerId, float _moral, float _education, int _manPower, int _money, int _metal,
                                      int _wood, int _food, int _ownerShipRange, int _woodResourcesPerTurn, int _metalResourcesPerTurn,
-                                     int _foodResourcesPerTurn, int _xIndex, int _zIndex)
+                                     int _foodResourcesPerTurn, int _moneyResourcesPerTurn, int _populationResourcesPerTurn,
+                                     int _xIndex, int _zIndex)
     {
         tiles[_xIndex, _zIndex].tile.tag = "City"; 
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
@@ -436,6 +438,8 @@ public class GameManagerCS : MonoBehaviour
         _cityInfo.woodResourcesPerTurn = _woodResourcesPerTurn;
         _cityInfo.metalResourcesPerTurn = _metalResourcesPerTurn;
         _cityInfo.foodResourcesPerTurn = _foodResourcesPerTurn;
+        _cityInfo.moneyResourcesPerTurn = _moneyResourcesPerTurn;
+        _cityInfo.populationResourcesPerTurn = _populationResourcesPerTurn;
         _cityInfo.xIndex = _xIndex;
         _cityInfo.zIndex = _zIndex;
         cities.Add(_cityInfo.id, _cityInfo);
@@ -476,6 +480,7 @@ public class GameManagerCS : MonoBehaviour
         { { _tile, "Update"} };
         modifiedTileInfo.Add(_tileData);
 
+        // Create owned tiles
         for(int x = _xIndex - _cityInfo.ownerShipRange; x < _xIndex + _cityInfo.ownerShipRange + 1; x++)
         {
             for(int z = _zIndex - _cityInfo.ownerShipRange; z < _zIndex + _cityInfo.ownerShipRange + 1; z++)
@@ -491,6 +496,13 @@ public class GameManagerCS : MonoBehaviour
                     modifiedTileInfo.Add(_tileData);
                 }
             }
+        }
+
+        // Increase city cost (double values)
+        List<string> _priceKeys = Constants.prices["City"].Keys.ToList();
+        for (int i = 0; i < _priceKeys.Count; i++)
+        {
+            Constants.prices["City"][_priceKeys[i]] *= 2;
         }
         currentCityIndex++;
     }
@@ -522,25 +534,17 @@ public class GameManagerCS : MonoBehaviour
     {
         foreach(CityInfo _city in cities.Values)
         {
-            if(_city.ownerId == ClientCS.instance.myId)
+            if(_city.ownerId == ClientCS.instance.myId && !_city.isBeingConquered)
             {
                 PlayerCS.instance.wood += _city.woodResourcesPerTurn;
                 PlayerCS.instance.metal += _city.metalResourcesPerTurn;
                 PlayerCS.instance.food += _city.foodResourcesPerTurn;
+                PlayerCS.instance.money += _city.moneyResourcesPerTurn;
+                PlayerCS.instance.population += _city.populationResourcesPerTurn;
             }
         }
-        playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
-                                  PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
-    }
-
-    public void AddCityResources(int _foodAmount, int _woodAmount, int _metalAmount)
-    {
-        PlayerCS.instance.food += _foodAmount;
-        PlayerCS.instance.wood += _woodAmount;
-        PlayerCS.instance.metal += _metalAmount;
-
-        playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
-                                  PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
+        playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money, PlayerCS.instance.population);
+        PlayerCS.instance.ResetMoraleAndEducation();
     }
 
     public void ResetCities()
@@ -604,6 +608,9 @@ public class GameManagerCS : MonoBehaviour
                 Debug.LogError("Building " + _buildingName + " not found");
                 break;
         }
+
+        // Update player resource UI
+        playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.wood, PlayerCS.instance.metal, PlayerCS.instance.money, PlayerCS.instance.population);
 
         // Update tile
         _tile.isBuilding = true;

@@ -289,31 +289,40 @@ public static class Constants
 
     public static Dictionary<string, Dictionary<string, int>> prices = new Dictionary<string, Dictionary<string, int>>()
     {
-        { "Lumberyard" , new Dictionary<string, int> 
+        { "City" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
+                { "Money", 50 },
+                { "Population", 5 },
+            }
+        },
+        { "LumberYard" , new Dictionary<string, int> 
+            {
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 100 },
+                { "Population", 0 },
             }
         },
         { "Farm" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 100 },
+                { "Population", 0 },
             }
         },
         { "Mine" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 100 },
+                { "Population", 0 },
             }
         },
         { "Housing" , new Dictionary<string, int> 
@@ -321,8 +330,8 @@ public static class Constants
                 { "Food", 10 },
                 { "Metal", 10 },
                 { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
             }
         },
         { "School" , new Dictionary<string, int> 
@@ -330,8 +339,8 @@ public static class Constants
                 { "Food", 10 },
                 { "Metal", 10 },
                 { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
             }
         },
         { "Library" , new Dictionary<string, int> 
@@ -339,17 +348,8 @@ public static class Constants
                 { "Food", 10 },
                 { "Metal", 10 },
                 { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
-            }
-        },
-        { "Lab" , new Dictionary<string, int> 
-            {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
             }
         },
         { "Dome" , new Dictionary<string, int> 
@@ -357,165 +357,190 @@ public static class Constants
                 { "Food", 10 },
                 { "Metal", 10 },
                 { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
+        { "Market" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
             }
         },
         { "Road" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
                 { "Money", 10 },
-                { "Population", 10 },
+                { "Population", 0 },
             }
         },
         { "Wall" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
                 { "Money", 10 },
-                { "Population", 10 },
+                { "Population", 0 },
             }
         },
         { "Scout" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
+                { "Money", 50 },
+                { "Population", 2 },
             }
         },
         { "Militia" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 1 },
+                { "Metal", 2 },
+                { "Wood", 2 },
+                { "Money", 50 },
+                { "Population", 5 },
             } 
         },
         { "Army" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 2 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 5 },
             } 
         },
         { "Missle" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 2 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 5 },
             } 
         },
         { "Defense" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
-            } 
-        },
-        { "Snipper" , new Dictionary<string, int> 
-            {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 3 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 5 },
             } 
         },
         { "Stealth" , new Dictionary<string, int> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 3 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 3 },
+            } 
+        },
+        { "Snipper" , new Dictionary<string, int> 
+            {
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 200 },
+                { "Population", 5 },
             } 
         },
     };
 
-    public static Dictionary<string, Dictionary<string, int>> buildingResourceGain = new Dictionary<string, Dictionary<string, int>>()
+    public static Dictionary<string, Dictionary<string, float>> buildingResourceGain = new Dictionary<string, Dictionary<string, float>>()
     {
-        { "Lumberyard" , new Dictionary<string, int> 
+        { "Lumberyard" , new Dictionary<string, float> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Money", 100 },
+                { "Population", 1 },
+                { "Morale", 0 },
+                { "Education", .05f },
             } 
         },
-        { "Farm" , new Dictionary<string, int> 
+        { "Farm" , new Dictionary<string, float> 
             {
                 { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 100 },
+                { "Population", 1 },
+                { "Morale", 0 },
+                { "Education", .05f },
             } 
         },
-        { "Mine" , new Dictionary<string, int> 
+        { "Mine" , new Dictionary<string, float> 
             {
-                { "Food", 10 },
+                { "Food", 0 },
                 { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Wood", 0 },
+                { "Money", 100 },
+                { "Population", 1 },
+                { "Morale", 0 },
+                { "Education", .05f },
             } 
         },
-        { "Housing" , new Dictionary<string, int> 
+        { "Housing" , new Dictionary<string, float> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 50 },
+                { "Population", 5 },
+                { "Morale", .05f },
+                { "Education", 0 },
             } 
         },
-        { "School" , new Dictionary<string, int> 
+        { "School" , new Dictionary<string, float> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 0 },
+                { "Population", 0 },
+                { "Morale", 0 },
+                { "Education", .1f },
             } 
         },
-        { "Library" , new Dictionary<string, int> 
+        { "Library" , new Dictionary<string, float> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 00 },
+                { "Population", 5 },
+                { "Morale", .1f },
+                { "Education", .05f },
             } 
         },
-        { "Lab" , new Dictionary<string, int> 
+        { "Market" , new Dictionary<string, float> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 200 },
+                { "Population", 1 },
+                { "Morale", .05f },
+                { "Education", 0 },
             } 
         },
-        { "Dome" , new Dictionary<string, int> 
+        { "Dome" , new Dictionary<string, float> 
             {
-                { "Food", 10 },
-                { "Metal", 10 },
-                { "Wood", 10 },
-                { "Money", 10 },
-                { "Population", 10 },
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 50 },
+                { "Population", 1 },
+                { "Morale", .15f },
+                { "Education", 0 },
             } 
         },
     };

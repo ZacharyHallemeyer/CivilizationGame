@@ -57,6 +57,8 @@ public class CityInfo : MonoBehaviour
         woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
         metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
         foodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingFoodResourcesPerTurn"]);
+        moneyResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoneyResourcesPerTurn"]);
+        populationResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingPopulationResourcesPerTurn"]);
 
         xIndex = _xIndex;
         zIndex = _zIndex;
@@ -79,6 +81,8 @@ public class CityInfo : MonoBehaviour
         woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
         metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
         foodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingFoodResourcesPerTurn"]);
+        moneyResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoneyResourcesPerTurn"]);
+        populationResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingPopulationResourcesPerTurn"]);
 
         xIndex = _xIndex;
         zIndex = _zIndex;
@@ -108,6 +112,8 @@ public class CityInfo : MonoBehaviour
         woodResourcesPerTurn = _city.woodResourcesPerTurn;
         metalResourcesPerTurn = _city.metalResourcesPerTurn;
         foodResourcesPerTurn = _city.foodResourcesPerTurn;
+        moneyResourcesPerTurn = _city.moneyResourcesPerTurn;
+        populationResourcesPerTurn = _city.populationResourcesPerTurn;
 
         xIndex = _city.xIndex;
         zIndex = _city.zIndex;
@@ -134,6 +140,8 @@ public class CityInfo : MonoBehaviour
         woodResourcesPerTurn = _cityToCopy.woodResourcesPerTurn;
         metalResourcesPerTurn = _cityToCopy.metalResourcesPerTurn;
         foodResourcesPerTurn = _cityToCopy.foodResourcesPerTurn;
+        moneyResourcesPerTurn = _cityToCopy.moneyResourcesPerTurn;
+        populationResourcesPerTurn = _cityToCopy.populationResourcesPerTurn;
     }
 
     public void CopyCityInfo(CityInfo _cityToCopy)

@@ -136,12 +136,14 @@ public class ClientHandle : MonoBehaviour
         int _woodResourcePerTurn = _packet.ReadInt();
         int _metalResourcePerTurn = _packet.ReadInt();
         int _foodResourcePerTurn = _packet.ReadInt();
+        int _moneyResourcesPerTurn = _packet.ReadInt();
+        int _populationResourcePerTurn = _packet.ReadInt();
         int  _xIndex = _packet.ReadInt();
         int  _zIndex = _packet.ReadInt();
 
         GameManagerCS.instance.CreateNewNeutralCity(_id, _ownerId, _morale, _education, _manPower, _money, _metal, _wood, _food,
                                                     _ownerShipRange, _woodResourcePerTurn, _metalResourcePerTurn, _foodResourcePerTurn,
-                                                    _xIndex, _zIndex);
+                                                    _moneyResourcesPerTurn, _populationResourcePerTurn, _xIndex, _zIndex);
 
     }
 
@@ -243,6 +245,8 @@ public class ClientHandle : MonoBehaviour
         _city.woodResourcesPerTurn = _packet.ReadInt();
         _city.metalResourcesPerTurn = _packet.ReadInt();
         _city.foodResourcesPerTurn = _packet.ReadInt();
+        _city.moneyResourcesPerTurn = _packet.ReadInt();
+        _city.populationResourcesPerTurn = _packet.ReadInt();
         _city.isBeingConquered = _packet.ReadBool();
         _city.isConstructingBuilding = _packet.ReadBool();
         _city.occupyingObjectId = _packet.ReadInt();

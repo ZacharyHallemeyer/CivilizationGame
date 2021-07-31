@@ -20,6 +20,14 @@ public class PlayerUI : MonoBehaviour
         SetEducationText(_educationAmount);
         SetPopulationText(_populationAmount);
     }
+    public void SetAllIntResourceUI(int _foodAmount, int _woodAmount, int _metalAmount, int _moneyAmount, int _populationAmount)
+    {
+        SetFoodAmountUI(_foodAmount);
+        SetWoodAmountUI(_woodAmount);
+        SetMetalAmountUI(_metalAmount);
+        SetMoneyAmount(_moneyAmount);
+        SetPopulationText(_populationAmount);
+    }
 
     public void SetFoodAmountUI(int _foodAmount)
     {
