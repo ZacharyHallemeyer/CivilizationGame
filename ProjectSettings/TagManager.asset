@@ -11,6 +11,8 @@ TagManager:
   - City
   - ConquerableCity
   - MoveableCity
+  - Building
+  - ConstructBuilding
   layers:
   - Default
   - TransparentFX

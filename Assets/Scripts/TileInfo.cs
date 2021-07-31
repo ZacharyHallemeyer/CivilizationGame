@@ -18,14 +18,16 @@ public class TileInfo : MonoBehaviour
     public bool isMetal = false;
     public bool isRoad = false;
     public bool isCity = false;
+    public bool isBuilding = false;
     public bool isOccupied = false;
     public int occupyingObjectId = -1;
     public int cityId = -1;
     public int xIndex;
-    public int yIndex;
+    public int zIndex;
     public Vector2 position;
     public int idOfPlayerThatSentInfo;
 
+    public string buildingName = "";
     public GameObject resourceObject;
     public GameObject ownerShipVisualObject;
 
@@ -39,7 +41,7 @@ public class TileInfo : MonoBehaviour
         movementCost = (int)Constants.biomeInfo[_biomeName]["MovementCost"];
         position = new Vector2((int)_tile.transform.position.x, (int)_tile.transform.position.z);
         xIndex = _xIndex;
-        yIndex = _yIndex;
+        zIndex = _yIndex;
     }
 
     public void InitWaterInfo(GameObject _tile, int _id, int _xIndex, int _yIndex)
@@ -50,7 +52,7 @@ public class TileInfo : MonoBehaviour
         biome = "Water";
         position = new Vector2((int)_tile.transform.position.x, (int)_tile.transform.position.z);
         xIndex = _xIndex;
-        yIndex = _yIndex;
+        zIndex = _yIndex;
     }
 
     public void UpdateTileInfo(TileInfo _tileToCopy)
@@ -59,10 +61,11 @@ public class TileInfo : MonoBehaviour
         ownerId = _tileToCopy.ownerId;
         isRoad = _tileToCopy.isRoad;
         isCity = _tileToCopy.isCity;
+        isBuilding = _tileToCopy.isBuilding;
         isOccupied = _tileToCopy.isOccupied;
         occupyingObjectId = _tileToCopy.occupyingObjectId;
         xIndex = _tileToCopy.xIndex;
-        yIndex = _tileToCopy.yIndex;
+        zIndex = _tileToCopy.zIndex;
         cityId = _tileToCopy.cityId;
     }
 
@@ -81,10 +84,11 @@ public class TileInfo : MonoBehaviour
         isMetal = _tileToCopy.isMetal;
         isRoad = _tileToCopy.isRoad;
         isCity = _tileToCopy.isCity;
+        isBuilding = _tileToCopy.isBuilding;
         isOccupied = _tileToCopy.isOccupied;
         occupyingObjectId = _tileToCopy.occupyingObjectId;
         xIndex = _tileToCopy.xIndex;
-        yIndex = _tileToCopy.yIndex;
+        zIndex = _tileToCopy.zIndex;
         cityId = _tileToCopy.cityId;
     }
 }

@@ -276,7 +276,7 @@ public class TroopActionsCS : MonoBehaviour
         PlayerCS.instance.isAnimInProgress = true;
 
         // Update new tile
-        troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.yIndex - _oldTile.yIndex);
+        troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.zIndex - _oldTile.zIndex);
         if (troopInfo.movementCost < 0) troopInfo.movementCost = 0;
         _newTile.isOccupied = true;
         _newTile.occupyingObjectId = troopInfo.id;
@@ -380,6 +380,7 @@ public class TroopActionsCS : MonoBehaviour
     public void ConquerCity(TileInfo _tile, CityInfo _city)
     {
         _tile.tile.tag = cityTag;
+        _tile.tile.layer = whatIsInteractableValue;
         troopInfo.movementCost = 0;
         troopInfo.canAttack = false;
         _city.isAbleToBeConquered = false;

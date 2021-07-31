@@ -150,38 +150,6 @@ public class ServerSend
     /// </summary>
     /// <param name="_toClient"> client id to send tile data </param>
     /// <param name="_tileInfo"> the tile info to send </param>
-    public static void SendTileInfo(int _toClient, TileInfo _tileInfo)
-    {
-        using (Packet _packet = new Packet((int)ServerPackets.sendTileInfo))
-        {
-            _packet.Write(_tileInfo.id);
-            _packet.Write(_tileInfo.ownerId);
-            _packet.Write(_tileInfo.movementCost);
-            _packet.Write(_tileInfo.occupyingObjectId);
-            _packet.Write(_tileInfo.biome);
-            _packet.Write(_tileInfo.temperature);
-            _packet.Write(_tileInfo.height);
-            _packet.Write(_tileInfo.isWater);
-            _packet.Write(_tileInfo.isFood);
-            _packet.Write(_tileInfo.isWood);
-            _packet.Write(_tileInfo.isMetal);
-            _packet.Write(_tileInfo.isRoad);
-            _packet.Write(_tileInfo.isCity);
-            _packet.Write(_tileInfo.isOccupied);
-            _packet.Write(_tileInfo.position);
-            _packet.Write(_tileInfo.xIndex);
-            _packet.Write(_tileInfo.yIndex);
-            _packet.Write(_tileInfo.cityId);
-
-            SendTCPData(_toClient, _packet);
-        }
-    }
-
-    /// <summary>
-    /// Send all tile data to client at start of game
-    /// </summary>
-    /// <param name="_toClient"> client id to send tile data </param>
-    /// <param name="_tileInfo"> the tile info to send </param>
     public static void SendTileInfo(int _toClient, TileInfo[,] _tiles)
     {
         for (int x = 0; x < _tiles.GetLength(0); x++)
@@ -207,7 +175,7 @@ public class ServerSend
                     _packet.Write(_tile.isOccupied);
                     _packet.Write(_tile.position);
                     _packet.Write(_tile.xIndex);
-                    _packet.Write(_tile.yIndex);
+                    _packet.Write(_tile.zIndex);
                     _packet.Write(_tile.cityId);
 
                     SendTCPData(_toClient, _packet);
@@ -352,11 +320,13 @@ public class ServerSend
                         _packet.Write(_tile.ownerId);
                         _packet.Write(_tile.isRoad);
                         _packet.Write(_tile.isCity);
+                        _packet.Write(_tile.isBuilding);
                         _packet.Write(_tile.isOccupied);
                         _packet.Write(_tile.occupyingObjectId);
                         _packet.Write(_tile.xIndex);
-                        _packet.Write(_tile.yIndex);
+                        _packet.Write(_tile.zIndex);
                         _packet.Write(_tile.cityId);
+                        _packet.Write(_tile.buildingName);
                         _packet.Write(_tileDict[_tile]);
 
                         SendTCPData(_playerId, _packet);

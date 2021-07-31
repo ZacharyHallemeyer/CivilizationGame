@@ -14,8 +14,8 @@ public class PlayerCS : MonoBehaviour
     public Camera cam;
     public Rigidbody camRB;
 
-    public int _currentSelectedTroopId = -1;
-    public int _currentSelectedCityId = -1;
+    public int currentSelectedTroopId = -1;
+    public int currentSelectedCityId  = -1;
 
     // Stats
     public float morale = 1;
@@ -97,7 +97,7 @@ public class PlayerCS : MonoBehaviour
                     if (_troop.ownerId == id)
                     {
                         _troop.troopActions.ShowQuickMenu();
-                        _currentSelectedTroopId = _troop.id;
+                        currentSelectedTroopId = _troop.id;
                         GameManagerCS.instance.troops[_troop.id].troopActions.CreateInteractableTiles();
                     }
                 }
@@ -105,14 +105,14 @@ public class PlayerCS : MonoBehaviour
                 {
                     TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x,
                                                                       (int)_hit.transform.position.z];
-                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+                    if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.MoveToNewTile(_tileInfo);
                 }
                 else if (_hit.collider.CompareTag("AttackableTile"))
                 {
                     TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x,
                                                                       (int)_hit.transform.position.z];
-                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+                    if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.Attack(_tileInfo);
                 }
                 else if(_hit.collider.CompareTag("City"))
@@ -120,9 +120,9 @@ public class PlayerCS : MonoBehaviour
                     ResetAlteredTiles();
                     TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
                     CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
-                    if (_cityInfo.ownerId == id  && _currentSelectedTroopId == -1)
+                    if (_cityInfo.ownerId == id  && currentSelectedTroopId == -1)
                     {
-                        _currentSelectedCityId = _cityInfo.id;
+                        currentSelectedCityId = _cityInfo.id;
                         GameManagerCS.instance.cities[_cityInfo.id].cityActions.ToggleQuickMenu();
                     }
                 }
@@ -130,27 +130,34 @@ public class PlayerCS : MonoBehaviour
                 {
                     TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
                     CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
-                    if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+                    if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.MoveOntoCity(_tileInfo, _cityInfo);
+                }
+                else if(_hit.collider.CompareTag("ConstructBuilding"))
+                {
+
+                    TileInfo _tile = _hit.collider.GetComponent<TileInfo>();
+                    if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
+                        _city.cityActions.BuildBuilding(_tile);
                 }
                 else
                 {
                     ResetAlteredTiles();
-                    _currentSelectedTroopId = -1;
-                    _currentSelectedCityId = -1;
+                    currentSelectedTroopId = -1;
+                    currentSelectedCityId = -1;
                 }
             }
             else
             {
                 ResetAlteredTiles();
-                _currentSelectedTroopId = -1;
-                _currentSelectedCityId = -1;
+                currentSelectedTroopId = -1;
+                currentSelectedCityId = -1;
             }
         }
 
-        if (inputMaster.Player.Rotate.triggered && _currentSelectedTroopId >= 0)        // Rotate current selected troop
+        if (inputMaster.Player.Rotate.triggered && currentSelectedTroopId >= 0)        // Rotate current selected troop
         {
-            if(GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+            if(GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
             {
                 _troop.troopActions.Rotate(1);
             }
@@ -159,8 +166,13 @@ public class PlayerCS : MonoBehaviour
         {
             enabled = false;
             ResetAlteredTiles();
-            _currentSelectedCityId = -1;
-            _currentSelectedTroopId = -1;
+            // Turn off any quick menus
+            if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+                _troop.troopActions.HideQuickMenu();
+            if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
+                _city.cityActions.HideQuickMenu();
+            currentSelectedCityId = -1;
+            currentSelectedTroopId = -1;
             ClientSend.SendEndOfTurnData();
             GameManagerCS.instance.ResetTroops();
             GameManagerCS.instance.ResetCities();
@@ -210,8 +222,10 @@ public class PlayerCS : MonoBehaviour
 
     public void ResetAlteredTiles()
     {
-        if (GameManagerCS.instance.troops.TryGetValue(_currentSelectedTroopId, out TroopInfo _troop))
+        if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
             _troop.troopActions.ResetAlteredTiles();
+        if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
+            _city.cityActions.ResetAlteredObjects();
     }
 
     /// <summary>

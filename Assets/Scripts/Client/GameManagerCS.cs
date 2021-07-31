@@ -29,6 +29,7 @@ public class GameManagerCS : MonoBehaviour
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab;
     public GameObject cityPrefab;
     public GameObject ownershipObjectPrefab;
+    public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab;
 
     public string[] troopNames;
     public string[] biomeOptions;
@@ -39,6 +40,9 @@ public class GameManagerCS : MonoBehaviour
     public int minDistanceBetweenCities = 5, maxDistanceBetweenCities = 15, maxDistanceFromResource = 5;
 
     public PlayerUI playerUI;
+
+    private string cityTag = "City";
+    public int whatIsInteractableValue, whatIsDefaultValue;
 
     #region Set Up Functions
 
@@ -71,6 +75,8 @@ public class GameManagerCS : MonoBehaviour
             troopNames[_index] = _troopName; 
             _index++;
         }
+        whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
+        whatIsDefaultValue = LayerMask.NameToLayer("Default");
     }
 
     /// <summary>
@@ -222,7 +228,7 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.isCity = _isCity;
         _tileInfo.isOccupied = _isOccupied;
         _tileInfo.xIndex = _xIndex;
-        _tileInfo.yIndex = _zIndex;
+        _tileInfo.zIndex = _zIndex;
         _tileInfo.cityId = _cityId;
         _tileInfo.position = _position;
 
@@ -251,7 +257,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_tile"> tile to update </param>
     public void UpdateTileInfo(TileInfo _tile)
     {
-        tiles[_tile.xIndex, _tile.yIndex].UpdateTileInfo(_tile);
+        tiles[_tile.xIndex, _tile.zIndex].UpdateTileInfo(_tile);
     }
 
     /// <summary>
@@ -260,7 +266,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_tile"></param>
     public void UpdateOwnedTileInfo(TileInfo _tile)
     {
-        tiles[_tile.xIndex, _tile.yIndex].ownerShipVisualObject.SetActive(true);
+        tiles[_tile.xIndex, _tile.zIndex].ownerShipVisualObject.SetActive(true);
         UpdateTileInfo(_tile);
     }
 
@@ -463,8 +469,10 @@ public class GameManagerCS : MonoBehaviour
         TileInfo _tile = tiles[_xIndex, _zIndex];
         _tile.isCity = true;
         _tile.cityId = currentCityIndex;
-        _tile.ownerId = _cityInfo.ownerId
-;       Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+        _tile.ownerId = _cityInfo.ownerId;
+        _tile.tile.tag = cityTag;
+        _tile.tile.layer = whatIsInteractableValue;
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
         { { _tile, "Update"} };
         modifiedTileInfo.Add(_tileData);
 
@@ -548,7 +556,111 @@ public class GameManagerCS : MonoBehaviour
         */
     }
 
-    #endregion 
+    #endregion
+
+    #region Building
+
+    /// <summary>
+    /// Spawns building cooresponding to building name (parem) at tile (parem) and updates modified tile dict
+    /// </summary>
+    /// <param name="_buildingName"> type of building to spawn </param>
+    /// <param name="_tile"> tile to spawn building </param>
+    public void SpawnBuilding(string _buildingName, TileInfo _tile)
+    {
+        int _xCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.x;
+        int _zCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.y;
+        switch (_buildingName)
+        {
+            case "LumberYard":
+                Instantiate(lumberYardPrefab, new Vector3(_xCoord, lumberYardPrefab.transform.position.y,
+                                                                       _tile.position.y), lumberYardPrefab.transform.localRotation);
+                break;
+            case "Farm":
+                Instantiate(farmPrefab, new Vector3(_xCoord, farmPrefab.transform.position.y,
+                                                       _zCoord), farmPrefab.transform.localRotation);
+                break;
+            case "Mine":
+                Instantiate(minePrefab, new Vector3(_xCoord, minePrefab.transform.position.y,
+                                                       _zCoord), minePrefab.transform.localRotation);
+                break;
+            case "School":
+                Instantiate(schoolPrefab, new Vector3(_xCoord, schoolPrefab.transform.position.y,
+                                                       _zCoord), schoolPrefab.transform.localRotation);
+                break;
+            case "Library":
+                Instantiate(libraryPrefab, new Vector3(_xCoord, libraryPrefab.transform.position.y,
+                                                       _zCoord), libraryPrefab.transform.localRotation);
+                break;
+            case "Dome":
+                Instantiate(domePrefab, new Vector3(_xCoord, domePrefab.transform.position.y,
+                                                       _zCoord), domePrefab.transform.localRotation);
+                break;
+            case "Housing":
+                Instantiate(housingPrefab, new Vector3(_xCoord, housingPrefab.transform.position.y,
+                                                       _zCoord), housingPrefab.transform.localRotation);
+                break;
+
+            default:
+                Debug.LogError("Building " + _buildingName + " not found");
+                break;
+        }
+
+        // Update tile
+        _tile.isBuilding = true;
+        _tile.buildingName = _buildingName;
+
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+        { { _tile, "BuildBuilding"} };
+        modifiedTileInfo.Add(_tileData);
+    }
+
+    /// <summary>
+    /// Spawns building cooresponding to tile information
+    /// Does NOT update modified tile dict.
+    /// </summary>
+    /// <param name="_tile"> tile to spawn building and contains building name to spawn </param>
+    public void SpawnBuilding(TileInfo _tile)
+    {
+        int _xCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.x;
+        int _zCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.y;
+        switch (_tile.buildingName)
+        {
+            case "LumberYard":
+                Instantiate(lumberYardPrefab, new Vector3(_xCoord, lumberYardPrefab.transform.position.y,
+                                                                       _tile.position.y), lumberYardPrefab.transform.localRotation);
+                break;
+            case "Farm":
+                Instantiate(farmPrefab, new Vector3(_xCoord, farmPrefab.transform.position.y,
+                                                       _zCoord), farmPrefab.transform.localRotation);
+                break;
+            case "Mine":
+                Instantiate(minePrefab, new Vector3(_xCoord, minePrefab.transform.position.y,
+                                                       _zCoord), minePrefab.transform.localRotation);
+                break;
+            case "School":
+                Instantiate(schoolPrefab, new Vector3(_xCoord, schoolPrefab.transform.position.y,
+                                                       _zCoord), schoolPrefab.transform.localRotation);
+                break;
+            case "Library":
+                Instantiate(libraryPrefab, new Vector3(_xCoord, libraryPrefab.transform.position.y,
+                                                       _zCoord), libraryPrefab.transform.localRotation);
+                break;
+            case "Dome":
+                Instantiate(domePrefab, new Vector3(_xCoord, domePrefab.transform.position.y,
+                                                       _zCoord), domePrefab.transform.localRotation);
+                break;
+            case "Housing":
+                Instantiate(housingPrefab, new Vector3(_xCoord, housingPrefab.transform.position.y,
+                                                       _zCoord), housingPrefab.transform.localRotation);
+                break;
+
+            default:
+                Debug.LogError("Building " + _tile.buildingName + " not found");
+                break;
+        }
+    }
+
+    #endregion
 
     #region Turn Functions
 
@@ -622,6 +734,9 @@ public class GameManagerCS : MonoBehaviour
                         break;
                     case "Owned":
                         UpdateOwnedTileInfo(_tile);
+                        break;
+                    case "BuildBuilding":
+                        SpawnBuilding(_tile);
                         break;
                     default:
                         Debug.LogError("Could not find tile action: " + _tileDict[_tile]);

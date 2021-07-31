@@ -121,11 +121,13 @@ public class ServerHandle
         _tile.ownerId = _packet.ReadInt();
         _tile.isRoad = _packet.ReadBool();
         _tile.isCity = _packet.ReadBool();
+        _tile.isBuilding = _packet.ReadBool();
         _tile.isOccupied = _packet.ReadBool();
         _tile.occupyingObjectId = _packet.ReadInt();
         _tile.xIndex = _packet.ReadInt();
-        _tile.yIndex = _packet.ReadInt();
+        _tile.zIndex = _packet.ReadInt();
         _tile.cityId = _packet.ReadInt();
+        _tile.buildingName = _packet.ReadString();
         string _command = _packet.ReadString();
         _tile.idOfPlayerThatSentInfo = _fromClient;
 

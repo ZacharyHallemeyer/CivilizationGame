@@ -524,6 +524,20 @@ MonoBehaviour:
     type: 3}
   ownershipObjectPrefab: {fileID: 4672860621558947833, guid: db0558fc3adfc2741a8203eb23f529c5,
     type: 3}
+  lumberYardPrefab: {fileID: 3820960747793287681, guid: f10085dfc2d59264c93ca7cde6a9ceaa,
+    type: 3}
+  farmPrefab: {fileID: 9048230964073980194, guid: 4db280426cdd84746b50b4f172e856e0,
+    type: 3}
+  minePrefab: {fileID: 8513372748242809241, guid: 9499180cfb9e61d408f299fd59df6a7a,
+    type: 3}
+  schoolPrefab: {fileID: 8406410193317412547, guid: 321f20c857d6ac1468a9eba89568b469,
+    type: 3}
+  libraryPrefab: {fileID: 1767570366774240349, guid: 86f379ca0db327d45a232b5b579bee47,
+    type: 3}
+  domePrefab: {fileID: 3652076173220203282, guid: 8d996c26a96d9df4a8ca5bf98a5b0959,
+    type: 3}
+  housingPrefab: {fileID: 7042388651001649627, guid: b3ab93fc64d578242ad5ee2c28feace9,
+    type: 3}
   troopNames: []
   biomeOptions: []
   startScreenUI: {fileID: 313555650}
