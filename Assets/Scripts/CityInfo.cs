@@ -10,11 +10,6 @@ public class CityInfo : MonoBehaviour
     // resource variables
     public float morale;
     public float education;
-    public int manPower;
-    public int money;
-    public int metal;
-    public int wood;
-    public int food;
     public int ownerShipRange = 1;
 
     // resource increase variables
@@ -48,11 +43,6 @@ public class CityInfo : MonoBehaviour
         ownerId = _ownerId;
         morale = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]);
         education = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]);
-        manPower = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingManPower"]);
-        money = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoney"]);
-        food = (int)Constants.biomeInfo[_biomeName]["Food"];
-        metal = (int)Constants.biomeInfo[_biomeName]["Metal"];
-        wood = (int)Constants.biomeInfo[_biomeName]["Wood"];
 
         woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
         metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
@@ -72,11 +62,6 @@ public class CityInfo : MonoBehaviour
         ownerId = _ownerId;
         morale = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]);
         education = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]);
-        manPower = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingManPower"]);
-        money = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoney"]);
-        food = (int)Constants.biomeInfo[_biomeName]["Food"];
-        metal = (int)Constants.biomeInfo[_biomeName]["Metal"];
-        wood = (int)Constants.biomeInfo[_biomeName]["Wood"];
 
         woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
         metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
@@ -103,11 +88,6 @@ public class CityInfo : MonoBehaviour
 
         morale = _city.morale;
         education = _city.education;
-        manPower = _city.manPower;
-        money = _city.money;
-        food = _city.food;
-        metal = _city.metal;
-        wood = _city.wood;
 
         woodResourcesPerTurn = _city.woodResourcesPerTurn;
         metalResourcesPerTurn = _city.metalResourcesPerTurn;
@@ -131,11 +111,6 @@ public class CityInfo : MonoBehaviour
 
         morale = _cityToCopy.morale;
         education = _cityToCopy.education;
-        manPower = _cityToCopy.manPower;
-        money = _cityToCopy.money;
-        food = _cityToCopy.food;
-        metal = _cityToCopy.metal;
-        wood = _cityToCopy.wood;
 
         woodResourcesPerTurn = _cityToCopy.woodResourcesPerTurn;
         metalResourcesPerTurn = _cityToCopy.metalResourcesPerTurn;
@@ -157,11 +132,6 @@ public class CityInfo : MonoBehaviour
 
         morale = _cityToCopy.morale;
         education = _cityToCopy.education;
-        manPower = _cityToCopy.manPower;
-        money = _cityToCopy.money;
-        food = _cityToCopy.food;
-        metal = _cityToCopy.metal;
-        wood = _cityToCopy.wood;
 
         woodResourcesPerTurn = _cityToCopy.woodResourcesPerTurn;
         metalResourcesPerTurn = _cityToCopy.metalResourcesPerTurn;

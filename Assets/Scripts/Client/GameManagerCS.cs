@@ -30,7 +30,7 @@ public class GameManagerCS : MonoBehaviour
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab;
     public GameObject cityPrefab;
     public GameObject ownershipObjectPrefab;
-    public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab;
+    public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab;
 
     public string[] troopNames;
     public string[] biomeOptions;
@@ -414,9 +414,8 @@ public class GameManagerCS : MonoBehaviour
     /// Create New neutral city
     /// Does NOT update modified cities dict.
     /// </summary>
-    public void CreateNewNeutralCity(int _id, int _ownerId, float _moral, float _education, int _manPower, int _money, int _metal,
-                                     int _wood, int _food, int _ownerShipRange, int _woodResourcesPerTurn, int _metalResourcesPerTurn,
-                                     int _foodResourcesPerTurn, int _moneyResourcesPerTurn, int _populationResourcesPerTurn,
+    public void CreateNewNeutralCity(int _id, int _ownerId, float _moral, float _education, int _ownerShipRange, int _woodResourcesPerTurn, 
+                                     int _metalResourcesPerTurn, int _foodResourcesPerTurn, int _moneyResourcesPerTurn, int _populationResourcesPerTurn,
                                      int _xIndex, int _zIndex)
     {
         tiles[_xIndex, _zIndex].tile.tag = "City"; 
@@ -429,11 +428,6 @@ public class GameManagerCS : MonoBehaviour
         _cityInfo.ownerId = _ownerId;
         _cityInfo.morale = _moral;
         _cityInfo.education = _education;
-        _cityInfo.manPower = _manPower;
-        _cityInfo.money = _money;
-        _cityInfo.metal = _metal;
-        _cityInfo.wood = _wood;
-        _cityInfo.food = _food;
         _cityInfo.ownerShipRange = _ownerShipRange;
         _cityInfo.woodResourcesPerTurn = _woodResourcesPerTurn;
         _cityInfo.metalResourcesPerTurn = _metalResourcesPerTurn;
@@ -504,6 +498,9 @@ public class GameManagerCS : MonoBehaviour
         {
             Constants.prices["City"][_priceKeys[i]] *= 2;
         }
+
+        // Update morale and education
+        PlayerCS.instance.ResetMoraleAndEducation();
         currentCityIndex++;
     }
 
@@ -603,7 +600,10 @@ public class GameManagerCS : MonoBehaviour
                 Instantiate(housingPrefab, new Vector3(_xCoord, housingPrefab.transform.position.y,
                                                        _zCoord), housingPrefab.transform.localRotation);
                 break;
-
+            case "Market":
+                Instantiate(marketPrefab, new Vector3(_xCoord, marketPrefab.transform.position.y,
+                                                       _zCoord), marketPrefab.transform.localRotation);
+                break;
             default:
                 Debug.LogError("Building " + _buildingName + " not found");
                 break;
@@ -660,7 +660,10 @@ public class GameManagerCS : MonoBehaviour
                 Instantiate(housingPrefab, new Vector3(_xCoord, housingPrefab.transform.position.y,
                                                        _zCoord), housingPrefab.transform.localRotation);
                 break;
-
+            case "Market":
+                Instantiate(marketPrefab, new Vector3(_xCoord, marketPrefab.transform.position.y,
+                                                       _zCoord), marketPrefab.transform.localRotation);
+                break;
             default:
                 Debug.LogError("Building " + _tile.buildingName + " not found");
                 break;
@@ -696,6 +699,9 @@ public class GameManagerCS : MonoBehaviour
         objectsToDestroy = new List<GameObject>();
     }
 
+    /// <summary>
+    /// Plays the moves for each other players since this players last turn
+    /// </summary>
     public void PlayPastMoves()
     {
         // Update/Show Other Player troop movements/actions

@@ -132,11 +132,6 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_city.ownerId);
                     _packet.Write(_city.morale);
                     _packet.Write(_city.education);
-                    _packet.Write(_city.manPower);
-                    _packet.Write(_city.money);
-                    _packet.Write(_city.metal);
-                    _packet.Write(_city.wood);
-                    _packet.Write(_city.food);
                     _packet.Write(_city.ownerShipRange);
                     _packet.Write(_city.woodResourcesPerTurn);
                     _packet.Write(_city.metalResourcesPerTurn);

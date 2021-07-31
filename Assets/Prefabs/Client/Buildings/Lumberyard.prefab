@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4770390735465466038, guid: b39dd8e92903e7f4eb7beeeaff1b7902, type: 3}
+  - {fileID: 2100000, guid: 14e008f50585c684ebb358dc6c7beaa6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1985629170053519260}
   m_Layer: 0
-  m_Name: Lumberyard
+  m_Name: LumberYard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,7 +171,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: b39dd8e92903e7f4eb7beeeaff1b7902, type: 3}
+  - {fileID: 2100000, guid: 4293c1c3ea9a13f489ecfcec7db0c87f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -250,7 +250,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6210932467211981739, guid: b39dd8e92903e7f4eb7beeeaff1b7902, type: 3}
+  - {fileID: 2100000, guid: 14e008f50585c684ebb358dc6c7beaa6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -329,7 +329,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8437988985659317840, guid: b39dd8e92903e7f4eb7beeeaff1b7902, type: 3}
+  - {fileID: 2100000, guid: 14e008f50585c684ebb358dc6c7beaa6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

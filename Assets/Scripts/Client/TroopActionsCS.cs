@@ -410,6 +410,8 @@ public class TroopActionsCS : MonoBehaviour
             }
         }
 
+        // Update morale and education
+        PlayerCS.instance.ResetMoraleAndEducation();
         ResetAlteredTiles();
     }
 
@@ -524,7 +526,6 @@ public class TroopActionsCS : MonoBehaviour
             CityInfo _city = GameManagerCS.instance.cities[_tile.cityId];
             if(_city.isAbleToBeConquered)
             {
-                Debug.Log("City is able to be conquered");
                 if (troopInfo.troopName == "King")
                     conquerKingCityButton.enabled = true;
                 else
@@ -556,6 +557,11 @@ public class TroopActionsCS : MonoBehaviour
         mainContainer.SetActive(false);
         mainKingContainer.SetActive(false);
         createCityButton.enabled = true;
+    }
+
+    public void SetCurrentTroopId()
+    {
+        PlayerCS.instance.currentSelectedTroopId = troopInfo.id;
     }
 
     #endregion

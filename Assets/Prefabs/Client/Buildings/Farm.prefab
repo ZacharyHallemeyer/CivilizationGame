@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 2c7aff84fb379c64aa900bb20675c2e3, type: 3}
+  - {fileID: 2100000, guid: 7b0a8f0beaff556458758536e5c734f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -137,7 +137,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 2c7aff84fb379c64aa900bb20675c2e3, type: 3}
+  - {fileID: 2100000, guid: 7b0a8f0beaff556458758536e5c734f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -216,7 +216,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 2c7aff84fb379c64aa900bb20675c2e3, type: 3}
+  - {fileID: 2100000, guid: 7b0a8f0beaff556458758536e5c734f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -295,7 +295,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 2c7aff84fb379c64aa900bb20675c2e3, type: 3}
+  - {fileID: 2100000, guid: 7b0a8f0beaff556458758536e5c734f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -374,7 +374,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 2c7aff84fb379c64aa900bb20675c2e3, type: 3}
+  - {fileID: 2100000, guid: 7b0a8f0beaff556458758536e5c734f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -453,7 +453,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 2c7aff84fb379c64aa900bb20675c2e3, type: 3}
+  - {fileID: 2100000, guid: 7b0a8f0beaff556458758536e5c734f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -532,7 +532,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 2c7aff84fb379c64aa900bb20675c2e3, type: 3}
+  - {fileID: 2100000, guid: 7b0a8f0beaff556458758536e5c734f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -563,7 +563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1483921155047324027}
   m_Layer: 0
-  m_Name: LowPolyWindmill
+  m_Name: Farm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -9,6 +9,9 @@ public class PlayerUI : MonoBehaviour
     public GameObject playerUIContainer;
     public TextMeshProUGUI foodText, woodText, metalText, moneyText, moraleText, educationText, populationText;
 
+    /// <summary>
+    /// Set player resource UI
+    /// </summary>
     public void SetAllResourceUI(int _foodAmount, int _woodAmount, int _metalAmount, int _moneyAmount, float _moraleAmount,
                                  float _educationAmount, int _populationAmount)
     {
@@ -20,6 +23,10 @@ public class PlayerUI : MonoBehaviour
         SetEducationText(_educationAmount);
         SetPopulationText(_populationAmount);
     }
+
+    /// <summary>
+    /// Set player resource UI for all int values
+    /// </summary>
     public void SetAllIntResourceUI(int _foodAmount, int _woodAmount, int _metalAmount, int _moneyAmount, int _populationAmount)
     {
         SetFoodAmountUI(_foodAmount);
@@ -51,12 +58,12 @@ public class PlayerUI : MonoBehaviour
 
     public void SetMoraleAmount(float _moraleAmount)
     {
-        moraleText.text = "Morale: " + _moraleAmount;
+        moraleText.text = "Morale: " + string.Format("{0:N2}", _moraleAmount);
     }
 
     public void SetEducationText(float _educationAmount)
     {
-        educationText.text = "Education: " + _educationAmount;
+        educationText.text = "Education: " + string.Format("{0:N2}", _educationAmount);
     }
 
     public void SetPopulationText(float _populationAmount)

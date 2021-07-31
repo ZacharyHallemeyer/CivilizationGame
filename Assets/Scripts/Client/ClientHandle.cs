@@ -127,11 +127,6 @@ public class ClientHandle : MonoBehaviour
         int _ownerId = _packet.ReadInt();
         float _morale = _packet.ReadFloat();
         float _education = _packet.ReadFloat();
-        int _manPower = _packet.ReadInt();
-        int _money = _packet.ReadInt();
-        int _metal = _packet.ReadInt();
-        int _wood = _packet.ReadInt();
-        int _food = _packet.ReadInt();
         int _ownerShipRange = _packet.ReadInt();
         int _woodResourcePerTurn = _packet.ReadInt();
         int _metalResourcePerTurn = _packet.ReadInt();
@@ -141,8 +136,8 @@ public class ClientHandle : MonoBehaviour
         int  _xIndex = _packet.ReadInt();
         int  _zIndex = _packet.ReadInt();
 
-        GameManagerCS.instance.CreateNewNeutralCity(_id, _ownerId, _morale, _education, _manPower, _money, _metal, _wood, _food,
-                                                    _ownerShipRange, _woodResourcePerTurn, _metalResourcePerTurn, _foodResourcePerTurn,
+        GameManagerCS.instance.CreateNewNeutralCity(_id, _ownerId, _morale, _education,_ownerShipRange, _woodResourcePerTurn, 
+                                                    _metalResourcePerTurn, _foodResourcePerTurn,
                                                     _moneyResourcesPerTurn, _populationResourcePerTurn, _xIndex, _zIndex);
 
     }
@@ -236,11 +231,6 @@ public class ClientHandle : MonoBehaviour
         _city.ownerId = _packet.ReadInt();
         _city.morale = _packet.ReadFloat();
         _city.education = _packet.ReadFloat();
-        _city.manPower = _packet.ReadInt();
-        _city.money = _packet.ReadInt();
-        _city.metal = _packet.ReadInt();
-        _city.wood = _packet.ReadInt();
-        _city.food = _packet.ReadInt();
         _city.ownerShipRange = _packet.ReadInt();
         _city.woodResourcesPerTurn = _packet.ReadInt();
         _city.metalResourcesPerTurn = _packet.ReadInt();

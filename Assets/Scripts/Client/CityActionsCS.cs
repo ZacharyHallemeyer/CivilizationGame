@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CityActionsCS : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class CityActionsCS : MonoBehaviour
     // Buttons
     public Button scoutButton, militiaButton, armyButton, missleButton, defenseButton, stealthButton, snipperButton;
     public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton;
+
+    // Resource Cost Text
+    public TextMeshProUGUI lumberYardText, schoolText, libraryText, domeText, housingText, farmText, mineText, marketText;
+    public TextMeshProUGUI scoutText, militiaText, armyText, missleText, defenseText, stealthText, snipperText;
 
     public string currentTroopTraining, currentBuidlingToBuild;
 
@@ -52,12 +57,62 @@ public class CityActionsCS : MonoBehaviour
         statsContainer.SetActive(false);
     }
 
+    public void SetCurrentCityId()
+    {
+        PlayerCS.instance.currentSelectedCityId = cityInfo.id;
+    }
+
+    public void SetBuildingResourceText()
+    {
+        lumberYardText.text = ResourceText(Constants.prices["LumberYard"]);
+        schoolText.text = ResourceText(Constants.prices["School"]);
+        libraryText.text = ResourceText(Constants.prices["Library"]);
+        domeText.text = ResourceText(Constants.prices["Dome"]);
+        housingText.text = ResourceText(Constants.prices["Housing"]);
+        farmText.text = ResourceText(Constants.prices["Farm"]);
+        mineText.text = ResourceText(Constants.prices["Mine"]);
+        marketText.text = ResourceText(Constants.prices["Market"]);
+    }
+
+    public void SetTroopResourceText()
+    {
+        scoutText.text = ResourceText(Constants.prices["Scout"]);
+        militiaText.text = ResourceText(Constants.prices["Militia"]);
+        armyText.text = ResourceText(Constants.prices["Army"]);
+        missleText.text = ResourceText(Constants.prices["Missle"]);
+        defenseText.text = ResourceText(Constants.prices["Defense"]);
+        stealthText.text = ResourceText(Constants.prices["Stealth"]);
+        snipperText.text = ResourceText(Constants.prices["Snipper"]);
+    }
+
+    public string ResourceText(Dictionary<string, int> _priceDict)
+    {
+        return "F: " +_priceDict["Food"]+ " W: " + _priceDict["Wood"] + " Met: " + _priceDict["Metal"] + " Mon: " + _priceDict["Money"] + 
+               " P: " + _priceDict["Population"];
+    }
+
+    /// <summary>
+    /// Enable construct buildings if player has enough resources to construct it and disable if player does not have resources
+    /// Disable all buttons if city is being conquered
+    /// </summary>
     public void DisplayPossibleBuildings()
     {
+        if(cityInfo.isBeingConquered)
+        {
+            lumberYardButton.enabled = false;
+            farmButton.enabled = false;
+            mineButton.enabled = false;
+            housingButton.enabled = false;
+            schoolButton.enabled = false;
+            libraryButton.enabled = false;
+            domeButton.enabled = false;
+            marketButton.enabled = false;
+            return;
+        }
         if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["LumberYard"]))
             lumberYardButton.enabled = true;
         else 
-            lumberYardButton.enabled=  false;
+            lumberYardButton.enabled =  false;
         if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Farm"]))
             farmButton.enabled = true;
         else
@@ -88,27 +143,90 @@ public class CityActionsCS : MonoBehaviour
             marketButton.enabled = false;
     }
 
+    /// <summary>
+    /// Enable train troops if player has enough resources to train it and disable if player does not have resources
+    /// Disable all buttons if city is occupied
+    /// </summary>
+    public void DisplayPossibleTroops()
+    {
+        if(GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied)
+        {
+            scoutButton.enabled = false;
+            militiaButton.enabled = false;
+            armyButton.enabled = false;
+            missleButton.enabled = false;
+            defenseButton.enabled = false;
+            stealthButton.enabled = false;
+            snipperButton.enabled = false;
+            return;
+        }
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Scout"]))
+            scoutButton.enabled = true;
+        else
+            scoutButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Militia"]))
+            militiaButton.enabled = true;
+        else
+            militiaButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Army"]))
+            armyButton.enabled = true;
+        else
+            armyButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Missle"]))
+            missleButton.enabled = true;
+        else
+            missleButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Defense"]))
+            defenseButton.enabled = true;
+        else
+            defenseButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Stealth"]))
+            stealthButton.enabled = true;
+        else
+            stealthButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Snipper"]))
+            snipperButton.enabled = true;
+        else
+            snipperButton.enabled = false;
+    }
+
+    /// <summary>
+    /// Returns true if player have enough resources to buy object
+    /// </summary>
+    /// <param name="_player"> Player that contains the resources </param>
+    /// <param name="_priceDict"> Dict containing resource costs for the object </param>
+    /// <returns></returns>
     public bool DoesPlayerHaveEnoughResources(PlayerCS _player, Dictionary<string, int> _priceDict)
     {
         return _player.food >= _priceDict["Food"] && _player.metal >= _priceDict["Metal"] && _player.wood >= _priceDict["Wood"] &&
                _player.money >= _priceDict["Money"] && _player.population >= _priceDict["Population"];
     }
 
+    /// <summary>
+    /// Starts training troop
+    /// </summary>
+    /// <param name="_troopName"> type of troop to spawn </param>
     public void StartTrainTroop(string _troopName)
     {
         if (GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied || cityInfo.isTrainingTroops) return;
         cityInfo.isTrainingTroops = true;
         currentTroopTraining = _troopName;
+        PlayerCS.instance.food -= Constants.prices[currentTroopTraining]["Food"];
+        PlayerCS.instance.wood -= Constants.prices[currentTroopTraining]["Wood"];
+        PlayerCS.instance.metal -= Constants.prices[currentTroopTraining]["Metal"];
+        PlayerCS.instance.money -= Constants.prices[currentTroopTraining]["Money"];
+        PlayerCS.instance.population -= Constants.prices[currentTroopTraining]["Population"];
+        PlayerCS.instance.playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.wood, PlayerCS.instance.metal,
+                                                       PlayerCS.instance.money, PlayerCS.instance.population);
         HideQuickMenu();
     }
 
+    /// <summary>
+    /// Spawn troop that was being trained last turn
+    /// </summary>
     public void SpawnTroop()
     {
         GameManagerCS.instance.SpawnTroop(ClientCS.instance.myId, currentTroopTraining, cityInfo.xIndex, cityInfo.zIndex, 0);
-        
-        /*Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { { cityInfo, "SpawnTroop"} };
-        GameManagerCS.instance.modifiedCityInfo.Add(_cityData);*/
     }
 
     public void SelectBuildingToBuild(string _buildingName)
@@ -139,6 +257,9 @@ public class CityActionsCS : MonoBehaviour
         ResetAlteredObjects();
     }
 
+    /// <summary>
+    /// Sets owned tiles to iteractable if player wants to build something and the tiles have the requirments for the building wanted to be spawned
+    /// </summary>
     public void CreateInteractableTileToBuildOn()
     {
         int _index = 0;
@@ -196,6 +317,9 @@ public class CityActionsCS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reset all altered tiles to default layer and tag
+    /// </summary>
     public void ResetAlteredObjects()
     {
         if (objecstToBeReset == null) return;

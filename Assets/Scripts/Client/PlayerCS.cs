@@ -13,7 +13,7 @@ public class PlayerCS : MonoBehaviour
     public LayerMask whatIsIteractable;
     public Camera cam;
     public Rigidbody camRB;
-    private PlayerUI playerUI;
+    public PlayerUI playerUI;
 
     public int currentSelectedTroopId = -1;
     public int currentSelectedCityId  = -1;
@@ -228,6 +228,14 @@ public class PlayerCS : MonoBehaviour
             _troop.troopActions.ResetAlteredTiles();
         if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
             _city.cityActions.ResetAlteredObjects();
+    }
+
+    public void HideQuckMenus()
+    {
+        if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+            _troop.troopActions.HideQuickMenu();
+        if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
+            _city.cityActions.HideQuickMenu();
     }
 
     /// <summary>
