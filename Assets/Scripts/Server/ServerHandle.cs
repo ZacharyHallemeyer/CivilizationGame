@@ -76,6 +76,7 @@ public class ServerHandle
 
         _troop.id = _id;
         _troop.ownerId = _packet.ReadInt();
+        _troop.troopName = _packet.ReadString();
         _troop.xIndex = _packet.ReadInt();
         _troop.zIndex = _packet.ReadInt();
         _troop.rotation = _packet.ReadInt();

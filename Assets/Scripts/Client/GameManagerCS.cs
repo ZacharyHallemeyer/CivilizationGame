@@ -383,8 +383,6 @@ public class GameManagerCS : MonoBehaviour
                 Debug.LogError("Could not find prefab for troop name: " + _troopInfoToCopy.troopName);
                 break;
         }
-        _troop = Instantiate(remoteTroopPrefab, new Vector3(_xCoord, 1, _zCoord),
-                                        Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
         _troopInfo.CopyTroopInfo(_troopInfoToCopy, _troop, _troopActions);
@@ -429,7 +427,9 @@ public class GameManagerCS : MonoBehaviour
     public void RotateTroop(TroopInfo _troopInfo)
     {
         troops[_troopInfo.id].rotation = _troopInfo.rotation;
-        troops[_troopInfo.id].troop.transform.localRotation = Quaternion.Euler(0, troops[_troopInfo.id].rotation, 0);
+        troops[_troopInfo.id].troop.transform.localRotation = Quaternion.Euler(troops[_troopInfo.id].troop.transform.localEulerAngles.x,
+                                                                               troops[_troopInfo.id].rotation,
+                                                                               troops[_troopInfo.id].troop.transform.localEulerAngles.z);
     }
 
     /// <summary>
