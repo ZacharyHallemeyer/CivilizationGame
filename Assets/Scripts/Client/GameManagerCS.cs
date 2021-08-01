@@ -31,6 +31,10 @@ public class GameManagerCS : MonoBehaviour
     public GameObject cityPrefab;
     public GameObject ownershipObjectPrefab;
     public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab;
+    public GameObject localScoutPrefab, localMilitiaPrefab, localArmyPrefab, localMisslePrefab, localDefensePrefab, localStealthPrefab,
+                      localSnipperPrefab, localKingPrefab;
+    public GameObject remoteScoutPrefab, remoteMilitiaPrefab, remoteArmyPrefab, remoteMisslePrefab, remoteDefensePrefab, remoteStealthPrefab,
+                      remoteSnipperPrefab, remoteKingPrefab;
 
     public string[] troopNames;
     public string[] biomeOptions;
@@ -247,7 +251,7 @@ public class GameManagerCS : MonoBehaviour
                                                                                     _position.y), metalResourcePrefab.transform.localRotation);
         // Spawn tile ownership object
         _tileInfo.ownerShipVisualObject = Instantiate(ownershipObjectPrefab, new Vector3(_position.x, ownershipObjectPrefab.transform.position.y,
-                                                                                         _position.y), Quaternion.identity);
+                                                                                         _position.y), ownershipObjectPrefab.transform.localRotation);
         _tileInfo.ownerShipVisualObject.SetActive(false);
     }
 
@@ -285,9 +289,41 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_rotation"> rotation of new troop </param>
     public void SpawnTroop(int _ownerId, string _troopName, int _xIndex, int _zIndex, int _rotation)
     {
+        GameObject _troop;
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
-        GameObject _troop = Instantiate(localTroopPrefab, new Vector3(_xCoord, 1, _zCoord), Quaternion.identity);
+        switch (_troopName)
+        {
+            case "Scout":
+            _troop = Instantiate(localScoutPrefab, new Vector3(_xCoord, 1, _zCoord), localTroopPrefab.transform.localRotation);
+                break;
+            case "Militia":
+            _troop = Instantiate(localMilitiaPrefab, new Vector3(_xCoord, 1, _zCoord), localMilitiaPrefab.transform.localRotation);
+                break;
+            case "Army":
+            _troop = Instantiate(localArmyPrefab, new Vector3(_xCoord, 1, _zCoord), localArmyPrefab.transform.localRotation);
+                break;
+            case "Missle":
+            _troop = Instantiate(localMisslePrefab, new Vector3(_xCoord, 1, _zCoord), localMisslePrefab.transform.localRotation);
+                break;
+            case "Defense":
+            _troop = Instantiate(localDefensePrefab, new Vector3(_xCoord, 1, _zCoord), localDefensePrefab.transform.localRotation);
+                break;
+            case "Stealth":
+            _troop = Instantiate(localStealthPrefab, new Vector3(_xCoord, 1, _zCoord), localStealthPrefab.transform.localRotation);
+                break;
+            case "Snipper":
+            _troop = Instantiate(localSnipperPrefab, new Vector3(_xCoord, 1, _zCoord), localSnipperPrefab.transform.localRotation);
+                break;
+            case "King":
+            _troop = Instantiate(localKingPrefab, new Vector3(_xCoord, 1, _zCoord), localKingPrefab.transform.localRotation);
+                break;
+            default:
+                _troop = Instantiate(localScoutPrefab, new Vector3(_xCoord, 1, _zCoord), localScoutPrefab.transform.localRotation);
+                Debug.LogError("Could not find prefab for troop name: " + _troopName);
+                break;
+        }
+
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         _troop.AddComponent<TroopInfo>().InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, 
                                                         _xIndex, _zIndex);
@@ -313,9 +349,41 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_troopInfoToCopy"> Existing troop spawn and init </param>
     public void SpawnTroop(TroopInfo _troopInfoToCopy)
     {
+        GameObject _troop;
         int _xCoord = (int)tiles[_troopInfoToCopy.xIndex, _troopInfoToCopy.zIndex].position.x;
         int _zCoord = (int)tiles[_troopInfoToCopy.xIndex, _troopInfoToCopy.zIndex].position.y;
-        GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_xCoord, 1, _zCoord),
+        switch (_troopInfoToCopy.troopName)
+        {
+            case "Scout":
+                _troop = Instantiate(remoteScoutPrefab, new Vector3(_xCoord, 1, _zCoord), remoteTroopPrefab.transform.localRotation);
+                break;
+            case "Militia":
+                _troop = Instantiate(remoteMilitiaPrefab, new Vector3(_xCoord, 1, _zCoord), remoteMilitiaPrefab.transform.localRotation);
+                break;
+            case "Army":
+                _troop = Instantiate(remoteArmyPrefab, new Vector3(_xCoord, 1, _zCoord), remoteArmyPrefab.transform.localRotation);
+                break;
+            case "Missle":
+                _troop = Instantiate(remoteMisslePrefab, new Vector3(_xCoord, 1, _zCoord), remoteMisslePrefab.transform.localRotation);
+                break;
+            case "Defense":
+                _troop = Instantiate(remoteDefensePrefab, new Vector3(_xCoord, 1, _zCoord), remoteDefensePrefab.transform.localRotation);
+                break;
+            case "Stealth":
+                _troop = Instantiate(remoteStealthPrefab, new Vector3(_xCoord, 1, _zCoord), remoteStealthPrefab.transform.localRotation);
+                break;
+            case "Snipper":
+                _troop = Instantiate(remoteSnipperPrefab, new Vector3(_xCoord, 1, _zCoord), remoteSnipperPrefab.transform.localRotation);
+                break;
+            case "King":
+                _troop = Instantiate(remoteKingPrefab, new Vector3(_xCoord, 1, _zCoord), remoteKingPrefab.transform.localRotation);
+                break;
+            default:
+                _troop = Instantiate(localScoutPrefab, new Vector3(_xCoord, 1, _zCoord), remoteScoutPrefab.transform.localRotation);
+                Debug.LogError("Could not find prefab for troop name: " + _troopInfoToCopy.troopName);
+                break;
+        }
+        _troop = Instantiate(remoteTroopPrefab, new Vector3(_xCoord, 1, _zCoord),
                                         Quaternion.identity);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();

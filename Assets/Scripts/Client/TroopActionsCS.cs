@@ -357,7 +357,8 @@ public class TroopActionsCS : MonoBehaviour
             else
                 troopInfo.rotation += 90;
         }
-        troopInfo.troop.transform.localRotation = Quaternion.Euler(0, troopInfo.rotation, 0);
+        troopInfo.troop.transform.localRotation = Quaternion.Euler(troopInfo.troop.transform.localEulerAngles.x, troopInfo.rotation,
+                                                                   troopInfo.troop.transform.localEulerAngles.z);
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {troopInfo, "Rotate"} };
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);

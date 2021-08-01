@@ -494,7 +494,7 @@ MonoBehaviour:
   objectsToDestroy: []
   playerPrefab: {fileID: 795644783452541475, guid: df0aa68d6704a08479e4a77d1e20a95f,
     type: 3}
-  localTroopPrefab: {fileID: 4779611018383367299, guid: fd9fb87db79df1b47b7803e96a572cb6,
+  localTroopPrefab: {fileID: 6253090551074964347, guid: 2cb1421853d2d064c8206d68d50f2fc2,
     type: 3}
   remoteTroopPrefab: {fileID: 4779611018383367299, guid: f6a296b67fa42f84795b2d5594bdae07,
     type: 3}
@@ -522,7 +522,7 @@ MonoBehaviour:
     type: 3}
   cityPrefab: {fileID: 5041866256424340271, guid: acd0eadc9b8a47a43b1994e5357f3829,
     type: 3}
-  ownershipObjectPrefab: {fileID: 4672860621558947833, guid: db0558fc3adfc2741a8203eb23f529c5,
+  ownershipObjectPrefab: {fileID: 139993347546936379, guid: 867a19e08a3df0647b3b617093f861c8,
     type: 3}
   lumberYardPrefab: {fileID: 3820960747793287681, guid: f10085dfc2d59264c93ca7cde6a9ceaa,
     type: 3}
@@ -539,6 +539,38 @@ MonoBehaviour:
   housingPrefab: {fileID: 7042388651001649627, guid: b3ab93fc64d578242ad5ee2c28feace9,
     type: 3}
   marketPrefab: {fileID: 4356431058999883361, guid: 499eb70152d54c245bc480fab7bbd132,
+    type: 3}
+  localScoutPrefab: {fileID: 7298131181847451065, guid: 1a54c4819433fda4094309022962ece5,
+    type: 3}
+  localMilitiaPrefab: {fileID: 6547437137183025280, guid: 5f9af588d4b962f4a836c5cd65fe41e0,
+    type: 3}
+  localArmyPrefab: {fileID: 3322451659845790572, guid: fda21be8151fcc5478af013375249008,
+    type: 3}
+  localMisslePrefab: {fileID: 1823241963045950131, guid: 20d0146a71ebd4f448f1d88b1a7c57ce,
+    type: 3}
+  localDefensePrefab: {fileID: 3599696473762690694, guid: 0dd529be0a049de42a5e72f8f6f90221,
+    type: 3}
+  localStealthPrefab: {fileID: 1548324698391675886, guid: 9767fa1870a647d428072ed86b5c0f08,
+    type: 3}
+  localSnipperPrefab: {fileID: 1557170415393459862, guid: 7045dff57947e5d409fb1ad2947ad132,
+    type: 3}
+  localKingPrefab: {fileID: 3223320413419776250, guid: c59fe8be5d2479346a8fde15b0a506e8,
+    type: 3}
+  remoteScoutPrefab: {fileID: 7298131181847451065, guid: 8adbee1fe1409a4479a492719f802d95,
+    type: 3}
+  remoteMilitiaPrefab: {fileID: 6547437137183025280, guid: a8de3bb2db545d647a4da6fdebdb1b46,
+    type: 3}
+  remoteArmyPrefab: {fileID: 3322451659845790572, guid: 98f5462e7de685b4fa8fc432bafbf4db,
+    type: 3}
+  remoteMisslePrefab: {fileID: 1823241963045950131, guid: 7e32c2d45665f2a40a23ffa982898fd1,
+    type: 3}
+  remoteDefensePrefab: {fileID: 3599696473762690694, guid: 7edbbb0654450ae4388fe86076703e8a,
+    type: 3}
+  remoteStealthPrefab: {fileID: 1548324698391675886, guid: beea13da8e292844fab68de8882c1db0,
+    type: 3}
+  remoteSnipperPrefab: {fileID: 1557170415393459862, guid: 798d7007308c2a149b3bf087ff5be646,
+    type: 3}
+  remoteKingPrefab: {fileID: 3223320413419776250, guid: f56c13a4f5b02f74ba1454f58c222575,
     type: 3}
   troopNames: []
   biomeOptions: []
