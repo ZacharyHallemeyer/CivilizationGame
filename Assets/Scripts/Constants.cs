@@ -140,7 +140,7 @@ public static class Constants
                 { "FacingDefense", 0},
                 { "MovementCost", 5},
                 { "AttackRange", 1},
-                { "SeeRange", 3},
+                { "SeeRange", 5},
             }
         },
         { "Militia", new Dictionary<string, int>
@@ -154,7 +154,7 @@ public static class Constants
                 { "FacingDefense", 1},
                 { "MovementCost", 2},
                 { "AttackRange", 1},
-                { "SeeRange", 2},
+                { "SeeRange", 5},
             }
         },
         { "Army", new Dictionary<string, int>
@@ -168,7 +168,7 @@ public static class Constants
                 { "FacingDefense", 3},
                 { "MovementCost", 2 },
                 { "AttackRange", 1},
-                { "SeeRange", 2},
+                { "SeeRange", 5},
             }
         },
         { "Missle", new Dictionary<string, int>
@@ -182,7 +182,7 @@ public static class Constants
                 { "FacingDefense", 0},
                 { "MovementCost", 1},
                 { "AttackRange", 5},
-                { "SeeRange", 2},
+                { "SeeRange", 5},
             }
         },
         { "Defense", new Dictionary<string, int>
@@ -196,7 +196,7 @@ public static class Constants
                 { "FacingDefense", 10},
                 { "MovementCost", 1},
                 { "AttackRange", 1},
-                { "SeeRange", 2},
+                { "SeeRange", 5},
             }
         },
         { "Stealth", new Dictionary<string, int>
@@ -210,7 +210,7 @@ public static class Constants
                 { "FacingDefense", 0},
                 { "MovementCost", 4},
                 { "AttackRange", 1},
-                { "SeeRange", 2},
+                { "SeeRange", 5},
             }
         },
         { "Snipper", new Dictionary<string, int>
@@ -224,7 +224,7 @@ public static class Constants
                 { "FacingDefense", 0},
                 { "MovementCost", 3},
                 { "AttackRange", 4},
-                { "SeeRange", 2},
+                { "SeeRange", 5},
             }
         },
         { "King", new Dictionary<string, int>
@@ -238,7 +238,7 @@ public static class Constants
                 { "FacingDefense", 5},
                 { "MovementCost", 3},
                 { "AttackRange", 1},
-                { "SeeRange", 2},
+                { "SeeRange", 5},
             }
         },
     };
@@ -248,41 +248,49 @@ public static class Constants
         { "Scout", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
+                { "CanMoveAfterKill", true},
             }
         },
         { "Militia", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
+                { "CanMoveAfterKill", true},
             }
         },
         { "Army", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
+                { "CanMoveAfterKill", true},
             }
         },
         { "Missle", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
+                { "CanMoveAfterKill", false},
             }
         },
         { "Defense", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
+                { "CanMoveAfterKill", true},
             }
         },
         { "Stealth", new Dictionary<string, bool>
             {
                 { "CanMultyKill", true},
+                { "CanMoveAfterKill", true},
             }
         },
         { "Snipper", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
+                { "CanMoveAfterKill", false},
             }
         },
         { "King", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
+                { "CanMoveAfterKill", true},
             }
         },
     };

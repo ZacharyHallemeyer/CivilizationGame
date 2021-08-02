@@ -414,6 +414,7 @@ public class ServerSend
         {
             _packet.Write(GameManagerSS.instance.currentTroopId);
             _packet.Write(GameManagerSS.instance.currentCityId);
+            _packet.Write(GameManagerSS.instance.turnCount);
 
             SendTCPData(_playerId, _packet);
         }

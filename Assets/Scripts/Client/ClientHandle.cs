@@ -269,6 +269,7 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.isAllCityInfoReceived = false;
         GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();
         GameManagerCS.instance.currentCityIndex = _packet.ReadInt();
+        GameManagerCS.instance.turnCount = _packet.ReadInt();
 
         GameManagerCS.instance.PlayPastMoves();
     }

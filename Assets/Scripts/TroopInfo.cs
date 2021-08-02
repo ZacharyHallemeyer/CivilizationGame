@@ -5,6 +5,7 @@ using UnityEngine;
 public class TroopInfo : MonoBehaviour
 {
     public GameObject troop;
+    public GameObject troopModel;
     public TroopActionsCS troopActions;
     public BoxCollider boxCollider;
     public string troopName;
@@ -28,8 +29,10 @@ public class TroopInfo : MonoBehaviour
     public bool canMoveNextTurn;
     public bool canAttack;
     public bool canMultyKill;
+    public bool canMoveAfterKill;
 
     public int idOfPlayerThatSentInfo;
+    public int turnCountWhenLastHit;
 
     /// <summary>
     /// Init troop info for new troop and set values for troop to be used this round
@@ -59,6 +62,7 @@ public class TroopInfo : MonoBehaviour
         canMoveNextTurn = true;
         canAttack = true;
         canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
+        canMoveAfterKill = Constants.troopInfoBool[_troopName]["CanMoveAfterKill"];
 
         if (GetComponent<BoxCollider>() != null)
         {
@@ -95,6 +99,7 @@ public class TroopInfo : MonoBehaviour
         canMoveNextTurn = true;
         canAttack = false;
         canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
+        canMoveAfterKill = Constants.troopInfoBool[_troopName]["CanMoveAfterKill"];
         if (GetComponent<BoxCollider>() != null)
         {
             boxCollider = GetComponent<BoxCollider>();
@@ -133,6 +138,7 @@ public class TroopInfo : MonoBehaviour
         lastHurtById = _troopInfo.lastHurtById;
         canMoveNextTurn = _troopInfo.canMoveNextTurn;
         canMultyKill = _troopInfo.canMultyKill;
+        canMoveAfterKill = _troopInfo.canMoveAfterKill;
     }
 
     /// <summary>

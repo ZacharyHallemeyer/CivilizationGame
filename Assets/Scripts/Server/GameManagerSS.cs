@@ -8,6 +8,7 @@ public class GameManagerSS : MonoBehaviour
 
     public int currentTroopId = 0, currentCityId = 0;
     public int currentPlayerTurnId = 0;
+    public int turnCount = 1;
 
     public List<int> playerIds;
 

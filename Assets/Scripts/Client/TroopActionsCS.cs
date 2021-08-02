@@ -93,9 +93,10 @@ public class TroopActionsCS : MonoBehaviour
             default:
                 Debug.LogError("Troop " + troopInfo.id + " rotation is not compatible");
                 break;
-        }     
+        }
 
         // Create attackable tiles
+        if (!troopInfo.canAttack) return;
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
         switch (troopInfo.rotation)
         {
@@ -322,6 +323,7 @@ public class TroopActionsCS : MonoBehaviour
             Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {troopInfo, "Move"} };
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+            CheckTroopSeeingRange();
             PlayerCS.instance.isAnimInProgress = false;
         }
     }
@@ -425,6 +427,8 @@ public class TroopActionsCS : MonoBehaviour
         HideQuickMenu();
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         bool _attackedFromTheBack = _troop.rotation + 180 == troopInfo.rotation || _troop.rotation - 180 == troopInfo.rotation;
+        _troop.turnCountWhenLastHit = GameManagerCS.instance.turnCount;
+        troopInfo.canAttack = false;
         // Play hurt animation
         _troop.troopActions.HurtAnim();
         // Check if attacking troop back
@@ -462,13 +466,15 @@ public class TroopActionsCS : MonoBehaviour
             { {_troop, "Die"} };
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
 
-            if (troopInfo.health > 0)
+            if (troopInfo.health > 0 && troopInfo.canMoveAfterKill)
             {
                 if (_tile.isCity)
                     MoveOntoCity(_tile, GameManagerCS.instance.cities[_tile.cityId]);
                 else
                     MoveToNewTile(_tile);
             }
+            if (troopInfo.canMultyKill)
+                troopInfo.canAttack = true;
         }
         // This troop was killed
         if(troopInfo.health <= 0)
@@ -481,6 +487,32 @@ public class TroopActionsCS : MonoBehaviour
             _troopData = new Dictionary<TroopInfo, string>()
             { {troopInfo, "Die"} };
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        }
+    }
+
+    public void CheckTroopSeeingRange()
+    {
+        TileInfo _tile;
+        TroopInfo _troop;
+        for (int x = troopInfo.xIndex - troopInfo.seeRange; x < troopInfo.xIndex + troopInfo.seeRange + 1; x++)
+        {
+            for (int z = troopInfo.zIndex - troopInfo.seeRange; z < troopInfo.zIndex + troopInfo.seeRange + 1; z++)
+            {
+                if (x >= 0 && x < GameManagerCS.instance.tiles.GetLength(0)
+                    && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1))
+                {
+                    _tile = GameManagerCS.instance.tiles[x, z];
+                    if (_tile.isOccupied)
+                    {
+                        _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
+                        if(_troop.ownerId != troopInfo.ownerId)
+                        {
+                            // Enemy troop within seeing range
+                            _troop.troop.SetActive(true);
+                        }
+                    }
+                }
+            }
         }
     }
 

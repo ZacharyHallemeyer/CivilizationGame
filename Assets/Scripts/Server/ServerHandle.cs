@@ -195,7 +195,10 @@ public class ServerHandle
 
         // Chose next player to start turn
         if (GameManagerSS.instance.currentPlayerTurnId + 1 >= GameManagerSS.instance.playerIds.Count)
+        {
             GameManagerSS.instance.currentPlayerTurnId = 0;
+            GameManagerSS.instance.turnCount++;
+        }
         else
             GameManagerSS.instance.currentPlayerTurnId++;
 

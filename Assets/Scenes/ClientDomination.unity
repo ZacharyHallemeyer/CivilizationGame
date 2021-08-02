@@ -485,6 +485,7 @@ MonoBehaviour:
   recievedAllNewTileData: 0
   recievedAllNewNeutralCityData: 0
   isTurn: 0
+  turnCount: 0
   starCount: 100
   currentTroopIndex: 0
   currentCityIndex: 0
@@ -494,7 +495,7 @@ MonoBehaviour:
   objectsToDestroy: []
   playerPrefab: {fileID: 795644783452541475, guid: df0aa68d6704a08479e4a77d1e20a95f,
     type: 3}
-  localTroopPrefab: {fileID: 6253090551074964347, guid: 2cb1421853d2d064c8206d68d50f2fc2,
+  localTroopPrefab: {fileID: 4779611018383367299, guid: fd9fb87db79df1b47b7803e96a572cb6,
     type: 3}
   remoteTroopPrefab: {fileID: 4779611018383367299, guid: f6a296b67fa42f84795b2d5594bdae07,
     type: 3}

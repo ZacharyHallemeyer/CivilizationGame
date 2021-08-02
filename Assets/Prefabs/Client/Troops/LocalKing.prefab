@@ -119,7 +119,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: HideQuickMenu
         m_Mode: 1
         m_Arguments:
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: HideQuickMenu
         m_Mode: 1
         m_Arguments:
@@ -369,8 +369,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1936777699451230953}
-  - component: {fileID: -1737363261766227406}
-  - component: {fileID: -684438787509813108}
   m_Layer: 8
   m_Name: LocalKing
   m_TagString: Troop
@@ -395,41 +393,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &-1737363261766227406
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3223320413419776250}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-684438787509813108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3223320413419776250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6d39f844cc7874e8124f1b8017d3f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objecstToBeReset: []
-  whatIsInteractableValue: 0
-  whatIsDefaultValue: 0
-  troopInfo: {fileID: 0}
-  quickMenuContainer: {fileID: 2237434804999996579}
-  mainContainer: {fileID: 5450835247201907993}
-  mainKingContainer: {fileID: 6883223145426874065}
-  createCityButton: {fileID: 1016582114635766203}
-  conquerMainCityButton: {fileID: 555633896883531036}
-  conquerKingCityButton: {fileID: 3832754236293653195}
 --- !u!1 &4403170424506782119
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,7 +748,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: ConquerCity
         m_Mode: 1
         m_Arguments:
@@ -796,7 +759,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: HideQuickMenu
         m_Mode: 1
         m_Arguments:
@@ -1548,7 +1511,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: CreateCity
         m_Mode: 1
         m_Arguments:
@@ -1559,7 +1522,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: HideQuickMenu
         m_Mode: 1
         m_Arguments:
@@ -1846,7 +1809,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: ConquerCity
         m_Mode: 1
         m_Arguments:
@@ -1857,7 +1820,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: -684438787509813108}
+      - m_Target: {fileID: 0}
         m_MethodName: HideQuickMenu
         m_Mode: 1
         m_Arguments:
