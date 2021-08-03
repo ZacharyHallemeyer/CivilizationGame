@@ -6,6 +6,7 @@ public class TroopInfo : MonoBehaviour
 {
     public GameObject troop;
     public GameObject troopModel;
+    public GameObject blurredTroopModel;
     public TroopActionsCS troopActions;
     public BoxCollider boxCollider;
     public string troopName;
@@ -30,6 +31,7 @@ public class TroopInfo : MonoBehaviour
     public bool canAttack;
     public bool canMultyKill;
     public bool canMoveAfterKill;
+    public bool isExposed = false;
 
     public int idOfPlayerThatSentInfo;
     public int turnCountWhenLastHit;

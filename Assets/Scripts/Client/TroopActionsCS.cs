@@ -26,7 +26,7 @@ public class TroopActionsCS : MonoBehaviour
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
         troopInfo = _troopInfo;
-        meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer = troopInfo.troopModel.GetComponent<MeshRenderer>();
     }
     #endregion
 
@@ -205,7 +205,7 @@ public class TroopActionsCS : MonoBehaviour
             {
                 _tile.tile.layer = whatIsInteractableValue;
                 _tile.tile.tag = attackableTileTag;
-                _tile.moveUI.SetActive(true);
+                _tile.attackUI.SetActive(true);
             }
         }
         objecstToBeReset[_index] = _tile;
@@ -236,12 +236,14 @@ public class TroopActionsCS : MonoBehaviour
                     _tile.tile.layer = whatIsDefaultValue;
                     _tile.tile.tag = cityTag;
                     _tile.moveUI.SetActive(false);
+                    _tile.attackUI.SetActive(false);
                 }
                 else
                 {
                     _tile.tile.layer = whatIsDefaultValue;
                     _tile.tile.tag = defaultTileTag;
                     _tile.moveUI.SetActive(false);
+                    _tile.attackUI.SetActive(false);
                 }
                 _tile.moveUI.SetActive(false);
             }
@@ -425,9 +427,18 @@ public class TroopActionsCS : MonoBehaviour
     public void Attack(TileInfo _tile)
     {
         HideQuickMenu();
+        ResetAlteredTiles();
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         bool _attackedFromTheBack = _troop.rotation + 180 == troopInfo.rotation || _troop.rotation - 180 == troopInfo.rotation;
         _troop.turnCountWhenLastHit = GameManagerCS.instance.turnCount;
+        // Expose troop identity
+        if(!_troop.isExposed)
+        {
+            _troop.isExposed = true;
+            _troop.troopModel.SetActive(true);
+            if (_troop.blurredTroopModel.activeSelf)
+                _troop.blurredTroopModel.SetActive(false);
+        }
         troopInfo.canAttack = false;
         // Play hurt animation
         _troop.troopActions.HurtAnim();
@@ -508,7 +519,14 @@ public class TroopActionsCS : MonoBehaviour
                         if(_troop.ownerId != troopInfo.ownerId)
                         {
                             // Enemy troop within seeing range
-                            _troop.troop.SetActive(true);
+                            if(_troop.isExposed)
+                            {
+                                _troop.troopModel.SetActive(true);
+                                if(_troop.blurredTroopModel.activeSelf)
+                                    _troop.blurredTroopModel.SetActive(false);
+                            }
+                            else
+                                _troop.blurredTroopModel.SetActive(true);
                         }
                     }
                 }
@@ -606,13 +624,16 @@ public class TroopActionsCS : MonoBehaviour
 
     }
 
+
     public void HurtAnim()
     {
+        /*
         meshRenderer.material.color = new Color(meshRenderer.material.color.r + .5f,
                                                 meshRenderer.material.color.g + .5f,
                                                 meshRenderer.material.color.b + .5f,
                                                 meshRenderer.material.color.a);
         InvokeRepeating("TurnOffHurtAnim", 1f, 0);
+        */
     }
 
     public void TurnOffHurtAnim()

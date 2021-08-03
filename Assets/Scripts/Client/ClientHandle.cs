@@ -34,7 +34,6 @@ public class ClientHandle : MonoBehaviour
         ClientCS.instance.lobby.InitLobbyUI();
     }
 
-
     /// <summary>
     /// Recieve which player disconnected from server and remove from dictionries
     /// </summary>

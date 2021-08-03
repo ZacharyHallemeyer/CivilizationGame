@@ -24,8 +24,8 @@ public class GameManagerCS : MonoBehaviour
     public List<GameObject> objectsToDestroy = new List<GameObject>();
 
     public GameObject playerPrefab;
-    public GameObject localTroopPrefab, remoteTroopPrefab;
-    public GameObject starPrefab; 
+    public GameObject localTroopPrefab, remoteTroopPrefab, blurredTroopPrefab;
+    public GameObject starPrefab;
     public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
                       tundraTilePrefab, waterTilePrefab;
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab;
@@ -216,7 +216,8 @@ public class GameManagerCS : MonoBehaviour
 
         _tile.transform.parent = transform;
         TileInfo _tileInfo = _tile.AddComponent<TileInfo>();
-        _tileInfo.moveUI = _tile.transform.GetChild(0).gameObject;  // Get move UI
+        _tileInfo.moveUI = _tile.transform.GetChild(0).gameObject;  // Get move UI game object
+        _tileInfo.attackUI = _tile.transform.GetChild(1).gameObject;  // Get attack UI game object
         _tile.name = _name;
         _tileInfo.tile = _tile;
         _tileInfo.id = _id;
@@ -242,17 +243,29 @@ public class GameManagerCS : MonoBehaviour
 
         // Spawn appropriate resource object
         if (_tileInfo.isFood)
+        {
             _tileInfo.resourceObject = Instantiate(foodResourcePrefab, new Vector3(_position.x, foodResourcePrefab.transform.position.y, 
                                                                                     _position.y), foodResourcePrefab.transform.localRotation);
+            _tileInfo.resourceObject.transform.parent = _tile.transform;
+        }
+
         if (_tileInfo.isWood)
+        {
             _tileInfo.resourceObject = Instantiate(woodResourcePrefab, new Vector3(_position.x, woodResourcePrefab.transform.position.y,
                                                                                     _position.y), woodResourcePrefab.transform.localRotation);
+            _tileInfo.resourceObject.transform.parent = _tile.transform;
+        }
         if (_tileInfo.isMetal)
+        {
             _tileInfo.resourceObject = Instantiate(metalResourcePrefab, new Vector3(_position.x, metalResourcePrefab.transform.position.y,
                                                                                     _position.y), metalResourcePrefab.transform.localRotation);
+            _tileInfo.resourceObject.transform.parent = _tile.transform;
+
+        }
         // Spawn tile ownership object
         _tileInfo.ownerShipVisualObject = Instantiate(ownershipObjectPrefab, new Vector3(_position.x, ownershipObjectPrefab.transform.position.y,
                                                                                          _position.y), ownershipObjectPrefab.transform.localRotation);
+        _tileInfo.ownerShipVisualObject.transform.parent = _tile.transform;
         _tileInfo.ownerShipVisualObject.SetActive(false);
     }
 
@@ -295,7 +308,6 @@ public class GameManagerCS : MonoBehaviour
         GameObject _troop = Instantiate(localTroopPrefab, new Vector3(_xCoord, 1, _zCoord), localTroopPrefab.transform.localRotation);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
-        _troopInfo.InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, _xIndex, _zIndex);
 
         switch (_troopName)
         {
@@ -337,6 +349,8 @@ public class GameManagerCS : MonoBehaviour
                 Debug.LogError("Could not find prefab for troop name: " + _troopName);
                 break;
         }
+        _troopInfo.InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, _xIndex, _zIndex);
+        _troopInfo.troopActions.CheckTroopSeeingRange();
 
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;
@@ -364,7 +378,6 @@ public class GameManagerCS : MonoBehaviour
         GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_xCoord, 1, _zCoord), localTroopPrefab.transform.localRotation);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
-        _troopInfo.CopyTroopInfo(_troopInfoToCopy, _troop, _troopActions);
         switch (_troopInfoToCopy.troopName)
         {
             case "Scout":
@@ -405,6 +418,10 @@ public class GameManagerCS : MonoBehaviour
                 Debug.LogError("Could not find prefab for troop name: " + _troopInfoToCopy.troopName);
                 break;
         }
+        _troopInfo.CopyTroopInfo(_troopInfoToCopy, _troop, _troopActions);
+        _troopInfo.blurredTroopModel = Instantiate(blurredTroopPrefab, _troop.transform.position, blurredTroopPrefab.transform.localRotation);
+        _troopInfo.blurredTroopModel.transform.parent = _troop.transform;
+        _troopInfo.blurredTroopModel.SetActive(false);
 
         troops.Add(_troopInfo.id, _troopInfo);
     }
@@ -900,7 +917,10 @@ public class GameManagerCS : MonoBehaviour
         foreach (TroopInfo _troop in troops.Values)
         {
             if (_troop.ownerId != ClientCS.instance.myId)
-                _troop.troop.SetActive(false);
+            {
+                _troop.troopModel.SetActive(false);
+                _troop.blurredTroopModel.SetActive(false);
+            }
         }
 
         // Check if any troops are in seeing range and show them if they are

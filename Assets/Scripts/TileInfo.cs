@@ -6,6 +6,7 @@ public class TileInfo : MonoBehaviour
 {
     public GameObject tile;
     public GameObject moveUI;
+    public GameObject attackUI;
     public int id;
     public int ownerId;
     public int movementCost;
