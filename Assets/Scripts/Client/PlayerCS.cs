@@ -98,9 +98,19 @@ public class PlayerCS : MonoBehaviour
                     TroopInfo _troop = _hit.collider.GetComponent<TroopInfo>();
                     if (_troop.ownerId == id)
                     {
-                        _troop.troopActions.ShowQuickMenu();
-                        currentSelectedTroopId = _troop.id;
-                        GameManagerCS.instance.troops[_troop.id].troopActions.CreateInteractableTiles();
+                        // Deselect troop if troop that has been already selected is selected again
+                        if(currentSelectedTroopId == _troop.id)
+                        {
+                            _troop.troopActions.HideQuickMenu();
+                            currentSelectedTroopId = -1;
+                        }
+                        // Select troop
+                        else
+                        {
+                            _troop.troopActions.ShowQuickMenu();
+                            currentSelectedTroopId = _troop.id;
+                            GameManagerCS.instance.troops[_troop.id].troopActions.CreateInteractableTiles();
+                        }
                     }
                 }
                 else if (_hit.collider.CompareTag("MoveableTile"))
@@ -122,10 +132,18 @@ public class PlayerCS : MonoBehaviour
                     ResetAlteredTiles();
                     TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
                     CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
-                    if (_cityInfo.ownerId == id  && currentSelectedTroopId == -1)
+                    if (_cityInfo.ownerId == id)
                     {
-                        currentSelectedCityId = _cityInfo.id;
-                        GameManagerCS.instance.cities[_cityInfo.id].cityActions.ToggleQuickMenu();
+                        if(currentSelectedCityId == _cityInfo.id)
+                        {
+                            currentSelectedCityId = -1;
+                            GameManagerCS.instance.cities[_cityInfo.id].cityActions.HideQuickMenu();
+                        }
+                        else
+                        {
+                            currentSelectedCityId = _cityInfo.id;
+                            GameManagerCS.instance.cities[_cityInfo.id].cityActions.ShowQuickMenu();
+                        }
                     }
                 }
                 else if(_hit.collider.CompareTag("MoveableCity"))
@@ -144,16 +162,20 @@ public class PlayerCS : MonoBehaviour
                 }
                 else
                 {
+                    /*
                     ResetAlteredTiles();
                     currentSelectedTroopId = -1;
                     currentSelectedCityId = -1;
+                    */ 
                 }
             }
             else
             {
+                /*
                 ResetAlteredTiles();
                 currentSelectedTroopId = -1;
                 currentSelectedCityId = -1;
+                */
             }
         }
 

@@ -173,17 +173,12 @@ public class TroopActionsCS : MonoBehaviour
         if (_tile.isWater || _tile.isOccupied) return false;
         if (_tile.isCity)
         {
-            if (GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)     // Client does NOT owns city
-            {
-                _tile.tile.layer = whatIsInteractableValue;
-                _tile.tile.tag = moveableCityTag;
-                _tile.moveUI.SetActive(true);
-            }
-            else
-            {
-                // Prevent troops from moving onto a city that is training troops 
-                if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops) return false;
-            }
+            if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops &&
+                GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId) 
+                    return false;
+            _tile.tile.layer = whatIsInteractableValue;
+            _tile.tile.tag = moveableCityTag;
+            _tile.moveUI.SetActive(true);
         }
         else
         {
@@ -431,6 +426,7 @@ public class TroopActionsCS : MonoBehaviour
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         bool _attackedFromTheBack = _troop.rotation + 180 == troopInfo.rotation || _troop.rotation - 180 == troopInfo.rotation;
         _troop.turnCountWhenLastHit = GameManagerCS.instance.turnCount;
+        AttackAnim(_troop);
         // Expose troop identity
         if(!_troop.isExposed)
         {
@@ -541,6 +537,112 @@ public class TroopActionsCS : MonoBehaviour
 
     #endregion
 
+    #region Troop Animations
+
+    public void AttackAnim(TroopInfo _troopToAttack)
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        int _distance = Mathf.Abs(_troopToAttack.xIndex - troopInfo.xIndex) + Mathf.Abs(_troopToAttack.zIndex - troopInfo.zIndex);
+        if (_distance == 1)
+        {
+            GameManagerCS.instance.sword.transform.position = new Vector3(troopInfo.transform.position.x,
+                                                                         2,
+                                                                         troopInfo.transform.position.z);
+            GameManagerCS.instance.sword.transform.localRotation = Quaternion.Euler(-90, troopInfo.rotation, 0);
+            GameManagerCS.instance.sword.SetActive(true);
+            InvokeRepeating("SwordAnim", 0, .01f);
+        }
+        else
+        {
+            TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
+            switch (troopInfo.rotation)
+            {
+                case 0:
+
+                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
+                                                                                  2,
+                                                                                  _tile.transform.position.z + 1);
+                    break;
+                case 90:
+
+                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x + 1,
+                                                                                  2,
+                                                                                  _tile.transform.position.z);
+                    break;
+                case 180:
+
+                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
+                                                                                  2,
+                                                                                  _tile.transform.position.z - 1);
+                    break;
+                case 270:
+
+                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x - 1,
+                                                                                  2,
+                                                                                  _tile.transform.position.z);
+                    break;
+
+                default:
+                    Debug.LogError("Could not accomplish task with rotation " + troopInfo.rotation);
+                    break;
+            }
+            GameManagerCS.instance.gun.transform.localRotation = Quaternion.Euler(-90, troopInfo.rotation, 0);
+            GameManagerCS.instance.gun.SetActive(true);
+            GunAnim();
+        }
+    }
+
+    public void SwordAnim()
+    {
+        if(GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f  || GameManagerCS.instance.sword.transform.localEulerAngles.x > 4.9f)
+        {
+            GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(1, 0, 0);
+        }
+        else
+        {
+            GameManagerCS.instance.sword.SetActive(false);
+            GameManagerCS.instance.sword.transform.localRotation = Quaternion.Euler(-90, 0, 0);
+            PlayerCS.instance.isAnimInProgress = false;
+            CancelInvoke("SwordAnim");
+        }
+    }
+
+    public void GunAnim()
+    {
+        GameManagerCS.instance.gunBullet.Play();
+        InvokeRepeating("GunAnimHelper", 1, 0);
+    }
+
+    public void GunAnimHelper()
+    {
+        GameManagerCS.instance.gun.SetActive(false);
+        PlayerCS.instance.isAnimInProgress = false;
+        CancelInvoke("GunAnimHelper");
+    }
+
+
+    public void HurtAnim()
+    {
+        /*
+        meshRenderer.material.color = new Color(meshRenderer.material.color.r + .5f,
+                                                meshRenderer.material.color.g + .5f,
+                                                meshRenderer.material.color.b + .5f,
+                                                meshRenderer.material.color.a);
+        InvokeRepeating("TurnOffHurtAnim", 1f, 0);
+        */
+    }
+
+    public void TurnOffHurtAnim()
+    {
+        meshRenderer.material.color = new Color(meshRenderer.material.color.r - .5f,
+                                        meshRenderer.material.color.g - .5f,
+                                        meshRenderer.material.color.b - .5f,
+                                        meshRenderer.material.color.a);
+        CancelInvoke("TurnOffHurtAnim");
+    }
+
+    #endregion
+
     #region Troop Quick Menu
 
     public void ToggleQuickMenu()
@@ -558,6 +660,7 @@ public class TroopActionsCS : MonoBehaviour
 
     public void ShowQuickMenu()
     {
+        PlayerCS.instance.HideQuckMenus();
         DisplayerPossibleActions();
         quickMenuContainer.SetActive(true);
         if (troopInfo.troopName == "King")
@@ -613,36 +716,6 @@ public class TroopActionsCS : MonoBehaviour
     public void SetCurrentTroopId()
     {
         PlayerCS.instance.currentSelectedTroopId = troopInfo.id;
-    }
-
-    #endregion
-
-    #region Troop Animations
-
-    public void AttackAnim()
-    {
-
-    }
-
-
-    public void HurtAnim()
-    {
-        /*
-        meshRenderer.material.color = new Color(meshRenderer.material.color.r + .5f,
-                                                meshRenderer.material.color.g + .5f,
-                                                meshRenderer.material.color.b + .5f,
-                                                meshRenderer.material.color.a);
-        InvokeRepeating("TurnOffHurtAnim", 1f, 0);
-        */
-    }
-
-    public void TurnOffHurtAnim()
-    {
-        meshRenderer.material.color = new Color(meshRenderer.material.color.r - .5f,
-                                        meshRenderer.material.color.g - .5f,
-                                        meshRenderer.material.color.b - .5f,
-                                        meshRenderer.material.color.a);
-        CancelInvoke("TurnOffHurtAnim");
     }
 
     #endregion

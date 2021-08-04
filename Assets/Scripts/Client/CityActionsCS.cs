@@ -46,6 +46,7 @@ public class CityActionsCS : MonoBehaviour
 
     public void ShowQuickMenu()
     {
+        PlayerCS.instance.HideQuckMenus();
         quickMenuContainer.SetActive(true);
     }
 

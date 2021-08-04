@@ -575,8 +575,15 @@ MonoBehaviour:
     type: 3}
   remoteKingPrefab: {fileID: 6233481866056760490, guid: f56c13a4f5b02f74ba1454f58c222575,
     type: 3}
+  swordPrefab: {fileID: 4630392494860568018, guid: d230336b416688841982877f75e3a237,
+    type: 3}
+  gunPrefab: {fileID: 2306370904094242421, guid: 002af9e485242e04cb0c866aa91c69b6,
+    type: 3}
   troopNames: []
   biomeOptions: []
+  sword: {fileID: 0}
+  gun: {fileID: 0}
+  gunBullet: {fileID: 0}
   startScreenUI: {fileID: 313555650}
   startButtonObject: {fileID: 424337546}
   startButton: {fileID: 424337548}

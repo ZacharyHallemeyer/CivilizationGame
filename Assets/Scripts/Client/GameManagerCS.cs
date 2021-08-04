@@ -36,9 +36,13 @@ public class GameManagerCS : MonoBehaviour
                       localSnipperPrefab, localKingPrefab;
     public GameObject remoteScoutPrefab, remoteMilitiaPrefab, remoteArmyPrefab, remoteMisslePrefab, remoteDefensePrefab, remoteStealthPrefab,
                       remoteSnipperPrefab, remoteKingPrefab;
+    public GameObject swordPrefab, gunPrefab;
 
     public string[] troopNames;
     public string[] biomeOptions;
+
+    public GameObject sword, gun;
+    public ParticleSystem gunBullet;
 
     public GameObject startScreenUI, startButtonObject;
     public Button startButton;
@@ -83,6 +87,11 @@ public class GameManagerCS : MonoBehaviour
         }
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
+        sword = Instantiate(swordPrefab, Vector3.zero, swordPrefab.transform.localRotation);
+        sword.SetActive(false);
+        gun = Instantiate(gunPrefab, Vector3.zero, gunPrefab.transform.localRotation);
+        gun.SetActive(false);
+        gunBullet = gun.transform.GetChild(0).GetComponent<ParticleSystem>();
     }
 
     /// <summary>
