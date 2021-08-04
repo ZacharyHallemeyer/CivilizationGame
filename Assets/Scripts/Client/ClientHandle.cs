@@ -134,10 +134,11 @@ public class ClientHandle : MonoBehaviour
         int _populationResourcePerTurn = _packet.ReadInt();
         int  _xIndex = _packet.ReadInt();
         int  _zIndex = _packet.ReadInt();
+        int  _level = _packet.ReadInt();
 
         GameManagerCS.instance.CreateNewNeutralCity(_id, _ownerId, _morale, _education,_ownerShipRange, _woodResourcePerTurn, 
-                                                    _metalResourcePerTurn, _foodResourcePerTurn,
-                                                    _moneyResourcesPerTurn, _populationResourcePerTurn, _xIndex, _zIndex);
+                                                    _metalResourcePerTurn, _foodResourcePerTurn,_moneyResourcesPerTurn, 
+                                                    _populationResourcePerTurn, _xIndex, _zIndex, _level);
 
     }
 
@@ -242,6 +243,9 @@ public class ClientHandle : MonoBehaviour
         _city.occupyingObjectId = _packet.ReadInt();
         _city.xIndex = _packet.ReadInt();
         _city.zIndex = _packet.ReadInt();
+        _city.level = _packet.ReadInt();
+        _city.experience = _packet.ReadInt();
+        _city.experienceToNextLevel = _packet.ReadInt();
         string _command = _packet.ReadString();
 
         // Add data to dictionary to be used when displaying past moves

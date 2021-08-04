@@ -525,6 +525,16 @@ MonoBehaviour:
     type: 3}
   cityPrefab: {fileID: 5041866256424340271, guid: acd0eadc9b8a47a43b1994e5357f3829,
     type: 3}
+  cityLevel1Prefab: {fileID: 1253063319018437, guid: 6c895bf5d35970e489a83f84bbd3ceb2,
+    type: 3}
+  cityLevel2Prefab: {fileID: 6754824646952115352, guid: a5a42bfb3cda3b74985093f9802106f9,
+    type: 3}
+  cityLevel3Prefab: {fileID: 2022995923558832425, guid: c189e71f05a685a4bbddaffd23162046,
+    type: 3}
+  cityLevel4Prefab: {fileID: 6406266695161477702, guid: 1314e4695aa246c4dbcfc73365e68f49,
+    type: 3}
+  cityLevel5Prefab: {fileID: 1609832315479187598, guid: 910cecfb0e9c93141b1d928cdd5cf6c1,
+    type: 3}
   ownershipObjectPrefab: {fileID: 139993347546936379, guid: 867a19e08a3df0647b3b617093f861c8,
     type: 3}
   lumberYardPrefab: {fileID: 3820960747793287681, guid: f10085dfc2d59264c93ca7cde6a9ceaa,
@@ -673,7 +683,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1328,7 +1338,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1893,7 +1903,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -3761,7 +3771,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

@@ -23,12 +23,18 @@ public class CityActionsCS : MonoBehaviour
     public int whatIsInteractableValue, whatIsDefaultValue;
     private string defaultTileTag = "Tile", cityTag = "City", buildingTag = "Building", constructBuildingTag = "ConstructBuilding";
 
+    #region Set Up
+
     public void InitCityActions(CityInfo _cityInfo)
     {
         cityInfo = _cityInfo;
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
     }
+
+    #endregion
+
+    #region Quick Menu
 
     public void ToggleQuickMenu()
     {
@@ -203,6 +209,78 @@ public class CityActionsCS : MonoBehaviour
                _player.money >= _priceDict["Money"] && _player.population >= _priceDict["Population"];
     }
 
+    #endregion
+
+    #region Level System
+
+    public void CheckLevel()
+    {
+        if (cityInfo.level == 5) return;
+        if(cityInfo.experience >= cityInfo.experienceToNextLevel)
+        {
+            cityInfo.level++;
+            cityInfo.experienceToNextLevel += cityInfo.experienceToNextLevel * 2;
+            IncreaseLevel();
+        }
+    }
+
+    public void IncreaseLevel()
+    {
+        ChangeLevelModel();
+        IncreaseOwnerShipRange();
+        IncreaseResourceGain();
+
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+        { { cityInfo, "LevelUp" } };
+        GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
+    }
+
+    public void IncreaseOwnerShipRange()
+    {
+        if (cityInfo.level == 4 || cityInfo.level == 5) return;
+        cityInfo.ownerShipRange++;
+        GameManagerCS.instance.CreateOwnedTiles(cityInfo);
+    }
+
+    public void IncreaseResourceGain()
+    {
+        cityInfo.foodResourcesPerTurn += cityInfo.foodResourcesPerTurn;
+        cityInfo.woodResourcesPerTurn += cityInfo.woodResourcesPerTurn;
+        cityInfo.metalResourcesPerTurn += cityInfo.metalResourcesPerTurn;
+        cityInfo.moneyResourcesPerTurn += cityInfo.moneyResourcesPerTurn;
+        cityInfo.populationResourcesPerTurn += cityInfo.populationResourcesPerTurn;
+    }
+
+    public void ChangeLevelModel()
+    {
+        Destroy(cityInfo.cityModel);
+        GameObject _cityModel = null;
+        if (cityInfo.level == 2)
+        {
+            _cityModel = GameManagerCS.instance.cityLevel2Prefab;
+        }
+        else if (cityInfo.level == 3)
+        {
+            _cityModel = GameManagerCS.instance.cityLevel3Prefab;
+        }
+        else if (cityInfo.level == 4)
+        {
+            _cityModel = GameManagerCS.instance.cityLevel4Prefab;
+        }
+        else if (cityInfo.level == 5)
+        {
+            _cityModel = GameManagerCS.instance.cityLevel5Prefab;
+        }
+        cityInfo.cityModel = Instantiate(_cityModel, new Vector3(cityInfo.city.transform.position.x,
+                                                                 _cityModel.transform.position.y,
+                                                                 cityInfo.city.transform.position.z),
+                                                                _cityModel.transform.localRotation);
+    }
+
+    #endregion
+
+    #region Troops
+
     /// <summary>
     /// Starts training troop
     /// </summary>
@@ -230,6 +308,10 @@ public class CityActionsCS : MonoBehaviour
         GameManagerCS.instance.SpawnTroop(ClientCS.instance.myId, currentTroopTraining, cityInfo.xIndex, cityInfo.zIndex, 0);
     }
 
+    #endregion
+
+    #region Buildings
+
     public void SelectBuildingToBuild(string _buildingName)
     {
         currentBuidlingToBuild = _buildingName;
@@ -255,8 +337,15 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.money -= Constants.prices[currentBuidlingToBuild]["Money"];
         PlayerCS.instance.population -= Constants.prices[currentBuidlingToBuild]["Population"];
         GameManagerCS.instance.SpawnBuilding(currentBuidlingToBuild, _tileInfo);
+        // Increase experience and check if city should level up
+        cityInfo.experience += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Experience"];
+        CheckLevel();
         ResetAlteredObjects();
     }
+
+    #endregion
+
+    #region Interactable Tiles
 
     /// <summary>
     /// Sets owned tiles to iteractable if player wants to build something and the tiles have the requirments for the building wanted to be spawned
@@ -264,7 +353,7 @@ public class CityActionsCS : MonoBehaviour
     public void CreateInteractableTileToBuildOn()
     {
         int _index = 0;
-        objecstToBeReset = new TileInfo[cityInfo.ownerShipRange * 9];
+        objecstToBeReset = new TileInfo[Mathf.FloorToInt(Mathf.Pow(cityInfo.ownerShipRange * 2 + 1, 2))];
 
         TileInfo _tile;
         for (int x = cityInfo.xIndex - cityInfo.ownerShipRange; x < cityInfo.xIndex + cityInfo.ownerShipRange + 1; x++)
@@ -275,7 +364,7 @@ public class CityActionsCS : MonoBehaviour
                     && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1))
                 {
                     _tile = GameManagerCS.instance.tiles[x, z];
-                    if (cityInfo.ownerId == _tile.ownerId && !_tile.isCity)
+                    if (cityInfo.ownerId == _tile.ownerId && !_tile.isCity && !_tile.isBuilding)
                     {
                         if (currentBuidlingToBuild == "Farm")
                         {
@@ -351,4 +440,5 @@ public class CityActionsCS : MonoBehaviour
         }
         objecstToBeReset = null;
     }
+    #endregion
 }

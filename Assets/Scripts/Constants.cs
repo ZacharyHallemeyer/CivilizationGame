@@ -472,6 +472,7 @@ public static class Constants
                 { "Population", 1 },
                 { "Morale", 0 },
                 { "Education", .05f },
+                { "Experience", 10f },
             } 
         },
         { "Farm" , new Dictionary<string, float> 
@@ -483,6 +484,7 @@ public static class Constants
                 { "Population", 1 },
                 { "Morale", 0 },
                 { "Education", .05f },
+                { "Experience", 10f },
             } 
         },
         { "Mine" , new Dictionary<string, float> 
@@ -494,6 +496,7 @@ public static class Constants
                 { "Population", 1 },
                 { "Morale", 0 },
                 { "Education", .05f },
+                { "Experience", 10f },
             } 
         },
         { "Housing" , new Dictionary<string, float> 
@@ -505,6 +508,7 @@ public static class Constants
                 { "Population", 5 },
                 { "Morale", .05f },
                 { "Education", 0 },
+                { "Experience", 10f },
             } 
         },
         { "School" , new Dictionary<string, float> 
@@ -516,6 +520,7 @@ public static class Constants
                 { "Population", 0 },
                 { "Morale", 0 },
                 { "Education", .1f },
+                { "Experience", 10f },
             } 
         },
         { "Library" , new Dictionary<string, float> 
@@ -527,6 +532,7 @@ public static class Constants
                 { "Population", 5 },
                 { "Morale", .1f },
                 { "Education", .05f },
+                { "Experience", 10f },
             } 
         },
         { "Market" , new Dictionary<string, float> 
@@ -538,6 +544,7 @@ public static class Constants
                 { "Population", 1 },
                 { "Morale", .05f },
                 { "Education", 0 },
+                { "Experience", 10f },
             } 
         },
         { "Dome" , new Dictionary<string, float> 
@@ -549,6 +556,7 @@ public static class Constants
                 { "Population", 1 },
                 { "Morale", .15f },
                 { "Education", 0 },
+                { "Experience", 10f },
             } 
         },
     };

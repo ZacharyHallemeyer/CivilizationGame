@@ -144,6 +144,9 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_city.occupyingObjectId);
                     _packet.Write(_city.xIndex);
                     _packet.Write(_city.zIndex);
+                    _packet.Write(_city.level);
+                    _packet.Write(_city.experience);
+                    _packet.Write(_city.experienceToNextLevel);
                     _packet.Write(_cityDict[_city]);
 
                     SendTCPData(_packet);

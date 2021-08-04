@@ -29,7 +29,7 @@ public class GameManagerCS : MonoBehaviour
     public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
                       tundraTilePrefab, waterTilePrefab;
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab;
-    public GameObject cityPrefab;
+    public GameObject cityPrefab, cityLevel1Prefab, cityLevel2Prefab, cityLevel3Prefab, cityLevel4Prefab, cityLevel5Prefab;
     public GameObject ownershipObjectPrefab;
     public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab;
     public GameObject localScoutPrefab, localMilitiaPrefab, localArmyPrefab, localMisslePrefab, localDefensePrefab, localStealthPrefab,
@@ -87,11 +87,6 @@ public class GameManagerCS : MonoBehaviour
         }
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
-        sword = Instantiate(swordPrefab, Vector3.zero, swordPrefab.transform.localRotation);
-        sword.SetActive(false);
-        gun = Instantiate(gunPrefab, Vector3.zero, gunPrefab.transform.localRotation);
-        gun.SetActive(false);
-        gunBullet = gun.transform.GetChild(0).GetComponent<ParticleSystem>();
     }
 
     /// <summary>
@@ -104,6 +99,12 @@ public class GameManagerCS : MonoBehaviour
         GameObject _player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         _player.GetComponent<PlayerCS>().InitPlayer(_id, _username);
         CreateStars();
+        // Spawn weapons
+        sword = Instantiate(swordPrefab, Vector3.zero, swordPrefab.transform.localRotation);
+        sword.SetActive(false);
+        gun = Instantiate(gunPrefab, Vector3.zero, gunPrefab.transform.localRotation);
+        gun.SetActive(false);
+        gunBullet = gun.transform.GetChild(0).GetComponent<ParticleSystem>();
         // Spawn King
         //SpawnTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
     }
@@ -529,13 +530,18 @@ public class GameManagerCS : MonoBehaviour
     /// </summary>
     public void CreateNewNeutralCity(int _id, int _ownerId, float _moral, float _education, int _ownerShipRange, int _woodResourcesPerTurn, 
                                      int _metalResourcesPerTurn, int _foodResourcesPerTurn, int _moneyResourcesPerTurn, int _populationResourcesPerTurn,
-                                     int _xIndex, int _zIndex)
+                                     int _xIndex, int _zIndex, int _level)
     {
         tiles[_xIndex, _zIndex].tile.tag = "City"; 
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
         GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .625f, _zCoord), Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
+        _cityInfo.cityModel = Instantiate(cityLevel1Prefab, new Vector3(_city.transform.position.x,
+                                                                        cityLevel1Prefab.transform.position.y,
+                                                                        _city.transform.position.z),
+                                                            cityLevel1Prefab.transform.localRotation);
+        _cityInfo.cityModel.transform.parent = _city.transform;
         _cityInfo.city = _city;
         _cityInfo.id = _id;
         _cityInfo.ownerId = _ownerId;
@@ -549,6 +555,7 @@ public class GameManagerCS : MonoBehaviour
         _cityInfo.populationResourcesPerTurn = _populationResourcesPerTurn;
         _cityInfo.xIndex = _xIndex;
         _cityInfo.zIndex = _zIndex;
+        _cityInfo.level = _level;
         cities.Add(_cityInfo.id, _cityInfo);
     }
 
@@ -566,6 +573,11 @@ public class GameManagerCS : MonoBehaviour
         string _biomeName = tiles[_xIndex, _zIndex].biome;
         GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .625f, _zCoord), Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
+        _cityInfo.cityModel = Instantiate(cityLevel1Prefab, new Vector3(_city.transform.position.x,
+                                                                        cityLevel1Prefab.transform.position.y,
+                                                                        _city.transform.position.z),
+                                                            cityLevel1Prefab.transform.localRotation);
+        _cityInfo.cityModel.transform.parent = _city.transform;
         CityActionsCS _cityActions = _city.GetComponent<CityActionsCS>();
         _cityInfo.InitCity(_biomeName, _city, currentCityIndex, ClientCS.instance.myId, _xIndex, _zIndex, _cityActions);
         _cityActions.InitCityActions(_cityInfo);
@@ -588,22 +600,7 @@ public class GameManagerCS : MonoBehaviour
         modifiedTileInfo.Add(_tileData);
 
         // Create owned tiles
-        for(int x = _xIndex - _cityInfo.ownerShipRange; x < _xIndex + _cityInfo.ownerShipRange + 1; x++)
-        {
-            for(int z = _zIndex - _cityInfo.ownerShipRange; z < _zIndex + _cityInfo.ownerShipRange + 1; z++)
-            {
-                if(x >= 0 && x < tiles.GetLength(0)
-                 && z >= 0 && z < tiles.GetLength(1))
-                {
-                    _tile = tiles[x, z];
-                    _tile.ownerId = _cityInfo.ownerId;
-                    _tile.ownerShipVisualObject.SetActive(true);
-                    _tileData = new Dictionary<TileInfo, string>()
-                    { { _tile, "Owned"} };
-                    modifiedTileInfo.Add(_tileData);
-                }
-            }
-        }
+        CreateOwnedTiles(_cityInfo);
 
         // Increase city cost (double values)
         List<string> _priceKeys = Constants.prices["City"].Keys.ToList();
@@ -630,14 +627,69 @@ public class GameManagerCS : MonoBehaviour
         GameObject _city = Instantiate(cityPrefab, new Vector3(_xCoord, .75f, _zCoord),
                            Quaternion.identity);
         CityInfo _cityInfo = _city.AddComponent<CityInfo>();
+        _cityInfo.cityModel = Instantiate(cityLevel1Prefab, new Vector3(_city.transform.position.x,
+                                                                        cityLevel1Prefab.transform.position.y,
+                                                                        _city.transform.position.z),
+                                                            cityLevel1Prefab.transform.localRotation);
+        _cityInfo.cityModel.transform.parent = _city.transform;
         _cityInfo.InitExistingCity(_cityInfoToSpawn, _city);
         cities.Add(_cityInfo.id, _cityInfo);
+    }
 
+    public void CreateOwnedTiles(CityInfo _cityInfo)
+    {
+        TileInfo _tile;
+        Dictionary<TileInfo, string> _tileData;
+        // Create owned tiles
+        for (int x = _cityInfo.xIndex - _cityInfo.ownerShipRange; x < _cityInfo.xIndex + _cityInfo.ownerShipRange + 1; x++)
+        {
+            for (int z = _cityInfo.zIndex - _cityInfo.ownerShipRange; z < _cityInfo.zIndex + _cityInfo.ownerShipRange + 1; z++)
+            {
+                if (x >= 0 && x < tiles.GetLength(0)
+                 && z >= 0 && z < tiles.GetLength(1))
+                {
+                    _tile = tiles[x, z];
+                    _tile.ownerId = _cityInfo.ownerId;
+                    _tile.ownerShipVisualObject.SetActive(true);
+                    _tileData = new Dictionary<TileInfo, string>()
+                    { { _tile, "Owned"} };
+                    modifiedTileInfo.Add(_tileData);
+                }
+            }
+        }
     }
     
     public void UpdateCityInfo(CityInfo _cityToCopy)
     {
         cities[_cityToCopy.id].UpdateCityInfo(_cityToCopy);
+    }
+
+    public void LevelUpCity(CityInfo _cityToLevelUp)
+    {
+        UpdateCityInfo(_cityToLevelUp);
+        Destroy(_cityToLevelUp.cityModel);
+        GameObject _cityModel = null;
+        if (_cityToLevelUp.level == 2)
+        {
+            _cityModel = cityLevel2Prefab;
+        }
+        else if (_cityToLevelUp.level == 3)
+        {
+            _cityModel = cityLevel3Prefab;
+        }
+        else if (_cityToLevelUp.level == 4)
+        {
+            _cityModel = cityLevel4Prefab;
+        }
+        else if (_cityToLevelUp.level == 5)
+        {
+            _cityModel = cityLevel5Prefab;
+        }
+        CityInfo _city = cities[_cityToLevelUp.id];
+        _city.cityModel = Instantiate(_cityModel, new Vector3(_city.city.transform.position.x,
+                                                              _cityModel.transform.position.y,
+                                                              _city.city.transform.position.z),
+                                                          _cityModel.transform.localRotation);
     }
 
     public void AddCityResourcesAtStartOfTurn()
@@ -886,6 +938,9 @@ public class GameManagerCS : MonoBehaviour
                         break;
                     case "Update":
                         UpdateCityInfo(_city);
+                        break;
+                    case "LevelUp":
+                        LevelUpCity(_city);
                         break;
                     case "TrainTroop":
                         //UpdateCityInfo(_city);

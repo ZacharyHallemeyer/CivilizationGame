@@ -5,6 +5,7 @@ using UnityEngine;
 public class CityInfo : MonoBehaviour
 {
     public GameObject city;
+    public GameObject cityModel;
     public CityActionsCS cityActions;
 
     // resource variables
@@ -22,12 +23,14 @@ public class CityInfo : MonoBehaviour
     // Status variables
     public bool isBeingConquered = false;           // tile is being occupied by troop not owned by city owner
     public bool isAbleToBeConquered = false;
-    //public bool isOccupied;                 // tile is being occupied by troop owned by city owner
     public bool isConstructingBuilding = false;
     public bool isTrainingTroops = false;
     public int occupyingObjectId;
     public int xIndex;                      // x index for tile that city is on
     public int zIndex;                      // z index for tile that city is on
+    public int level = 1;
+    public int experience = 0;
+    public int experienceToNextLevel = 10;
 
     // Identity variables
     public int id;
@@ -66,7 +69,7 @@ public class CityInfo : MonoBehaviour
         woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
         metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
         foodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingFoodResourcesPerTurn"]);
-        moneyResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoneyResourcesPerTurn"]);
+        moneyResourcesPerTurn = Random.Range(25, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoneyResourcesPerTurn"]);
         populationResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingPopulationResourcesPerTurn"]);
 
         xIndex = _xIndex;
@@ -97,6 +100,10 @@ public class CityInfo : MonoBehaviour
 
         xIndex = _city.xIndex;
         zIndex = _city.zIndex;
+
+        level = _city.level;
+        experience = _city.experience;
+        experienceToNextLevel = _city.experienceToNextLevel;
     }
 
     public void UpdateCityInfo(CityInfo _cityToCopy)
@@ -117,6 +124,10 @@ public class CityInfo : MonoBehaviour
         foodResourcesPerTurn = _cityToCopy.foodResourcesPerTurn;
         moneyResourcesPerTurn = _cityToCopy.moneyResourcesPerTurn;
         populationResourcesPerTurn = _cityToCopy.populationResourcesPerTurn;
+
+        level = _cityToCopy.level;
+        experience = _cityToCopy.experience;
+        experienceToNextLevel = _cityToCopy.experienceToNextLevel;
     }
 
     public void CopyCityInfo(CityInfo _cityToCopy)
@@ -136,6 +147,10 @@ public class CityInfo : MonoBehaviour
         woodResourcesPerTurn = _cityToCopy.woodResourcesPerTurn;
         metalResourcesPerTurn = _cityToCopy.metalResourcesPerTurn;
         foodResourcesPerTurn = _cityToCopy.foodResourcesPerTurn;
+
+        level = _cityToCopy.level;
+        experience = _cityToCopy.experience;
+        experienceToNextLevel = _cityToCopy.experienceToNextLevel;
     }
 
     public void InitConqueredCity()

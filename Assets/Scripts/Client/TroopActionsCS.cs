@@ -560,25 +560,25 @@ public class TroopActionsCS : MonoBehaviour
                 case 0:
 
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
-                                                                                  2,
+                                                                                  1,
                                                                                   _tile.transform.position.z + 1);
                     break;
                 case 90:
 
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x + 1,
-                                                                                  2,
+                                                                                  1,
                                                                                   _tile.transform.position.z);
                     break;
                 case 180:
 
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
-                                                                                  2,
+                                                                                  1,
                                                                                   _tile.transform.position.z - 1);
                     break;
                 case 270:
 
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x - 1,
-                                                                                  2,
+                                                                                  1,
                                                                                   _tile.transform.position.z);
                     break;
 
@@ -596,7 +596,7 @@ public class TroopActionsCS : MonoBehaviour
     {
         if(GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f  || GameManagerCS.instance.sword.transform.localEulerAngles.x > 4.9f)
         {
-            GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(1, 0, 0);
+            GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(3, 0, 0);
         }
         else
         {

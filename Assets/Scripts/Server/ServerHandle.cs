@@ -167,6 +167,9 @@ public class ServerHandle
         _city.occupyingObjectId = _packet.ReadInt();
         _city.xIndex = _packet.ReadInt();
         _city.zIndex = _packet.ReadInt();
+        _city.level = _packet.ReadInt();
+        _city.experienceToNextLevel = _packet.ReadInt();
+        _city.experienceToNextLevel = _packet.ReadInt();
         string _command = _packet.ReadString();
         _city.idOfPlayerThatSentInfo = _fromClient;
 

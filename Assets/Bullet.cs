@@ -10,4 +10,10 @@ public class Bullet : MonoBehaviour
     {
         particle.Stop();        
     }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        Debug.Log("Particle has collided");
+        particle.Stop();
+    }
 }

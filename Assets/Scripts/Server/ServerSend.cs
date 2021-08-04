@@ -214,6 +214,7 @@ public class ServerSend
                 _packet.Write(_city.populationResourcesPerTurn);
                 _packet.Write(_city.xIndex);
                 _packet.Write(_city.zIndex);
+                _packet.Write(_city.level);
 
                 SendTCPData(_toClient, _packet);
             }
@@ -384,6 +385,9 @@ public class ServerSend
                         _packet.Write(_city.occupyingObjectId);
                         _packet.Write(_city.xIndex);
                         _packet.Write(_city.zIndex);
+                        _packet.Write(_city.level);
+                        _packet.Write(_city.experience);
+                        _packet.Write(_city.experienceToNextLevel);
                         _packet.Write(_cityDict[_city]);
 
                         SendTCPData(_playerId, _packet);
