@@ -23,7 +23,7 @@ public class WorldGeneratorSS : MonoBehaviour
     public string[] biomeOptions;
 
     public int amountOfFoodTiles = 15, amountofWoodTiles = 15, amountOfMetalTiles = 15;
-    public int amountOfNeutralCities = 15;
+    public int amountOfNeutralCities = 15, amountOfObstacles = 15;
 
     // Set instance or destroy if instance already exist
     private void Awake()
@@ -152,6 +152,24 @@ public class WorldGeneratorSS : MonoBehaviour
             CityInfo _city = gameObject.AddComponent<CityInfo>();
             _city.InitCityServerSide(_tileInfo.biome, GameManagerSS.instance.currentCityId, -1, _xIndex, _zIndex);
             neutralCities.Add(_city);
+            GameManagerSS.instance.currentCityId++;
+        }
+
+        // Create Obstacles
+        for (int i = 0; i < amountOfObstacles; i++)
+        {
+            _infiniteLoopCatcher = 0;
+            do
+            {
+                _xIndex = Random.Range(0, (int)groundXSize);
+                _zIndex = Random.Range(0, (int)groundZSize);
+                _tileInfo = tiles[_xIndex, _zIndex];
+                _infiniteLoopCatcher++;
+                if (_infiniteLoopCatcher > 1000) break;
+            }
+            while ((_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal || _tileInfo.isCity) &&
+                   (_xIndex == 0 && _xIndex == tiles.GetLength(0) && _zIndex == 0 && _zIndex == tiles.GetLength(1)));
+            _tileInfo.isObstacle = true;
             GameManagerSS.instance.currentCityId++;
         }
 

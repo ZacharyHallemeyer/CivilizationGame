@@ -521,7 +521,9 @@ MonoBehaviour:
     type: 3}
   woodResourcePrefab: {fileID: 155180356983296367, guid: a0d651ad73ad66243abe57ac996f7b4d,
     type: 3}
-  metalResourcePrefab: {fileID: 5131236982350641097, guid: df37bfec0e4a08642af345f5244c300e,
+  metalResourcePrefab: {fileID: 2622862527229920008, guid: d5287d2cf18431f459180db4f9fd1d3d,
+    type: 3}
+  obstaclePrefab: {fileID: 5131236982350641097, guid: df37bfec0e4a08642af345f5244c300e,
     type: 3}
   cityPrefab: {fileID: 5041866256424340271, guid: acd0eadc9b8a47a43b1994e5357f3829,
     type: 3}

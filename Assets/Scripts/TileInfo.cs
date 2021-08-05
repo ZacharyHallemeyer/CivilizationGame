@@ -21,6 +21,7 @@ public class TileInfo : MonoBehaviour
     public bool isCity = false;
     public bool isBuilding = false;
     public bool isOccupied = false;
+    public bool isObstacle = false;
     public int occupyingObjectId = -1;
     public int cityId = -1;
     public int xIndex;

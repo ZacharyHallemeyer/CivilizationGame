@@ -28,7 +28,7 @@ public class GameManagerCS : MonoBehaviour
     public GameObject starPrefab;
     public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
                       tundraTilePrefab, waterTilePrefab;
-    public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab;
+    public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab, obstaclePrefab;
     public GameObject cityPrefab, cityLevel1Prefab, cityLevel2Prefab, cityLevel3Prefab, cityLevel4Prefab, cityLevel5Prefab;
     public GameObject ownershipObjectPrefab;
     public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab;
@@ -175,8 +175,8 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_name"> Tile name </param>
     public void CreateNewTile(int _id, int _ownerId, int _movementCost, int _occupyingObjectId, string _biome,
                               float _temp, float _height, bool _isWater, bool _isFood, bool _isWood, bool _isMetal, 
-                              bool _isRoad, bool _isCity, bool _isOccupied, Vector2 _position, int _xIndex, int _zIndex, 
-                              int _cityId, string _name)
+                              bool _isRoad, bool _isCity, bool _isOccupied, bool _isObstacle, Vector2 _position, int _xIndex, 
+                              int _zIndex, int _cityId, string _name)
     {
         GameObject _tile = null;
         if(_isWater)
@@ -244,6 +244,7 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.isRoad = _isRoad;
         _tileInfo.isCity = _isCity;
         _tileInfo.isOccupied = _isOccupied;
+        _tileInfo.isObstacle = _isObstacle;
         _tileInfo.xIndex = _xIndex;
         _tileInfo.zIndex = _zIndex;
         _tileInfo.cityId = _cityId;
@@ -271,6 +272,13 @@ public class GameManagerCS : MonoBehaviour
                                                                                     _position.y), metalResourcePrefab.transform.localRotation);
             _tileInfo.resourceObject.transform.parent = _tile.transform;
 
+        }
+        if(_tileInfo.isObstacle)
+        {
+            _tileInfo.resourceObject = Instantiate(obstaclePrefab, new Vector3(_position.x, obstaclePrefab.transform.position.y,
+                                                                                _position.y), obstaclePrefab.transform.localRotation);
+            _tileInfo.resourceObject.transform.parent = _tile.transform;
+            Debug.Log("Obstacle @ " + _tileInfo.xIndex + " " + _tileInfo.zIndex);
         }
         // Spawn tile ownership object
         _tileInfo.ownerShipVisualObject = Instantiate(ownershipObjectPrefab, new Vector3(_position.x, ownershipObjectPrefab.transform.position.y,

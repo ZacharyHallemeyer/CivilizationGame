@@ -103,6 +103,7 @@ public class ClientHandle : MonoBehaviour
         bool _isRoad = _packet.ReadBool();
         bool _isCity = _packet.ReadBool();
         bool _isOccupied = _packet.ReadBool();
+        bool _isObstacle = _packet.ReadBool();
         Vector2 _position = _packet.ReadVector2();
         int _xIndex = _packet.ReadInt();
         int _zIndex = _packet.ReadInt();
@@ -110,8 +111,8 @@ public class ClientHandle : MonoBehaviour
         string _name = "ClientTile " + _xIndex + " " + _zIndex;
 
         GameManagerCS.instance.CreateNewTile(_id, _ownerId, _movementCost, _occupyingObjectId, _biome, _temperature,
-                                            _height, _isWater, _isFood, _isWood, _isMetal, _isRoad, _isCity, _isOccupied, _position, _xIndex, _zIndex,
-                                            _cityId ,_name);
+                                            _height, _isWater, _isFood, _isWood, _isMetal, _isRoad, _isCity, _isOccupied, 
+                                            _isObstacle, _position, _xIndex, _zIndex, _cityId ,_name);
     }
 
     public static void CreateNeutralCity(Packet _packet)

@@ -321,6 +321,8 @@ public class CityActionsCS : MonoBehaviour
 
     public void BuildBuilding(TileInfo _tileInfo)
     {
+        if (_tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal)
+            Destroy(_tileInfo.resourceObject);
         // Update resource per turn
         cityInfo.foodResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Food"];
         cityInfo.metalResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Metal"];

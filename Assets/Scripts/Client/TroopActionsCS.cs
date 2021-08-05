@@ -48,7 +48,7 @@ public class TroopActionsCS : MonoBehaviour
             case 0:
                 for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + troopInfo.movementCost + 1; z++)
                 {
-                    if (CheckTileExists(troopInfo.xIndex, z)) 
+                    if (CheckTileExists(troopInfo.xIndex, z))
                     {
                         if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
                             break;
@@ -61,7 +61,7 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        if(!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
                             break;
                         _index++;
                     }
@@ -72,7 +72,7 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
-                        if(!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
                             break;
                         _index++;
                     }
@@ -83,7 +83,7 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        if(!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
                             break;
                         _index++;
                     }
@@ -103,7 +103,7 @@ public class TroopActionsCS : MonoBehaviour
             case 0:
                 for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + troopInfo.attackRange + 1; z++)
                 {
-                    if (CheckTileExists(troopInfo.xIndex, z)) 
+                    if (CheckTileExists(troopInfo.xIndex, z))
                     {
                         CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index);
                         _index++;
@@ -148,7 +148,7 @@ public class TroopActionsCS : MonoBehaviour
 
         // Check if can standing on and can conquer acity
         TileInfo _tileInfo = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
-        if(_tileInfo.isCity)
+        if (_tileInfo.isCity)
         {
             CityInfo _city = GameManagerCS.instance.cities[_tileInfo.cityId];
             if (_city.ownerId != troopInfo.ownerId)
@@ -170,12 +170,12 @@ public class TroopActionsCS : MonoBehaviour
     /// <param name="_index"> current index of objectsToBeReset array </param>
     public bool CreateInteractableTilesHelperMovement(TileInfo _tile, int _index)
     {
-        if (_tile.isWater || _tile.isOccupied) return false;
+        if (_tile.isWater || _tile.isOccupied || _tile.isObstacle) return false;
         if (_tile.isCity)
         {
             if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops &&
-                GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId) 
-                    return false;
+                GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)
+                return false;
             _tile.tile.layer = whatIsInteractableValue;
             _tile.tile.tag = moveableCityTag;
             _tile.moveUI.SetActive(true);
@@ -193,7 +193,7 @@ public class TroopActionsCS : MonoBehaviour
     // set tile tags and layer for troop to be able to attack troop on said tile
     public void CreateInteractableTilesHelperAttack(TileInfo _tile, int _index)
     {
-        if (_tile.isWater) return;
+        if (_tile.isObstacle) return;
         if (_tile.isOccupied)
         {
             if (GameManagerCS.instance.troops[_tile.occupyingObjectId].ownerId != troopInfo.ownerId)
@@ -262,7 +262,7 @@ public class TroopActionsCS : MonoBehaviour
         TileInfo _oldTile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
         _oldTile.isOccupied = false;
         _oldTile.occupyingObjectId = -1;
-        if(_oldTile.isCity)
+        if (_oldTile.isCity)
         {
             CityInfo _city = GameManagerCS.instance.cities[_oldTile.cityId];
             _city.isBeingConquered = false;
@@ -424,11 +424,11 @@ public class TroopActionsCS : MonoBehaviour
         HideQuickMenu();
         ResetAlteredTiles();
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
-        bool _attackedFromTheBack = _troop.rotation + 180 == troopInfo.rotation || _troop.rotation - 180 == troopInfo.rotation;
+        bool _attackedFromTheBack = _troop.rotation == troopInfo.rotation;
         _troop.turnCountWhenLastHit = GameManagerCS.instance.turnCount;
         AttackAnim(_troop);
         // Expose troop identity
-        if(!_troop.isExposed)
+        if (!_troop.isExposed)
         {
             _troop.isExposed = true;
             _troop.troopModel.SetActive(true);
@@ -436,8 +436,7 @@ public class TroopActionsCS : MonoBehaviour
                 _troop.blurredTroopModel.SetActive(false);
         }
         troopInfo.canAttack = false;
-        // Play hurt animation
-        _troop.troopActions.HurtAnim();
+
         // Check if attacking troop back
         if (_attackedFromTheBack)
             _troop.health -= troopInfo.stealthAttack - _troop.baseDefense;
@@ -447,7 +446,7 @@ public class TroopActionsCS : MonoBehaviour
             troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
             HurtAnim();
         }
-        troopInfo.lastTroopAttackedId = _troop.id;
+
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {troopInfo, "Attack"} };
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
@@ -455,15 +454,8 @@ public class TroopActionsCS : MonoBehaviour
             { {_troop, "Hurt"} };
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
 
-        if(_attackedFromTheBack)
-        {
-            _troopData = new Dictionary<TroopInfo, string>()
-            { {troopInfo, "Hurt"} };
-            GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
-        }
-
         // this troop killed the other troop
-        if(_troop.health <= 0)
+        if (_troop.health <= 0)
         {
             _tile.isOccupied = false;
             _troop.troop.SetActive(false);
@@ -483,8 +475,20 @@ public class TroopActionsCS : MonoBehaviour
             if (troopInfo.canMultyKill)
                 troopInfo.canAttack = true;
         }
+        else
+        {
+            // Play hurt animation
+            _troop.troopActions.HurtAnim();
+        }
+
+        if (_attackedFromTheBack)
+        {
+            _troopData = new Dictionary<TroopInfo, string>()
+            { {troopInfo, "Hurt"} };
+            GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        }
         // This troop was killed
-        if(troopInfo.health <= 0)
+        if (troopInfo.health <= 0)
         {
             _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
             _tile.isOccupied = false;
@@ -494,6 +498,11 @@ public class TroopActionsCS : MonoBehaviour
             _troopData = new Dictionary<TroopInfo, string>()
             { {troopInfo, "Die"} };
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        }
+        else if(!_attackedFromTheBack)
+        {
+            _troop.troopActions.AttackAnim(troopInfo);
+            HurtAnim();
         }
     }
 
@@ -512,13 +521,13 @@ public class TroopActionsCS : MonoBehaviour
                     if (_tile.isOccupied)
                     {
                         _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
-                        if(_troop.ownerId != troopInfo.ownerId)
+                        if (_troop.ownerId != troopInfo.ownerId)
                         {
                             // Enemy troop within seeing range
-                            if(_troop.isExposed)
+                            if (_troop.isExposed)
                             {
                                 _troop.troopModel.SetActive(true);
-                                if(_troop.blurredTroopModel.activeSelf)
+                                if (_troop.blurredTroopModel.activeSelf)
                                     _troop.blurredTroopModel.SetActive(false);
                             }
                             else
@@ -594,7 +603,7 @@ public class TroopActionsCS : MonoBehaviour
 
     public void SwordAnim()
     {
-        if(GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f  || GameManagerCS.instance.sword.transform.localEulerAngles.x > 4.9f)
+        if (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f || GameManagerCS.instance.sword.transform.localEulerAngles.x > 4.9f)
         {
             GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(3, 0, 0);
         }
@@ -623,22 +632,23 @@ public class TroopActionsCS : MonoBehaviour
 
     public void HurtAnim()
     {
-        /*
-        meshRenderer.material.color = new Color(meshRenderer.material.color.r + .5f,
-                                                meshRenderer.material.color.g + .5f,
-                                                meshRenderer.material.color.b + .5f,
-                                                meshRenderer.material.color.a);
-        InvokeRepeating("TurnOffHurtAnim", 1f, 0);
-        */
+        PlayerCS.instance.isAnimInProgress = true;
+        StartCoroutine(HurtAnimHelper());
     }
 
-    public void TurnOffHurtAnim()
+    /// <summary>
+    /// Rotate troop 360 degrees on the x axis by rotating 5 degree every .01 seconds of scaled time
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator HurtAnimHelper()
     {
-        meshRenderer.material.color = new Color(meshRenderer.material.color.r - .5f,
-                                        meshRenderer.material.color.g - .5f,
-                                        meshRenderer.material.color.b - .5f,
-                                        meshRenderer.material.color.a);
-        CancelInvoke("TurnOffHurtAnim");
+        for(int i = 0; i < 72; i++)
+        {
+            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 5, 0);
+            yield return new WaitForSeconds(.01f);
+        }
+        PlayerCS.instance.isAnimInProgress = false;
+        troopInfo.troopModel.transform.rotation = Quaternion.Euler(0, troopInfo.rotation, 0);
     }
 
     #endregion

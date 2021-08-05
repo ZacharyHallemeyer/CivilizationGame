@@ -173,6 +173,7 @@ public class ServerSend
                     _packet.Write(_tile.isRoad);
                     _packet.Write(_tile.isCity);
                     _packet.Write(_tile.isOccupied);
+                    _packet.Write(_tile.isObstacle);
                     _packet.Write(_tile.position);
                     _packet.Write(_tile.xIndex);
                     _packet.Write(_tile.zIndex);

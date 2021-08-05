@@ -82,8 +82,8 @@ public class PlayerCS : MonoBehaviour
         // TESTING
         if (inputMaster.Player.Testing.triggered)
         {
-            //GameManagerCS.instance.InstantiateTroop(id, "Scout", Random.Range(0, 10), Random.Range(0, 10), 0);
-            //GameManagerCS.instance.SpawnCity(Random.Range(0, 10), Random.Range(0, 10));
+            if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+                _troop.troopActions.HurtAnim();
         }
 
         // TESTING END

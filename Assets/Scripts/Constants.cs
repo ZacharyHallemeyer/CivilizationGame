@@ -233,7 +233,7 @@ public static class Constants
                 { "Health", 20 },
                 { "BaseAttack", 10},
                 { "StealthAttack", 10},
-                { "CounterAttack", 10},
+                { "CounterAttack", 5},
                 { "BaseDefense", 3},
                 { "FacingDefense", 5},
                 { "MovementCost", 3},
