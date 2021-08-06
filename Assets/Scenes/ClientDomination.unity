@@ -591,10 +591,14 @@ MonoBehaviour:
     type: 3}
   gunPrefab: {fileID: 2306370904094242421, guid: 002af9e485242e04cb0c866aa91c69b6,
     type: 3}
+  arrowPrefab: {fileID: 7690062439369146723, guid: 55bc64dbfe4d28d45a500c78df73d940,
+    type: 3}
   troopNames: []
   biomeOptions: []
   sword: {fileID: 0}
   gun: {fileID: 0}
+  arrow: {fileID: 0}
+  arrowRB: {fileID: 0}
   gunBullet: {fileID: 0}
   startScreenUI: {fileID: 313555650}
   startButtonObject: {fileID: 424337546}

@@ -87,7 +87,7 @@ public class PlayerCS : MonoBehaviour
         if (inputMaster.Player.Testing.triggered)
         {
             if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
-                _troop.troopActions.HurtAnim();
+                _troop.troopActions.DieAnim();
         }
 
         // TESTING END
@@ -229,6 +229,7 @@ public class PlayerCS : MonoBehaviour
         }
 
         // Handle animations
+        // Start next animation if current animation is done and if there are more animations in queue
         if(animationQueue.Count > 0 && runningCoroutine == null)
         {
             runningCoroutine = animationQueue.Dequeue();

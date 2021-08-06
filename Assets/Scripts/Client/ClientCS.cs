@@ -43,6 +43,7 @@ public class ClientCS : MonoBehaviour
         DontDestroyOnLoad(this);
         ip = PlayerPrefs.GetString("HostIP", "127.0.0.1");
         instance.ConnectToServer();
+        QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
     }
 

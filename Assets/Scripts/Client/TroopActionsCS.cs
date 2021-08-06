@@ -293,10 +293,10 @@ public class TroopActionsCS : MonoBehaviour
 
     public IEnumerator DescendTroopMoveAnim(TileInfo _oldTile, TileInfo _newTile)
     {
-        yield return new WaitForSeconds(.001f);
+        yield return new WaitForSeconds(.0001f);
         if (transform.position.y > -.2)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y - .05f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y - .1f, transform.position.z);
             StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
         }
         else
@@ -311,10 +311,10 @@ public class TroopActionsCS : MonoBehaviour
 
     public IEnumerator RiseTroopMoveAnim(TileInfo _oldTile, TileInfo _newTile)
     {
-        yield return new WaitForSeconds(.001f);
+        yield return new WaitForSeconds(.0001f);
         if (transform.position.y < 1)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y + .05f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y + .1f, transform.position.z);
             StartCoroutine(RiseTroopMoveAnim(_oldTile, _newTile));
         }
         else
@@ -454,10 +454,9 @@ public class TroopActionsCS : MonoBehaviour
         {
             _troop.health -= troopInfo.baseAttack - _troop.facingDefense;
             // If troop is ranged then they are immune to counter attack
-            if(troopInfo.attackRange > 1)
+            if(troopInfo.attackRange == 1)
             {
                 troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
-                HurtAnim();
             }
         }
 
@@ -472,12 +471,12 @@ public class TroopActionsCS : MonoBehaviour
         if (_troop.health <= 0)
         {
             _tile.isOccupied = false;
-            _troop.troop.SetActive(false);
             GameManagerCS.instance.troops.Remove(_troop.id);
             GameManagerCS.instance.objectsToDestroy.Add(_troop.troop);
             _troopData = new Dictionary<TroopInfo, string>()
             { {_troop, "Die"} };
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+            _troop.troopActions.DieAnim();
 
             if (troopInfo.health > 0 && troopInfo.canMoveAfterKill)
             {
@@ -506,7 +505,7 @@ public class TroopActionsCS : MonoBehaviour
         {
             _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
             _tile.isOccupied = false;
-            troopInfo.troop.SetActive(false);
+            DieAnim();
             GameManagerCS.instance.troops.Remove(troopInfo.id);
             GameManagerCS.instance.objectsToDestroy.Add(troopInfo.troop);
             _troopData = new Dictionary<TroopInfo, string>()
@@ -515,11 +514,19 @@ public class TroopActionsCS : MonoBehaviour
         }
         else if(!_attackedFromTheBack)
         {
-            _troop.troopActions.AttackAnim(troopInfo);
-            HurtAnim();
+            // Ranged troops are immune to counter attacks so only show counter attack info if the troop is not ranged
+            if(troopInfo.attackRange == 1)
+            {
+                _troop.troopActions.AttackAnim(troopInfo);
+                HurtAnim();
+            }
         }
     }
 
+
+    /// <summary>
+    /// Checks around this troop to see if there are any enemy troops on the tiles within seeing range.
+    /// </summary>
     public void CheckTroopSeeingRange()
     {
         TileInfo _tile;
@@ -553,11 +560,6 @@ public class TroopActionsCS : MonoBehaviour
         }
     }
 
-    public void Die()
-    {
-
-    }
-
     #endregion
 
     #region Troop Animations
@@ -567,42 +569,9 @@ public class TroopActionsCS : MonoBehaviour
         PlayerCS.instance.isAnimInProgress = true;
         int _distance = Mathf.Abs(_troopToAttack.xIndex - troopInfo.xIndex) + Mathf.Abs(_troopToAttack.zIndex - troopInfo.zIndex);
         if (_distance == 1)
-        {
             PlayerCS.instance.animationQueue.Enqueue(SwordAnim());
-        }
         else
-        {
-            TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
-            switch (troopInfo.rotation)
-            {
-                case 0:
-                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
-                                                                                  1,
-                                                                                  _tile.transform.position.z + 1);
-                    break;
-                case 90:
-                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x + 1,
-                                                                                  1,
-                                                                                  _tile.transform.position.z);
-                    break;
-                case 180:
-                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
-                                                                                  1,
-                                                                                  _tile.transform.position.z - 1);
-                    break;
-                case 270:
-                    GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x - 1,
-                                                                                  1,
-                                                                                  _tile.transform.position.z);
-                    break;
-                default:
-                    Debug.LogError("Could not accomplish task with rotation " + troopInfo.rotation);
-                    break;
-            }
-            GameManagerCS.instance.gun.transform.localRotation = Quaternion.Euler(-90, troopInfo.rotation, 0);
-            GameManagerCS.instance.gun.SetActive(true);
-            GunAnim();
-        }
+            PlayerCS.instance.animationQueue.Enqueue(ArrowAnim(_troopToAttack));
     }
 
     public IEnumerator SwordAnim()
@@ -619,9 +588,9 @@ public class TroopActionsCS : MonoBehaviour
     public IEnumerator SwordAnimHelper()
     {
         yield return new WaitForSeconds(.01f);
-        if (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f || GameManagerCS.instance.sword.transform.localEulerAngles.x > 4.9f)
+        if (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f || GameManagerCS.instance.sword.transform.localEulerAngles.x > 10.1f)
         {
-            GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(3, 0, 0);
+            GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(10, 0, 0);
             StartCoroutine(SwordAnimHelper());
         }
         else
@@ -633,41 +602,128 @@ public class TroopActionsCS : MonoBehaviour
         }
     }
 
-    public void GunAnim()
-    {
-        GameManagerCS.instance.gunBullet.Play();
-        PlayerCS.instance.animationQueue.Enqueue(GunAnimHelper());
-    }
-
-    public IEnumerator GunAnimHelper()
-    {
-        yield return new WaitForSeconds(.5f);
-        GameManagerCS.instance.gun.SetActive(false);
-        PlayerCS.instance.isAnimInProgress = false;
-        PlayerCS.instance.runningCoroutine = null;
-    }
-
-
-    public void HurtAnim()
+    /// <summary>
+    /// Places arrow one tile in front of troop and adjusts the arrow's angle according to troop's current rotation.
+    /// Then the arrow is enabled starts the ArrowAnimHelper function
+    /// </summary>
+    /// <param name="_troopToAttack"> Troop to attack </param>
+    /// <returns></returns>
+    public IEnumerator ArrowAnim(TroopInfo _troopToAttack)
     {
         PlayerCS.instance.isAnimInProgress = true;
+        TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
+        switch (troopInfo.rotation)
+        {
+            case 0:
+                GameManagerCS.instance.arrow.transform.position = new Vector3(_tile.transform.position.x,
+                                                                              1,
+                                                                              _tile.transform.position.z + 1);
+                break;
+            case 90:
+                GameManagerCS.instance.arrow.transform.position = new Vector3(_tile.transform.position.x + 1,
+                                                                              1,
+                                                                              _tile.transform.position.z);
+                break;
+            case 180:
+                GameManagerCS.instance.arrow.transform.position = new Vector3(_tile.transform.position.x,
+                                                                              1,
+                                                                              _tile.transform.position.z - 1);
+                break;
+            case 270:
+                GameManagerCS.instance.arrow.transform.position = new Vector3(_tile.transform.position.x - 1,
+                                                                              1,
+                                                                              _tile.transform.position.z);
+                break;
+            default:
+                Debug.LogError("Could not accomplish task with rotation " + troopInfo.rotation);
+                break;
+        }
+        GameManagerCS.instance.arrow.transform.localRotation = Quaternion.Euler(GameManagerCS.instance.arrow.transform.localEulerAngles.x, 
+                                                                                troopInfo.rotation, 0);
+        GameManagerCS.instance.arrow.SetActive(true);
+
+        StartCoroutine(ArrowAnimHelper(_troopToAttack));
+        yield return new WaitForEndOfFrame();
+    }
+
+    /// <summary>
+    /// Add force to the arrow object from GamaManagerCS to go towards troop that is supposed to be attacked.
+    /// The arrow is then disabled when it has reached its target
+    /// </summary>
+    /// <param name="_troopToAttack"> Troop to attack </param>
+    public IEnumerator ArrowAnimHelper(TroopInfo _troopToAttack)
+    {
+        TileInfo _tileToGoTo = GameManagerCS.instance.tiles[_troopToAttack.xIndex, _troopToAttack.zIndex];
+
+        GameManagerCS.instance.arrowRB.AddForce(troopInfo.troopModel.transform.forward * 200 * Time.deltaTime, ForceMode.Impulse);
+
+        while(Mathf.Abs(GameManagerCS.instance.arrow.transform.position.x - _tileToGoTo.transform.position.x) > .5f )
+        {
+            yield return new WaitForSeconds(.01f);
+        }
+        while (Mathf.Abs(GameManagerCS.instance.arrow.transform.position.z - _tileToGoTo.transform.position.z) > .5f)
+        {
+            yield return new WaitForSeconds(.01f);
+        }
+        GameManagerCS.instance.arrow.SetActive(false);
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
+
+    }
+
+    /// <summary>
+    /// Call when troop takes damaage. Places hurt animation in animation queue
+    /// </summary>
+    public void HurtAnim()
+    {
         PlayerCS.instance.animationQueue.Enqueue(HurtAnimHelper());
     }
 
     /// <summary>
-    /// Rotate troop 360 degrees on the x axis by rotating 10 degree every .01 seconds of scaled time
+    /// Rotate troop 360 degrees on the x axis by rotating 20 degree every .01 seconds of scaled time
     /// </summary>
-    /// <returns></returns>
     public IEnumerator HurtAnimHelper()
     {
-        for(int i = 0; i < 36; i++)
+        PlayerCS.instance.isAnimInProgress = true;
+        for (int i = 0; i < 18; i++)
         {
             yield return new WaitForSeconds(.01f);
-            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 10, 0);
+            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 20, 0);
         }
         PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;
         troopInfo.troopModel.transform.rotation = Quaternion.Euler(0, troopInfo.rotation, 0);
+    }
+
+    /// <summary>
+    /// Call when troop dies. Resets altered tiles, hides quick menu, and places die animation in queue
+    /// </summary>
+    public void DieAnim()
+    {
+        ResetAlteredTiles();
+        HideQuickMenu();
+        PlayerCS.instance.animationQueue.Enqueue(DieAnimHelper());
+    }
+
+    /// <summary>
+    /// Rotates troop on the x and z axis while decreasing the troops y position until it is out of view.
+    /// When the troop is out of view it is disabled.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator DieAnimHelper()
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        while (troopInfo.troopModel.transform.localPosition.y > -1.5f)
+        {
+            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(5, 0, 5);
+            troopInfo.troopModel.transform.localPosition = new Vector3(troopInfo.troopModel.transform.localPosition.x,
+                                                                       troopInfo.troopModel.transform.localPosition.y - .05f,
+                                                                       troopInfo.troopModel.transform.localPosition.z);
+            yield return new WaitForSeconds(.001f);
+        }
+        troopInfo.troop.SetActive(false);
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
     }
 
     #endregion

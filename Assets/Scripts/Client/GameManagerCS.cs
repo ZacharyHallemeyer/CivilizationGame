@@ -36,12 +36,13 @@ public class GameManagerCS : MonoBehaviour
                       localSnipperPrefab, localKingPrefab;
     public GameObject remoteScoutPrefab, remoteMilitiaPrefab, remoteArmyPrefab, remoteMisslePrefab, remoteDefensePrefab, remoteStealthPrefab,
                       remoteSnipperPrefab, remoteKingPrefab;
-    public GameObject swordPrefab, gunPrefab;
+    public GameObject swordPrefab, gunPrefab, arrowPrefab;
 
     public string[] troopNames;
     public string[] biomeOptions;
 
-    public GameObject sword, gun;
+    public GameObject sword, gun, arrow;
+    public Rigidbody arrowRB;
     public ParticleSystem gunBullet;
 
     public GameObject startScreenUI, startButtonObject;
@@ -105,8 +106,9 @@ public class GameManagerCS : MonoBehaviour
         gun = Instantiate(gunPrefab, Vector3.zero, gunPrefab.transform.localRotation);
         gun.SetActive(false);
         gunBullet = gun.transform.GetChild(0).GetComponent<ParticleSystem>();
-        // Spawn King
-        //SpawnTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
+        arrow = Instantiate(arrowPrefab, Vector3.zero, arrowPrefab.transform.localRotation);
+        arrowRB = arrow.GetComponent<Rigidbody>();
+        arrow.SetActive(false);
     }
 
     public void CreateStars()
@@ -662,13 +664,13 @@ public class GameManagerCS : MonoBehaviour
                  && z >= 0 && z < tiles.GetLength(1))
                 {
                     _tile = tiles[x, z];
-                    if(_tile.ownerId != -1)
+                    if(_tile.ownerId == -1)
                     { 
                         _tile.ownerId = _cityInfo.ownerId;
                         _tile.ownerShipVisualObject.SetActive(true);
                         _tileData = new Dictionary<TileInfo, string>()
                         { { _tile, "Owned"} };
-                        modifiedTileInfo.Add(_tileData);                    
+                        modifiedTileInfo.Add(_tileData);
                     }
                 }
             }
