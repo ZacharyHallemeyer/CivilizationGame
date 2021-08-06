@@ -37,6 +37,10 @@ public class PlayerCS : MonoBehaviour
     // Status variables
     public bool isAnimInProgress = false;
 
+    // Animations
+    public Queue<IEnumerator> animationQueue = new Queue<IEnumerator>();
+    public IEnumerator runningCoroutine = null;
+
     // Set instance and needed variables
     private void Awake()
     {
@@ -160,33 +164,19 @@ public class PlayerCS : MonoBehaviour
                     if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
                         _city.cityActions.BuildBuilding(_tile);
                 }
-                else
-                {
-                    /*
-                    ResetAlteredTiles();
-                    currentSelectedTroopId = -1;
-                    currentSelectedCityId = -1;
-                    */ 
-                }
-            }
-            else
-            {
-                /*
-                ResetAlteredTiles();
-                currentSelectedTroopId = -1;
-                currentSelectedCityId = -1;
-                */
             }
         }
 
-        if (inputMaster.Player.Rotate.triggered && currentSelectedTroopId >= 0)        // Rotate current selected troop
+        // Rotate current selected troop
+        if (inputMaster.Player.Rotate.triggered && currentSelectedTroopId >= 0)       
         {
             if(GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
             {
                 _troop.troopActions.Rotate(1);
             }
         }
-        if (inputMaster.Player.EndTurn.triggered)        // End Turn
+        // End Turn
+        if (inputMaster.Player.EndTurn.triggered)       
         {
             enabled = false;
             ResetAlteredTiles();
@@ -204,7 +194,8 @@ public class PlayerCS : MonoBehaviour
             GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
             GameManagerCS.instance.isTurn = false;
         }
-        if(inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)       // Zoom Camera in and out
+        // Zoom Camera in and out
+        if (inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)       
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
 
         // Rotate Camera
@@ -235,6 +226,13 @@ public class PlayerCS : MonoBehaviour
                                                    cam.transform.localEulerAngles.y - 1f,
                                                    cam.transform.localEulerAngles.z);
             }
+        }
+
+        // Handle animations
+        if(animationQueue.Count > 0 && runningCoroutine == null)
+        {
+            runningCoroutine = animationQueue.Dequeue();
+            StartCoroutine(runningCoroutine);
         }
     }
 

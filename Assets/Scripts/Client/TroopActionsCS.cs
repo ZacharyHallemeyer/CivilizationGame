@@ -16,6 +16,9 @@ public class TroopActionsCS : MonoBehaviour
     public GameObject quickMenuContainer, mainContainer, mainKingContainer;
     public Button createCityButton, conquerMainCityButton, conquerKingCityButton;
 
+    // Animations
+
+
     #region Set Up
     /// <summary>
     /// Init troop action variables
@@ -270,7 +273,8 @@ public class TroopActionsCS : MonoBehaviour
         }
 
         // Move troop while doing the move animation
-        StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
+        //StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
+        PlayerCS.instance.animationQueue.Enqueue(DescendTroopMoveAnim(_oldTile, _newTile));
         PlayerCS.instance.isAnimInProgress = true;
 
         // Update new tile
@@ -322,6 +326,7 @@ public class TroopActionsCS : MonoBehaviour
             GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
             CheckTroopSeeingRange();
             PlayerCS.instance.isAnimInProgress = false;
+            PlayerCS.instance.runningCoroutine = null;
         }
     }
 
@@ -379,6 +384,7 @@ public class TroopActionsCS : MonoBehaviour
 
     public void ConquerCity(TileInfo _tile, CityInfo _city)
     {
+        int _previousCityOwnerId = _city.ownerId;
         _tile.tile.tag = cityTag;
         _tile.tile.layer = whatIsInteractableValue;
         troopInfo.movementCost = 0;
@@ -401,11 +407,15 @@ public class TroopActionsCS : MonoBehaviour
                  && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1))
                 {
                     _tile = GameManagerCS.instance.tiles[x, z];
-                    _tile.ownerId = _city.ownerId;
-                    _tile.ownerShipVisualObject.SetActive(true);
-                    _tileData = new Dictionary<TileInfo, string>()
-                    { { _tile, "Owned"} };
-                    GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
+                    // Only make this tile owned by this player if this tile was owned by previous city owner
+                    if(_tile.ownerId == _previousCityOwnerId)
+                    {
+                        _tile.ownerId = _city.ownerId;
+                        _tile.ownerShipVisualObject.SetActive(true);
+                        _tileData = new Dictionary<TileInfo, string>()
+                        { { _tile, "Owned"} };
+                        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
+                    }
                 }
             }
         }
@@ -443,8 +453,12 @@ public class TroopActionsCS : MonoBehaviour
         else
         {
             _troop.health -= troopInfo.baseAttack - _troop.facingDefense;
-            troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
-            HurtAnim();
+            // If troop is ranged then they are immune to counter attack
+            if(troopInfo.attackRange > 1)
+            {
+                troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
+                HurtAnim();
+            }
         }
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
@@ -554,12 +568,7 @@ public class TroopActionsCS : MonoBehaviour
         int _distance = Mathf.Abs(_troopToAttack.xIndex - troopInfo.xIndex) + Mathf.Abs(_troopToAttack.zIndex - troopInfo.zIndex);
         if (_distance == 1)
         {
-            GameManagerCS.instance.sword.transform.position = new Vector3(troopInfo.transform.position.x,
-                                                                         2,
-                                                                         troopInfo.transform.position.z);
-            GameManagerCS.instance.sword.transform.localRotation = Quaternion.Euler(-90, troopInfo.rotation, 0);
-            GameManagerCS.instance.sword.SetActive(true);
-            InvokeRepeating("SwordAnim", 0, .01f);
+            PlayerCS.instance.animationQueue.Enqueue(SwordAnim());
         }
         else
         {
@@ -567,30 +576,25 @@ public class TroopActionsCS : MonoBehaviour
             switch (troopInfo.rotation)
             {
                 case 0:
-
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
                                                                                   1,
                                                                                   _tile.transform.position.z + 1);
                     break;
                 case 90:
-
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x + 1,
                                                                                   1,
                                                                                   _tile.transform.position.z);
                     break;
                 case 180:
-
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x,
                                                                                   1,
                                                                                   _tile.transform.position.z - 1);
                     break;
                 case 270:
-
                     GameManagerCS.instance.gun.transform.position = new Vector3(_tile.transform.position.x - 1,
                                                                                   1,
                                                                                   _tile.transform.position.z);
                     break;
-
                 default:
                     Debug.LogError("Could not accomplish task with rotation " + troopInfo.rotation);
                     break;
@@ -601,53 +605,68 @@ public class TroopActionsCS : MonoBehaviour
         }
     }
 
-    public void SwordAnim()
+    public IEnumerator SwordAnim()
     {
+        GameManagerCS.instance.sword.transform.position = new Vector3(troopInfo.transform.position.x,
+                                                             2,
+                                                             troopInfo.transform.position.z);
+        GameManagerCS.instance.sword.transform.localRotation = Quaternion.Euler(-90, troopInfo.rotation, 0);
+        GameManagerCS.instance.sword.SetActive(true);
+        StartCoroutine(SwordAnimHelper());
+        yield return new WaitForEndOfFrame();
+    }
+
+    public IEnumerator SwordAnimHelper()
+    {
+        yield return new WaitForSeconds(.01f);
         if (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f || GameManagerCS.instance.sword.transform.localEulerAngles.x > 4.9f)
         {
             GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(3, 0, 0);
+            StartCoroutine(SwordAnimHelper());
         }
         else
         {
             GameManagerCS.instance.sword.SetActive(false);
             GameManagerCS.instance.sword.transform.localRotation = Quaternion.Euler(-90, 0, 0);
             PlayerCS.instance.isAnimInProgress = false;
-            CancelInvoke("SwordAnim");
+            PlayerCS.instance.runningCoroutine = null;
         }
     }
 
     public void GunAnim()
     {
         GameManagerCS.instance.gunBullet.Play();
-        InvokeRepeating("GunAnimHelper", 1, 0);
+        PlayerCS.instance.animationQueue.Enqueue(GunAnimHelper());
     }
 
-    public void GunAnimHelper()
+    public IEnumerator GunAnimHelper()
     {
+        yield return new WaitForSeconds(.5f);
         GameManagerCS.instance.gun.SetActive(false);
         PlayerCS.instance.isAnimInProgress = false;
-        CancelInvoke("GunAnimHelper");
+        PlayerCS.instance.runningCoroutine = null;
     }
 
 
     public void HurtAnim()
     {
         PlayerCS.instance.isAnimInProgress = true;
-        StartCoroutine(HurtAnimHelper());
+        PlayerCS.instance.animationQueue.Enqueue(HurtAnimHelper());
     }
 
     /// <summary>
-    /// Rotate troop 360 degrees on the x axis by rotating 5 degree every .01 seconds of scaled time
+    /// Rotate troop 360 degrees on the x axis by rotating 10 degree every .01 seconds of scaled time
     /// </summary>
     /// <returns></returns>
     public IEnumerator HurtAnimHelper()
     {
-        for(int i = 0; i < 72; i++)
+        for(int i = 0; i < 36; i++)
         {
-            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 5, 0);
             yield return new WaitForSeconds(.01f);
+            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 10, 0);
         }
         PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
         troopInfo.troopModel.transform.rotation = Quaternion.Euler(0, troopInfo.rotation, 0);
     }
 

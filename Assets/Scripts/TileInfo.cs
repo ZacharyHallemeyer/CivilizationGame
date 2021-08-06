@@ -8,7 +8,7 @@ public class TileInfo : MonoBehaviour
     public GameObject moveUI;
     public GameObject attackUI;
     public int id;
-    public int ownerId;
+    public int ownerId = -1;
     public int movementCost;
     public string biome;
     public float temperature;       // Range -1 to 1

@@ -278,7 +278,6 @@ public class GameManagerCS : MonoBehaviour
             _tileInfo.resourceObject = Instantiate(obstaclePrefab, new Vector3(_position.x, obstaclePrefab.transform.position.y,
                                                                                 _position.y), obstaclePrefab.transform.localRotation);
             _tileInfo.resourceObject.transform.parent = _tile.transform;
-            Debug.Log("Obstacle @ " + _tileInfo.xIndex + " " + _tileInfo.zIndex);
         }
         // Spawn tile ownership object
         _tileInfo.ownerShipVisualObject = Instantiate(ownershipObjectPrefab, new Vector3(_position.x, ownershipObjectPrefab.transform.position.y,
@@ -644,6 +643,12 @@ public class GameManagerCS : MonoBehaviour
         cities.Add(_cityInfo.id, _cityInfo);
     }
 
+    /// <summary>
+    /// Modifies the tile's ownership around the city given in parems to be owned by city owner.
+    /// This function skips over already owned tiles.
+    /// Do not use for creating owned tiles when troops conquer cities because of previous comment line.
+    /// </summary>
+    /// <param name="_cityInfo"></param>
     public void CreateOwnedTiles(CityInfo _cityInfo)
     {
         TileInfo _tile;
@@ -657,11 +662,14 @@ public class GameManagerCS : MonoBehaviour
                  && z >= 0 && z < tiles.GetLength(1))
                 {
                     _tile = tiles[x, z];
-                    _tile.ownerId = _cityInfo.ownerId;
-                    _tile.ownerShipVisualObject.SetActive(true);
-                    _tileData = new Dictionary<TileInfo, string>()
-                    { { _tile, "Owned"} };
-                    modifiedTileInfo.Add(_tileData);
+                    if(_tile.ownerId != -1)
+                    { 
+                        _tile.ownerId = _cityInfo.ownerId;
+                        _tile.ownerShipVisualObject.SetActive(true);
+                        _tileData = new Dictionary<TileInfo, string>()
+                        { { _tile, "Owned"} };
+                        modifiedTileInfo.Add(_tileData);                    
+                    }
                 }
             }
         }
