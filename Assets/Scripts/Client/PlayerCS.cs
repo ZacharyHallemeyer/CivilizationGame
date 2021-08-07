@@ -36,6 +36,7 @@ public class PlayerCS : MonoBehaviour
 
     // Status variables
     public bool isAnimInProgress = false;
+    public bool isAbleToCommitActions = true;
 
     // Animations
     public Queue<IEnumerator> animationQueue = new Queue<IEnumerator>();
@@ -82,7 +83,40 @@ public class PlayerCS : MonoBehaviour
     // Read player input and start actions based on this input
     void Update()
     {
-        if (isAnimInProgress) return;
+        if (inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)
+            ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
+
+        // Rotate Camera
+        if (inputMaster.Player.RightClick.ReadValue<float>() != 0 && camRB.velocity.magnitude < 1f)
+        {
+            differenceRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
+            if (!isRotating)
+            {
+                isRotating = true;
+                originRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
+            }
+        }
+        else
+            isRotating = false;
+
+        // Rotate camera if player wants to
+        if (isRotating)
+        {
+            if (differenceRotation.x - originRotation.x > .01)
+            {
+                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                                               cam.transform.localEulerAngles.y + 1f,
+                                                               cam.transform.localEulerAngles.z);
+            }
+            else if (differenceRotation.x - originRotation.x < -.01)
+            {
+                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                                   cam.transform.localEulerAngles.y - 1f,
+                                                   cam.transform.localEulerAngles.z);
+            }
+        }
+
+        if (isAnimInProgress && !isAbleToCommitActions) return;
         // TESTING
         if (inputMaster.Player.Testing.triggered)
         {
@@ -178,55 +212,9 @@ public class PlayerCS : MonoBehaviour
         // End Turn
         if (inputMaster.Player.EndTurn.triggered)       
         {
-            enabled = false;
-            ResetAlteredTiles();
-            // Turn off any quick menus
-            if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
-                _troop.troopActions.HideQuickMenu();
-            if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
-                _city.cityActions.HideQuickMenu();
-            currentSelectedCityId = -1;
-            currentSelectedTroopId = -1;
-            ClientSend.SendEndOfTurnData();
-            GameManagerCS.instance.ResetTroops();
-            GameManagerCS.instance.ResetCities();
-            GameManagerCS.instance.ClearModifiedData();
-            GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
-            GameManagerCS.instance.isTurn = false;
+            EndTurn();
         }
         // Zoom Camera in and out
-        if (inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)       
-            ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
-
-        // Rotate Camera
-        if (inputMaster.Player.RightClick.ReadValue<float>() != 0 && camRB.velocity.magnitude < 1f)
-        {
-            differenceRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
-            if (!isRotating)
-            {
-                isRotating = true;
-                originRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
-            }
-        }
-        else
-            isRotating = false;
-
-        // Rotate camera if player wants to
-        if (isRotating)
-        {
-            if (differenceRotation.x - originRotation.x > .01)
-            {
-                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                                               cam.transform.localEulerAngles.y + 1f,
-                                                               cam.transform.localEulerAngles.z);
-            }
-            else if(differenceRotation.x - originRotation.x < -.01)
-            {
-                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                                   cam.transform.localEulerAngles.y - 1f,
-                                                   cam.transform.localEulerAngles.z);
-            }
-        }
 
         // Handle animations
         // Start next animation if current animation is done and if there are more animations in queue
@@ -305,6 +293,25 @@ public class PlayerCS : MonoBehaviour
         }
         playerUI.SetMoraleAmount(morale);
         playerUI.SetEducationText(education);
+    }
+
+    public void EndTurn()
+    {
+        enabled = false;
+        ResetAlteredTiles();
+        // Turn off any quick menus
+        if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+            _troop.troopActions.HideQuickMenu();
+        if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
+            _city.cityActions.HideQuickMenu();
+        currentSelectedCityId = -1;
+        currentSelectedTroopId = -1;
+        ClientSend.SendEndOfTurnData(GameManagerCS.instance.isKingAlive);
+        GameManagerCS.instance.ResetTroops();
+        GameManagerCS.instance.ResetCities();
+        GameManagerCS.instance.ClearModifiedData();
+        GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
+        GameManagerCS.instance.isTurn = false;
     }
 }
 

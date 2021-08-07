@@ -74,7 +74,6 @@ public class ClientHandle : MonoBehaviour
         // Turn on spawn king UI
         GameManagerCS.instance.startScreenUI.SetActive(true);
         GameManagerCS.instance.SpawnPlayer(_id, _username);
-
     }
     
     /// <summary>

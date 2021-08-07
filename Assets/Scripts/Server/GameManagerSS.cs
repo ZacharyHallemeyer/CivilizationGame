@@ -57,6 +57,18 @@ public class GameManagerSS : MonoBehaviour
     }
 
     /// <summary>
+    /// Removes client given in parems from player turn list and decrements currentPlayerTurnId
+    /// </summary>
+    /// <param name="_fromClient"> Client to remove </param>
+    /// <param name="_packet"> Packet </param>
+    public void RemovePlayerFromPlayerTurnList(int _clientToRemove)
+    {
+        Debug.Log("Removing player w/ id: " + _clientToRemove);
+        currentPlayerTurnId--;
+        playerIds.Remove(_clientToRemove);
+    }
+
+    /// <summary>
     /// Remove Troop info from GameManager instance
     /// </summary>
     /// <param name="_troop"> troop to remove </param>

@@ -22,6 +22,7 @@ public class GameManagerCS : MonoBehaviour
     public List<Dictionary<TileInfo, string>> modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
     public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
     public List<GameObject> objectsToDestroy = new List<GameObject>();
+    public bool isKingAlive;
 
     public GameObject playerPrefab;
     public GameObject localTroopPrefab, remoteTroopPrefab, blurredTroopPrefab;
@@ -45,10 +46,14 @@ public class GameManagerCS : MonoBehaviour
     public Rigidbody arrowRB;
     public ParticleSystem gunBullet;
 
+    public int minDistanceBetweenCities = 5, maxDistanceBetweenCities = 15, maxDistanceFromResource = 5;
+
+    // Lobby
     public GameObject startScreenUI, startButtonObject;
     public Button startButton;
 
-    public int minDistanceBetweenCities = 5, maxDistanceBetweenCities = 15, maxDistanceFromResource = 5;
+    // King Death Screen
+    public GameObject kingDeathScreen;
 
     public PlayerUI playerUI;
 
@@ -451,6 +456,7 @@ public class GameManagerCS : MonoBehaviour
     public void SpawnKing()
     {
         if (!isTurn) return;
+        isKingAlive = true;
         playerUI.playerUIContainer.SetActive(true);
         playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
                                   PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
@@ -499,6 +505,11 @@ public class GameManagerCS : MonoBehaviour
 
     public void RemoveTroopInfo(TroopInfo _troopInfo)
     {
+        Debug.Log("Removing troop named: " + _troopInfo.troopName);
+        if(_troopInfo.troopName == "King" && _troopInfo.ownerId == ClientCS.instance.myId)
+        {
+            KingIsDead();
+        }
         _troopInfo.troop.SetActive(false);
         troops.Remove(_troopInfo.id);
         objectsToDestroy.Add(_troopInfo.troop);
@@ -527,6 +538,53 @@ public class GameManagerCS : MonoBehaviour
     {
         if (!(recievedAllNewNeutralCityData && recievedAllNewTileData)) return;
         startButton.enabled = true;
+    }
+
+    public void KingIsDead()
+    {
+        Debug.Log("King is dead function called");
+        isKingAlive = false;
+        kingDeathScreen.SetActive(true);
+        PlayerCS.instance.isAbleToCommitActions = false;
+    }
+
+    public void ResetOwnedCitiesAndTiles(int _ownerId)
+    {
+        TileInfo _tile;
+        Dictionary<TileInfo, string> _tileData;
+        Dictionary<CityInfo, string> _cityData;
+        // Change all owned tiles and all owned cities to netural
+        foreach (CityInfo _cityInfo in cities.Values)
+        {
+            if (_cityInfo.ownerId == _ownerId)
+            {
+                // Change all owned tiles to neutral
+                for (int x = _cityInfo.xIndex - _cityInfo.ownerShipRange; x < _cityInfo.xIndex + _cityInfo.ownerShipRange + 1; x++)
+                {
+                    for (int z = _cityInfo.zIndex - _cityInfo.ownerShipRange; z < _cityInfo.zIndex + _cityInfo.ownerShipRange + 1; z++)
+                    {
+                        if (x >= 0 && x < tiles.GetLength(0)
+                         && z >= 0 && z < tiles.GetLength(1))
+                        {
+                            _tile = tiles[x, z];
+                            if (_tile.ownerId == _ownerId)
+                            {
+                                _tile.ownerId = -1;
+                                _tile.ownerShipVisualObject.SetActive(false);
+                                _tileData = new Dictionary<TileInfo, string>()
+                                 { { _tile, "Owned"} };
+                                modifiedTileInfo.Add(_tileData);
+                            }
+                        }
+                    }
+                }
+                // Change all owned cities to neutral
+                _cityInfo.ownerId = -1;
+                _cityData = new Dictionary<CityInfo, string>()
+                { { _cityInfo, "Conquer" } };
+                modifiedCityInfo.Add(_cityData);
+            }
+        }
     }
 
     #endregion

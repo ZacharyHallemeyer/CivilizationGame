@@ -48,7 +48,7 @@ public class ClientSend : MonoBehaviour
     /// <summary>
     /// Sends all end of turn data to server. This includes modified troop, tile, and city info
     /// </summary>
-    public static void SendEndOfTurnData()
+    public static void SendEndOfTurnData(bool _isKingAlive)
     {
         // Send all modfified troop info to Server
         foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerCS.instance.modifiedTroopInfo)
@@ -161,19 +161,19 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
 
-        // TODO City and tile info
-        EndTurn();
+        EndTurn(_isKingAlive);
     }
 
     /// <summary>
     /// Tells the server to end turn for current player
     /// </summary>
-    public static void EndTurn()
+    public static void EndTurn(bool _isKingAlive)
     {
         using (Packet _packet = new Packet((int)ClientPackets.endTurn))
         {
             _packet.Write(GameManagerCS.instance.currentTroopIndex);
             _packet.Write(GameManagerCS.instance.currentCityIndex);
+            _packet.Write(_isKingAlive);
 
             SendTCPData(_packet);
         }

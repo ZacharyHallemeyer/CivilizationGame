@@ -30,6 +30,7 @@ public enum ClientPackets
     endTurnTileData,
     endTurnCityData,
     endTurn,
+    removePlayer,
 }
 
 public class Packet : IDisposable

@@ -196,6 +196,14 @@ public class ServerHandle
         GameManagerSS.instance.isAllTileInfoReceived = false;
         GameManagerSS.instance.isAllCityInfoReceived = false;
 
+
+        GameManagerSS.instance.currentTroopId = _packet.ReadInt();
+        GameManagerSS.instance.currentCityId = _packet.ReadInt();
+        bool _isKingAlive = _packet.ReadBool();
+
+        if (!_isKingAlive)
+            GameManagerSS.instance.RemovePlayerFromPlayerTurnList(_fromClient);
+
         // Chose next player to start turn
         if (GameManagerSS.instance.currentPlayerTurnId + 1 >= GameManagerSS.instance.playerIds.Count)
         {
@@ -204,9 +212,6 @@ public class ServerHandle
         }
         else
             GameManagerSS.instance.currentPlayerTurnId++;
-
-        GameManagerSS.instance.currentTroopId = _packet.ReadInt();
-        GameManagerSS.instance.currentCityId = _packet.ReadInt();
 
         // Start turn for next player
         ServerSend.SendModifiedTroop(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);

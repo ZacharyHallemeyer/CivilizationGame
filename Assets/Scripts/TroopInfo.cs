@@ -117,7 +117,7 @@ public class TroopInfo : MonoBehaviour
     /// <param name="_troopActions"> troop actions component </param>
     public void CopyTroopInfo(TroopInfo _troopInfo, GameObject _troop, TroopActionsCS _troopActions)
     {
-        troopName = _troopInfo.name;
+        troopName = _troopInfo.troopName;
         troop = _troop;
         troopActions = _troopActions;
         troopActions.InitTroopActions(this);

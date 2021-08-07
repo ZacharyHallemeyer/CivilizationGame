@@ -487,6 +487,11 @@ public class TroopActionsCS : MonoBehaviour
             }
             if (troopInfo.canMultyKill)
                 troopInfo.canAttack = true;
+            if(_troop.troopName == "King")
+            {
+                Debug.Log("Troop name was king");
+                GameManagerCS.instance.ResetOwnedCitiesAndTiles(_troop.ownerId);
+            }
         }
         else
         {
@@ -506,6 +511,8 @@ public class TroopActionsCS : MonoBehaviour
             _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
             _tile.isOccupied = false;
             DieAnim();
+            if (troopInfo.troopName == "King")
+                GameManagerCS.instance.KingIsDead();
             GameManagerCS.instance.troops.Remove(troopInfo.id);
             GameManagerCS.instance.objectsToDestroy.Add(troopInfo.troop);
             _troopData = new Dictionary<TroopInfo, string>()
@@ -700,8 +707,12 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void DieAnim()
     {
-        ResetAlteredTiles();
-        HideQuickMenu();
+        // Reset altered tiles and hide troop quick menu if this is a local rather than remote troop
+        if(troopInfo.ownerId == ClientCS.instance.myId)
+        {
+            ResetAlteredTiles();
+            HideQuickMenu();
+        }
         PlayerCS.instance.animationQueue.Enqueue(DieAnimHelper());
     }
 
