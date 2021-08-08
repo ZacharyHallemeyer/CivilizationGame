@@ -170,10 +170,11 @@ public class ClientHandle : MonoBehaviour
         _troop.movementCost = _packet.ReadInt();
         _troop.attackRange = _packet.ReadInt();
         _troop.seeRange = _packet.ReadInt();
-        _troop.lastTroopAttackedId = _packet.ReadInt();
         _troop.lastHurtById = _packet.ReadInt();
         _troop.canMoveNextTurn = _packet.ReadBool();
         _troop.canMultyKill= _packet.ReadBool();
+        _troop.lastTroopAttackedId = _packet.ReadInt();
+        _troop.attackRotation = _packet.ReadInt();
         string _command = _packet.ReadString();
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()

@@ -27,7 +27,6 @@ public class TroopInfo : MonoBehaviour
     public int movementCost;
     public int attackRange;
     public int seeRange;
-    public int lastTroopAttackedId;
     public int lastHurtById;
 
     public bool canMoveNextTurn;
@@ -38,6 +37,10 @@ public class TroopInfo : MonoBehaviour
 
     public int idOfPlayerThatSentInfo;
     public int turnCountWhenLastHit;
+
+    // Attack/Animation variables
+    public int attackRotation;
+    public int lastTroopAttackedId;
 
     /// <summary>
     /// Init troop info for new troop and set values for troop to be used this round
@@ -146,6 +149,33 @@ public class TroopInfo : MonoBehaviour
         canMoveAfterKill = _troopInfo.canMoveAfterKill;
     }
 
+    public void CopyNecessaryTroopInfoToSendToServer(TroopInfo _troopInfo)
+    {
+        troopName = _troopInfo.troopName;
+        id = _troopInfo.id;
+        ownerId = _troopInfo.ownerId;
+        xIndex = _troopInfo.xIndex;
+        zIndex = _troopInfo.zIndex;
+        rotation = _troopInfo.rotation;
+
+        health = _troopInfo.health;
+        baseAttack = _troopInfo.baseAttack;
+        stealthAttack = _troopInfo.stealthAttack;
+        counterAttack = _troopInfo.counterAttack;
+        baseDefense = _troopInfo.baseDefense;
+        facingDefense = _troopInfo.facingDefense;
+        movementCost = _troopInfo.movementCost;
+        attackRange = _troopInfo.attackRange;
+        seeRange = _troopInfo.seeRange;
+        lastHurtById = _troopInfo.lastHurtById;
+        canMoveNextTurn = _troopInfo.canMoveNextTurn;
+        canMultyKill = _troopInfo.canMultyKill;
+        canMoveAfterKill = _troopInfo.canMoveAfterKill;
+
+        lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
+        attackRotation = _troopInfo.attackRotation;
+    }
+
     /// <summary>
     /// Update troop info with another troop info values (used for updating troops for data coming from server)
     /// </summary>
@@ -170,5 +200,43 @@ public class TroopInfo : MonoBehaviour
         lastHurtById = _troopInfo.lastHurtById;
         canMoveNextTurn = _troopInfo.canMoveNextTurn;
         canMultyKill = _troopInfo.canMultyKill;
+    }
+
+    public TroopInfo(TroopInfo _troopToCopy)
+    {
+        troop = _troopToCopy.troop;
+        troopModel = _troopToCopy.troopModel;
+        blurredTroopModel = _troopToCopy.blurredTroopModel;
+        troopActions = _troopToCopy.troopActions;
+        healthTextObject = _troopToCopy.healthTextObject;
+        healthText = _troopToCopy.healthText;
+        boxCollider = _troopToCopy.boxCollider;
+        troopName = _troopToCopy.troopName;
+
+        id = _troopToCopy.id;
+        ownerId = _troopToCopy.ownerId;
+        xIndex = _troopToCopy.xIndex;
+        zIndex = _troopToCopy.zIndex;
+        rotation = _troopToCopy.rotation;
+        baseDefense = _troopToCopy.baseDefense;
+        facingDefense = _troopToCopy.facingDefense;
+        health = _troopToCopy.health;
+        baseAttack = _troopToCopy.baseAttack;
+        stealthAttack = _troopToCopy.stealthAttack;
+        counterAttack = _troopToCopy.counterAttack;
+        movementCost = _troopToCopy.movementCost;
+        attackRange = _troopToCopy.attackRange;
+        seeRange = _troopToCopy.seeRange;
+        lastTroopAttackedId = _troopToCopy.lastTroopAttackedId;
+        lastHurtById = _troopToCopy.lastHurtById;
+
+        canMoveNextTurn = _troopToCopy.canMoveNextTurn;
+        canAttack = _troopToCopy.canAttack;
+        canMultyKill = _troopToCopy.canMultyKill;
+        canMoveAfterKill = _troopToCopy.canMoveAfterKill;
+        isExposed = _troopToCopy.isExposed;
+
+        idOfPlayerThatSentInfo = _troopToCopy.idOfPlayerThatSentInfo;
+        turnCountWhenLastHit = _troopToCopy.turnCountWhenLastHit;
     }
 }

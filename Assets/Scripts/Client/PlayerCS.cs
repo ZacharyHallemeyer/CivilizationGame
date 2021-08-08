@@ -309,8 +309,8 @@ public class PlayerCS : MonoBehaviour
         ClientSend.SendEndOfTurnData(GameManagerCS.instance.isKingAlive);
         GameManagerCS.instance.ResetTroops();
         GameManagerCS.instance.ResetCities();
-        GameManagerCS.instance.ClearModifiedData();
         GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
+        GameManagerCS.instance.ClearModifiedData();
         GameManagerCS.instance.isTurn = false;
     }
 }

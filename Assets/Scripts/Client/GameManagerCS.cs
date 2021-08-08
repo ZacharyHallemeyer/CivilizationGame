@@ -24,6 +24,7 @@ public class GameManagerCS : MonoBehaviour
     public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
     public List<GameObject> objectsToDestroy = new List<GameObject>();
     public bool isKingAlive;
+    public GameObject dataStoringObject;
 
     public GameObject playerPrefab;
     public GameObject localTroopPrefab, remoteTroopPrefab, blurredTroopPrefab;
@@ -486,52 +487,53 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_troopInfo"></param>
     public void MoveTroopToNewTile(TroopInfo _troopInfo)
     {
-        troops[_troopInfo.id].xIndex = _troopInfo.xIndex;
-        troops[_troopInfo.id].zIndex = _troopInfo.zIndex;
-        int _xCoord = (int)tiles[_troopInfo.xIndex, _troopInfo.zIndex].position.x;
-        int _zCoord = (int)tiles[_troopInfo.xIndex, _troopInfo.zIndex].position.y;
-        troops[_troopInfo.id].troop.transform.position = new Vector3(_xCoord,
-                                                            troops[_troopInfo.id].troop.transform.position.y,
-                                                            _zCoord);
-        troops[_troopInfo.id].healthTextObject.transform.position = new Vector3(_xCoord, 0, _zCoord);
+        PlayerCS.instance.animationQueue.Enqueue(TroopMoveAnimation(troops[_troopInfo.id], _troopInfo));
     }
-    public IEnumerator TroopMoveAnimation(TroopInfo _troop, int _newXCorod, int _newZCoord)
+    public IEnumerator TroopMoveAnimation(TroopInfo _troop, TroopInfo _troopToCopy)
     {
         PlayerCS.instance.isAnimInProgress = true;
-        StartCoroutine(DescendTroopMoveAnin(_troop, _newXCorod, _newZCoord));
+        StartCoroutine(DescendTroopMoveAnin(_troop, _troopToCopy));
         yield return new WaitForEndOfFrame();
     }
 
-    public IEnumerator DescendTroopMoveAnin(TroopInfo _troop, int _newXCorod, int _newZCoord)
+    public IEnumerator DescendTroopMoveAnin(TroopInfo _troop, TroopInfo _troopToCopy)
     {
-        if (_troop.transform.position.y > -.2f)
+        while (_troop.transform.position.y > -.2f)
         {
             _troop.transform.position = new Vector3(_troop.transform.position.x, _troop.transform.position.y - .1f, _troop.transform.position.z);
-            StartCoroutine(DescendTroopMoveAnin(_troop, _newXCorod, _newZCoord));
+            // Using overlay texture so turn off health text when troop is under a tile
+            if (_troop.healthTextObject.transform.position.y < -1 && _troop.healthTextObject.activeSelf)
+                _troop.healthTextObject.SetActive(false);
+            yield return new WaitForSeconds(.0001f);
         }
-        else
-        {
-            _troop.troop.transform.position = new Vector3(_newXCorod, _troop.transform.position.y, _newZCoord);
-            StartCoroutine(AscendTroopMoveAnim(_troop));
-        }
-        yield return new WaitForSeconds(.0001f);
+        _troop.transform.position = new Vector3((int)tiles[_troopToCopy.xIndex, _troopToCopy.zIndex].position.x, 
+                                                      _troop.transform.position.y,
+                                                      (int)tiles[_troopToCopy.xIndex, _troopToCopy.zIndex].position.y);
+        _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x,
+                                                                 -1.5f,
+                                                                 _troop.transform.position.z);
+        StartCoroutine(AscendTroopMoveAnim(_troop));
     }
 
     public IEnumerator AscendTroopMoveAnim(TroopInfo _troop)
     {
-        if (_troop.transform.position.y < 1)
+        while (_troop.transform.position.y < 1)
         {
             _troop.transform.position = new Vector3(_troop.transform.position.x, _troop.transform.position.y + .1f, _troop.transform.position.z);
-            StartCoroutine(AscendTroopMoveAnim(_troop));
+            // Using overlay texture so turn on health text when troop is above a tile
+            if (_troop.healthTextObject.transform.position.y > -1 && !_troop.healthTextObject.activeSelf)
+                _troop.healthTextObject.SetActive(true);
+            _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x,
+                                                            _troop.healthTextObject.transform.position.y + .1f,
+                                                            _troop.transform.position.z);
+            yield return new WaitForSeconds(.0001f);
         }
-        else
-        {
-            transform.position = new Vector3(_troop.transform.position.x, 1f, _troop.transform.position.z);
-            PlayerCS.instance.isAnimInProgress = false;
-            PlayerCS.instance.runningCoroutine = null;
-        }
-
-        yield return new WaitForSeconds(.0001f);
+        _troop.transform.position = new Vector3(_troop.transform.position.x, 1f, _troop.transform.position.z);
+        _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x,
+                                                                  0,
+                                                                  _troop.transform.position.z);
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
     }
 
     /// <summary>
@@ -541,10 +543,17 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_troopInfo"> Troop to rotate </param>
     public void RotateTroop(TroopInfo _troopInfo)
     {
+        PlayerCS.instance.animationQueue.Enqueue(RotateTroopHelper(_troopInfo));
+    }
+
+    public IEnumerator RotateTroopHelper(TroopInfo _troopInfo)
+    {
+        yield return new WaitForEndOfFrame();
         troops[_troopInfo.id].rotation = _troopInfo.rotation;
         troops[_troopInfo.id].troop.transform.localRotation = Quaternion.Euler(troops[_troopInfo.id].troop.transform.localEulerAngles.x,
                                                                                troops[_troopInfo.id].rotation,
                                                                                troops[_troopInfo.id].troop.transform.localEulerAngles.z);
+        PlayerCS.instance.runningCoroutine = null;
     }
 
     /// <summary>
@@ -554,22 +563,144 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_troopInfo"> Troop to rotate </param>
     public void UpdateTroopInfo(TroopInfo _troopInfo)
     {
+        PlayerCS.instance.animationQueue.Enqueue(UpdateTroopInfoHelper(_troopInfo));
+    }
+
+    public IEnumerator UpdateTroopInfoHelper(TroopInfo _troopInfo)
+    {
+        yield return new WaitForEndOfFrame();
         troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
+        PlayerCS.instance.runningCoroutine = null;
+    }
+
+    public void AttackTroop(TroopInfo _troopInfo)
+    {
+        TroopInfo _troopToAttack = troops[_troopInfo.lastTroopAttackedId];
+        TroopInfo _troopAttacking = troops[_troopInfo.id];
+        int _distance = Mathf.Abs(_troopToAttack.xIndex - _troopAttacking.xIndex) + Mathf.Abs(_troopToAttack.zIndex - _troopAttacking.zIndex);
+        if (_distance == 1)
+            PlayerCS.instance.animationQueue.Enqueue(SwordAttackAnimation(_troopAttacking, _troopAttacking.attackRotation));
+        else
+            PlayerCS.instance.animationQueue.Enqueue(ArrowAttackAnimation(_troopAttacking, _troopToAttack));
+    }
+
+    public IEnumerator SwordAttackAnimation(TroopInfo _troopAttacking, int _localXRotation)
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        sword.transform.position = new Vector3(_troopAttacking.transform.position.x,
+                                                2,
+                                                _troopAttacking.transform.position.z);
+        sword.transform.localRotation = Quaternion.Euler(-90, _localXRotation, 0);
+        sword.SetActive(true);
+        while (sword.transform.localEulerAngles.x < .1f || sword.transform.localEulerAngles.x > 10.1f)
+        {
+            sword.transform.localRotation *= Quaternion.Euler(10, 0, 0);
+            yield return new WaitForSeconds(.001f);
+        }
+        sword.SetActive(false);
+        sword.transform.localRotation = Quaternion.Euler(-90, 0, 0);
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
+    }
+
+    public IEnumerator ArrowAttackAnimation(TroopInfo _troopAttacking, TroopInfo _troopToAttack)
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        TileInfo _tile = GameManagerCS.instance.tiles[_troopAttacking.xIndex, _troopAttacking.zIndex];
+        switch (_troopAttacking.attackRotation)
+        {
+            case 0:
+                arrow.transform.position = new Vector3(_tile.transform.position.x,
+                                                        1,
+                                                        _tile.transform.position.z + 1);
+                break;
+            case 90:
+                arrow.transform.position = new Vector3(_tile.transform.position.x + 1,
+                                                        1,
+                                                        _tile.transform.position.z);
+                break;
+            case 180:
+                arrow.transform.position = new Vector3(_tile.transform.position.x,
+                                                        1,
+                                                        _tile.transform.position.z - 1);
+                break;
+            case 270:
+                arrow.transform.position = new Vector3(_tile.transform.position.x - 1,
+                                                        1,
+                                                        _tile.transform.position.z);
+                break;
+            default:
+                Debug.LogError("Could not accomplish task with rotation " + _troopAttacking.rotation);
+                break;
+        }
+        arrow.transform.localRotation = Quaternion.Euler(arrow.transform.localEulerAngles.x, _troopAttacking.rotation, 0);
+        arrow.SetActive(true);
+
+        TileInfo _tileToGoTo = tiles[_troopToAttack.xIndex, _troopToAttack.zIndex];
+
+        arrowRB.AddForce(_troopAttacking.troopModel.transform.forward * 200 * Time.deltaTime, ForceMode.Impulse);
+
+        while (Mathf.Abs(arrow.transform.position.x - _tileToGoTo.transform.position.x) > .5f)
+        {
+            yield return new WaitForSeconds(.01f);
+        }
+        while (Mathf.Abs(arrow.transform.position.z - _tileToGoTo.transform.position.z) > .5f)
+        {
+            yield return new WaitForSeconds(.01f);
+        }
+        arrow.SetActive(false);
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
     }
 
     public void HurtTroop(TroopInfo _troopInfo)
     {
-        troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
-        troops[_troopInfo.id].healthText.text = _troopInfo.health.ToString();
+        PlayerCS.instance.animationQueue.Enqueue(HurtTroopHelper(troops[_troopInfo.id], _troopInfo));
+    }
+
+    public IEnumerator HurtTroopHelper(TroopInfo _troopInfo, TroopInfo _troopToCopy)
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        _troopInfo.UpdateTroopInfo(_troopToCopy);
+        _troopInfo.healthText.text = _troopInfo.health.ToString();
+        for (int i = 0; i < 18; i++)
+        {
+            yield return new WaitForSeconds(.01f);
+            _troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 20, 0);
+        }
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
+        _troopInfo.troopModel.transform.rotation = Quaternion.Euler(0, _troopInfo.rotation, 0);
     }
 
     public void RemoveTroopInfo(TroopInfo _troopInfo)
     {
+        PlayerCS.instance.animationQueue.Enqueue(RemoveTroopInfoHelper(troops[_troopInfo.id]));
+    }
+
+    public IEnumerator RemoveTroopInfoHelper(TroopInfo _troopInfo)
+    {
+        // Die animation
+        PlayerCS.instance.isAnimInProgress = true;
+        while (_troopInfo.troopModel.transform.localPosition.y > -1.5f)
+        {
+            _troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(5, 0, 5);
+            _troopInfo.troopModel.transform.localPosition = new Vector3(_troopInfo.troopModel.transform.localPosition.x,
+                                                                        _troopInfo.troopModel.transform.localPosition.y - .05f,
+                                                                        _troopInfo.troopModel.transform.localPosition.z);
+            yield return new WaitForSeconds(.001f);
+        }
+        _troopInfo.troop.SetActive(false);
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
+        
+        // Remove Troop
         if (_troopInfo.troopName == "King" && _troopInfo.ownerId == ClientCS.instance.myId)
             KingIsDead();
         _troopInfo.troop.SetActive(false);
         troops.Remove(_troopInfo.id);
         objectsToDestroy.Add(_troopInfo.troop);
+        PlayerCS.instance.runningCoroutine = null;
     }
 
     /// <summary>
@@ -607,8 +738,7 @@ public class GameManagerCS : MonoBehaviour
         // TEMP - until animations playe
         foreach(TroopInfo _troop in troops.Values)
         {
-            if(_troop.ownerId == ClientCS.instance.myId)
-                _troop.healthTextObject.SetActive(false);
+            _troop.healthTextObject.SetActive(false);
         }
         // TEMP
         isKingAlive = false;
@@ -1014,6 +1144,8 @@ public class GameManagerCS : MonoBehaviour
     /// </summary>
     public void PlayPastMoves()
     {
+        dataStoringObject = new GameObject("Data Storing Object");
+        objectsToDestroy.Add(dataStoringObject);
         // Update/Show Other Player troop movements/actions
         foreach (Dictionary<TroopInfo, string> _troopDict in modifiedTroopInfo)
         {
