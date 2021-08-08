@@ -294,10 +294,16 @@ public class TroopActionsCS : MonoBehaviour
     public IEnumerator DescendTroopMoveAnim(TileInfo _oldTile, TileInfo _newTile)
     {
         yield return new WaitForSeconds(.0001f);
-        if (transform.position.y > -.2)
+        if (transform.position.y > -.5)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - .1f, transform.position.z);
-            StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
+            troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x, 
+                                                                        troopInfo.healthTextObject.transform.position.y -.1f,
+                                                                        troopInfo.transform.position.z);
+            // Using overlay texture so turn off health text when troop is under a tile
+            if(troopInfo.healthTextObject.transform.position.y < -1 && troopInfo.healthTextObject.activeSelf)
+                troopInfo.healthTextObject.SetActive(false);
+                StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
         }
         else
         {
@@ -305,6 +311,9 @@ public class TroopActionsCS : MonoBehaviour
             troopInfo.zIndex = (int)_newTile.position.y;
             troopInfo.troop.transform.position = new Vector3(troopInfo.xIndex, troopInfo.troop.transform.position.y,
                                                              troopInfo.zIndex);
+            troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x,
+                                                            -1.5f,
+                                                            troopInfo.transform.position.z);
             StartCoroutine(RiseTroopMoveAnim(_oldTile, _newTile));
         }
     }
@@ -315,11 +324,23 @@ public class TroopActionsCS : MonoBehaviour
         if (transform.position.y < 1)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + .1f, transform.position.z);
+            if(troopInfo.healthTextObject.transform.position.y < 0)
+            {
+                // Using overlay texture so turn on health text when troop is above a tile
+                if (troopInfo.healthTextObject.transform.position.y > -1 && !troopInfo.healthTextObject.activeSelf)
+                    troopInfo.healthTextObject.SetActive(true);
+                troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x,
+                                                                troopInfo.healthTextObject.transform.position.y + .1f,
+                                                                troopInfo.transform.position.z);
+            }
             StartCoroutine(RiseTroopMoveAnim(_oldTile, _newTile));
         }
         else
         {
             transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
+            troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x,
+                                                                        0,
+                                                                        troopInfo.transform.position.z);
             // Add Troopdata to send to server
             Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {troopInfo, "Move"} };
@@ -442,6 +463,7 @@ public class TroopActionsCS : MonoBehaviour
         {
             _troop.isExposed = true;
             _troop.troopModel.SetActive(true);
+            _troop.healthTextObject.SetActive(true);
             if (_troop.blurredTroopModel.activeSelf)
                 _troop.blurredTroopModel.SetActive(false);
         }
@@ -487,11 +509,9 @@ public class TroopActionsCS : MonoBehaviour
             }
             if (troopInfo.canMultyKill)
                 troopInfo.canAttack = true;
+            // Change cities and tiles to neutral if the troop killed was a king
             if(_troop.troopName == "King")
-            {
-                Debug.Log("Troop name was king");
                 GameManagerCS.instance.ResetOwnedCitiesAndTiles(_troop.ownerId);
-            }
         }
         else
         {
@@ -499,12 +519,6 @@ public class TroopActionsCS : MonoBehaviour
             _troop.troopActions.HurtAnim();
         }
 
-        if (_attackedFromTheBack)
-        {
-            _troopData = new Dictionary<TroopInfo, string>()
-            { {troopInfo, "Hurt"} };
-            GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
-        }
         // This troop was killed
         if (troopInfo.health <= 0)
         {
@@ -524,6 +538,9 @@ public class TroopActionsCS : MonoBehaviour
             // Ranged troops are immune to counter attacks so only show counter attack info if the troop is not ranged
             if(troopInfo.attackRange == 1)
             {
+                _troopData = new Dictionary<TroopInfo, string>()
+                { {troopInfo, "Hurt"} };
+                GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
                 _troop.troopActions.AttackAnim(troopInfo);
                 HurtAnim();
             }
@@ -555,6 +572,7 @@ public class TroopActionsCS : MonoBehaviour
                             if (_troop.isExposed)
                             {
                                 _troop.troopModel.SetActive(true);
+                                _troop.healthTextObject.SetActive(true);
                                 if (_troop.blurredTroopModel.activeSelf)
                                     _troop.blurredTroopModel.SetActive(false);
                             }
@@ -692,6 +710,7 @@ public class TroopActionsCS : MonoBehaviour
     public IEnumerator HurtAnimHelper()
     {
         PlayerCS.instance.isAnimInProgress = true;
+        troopInfo.healthText.text = troopInfo.health.ToString();
         for (int i = 0; i < 18; i++)
         {
             yield return new WaitForSeconds(.01f);
@@ -707,6 +726,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void DieAnim()
     {
+        troopInfo.healthTextObject.SetActive(false);
         // Reset altered tiles and hide troop quick menu if this is a local rather than remote troop
         if(troopInfo.ownerId == ClientCS.instance.myId)
         {

@@ -502,6 +502,8 @@ MonoBehaviour:
     type: 3}
   blurredTroopPrefab: {fileID: 5188727864382981493, guid: db1e8e1b082bc884aa3dba92d2a6b77a,
     type: 3}
+  troopHealthTextPrefab: {fileID: 9138482577062792796, guid: 40050abf244b74146a694ab354021874,
+    type: 3}
   starPrefab: {fileID: 4427113777878196774, guid: 1025e2eac4e5ae841b782374f3a07600,
     type: 3}
   desertTilePrefab: {fileID: 1364257602559654584, guid: c7421042ab741bb4ab5da135c9cc8c05,

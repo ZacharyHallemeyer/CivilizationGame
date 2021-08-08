@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TroopInfo : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class TroopInfo : MonoBehaviour
     public GameObject troopModel;
     public GameObject blurredTroopModel;
     public TroopActionsCS troopActions;
+    public GameObject healthTextObject;
+    public TextMeshPro healthText;
     public BoxCollider boxCollider;
     public string troopName;
 

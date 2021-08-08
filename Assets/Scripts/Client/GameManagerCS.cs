@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
 
 public class GameManagerCS : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class GameManagerCS : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject localTroopPrefab, remoteTroopPrefab, blurredTroopPrefab;
+    public GameObject troopHealthTextPrefab;
     public GameObject starPrefab;
     public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
                       tundraTilePrefab, waterTilePrefab;
@@ -88,7 +90,7 @@ public class GameManagerCS : MonoBehaviour
         troopNames = new string[Constants.troopInfoInt.Count];
         foreach (string _troopName in Constants.troopInfoInt.Keys)
         {
-            troopNames[_index] = _troopName; 
+            troopNames[_index] = _troopName;
             _index++;
         }
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
@@ -181,12 +183,12 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_zIndex"> Tile zIndex </param>
     /// <param name="_name"> Tile name </param>
     public void CreateNewTile(int _id, int _ownerId, int _movementCost, int _occupyingObjectId, string _biome,
-                              float _temp, float _height, bool _isWater, bool _isFood, bool _isWood, bool _isMetal, 
-                              bool _isRoad, bool _isCity, bool _isOccupied, bool _isObstacle, Vector2 _position, int _xIndex, 
+                              float _temp, float _height, bool _isWater, bool _isFood, bool _isWood, bool _isMetal,
+                              bool _isRoad, bool _isCity, bool _isOccupied, bool _isObstacle, Vector2 _position, int _xIndex,
                               int _zIndex, int _cityId, string _name)
     {
         GameObject _tile = null;
-        if(_isWater)
+        if (_isWater)
         {
             _tile = Instantiate(waterTilePrefab, new Vector3(_position.x, 0, _position.y), Quaternion.identity);
         }
@@ -262,7 +264,7 @@ public class GameManagerCS : MonoBehaviour
         // Spawn appropriate resource object
         if (_tileInfo.isFood)
         {
-            _tileInfo.resourceObject = Instantiate(foodResourcePrefab, new Vector3(_position.x, foodResourcePrefab.transform.position.y, 
+            _tileInfo.resourceObject = Instantiate(foodResourcePrefab, new Vector3(_position.x, foodResourcePrefab.transform.position.y,
                                                                                     _position.y), foodResourcePrefab.transform.localRotation);
             _tileInfo.resourceObject.transform.parent = _tile.transform;
         }
@@ -280,7 +282,7 @@ public class GameManagerCS : MonoBehaviour
             _tileInfo.resourceObject.transform.parent = _tile.transform;
 
         }
-        if(_tileInfo.isObstacle)
+        if (_tileInfo.isObstacle)
         {
             _tileInfo.resourceObject = Instantiate(obstaclePrefab, new Vector3(_position.x, obstaclePrefab.transform.position.y,
                                                                                 _position.y), obstaclePrefab.transform.localRotation);
@@ -374,6 +376,12 @@ public class GameManagerCS : MonoBehaviour
                 break;
         }
         _troopInfo.InitTroopInfo(_troopName, _troop, _troopActions, currentTroopIndex, _ownerId, _xIndex, _zIndex);
+        _troopInfo.healthTextObject = Instantiate(troopHealthTextPrefab, new Vector3(_troop.transform.position.x,
+                                                                                    troopHealthTextPrefab.transform.position.y,
+                                                                                    _troop.transform.position.z), 
+                                                                         troopHealthTextPrefab.transform.rotation);
+        _troopInfo.healthText = _troopInfo.healthTextObject.transform.GetChild(0).GetComponent<TextMeshPro>();
+        _troopInfo.healthText.text = _troopInfo.health.ToString();
         _troopInfo.troopActions.CheckTroopSeeingRange();
 
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
@@ -443,6 +451,13 @@ public class GameManagerCS : MonoBehaviour
                 break;
         }
         _troopInfo.CopyTroopInfo(_troopInfoToCopy, _troop, _troopActions);
+        _troopInfo.healthTextObject = Instantiate(troopHealthTextPrefab, new Vector3(
+                                                                            _troop.transform.position.x,
+                                                                            troopHealthTextPrefab.transform.position.y,
+                                                                            _troop.transform.position.z),
+                                                                 troopHealthTextPrefab.transform.rotation);
+        _troopInfo.healthText = _troopInfo.healthTextObject.transform.GetChild(0).GetComponent<TextMeshPro>();
+        _troopInfo.healthText.text = _troopInfo.health.ToString();
         _troopInfo.blurredTroopModel = Instantiate(blurredTroopPrefab, _troop.transform.position, blurredTroopPrefab.transform.localRotation);
         _troopInfo.blurredTroopModel.transform.parent = _troop.transform;
         _troopInfo.blurredTroopModel.SetActive(false);
@@ -478,6 +493,45 @@ public class GameManagerCS : MonoBehaviour
         troops[_troopInfo.id].troop.transform.position = new Vector3(_xCoord,
                                                             troops[_troopInfo.id].troop.transform.position.y,
                                                             _zCoord);
+        troops[_troopInfo.id].healthTextObject.transform.position = new Vector3(_xCoord, 0, _zCoord);
+    }
+    public IEnumerator TroopMoveAnimation(TroopInfo _troop, int _newXCorod, int _newZCoord)
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        StartCoroutine(DescendTroopMoveAnin(_troop, _newXCorod, _newZCoord));
+        yield return new WaitForEndOfFrame();
+    }
+
+    public IEnumerator DescendTroopMoveAnin(TroopInfo _troop, int _newXCorod, int _newZCoord)
+    {
+        if (_troop.transform.position.y > -.2f)
+        {
+            _troop.transform.position = new Vector3(_troop.transform.position.x, _troop.transform.position.y - .1f, _troop.transform.position.z);
+            StartCoroutine(DescendTroopMoveAnin(_troop, _newXCorod, _newZCoord));
+        }
+        else
+        {
+            _troop.troop.transform.position = new Vector3(_newXCorod, _troop.transform.position.y, _newZCoord);
+            StartCoroutine(AscendTroopMoveAnim(_troop));
+        }
+        yield return new WaitForSeconds(.0001f);
+    }
+
+    public IEnumerator AscendTroopMoveAnim(TroopInfo _troop)
+    {
+        if (_troop.transform.position.y < 1)
+        {
+            _troop.transform.position = new Vector3(_troop.transform.position.x, _troop.transform.position.y + .1f, _troop.transform.position.z);
+            StartCoroutine(AscendTroopMoveAnim(_troop));
+        }
+        else
+        {
+            transform.position = new Vector3(_troop.transform.position.x, 1f, _troop.transform.position.z);
+            PlayerCS.instance.isAnimInProgress = false;
+            PlayerCS.instance.runningCoroutine = null;
+        }
+
+        yield return new WaitForSeconds(.0001f);
     }
 
     /// <summary>
@@ -503,13 +557,16 @@ public class GameManagerCS : MonoBehaviour
         troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
     }
 
+    public void HurtTroop(TroopInfo _troopInfo)
+    {
+        troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
+        troops[_troopInfo.id].healthText.text = _troopInfo.health.ToString();
+    }
+
     public void RemoveTroopInfo(TroopInfo _troopInfo)
     {
-        Debug.Log("Removing troop named: " + _troopInfo.troopName);
-        if(_troopInfo.troopName == "King" && _troopInfo.ownerId == ClientCS.instance.myId)
-        {
+        if (_troopInfo.troopName == "King" && _troopInfo.ownerId == ClientCS.instance.myId)
             KingIsDead();
-        }
         _troopInfo.troop.SetActive(false);
         troops.Remove(_troopInfo.id);
         objectsToDestroy.Add(_troopInfo.troop);
@@ -542,10 +599,22 @@ public class GameManagerCS : MonoBehaviour
 
     public void KingIsDead()
     {
-        Debug.Log("King is dead function called");
+        PlayerCS.instance.animationQueue.Enqueue(KingIsDeadHelper());
+    }
+
+    public IEnumerator KingIsDeadHelper()
+    {
+        // TEMP - until animations play turning start of turn
+        foreach(TroopInfo _troop in troops.Values)
+        {
+            if(_troop.ownerId == ClientCS.instance.myId)
+                _troop.healthTextObject.SetActive(false);
+        }
+        // TEMP
         isKingAlive = false;
         kingDeathScreen.SetActive(true);
         PlayerCS.instance.isAbleToCommitActions = false;
+        yield return new WaitForEndOfFrame();
     }
 
     public void ResetOwnedCitiesAndTiles(int _ownerId)
@@ -965,7 +1034,7 @@ public class GameManagerCS : MonoBehaviour
                         UpdateTroopInfo(_troop);
                         break;
                     case "Hurt":
-                        UpdateTroopInfo(_troop);
+                        HurtTroop(_troop);
                         break;
                     case "Die":
                         RemoveTroopInfo(troops[_troop.id]);
@@ -1059,11 +1128,12 @@ public class GameManagerCS : MonoBehaviour
             if (_troop.ownerId != ClientCS.instance.myId)
             {
                 _troop.troopModel.SetActive(false);
+                _troop.healthTextObject.SetActive(false);
                 _troop.blurredTroopModel.SetActive(false);
             }
         }
 
-        // Check if any troops are in seeing range and show them if they are
+        /f/ Check if any troops are in seeing range and show them if they are
         foreach (TroopInfo _troop in troops.Values)
         {
             if (_troop.ownerId == ClientCS.instance.myId)

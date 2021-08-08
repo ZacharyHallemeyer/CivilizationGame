@@ -63,7 +63,6 @@ public class GameManagerSS : MonoBehaviour
     /// <param name="_packet"> Packet </param>
     public void RemovePlayerFromPlayerTurnList(int _clientToRemove)
     {
-        Debug.Log("Removing player w/ id: " + _clientToRemove);
         currentPlayerTurnId--;
         playerIds.Remove(_clientToRemove);
     }
