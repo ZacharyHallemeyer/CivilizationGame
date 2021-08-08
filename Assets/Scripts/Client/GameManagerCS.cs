@@ -604,7 +604,7 @@ public class GameManagerCS : MonoBehaviour
 
     public IEnumerator KingIsDeadHelper()
     {
-        // TEMP - until animations play turning start of turn
+        // TEMP - until animations playe
         foreach(TroopInfo _troop in troops.Values)
         {
             if(_troop.ownerId == ClientCS.instance.myId)
@@ -1133,7 +1133,7 @@ public class GameManagerCS : MonoBehaviour
             }
         }
 
-        /f/ Check if any troops are in seeing range and show them if they are
+        // Check if any troops are in seeing range and show them if they are
         foreach (TroopInfo _troop in troops.Values)
         {
             if (_troop.ownerId == ClientCS.instance.myId)
