@@ -305,7 +305,7 @@ public class CityActionsCS : MonoBehaviour
     /// </summary>
     public void SpawnTroop()
     {
-        GameManagerCS.instance.SpawnTroop(ClientCS.instance.myId, currentTroopTraining, cityInfo.xIndex, cityInfo.zIndex, 0);
+        GameManagerCS.instance.SpawnLocalTroop(ClientCS.instance.myId, currentTroopTraining, cityInfo.xIndex, cityInfo.zIndex, 0);
     }
 
     #endregion

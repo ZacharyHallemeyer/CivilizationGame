@@ -196,10 +196,12 @@ public class TroopInfo : MonoBehaviour
         movementCost = _troopInfo.movementCost;
         attackRange = _troopInfo.attackRange;
         seeRange = _troopInfo.seeRange;
-        lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
         lastHurtById = _troopInfo.lastHurtById;
         canMoveNextTurn = _troopInfo.canMoveNextTurn;
         canMultyKill = _troopInfo.canMultyKill;
+
+        lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
+        attackRotation = _troopInfo.attackRotation;
     }
 
     public TroopInfo(TroopInfo _troopToCopy)

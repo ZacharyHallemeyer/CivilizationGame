@@ -471,13 +471,7 @@ public class TroopActionsCS : MonoBehaviour
         else
         {
             _troop.health -= troopInfo.baseAttack - _troop.facingDefense;
-            // If troop is ranged then they are immune to counter attack
-            if(troopInfo.attackRange == 1)
-            {
-                troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
-            }
         }
-
         // this troop killed the other troop
         if (_troop.health <= 0)
         {
@@ -501,6 +495,13 @@ public class TroopActionsCS : MonoBehaviour
         }
         else
         {
+            // Check if can counter attack (only can counter attack if troop remains alive)
+            if(!_attackedFromTheBack)
+            {
+                // If troop is ranged then they are immune to counter attack
+                if (troopInfo.attackRange == 1)
+                    troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
+            }
             // Play hurt animation
             _troop.troopActions.HurtAnim();
         }
@@ -516,7 +517,7 @@ public class TroopActionsCS : MonoBehaviour
             GameManagerCS.instance.troops.Remove(troopInfo.id);
             GameManagerCS.instance.objectsToDestroy.Add(troopInfo.troop);
         }
-        else if(!_attackedFromTheBack)
+        else if(!_attackedFromTheBack && _troop.health > 0)
         {
             // Ranged troops are immune to counter attacks so only show counter attack info if the troop is not ranged
             if(troopInfo.attackRange == 1)
@@ -569,6 +570,10 @@ public class TroopActionsCS : MonoBehaviour
 
     #region Troop Animations
 
+    /// <summary>
+    /// Sets up attack animations and adds attack information to modified troop dict to send to server
+    /// </summary>
+    /// <param name="_troopToAttack"></param>
     public void AttackAnim(TroopInfo _troopToAttack)
     {
         PlayerCS.instance.isAnimInProgress = true;
@@ -599,6 +604,11 @@ public class TroopActionsCS : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Sets up sword animation 
+    /// </summary>
+    /// <param name="_localXRotation"> attack rotation </param>
+    /// <returns></returns>
     public IEnumerator SwordAnim(int _localXRotation)
     {
         GameManagerCS.instance.sword.transform.position = new Vector3(troopInfo.transform.position.x,
@@ -610,21 +620,25 @@ public class TroopActionsCS : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
+    /// <summary>
+    /// Plays sword animation (swings sword up and down)
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator SwordAnimHelper()
     {
-        yield return new WaitForSeconds(.01f);
-        if (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f || GameManagerCS.instance.sword.transform.localEulerAngles.x > 10.1f)
+        int errorCatcher = 0;
+        while (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f || GameManagerCS.instance.sword.transform.localEulerAngles.x > 10.1f)
         {
+            if (errorCatcher > 10000)
+                break;
             GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(10, 0, 0);
-            StartCoroutine(SwordAnimHelper());
+            errorCatcher++;
+            yield return new WaitForSeconds(.01f);
         }
-        else
-        {
-            GameManagerCS.instance.sword.SetActive(false);
-            GameManagerCS.instance.sword.transform.localRotation = Quaternion.Euler(-90, 0, 0);
-            PlayerCS.instance.isAnimInProgress = false;
-            PlayerCS.instance.runningCoroutine = null;
-        }
+        GameManagerCS.instance.sword.SetActive(false);
+        GameManagerCS.instance.sword.transform.localRotation = Quaternion.Euler(-90, 0, 0);
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
     }
 
     /// <summary>
@@ -682,12 +696,15 @@ public class TroopActionsCS : MonoBehaviour
 
         GameManagerCS.instance.arrowRB.AddForce(troopInfo.troopModel.transform.forward * 200 * Time.deltaTime, ForceMode.Impulse);
 
+        int errorCatcher = 0;
         while(Mathf.Abs(GameManagerCS.instance.arrow.transform.position.x - _tileToGoTo.transform.position.x) > .5f )
         {
             yield return new WaitForSeconds(.01f);
         }
         while (Mathf.Abs(GameManagerCS.instance.arrow.transform.position.z - _tileToGoTo.transform.position.z) > .5f)
         {
+            if (errorCatcher > 10000) break;
+            errorCatcher++; 
             yield return new WaitForSeconds(.01f);
         }
         GameManagerCS.instance.arrow.SetActive(false);
@@ -735,6 +752,7 @@ public class TroopActionsCS : MonoBehaviour
         _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {_copiedTroop, "Die"} };
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
         troopInfo.healthTextObject.SetActive(false);
         // Reset altered tiles and hide troop quick menu if this is a local rather than remote troop
         if(troopInfo.ownerId == ClientCS.instance.myId)
