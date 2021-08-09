@@ -167,7 +167,6 @@ public class ClientHandle : MonoBehaviour
         _troop.counterAttack = _packet.ReadInt();
         _troop.baseDefense = _packet.ReadInt();
         _troop.facingDefense = _packet.ReadInt();
-        _troop.movementCost = _packet.ReadInt();
         _troop.attackRange = _packet.ReadInt();
         _troop.seeRange = _packet.ReadInt();
         _troop.canMultyKill= _packet.ReadBool();

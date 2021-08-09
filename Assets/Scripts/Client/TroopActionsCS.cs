@@ -274,8 +274,8 @@ public class TroopActionsCS : MonoBehaviour
 
         // Move troop while doing the move animation
         //StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
-        PlayerCS.instance.animationQueue.Enqueue(DescendTroopMoveAnim(_oldTile, _newTile));
         PlayerCS.instance.isAnimInProgress = true;
+        PlayerCS.instance.animationQueue.Enqueue(DescendTroopMoveAnim(_oldTile, _newTile));
 
         // Update new tile
         troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.zIndex - _oldTile.zIndex);

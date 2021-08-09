@@ -69,7 +69,6 @@ public class ClientSend : MonoBehaviour
                     _packet.Write(_troop.counterAttack);
                     _packet.Write(_troop.baseDefense);
                     _packet.Write(_troop.facingDefense);
-                    _packet.Write(_troop.movementCost);
                     _packet.Write(_troop.attackRange);
                     _packet.Write(_troop.seeRange);
                     _packet.Write(_troop.canMultyKill);

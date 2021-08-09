@@ -671,16 +671,16 @@ public class GameManagerCS : MonoBehaviour
     {
         TroopInfo _troopInfo = troops[_troopToCopy.id];
         PlayerCS.instance.isAnimInProgress = true;
-        _troopInfo.UpdateTroopInfo(_troopToCopy);
+        _troopInfo.health = _troopToCopy.health;
         _troopInfo.healthText.text = _troopInfo.health.ToString();
         for (int i = 0; i < 18; i++)
         {
             yield return new WaitForSeconds(.01f);
-            _troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 20, 0);
+            _troopInfo.troop.transform.localRotation *= Quaternion.Euler(0, 20, 0);
         }
+        _troopInfo.troop.transform.rotation = Quaternion.Euler(0, _troopInfo.rotation, 0);
         PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;
-        _troopInfo.troopModel.transform.rotation = Quaternion.Euler(0, _troopInfo.rotation, 0);
     }
 
     /// <summary>
@@ -691,18 +691,20 @@ public class GameManagerCS : MonoBehaviour
     public IEnumerator RemoveTroopInfo(TroopInfo _troopInfo)
     {
         TroopInfo _troop = troops[_troopInfo.id];
-        _troop.UpdateTroopInfo(_troopInfo);
+        _troop.lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
+        _troop.attackRotation = _troopInfo.attackRotation;
         // Die animation
         PlayerCS.instance.isAnimInProgress = true;
-        while (_troopInfo.troopModel.transform.localPosition.y > -1.5f)
+        while (_troop.troop.transform.localPosition.y > -1.5f)
         {
-            _troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(5, 0, 5);
-            _troopInfo.troopModel.transform.localPosition = new Vector3(_troop.troopModel.transform.localPosition.x,
-                                                                        _troop.troopModel.transform.localPosition.y - .05f,
-                                                                        _troop.troopModel.transform.localPosition.z);
+            _troop.troop.transform.localRotation *= Quaternion.Euler(5, 0, 5);
+            _troop.troop.transform.localPosition = new Vector3(_troop.troop.transform.localPosition.x,
+                                                                        _troop.troop.transform.localPosition.y - .05f,
+                                                                        _troop.troop.transform.localPosition.z);
             yield return new WaitForSeconds(.001f);
         }
         _troop.troop.SetActive(false);
+        _troop.healthTextObject.SetActive(false);
         PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;
         
@@ -718,7 +720,7 @@ public class GameManagerCS : MonoBehaviour
     /// <summary>
     /// Reset player's troop to default start turn values for start of next turn
     /// </summary>
-    public void ResetTroops()
+    public IEnumerator ResetTroops()
     {
         foreach (TroopInfo _troop in troops.Values)
         {
@@ -729,6 +731,8 @@ public class GameManagerCS : MonoBehaviour
                 _troop.boxCollider.enabled = true;
             }
         }
+        PlayerCS.instance.runningCoroutine = null;
+        yield return new WaitForEndOfFrame();
     }
 
     /// <summary>
@@ -1003,7 +1007,7 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.ResetMoraleAndEducation();
     }
 
-    public void ResetCities()
+    public IEnumerator ResetCities()
     {
         /*
         foreach (CityInfo _city in cities.Values)
@@ -1014,6 +1018,8 @@ public class GameManagerCS : MonoBehaviour
             }
         }
         */
+        PlayerCS.instance.runningCoroutine = null;
+        yield return new WaitForEndOfFrame();
     }
 
     #endregion
@@ -1255,6 +1261,8 @@ public class GameManagerCS : MonoBehaviour
             }
         }
         ClearModifiedData();
+        PlayerCS.instance.animationQueue.Enqueue(ResetTroops());
+        PlayerCS.instance.animationQueue.Enqueue(ResetCities());
 
         // Start of turn city stuff
         foreach(CityInfo _city in cities.Values)
@@ -1268,7 +1276,9 @@ public class GameManagerCS : MonoBehaviour
                 if(_city.isTrainingTroops)
                 {
                     _city.isTrainingTroops = false;
-                    _city.cityActions.SpawnTroop();
+                    // Can not spawn troop on city that is being occupied
+                    if(!tiles[_city.xIndex, _city.zIndex].isOccupied)
+                        _city.cityActions.SpawnTroop();
                 }
             }
         }

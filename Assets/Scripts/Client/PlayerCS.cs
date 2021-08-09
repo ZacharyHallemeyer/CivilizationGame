@@ -118,15 +118,7 @@ public class PlayerCS : MonoBehaviour
             }
         }
 
-        if (isAnimInProgress && !isAbleToCommitActions) return;
-        // TESTING
-        if (inputMaster.Player.Testing.triggered)
-        {
-            if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
-                _troop.troopActions.DieAnim();
-        }
-
-        // TESTING END
+        if (isAnimInProgress || !isAbleToCommitActions) return;
         if (inputMaster.Player.Select.triggered)
         {
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());
@@ -309,8 +301,6 @@ public class PlayerCS : MonoBehaviour
         currentSelectedCityId = -1;
         currentSelectedTroopId = -1;
         ClientSend.SendEndOfTurnData(GameManagerCS.instance.isKingAlive);
-        GameManagerCS.instance.ResetTroops();
-        GameManagerCS.instance.ResetCities();
         GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
         GameManagerCS.instance.ClearModifiedData();
         GameManagerCS.instance.isTurn = false;
