@@ -560,4 +560,53 @@ public static class Constants
             } 
         },
     };
+
+    public static Dictionary<string, int> allSkills = new Dictionary<string, int>()
+    {
+        { "Army", 100 },    
+        { "Snipper", 200 },    
+        { "Missle", 300 },    
+        { "Defense", 200 },    
+        { "Stealth", 200 },    
+        { "Sailing", 300 },    
+        { "Warship", 500 },    
+        { "Walls", 100 },    
+        { "Dome", 200 },    
+        { "Library", 200 },    
+        { "School", 300 },    
+        { "Housing", 200 },    
+        { "Roads", 100 },    
+        { "Market", 300 },    
+    };
+
+    public static Dictionary<string, string[]> neededSkillsForCertainSkills = new Dictionary<string, string[]>()
+    {
+        { "Army", new string[0] },
+        { "Snipper", new [] { "Army", "Defense" } },
+        { "Missle", new [] { "Army", "Snipper" } },
+        { "Defense", new [] { "Army" } },
+        { "Stealth", new [] { "Army" } },
+        { "Sailing", new string[0] },
+        { "Warship", new [] { "Sailing" } },
+        { "Walls", new string[0] },
+        { "Dome", new [] { "Walls" } },
+        { "Library", new string[0] },
+        { "School", new [] { "Library" } },
+        { "Housing", new string[0] },
+        { "Roads", new string[0] },
+        { "Market", new [] { "Roads" } },
+    };
+
+    public static List<string> avaliableTroops = new List<string>()
+    { 
+        "Scout",
+        "Militia",
+    };
+
+    public static List<string> avaliableBuildings = new List<string>()
+    { 
+        "Farm",
+        "LumberYard",
+        "Mine",
+    };
 }

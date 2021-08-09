@@ -140,7 +140,7 @@ public class GameManagerCS : MonoBehaviour
                 _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
                 break;
             case 1:
-                _position = new Vector3(Random.Range(-_lengthX, _lengthX), -60, Random.Range(-_lengthZ, _lengthZ));
+                _position = new Vector3(Random.Range(-_lengthX, _lengthX), 60, Random.Range(-_lengthZ, _lengthZ));
                 break;
             case 2:
                 _position = new Vector3(-_lengthX - _lengthX, Random.Range(-_lengthX, _lengthX), Random.Range(-_lengthZ, _lengthZ));

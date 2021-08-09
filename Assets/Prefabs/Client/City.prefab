@@ -1119,7 +1119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4057165769965537653
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1261,7 +1261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3985049235259378741
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1645,7 +1645,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3594689563434355464
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1944,7 +1944,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8617384339473433051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2243,7 +2243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &306605827471572822
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3170,7 +3170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6494903942778888678
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3312,7 +3312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &185121842032561278
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3454,7 +3454,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6015205395361765839
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4265,7 +4265,7 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 5662312970431921208}
-        m_MethodName: DisplayPossibleTroops
+        m_MethodName: InitTroopMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4277,17 +4277,6 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 5662312970431921208}
         m_MethodName: SetCurrentCityId
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 5662312970431921208}
-        m_MethodName: SetTroopResourceText
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5950,7 +5939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7841398406947120371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6092,7 +6081,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5889526870443799622
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6234,7 +6223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5370506452141729544
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6376,7 +6365,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7864924640951860769
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6518,7 +6507,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6221649451254113093
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7403,7 +7392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4774358120846002456
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8474,7 +8463,7 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 5662312970431921208}
-        m_MethodName: DisplayPossibleBuildings
+        m_MethodName: InitBuildingMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8486,17 +8475,6 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 5662312970431921208}
         m_MethodName: SetCurrentCityId
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 5662312970431921208}
-        m_MethodName: SetBuildingResourceText
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8692,7 +8670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6695501310512971480
 RectTransform:
   m_ObjectHideFlags: 0

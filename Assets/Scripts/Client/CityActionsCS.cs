@@ -23,6 +23,12 @@ public class CityActionsCS : MonoBehaviour
     public int whatIsInteractableValue, whatIsDefaultValue;
     private string defaultTileTag = "Tile", cityTag = "City", buildingTag = "Building", constructBuildingTag = "ConstructBuilding";
 
+    public Dictionary<string, Button> troopButtons = new Dictionary<string, Button>();
+    public Dictionary<string, TextMeshProUGUI> troopResourceText = new Dictionary<string, TextMeshProUGUI>();
+
+    public Dictionary<string, Button> buildingButtons = new Dictionary<string, Button>();
+    public Dictionary<string, TextMeshProUGUI> buildingResourceText = new Dictionary<string, TextMeshProUGUI>();
+
     #region Set Up
 
     public void InitCityActions(CityInfo _cityInfo)
@@ -30,6 +36,49 @@ public class CityActionsCS : MonoBehaviour
         cityInfo = _cityInfo;
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
+        troopButtons = new Dictionary<string, Button>()
+        {
+            { "Scout", scoutButton },
+            { "Militia", militiaButton },
+            { "Army", armyButton },
+            { "Missle", missleButton },
+            { "Defense", defenseButton },
+            { "Stealth", stealthButton },
+            { "Snipper", snipperButton },
+        };
+        troopResourceText = new Dictionary<string, TextMeshProUGUI>()
+        {
+            { "Scout", scoutText },
+            { "Militia", militiaText },
+            { "Army", armyText },
+            { "Missle", missleText },
+            { "Defense", defenseText },
+            { "Stealth", stealthText },
+            { "Snipper", snipperText },
+        };
+
+        buildingButtons = new Dictionary<string, Button>()
+        {
+            { "Farm", farmButton },
+            { "LumberYard", lumberYardButton},
+            { "Mine", mineButton },
+            { "Housing", housingButton },
+            { "School", schoolButton },
+            { "Library", libraryButton },
+            { "Market", marketButton },
+            { "Dome", domeButton },
+        };
+        buildingResourceText = new Dictionary<string, TextMeshProUGUI>()
+        {
+            { "Farm", farmText },
+            { "LumberYard", lumberYardText },
+            { "Mine", mineText },
+            { "Housing", housingText },
+            { "School", schoolText },
+            { "Library", libraryText },
+            { "Market", marketText },
+            { "Dome", domeText },
+        };
     }
 
     #endregion
@@ -98,6 +147,61 @@ public class CityActionsCS : MonoBehaviour
                " P: " + _priceDict["Population"];
     }
 
+    public void InitTroopMenu()
+    {
+        int _currentXCoord = -750, _currentYCoord = -425, _xIncrementor = 300, _yIncrementor = 125;
+        int _maxXCoord = 750;
+        Button _button;
+        TextMeshProUGUI _text;
+
+        foreach(string _troop in Constants.avaliableTroops)
+        {
+            _button = troopButtons[_troop];
+            _button.gameObject.SetActive(true);
+            _text = troopResourceText[_troop];
+            _button.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+            _text.text = ResourceText(Constants.prices[_troop]);
+            if(_currentXCoord >= _maxXCoord)
+            {
+                _currentXCoord = -_maxXCoord;
+                _currentYCoord += _yIncrementor;
+            }
+            else
+            {
+                _currentXCoord += _xIncrementor;
+            }
+        }
+
+        DisplayPossibleTroops();
+    }
+
+    public void InitBuildingMenu()
+    {
+        int _currentXCoord = -700, _currentYCoord = -425, _xIncrementor = 400, _yIncrementor = 125;
+        int _maxXCoord = 500;
+        Button _button;
+        TextMeshProUGUI _text;
+
+        foreach (string _building in Constants.avaliableBuildings)
+        {
+            _button = buildingButtons[_building];
+            _button.gameObject.SetActive(true);
+            _text = buildingResourceText[_building];
+            _button.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+            _text.text = ResourceText(Constants.prices[_building]);
+            if (_currentXCoord >= _maxXCoord)
+            {
+                _currentXCoord = -_maxXCoord;
+                _currentYCoord += _yIncrementor;
+            }
+            else
+            {
+                _currentXCoord += _xIncrementor;
+            }
+        }
+        DisplayPossibleBuildings();
+    }
+
     /// <summary>
     /// Enable construct buildings if player has enough resources to construct it and disable if player does not have resources
     /// Disable all buttons if city is being conquered
@@ -156,6 +260,7 @@ public class CityActionsCS : MonoBehaviour
     /// </summary>
     public void DisplayPossibleTroops()
     {
+        /*
         if(GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied)
         {
             scoutButton.enabled = false;
@@ -195,6 +300,7 @@ public class CityActionsCS : MonoBehaviour
             snipperButton.enabled = true;
         else
             snipperButton.enabled = false;
+        */
     }
 
     /// <summary>

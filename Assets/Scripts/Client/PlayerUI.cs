@@ -6,8 +6,61 @@ using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
-    public GameObject playerUIContainer;
+    public GameObject playerUIContainer, mainContainer, skillTreeContainer, quickMenuContainer, menuButton;
+
+    // Resource
     public TextMeshProUGUI foodText, woodText, metalText, moneyText, moraleText, educationText, populationText;
+
+    // SKill Tree
+    public Button roadSkillButton, wallSkillButton, armySkillButton, snipperSkillButton, missleSkillButton, defenseSkillButton,
+                  stealthSkillButton, marketSkillButton, housingSkillButton, librarySkillButton, schoolSkillButton, domeSkillButton,
+                  sailingSkillButton, warshipSkillButton;
+
+    public TextMeshProUGUI roadSkillText, wallSkillText, armySkillText, snipperSkillText, missleSkillText, defenseSkillText,
+                  stealthSkillText, marketSkillText, housingSkillText, librarySkillText, schoolSkillText, domeSkillText,
+                  sailingSkillText, warshipSkillText;
+
+    public Dictionary<string, Button> skillButtons = new Dictionary<string, Button>();
+    public Dictionary<string, TextMeshProUGUI> skillText = new Dictionary<string, TextMeshProUGUI>();
+
+    public void Start()
+    {
+        skillButtons = new Dictionary<string, Button>()
+        {
+            { "Army", armySkillButton },
+            { "Snipper", snipperSkillButton },
+            { "Missle", missleSkillButton },
+            { "Defense", defenseSkillButton },
+            { "Stealth", stealthSkillButton },
+            { "Sailing", sailingSkillButton },
+            { "Warship", warshipSkillButton },
+            { "Walls", wallSkillButton },
+            { "Dome", domeSkillButton },
+            { "Library", librarySkillButton },
+            { "School", schoolSkillButton },
+            { "Housing", housingSkillButton },
+            { "Roads", roadSkillButton },
+            { "Market", marketSkillButton },
+        };
+
+        skillText = new Dictionary<string, TextMeshProUGUI>()
+        {
+            { "Army", armySkillText },
+            { "Snipper", snipperSkillText },
+            { "Missle", missleSkillText },
+            { "Defense", defenseSkillText },
+            { "Stealth", stealthSkillText },
+            { "Sailing", sailingSkillText },
+            { "Warship", warshipSkillText },
+            { "Walls", wallSkillText },
+            { "Dome", domeSkillText },
+            { "Library", librarySkillText },
+            { "School", schoolSkillText },
+            { "Housing", housingSkillText },
+            { "Roads", roadSkillText },
+            { "Market", marketSkillText },
+        };
+    }
 
     /// <summary>
     /// Set player resource UI
@@ -69,5 +122,77 @@ public class PlayerUI : MonoBehaviour
     public void SetPopulationText(float _populationAmount)
     {
         populationText.text = "Population: " + _populationAmount;
+    }
+
+    public void OpenMenu()
+    {
+        quickMenuContainer.SetActive(true);
+        menuButton.SetActive(false);
+    }
+
+    public void CloseMenu()
+    {
+        quickMenuContainer.SetActive(false);
+        menuButton.SetActive(true);
+    }
+
+    public void PurchaseSkill(string _skill)
+    {
+        PlayerCS.instance.money -= Constants.allSkills[_skill];
+        PlayerCS.instance.skills.Add(_skill);
+
+        if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" || _skill == "Stealh")
+            Constants.avaliableTroops.Add(_skill);
+        else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market")
+            Constants.avaliableBuildings.Add(_skill);
+
+        InitSkillTree();
+    }
+
+    public void InitSkillTree()
+    {
+        bool _hasPreviousSkills;
+        string[] _neededSkills;
+        foreach(string _key in skillButtons.Keys)
+        {
+            _hasPreviousSkills = true;
+            if(PlayerCS.instance.skills.Contains(_key))
+            {
+                skillButtons[_key].enabled = false;
+                skillText[_key].color = new Color(1f, 1f, 1f);
+            }
+            else
+            {
+                _neededSkills = Constants.neededSkillsForCertainSkills[_key];
+                foreach(string _neededSkill in _neededSkills)
+                {
+                    if (!PlayerCS.instance.skills.Contains(_neededSkill))
+                        _hasPreviousSkills = false;
+                }
+                if (PlayerCS.instance.money >= Constants.allSkills[_key] && _hasPreviousSkills)
+                {
+                    skillButtons[_key].enabled = true;
+                    skillText[_key].color = new Color(0f, 1f, 0f);
+                }
+                else
+                {
+                    skillButtons[_key].enabled = false;
+                    skillText[_key].color = new Color(1f, 0.4858491f, 0.4858491f);
+                }
+            }
+        }
+    }
+
+    public void DisplaySkillTree()
+    {
+        InitSkillTree();
+        skillTreeContainer.SetActive(true);
+        CloseMenu();
+    }
+
+    public void HideSkillTree()
+    {
+        skillTreeContainer.SetActive(false);
+        OpenMenu();
     }
 }

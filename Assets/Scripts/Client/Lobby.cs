@@ -96,19 +96,6 @@ public class Lobby : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
-        /*
-        if(InfectionEnvironmentGenerator.instance != null)
-        {
-            InfectionEnvironmentGenerator.buildings = new Dictionary<int, GameObject>();
-            InfectionEnvironmentGenerator.lights = new Dictionary<int, GameObject>();
-            InfectionEnvironmentGenerator.suns = new Dictionary<int, GameObject>();
-        }
-        if(FreeForAllEnvironmentGenerator.instance != null)
-        {
-            FreeForAllEnvironmentGenerator.planets = new Dictionary<int, GameObject>();
-            FreeForAllEnvironmentGenerator.nonGravityObjectDict = new Dictionary<int, GameObject>();
-        }
-        */
         ClientCS.allClients = new Dictionary<int, string>();
         ClientSS.allClients = new Dictionary<int, ClientSS>();
         // If player is host than close server and network manager
@@ -123,12 +110,6 @@ public class Lobby : MonoBehaviour
 
         Destroy(FindObjectOfType<ClientCS>().gameObject);
         Destroy(FindObjectOfType<EventSystem>().gameObject);
-        /*
-        for(int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().name);
-        }
-        */
         SceneManager.LoadScene("ClientMainMenu");
     }
 

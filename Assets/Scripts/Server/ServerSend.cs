@@ -265,8 +265,6 @@ public class ServerSend
                         _packet.Write(_troop.movementCost);
                         _packet.Write(_troop.attackRange);
                         _packet.Write(_troop.seeRange);
-                        _packet.Write(_troop.lastHurtById);
-                        _packet.Write(_troop.canMoveNextTurn);
                         _packet.Write(_troop.canMultyKill);
                         _packet.Write(_troop.lastTroopAttackedId);
                         _packet.Write(_troop.attackRotation);

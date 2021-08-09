@@ -42,6 +42,8 @@ public class PlayerCS : MonoBehaviour
     public Queue<IEnumerator> animationQueue = new Queue<IEnumerator>();
     public IEnumerator runningCoroutine = null;
 
+    public List<string> skills = new List<string>();
+
     // Set instance and needed variables
     private void Awake()
     {

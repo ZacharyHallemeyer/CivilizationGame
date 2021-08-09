@@ -452,7 +452,6 @@ public class TroopActionsCS : MonoBehaviour
         ResetAlteredTiles();
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         bool _attackedFromTheBack = _troop.rotation == troopInfo.rotation;
-        _troop.turnCountWhenLastHit = GameManagerCS.instance.turnCount;
         AttackAnim(_troop);
         // Expose troop identity
         if (!_troop.isExposed)
