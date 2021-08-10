@@ -65,8 +65,6 @@ public class ServerHandle
     {
         string _oldTribe = _packet.ReadString();
         string _newTribe = _packet.ReadString();
-        Debug.Log("Old tribe: " + _oldTribe);
-        Debug.Log("New tribe: " + _newTribe);
 
         // Check if new tribe has not been chosen by another player
         if(GameManagerSS.instance.avaliableTribe.Contains(_newTribe))
