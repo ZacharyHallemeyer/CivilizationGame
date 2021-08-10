@@ -17,6 +17,8 @@ public class GameManagerSS : MonoBehaviour
     public List<Dictionary<TileInfo, string>> modifiedTileInfo = new List<Dictionary<TileInfo, string>>();
     public List<Dictionary<CityInfo, string>> modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
 
+    public List<string> avaliableTribe = new List<string>();
+
     // Set instance or destroy if instance already exist
     private void Awake()
     {
@@ -27,6 +29,7 @@ public class GameManagerSS : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+        avaliableTribe = Constants.tribes;
     }
 
     /// <summary>
@@ -39,6 +42,18 @@ public class GameManagerSS : MonoBehaviour
             playerIds.Add(_client.id);
         }
     }
+
+    public void RemoveTribeFromTribeList(string _tribe)
+    {
+        avaliableTribe.Remove(_tribe);
+    }
+
+    public void AddTribeIntoTribeList(string _tribe)
+    {
+        avaliableTribe.Add(_tribe);
+    }
+
+    #region Turn Functions
 
     /// <summary>
     /// Wait and call end turn
@@ -55,6 +70,10 @@ public class GameManagerSS : MonoBehaviour
         yield return new WaitForSeconds(.1f);
         ServerHandle.EndTurn(_fromClient, _packet);
     }
+
+    #endregion
+
+    #region Remove data functions
 
     /// <summary>
     /// Removes client given in parems from player turn list and decrements currentPlayerTurnId
@@ -93,4 +112,6 @@ public class GameManagerSS : MonoBehaviour
     {
 
     }
+
+    #endregion
 }

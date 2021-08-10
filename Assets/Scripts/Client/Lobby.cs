@@ -14,10 +14,15 @@ public class Lobby : MonoBehaviour
     {
         public GameObject lobbyRowGameObject;
         public TextMeshProUGUI username;
+        public TextMeshProUGUI tribe;
     }
 
+    private int currentTribeIndex;
+
     public GameObject lobbyParent;
-    public GameObject lobbyRowPrefab;
+    public GameObject localLobbyRowPrefab;
+    public GameObject remoteLobbyRowPrefab;
+    public LobbyRow thisClientLobbyRow;
     public LobbyRow[] lobbyRows;
 
     public TextMeshProUGUI publicIP;
@@ -35,18 +40,22 @@ public class Lobby : MonoBehaviour
     /// </summary>
     public void InitLobbyUI()
     {
+        GameObject _lobbyRow = null;
         float _yPos = 230f;
         if (lobbyRows != null)
         {
-            foreach (LobbyRow _lobbyRow in lobbyRows)
+            foreach (LobbyRow _existingLobbyRow in lobbyRows)
             {
-                Destroy(_lobbyRow.lobbyRowGameObject);
+                Destroy(_existingLobbyRow.lobbyRowGameObject);
             }
         }
         lobbyRows = new LobbyRow[ClientCS.allClients.Count];
         foreach(int _clientId in ClientCS.allClients.Keys)
         {
-            GameObject _lobbyRow = Instantiate(lobbyRowPrefab, lobbyParent.transform);
+            if(_clientId == ClientCS.instance.myId)
+                _lobbyRow = Instantiate(localLobbyRowPrefab, lobbyParent.transform);
+            else
+                _lobbyRow = Instantiate(remoteLobbyRowPrefab, lobbyParent.transform);
             _lobbyRow.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, _yPos, 0);
 
             _yPos -= 75;
@@ -54,7 +63,11 @@ public class Lobby : MonoBehaviour
             lobbyRows[_clientId - 1] = new LobbyRow();
             lobbyRows[_clientId - 1].lobbyRowGameObject = _lobbyRow;
             lobbyRows[_clientId - 1].username = _lobbyRow.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            lobbyRows[_clientId - 1].username.text = ClientCS.allClients[_clientId];
+            lobbyRows[_clientId - 1].username.text = ClientCS.allClients[_clientId]["Username"];
+            lobbyRows[_clientId - 1].tribe = _lobbyRow.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            lobbyRows[_clientId - 1].tribe.text = ClientCS.allClients[_clientId]["Tribe"];
+            if (_clientId == ClientCS.instance.myId)
+                thisClientLobbyRow = lobbyRows[_clientId - 1];
         }
 
         /*
@@ -63,6 +76,26 @@ public class Lobby : MonoBehaviour
         localIP.text = Dns.GetHostEntry(string.Empty).AddressList[5].ToString();
         */
     } 
+
+    public void IncrementTribeList()
+    {
+        currentTribeIndex++;
+        if (currentTribeIndex >= GameManagerCS.instance.avaliableTribes.Count)
+            currentTribeIndex = 0;
+
+        string _newTribe = GameManagerCS.instance.avaliableTribes[currentTribeIndex];
+        ClientSend.UpdateTribe(ClientCS.allClients[ClientCS.instance.myId]["Tribe"], _newTribe);
+
+    }
+    public void DecrementTribeList()
+    {
+        currentTribeIndex--;
+        if (currentTribeIndex < 0)
+            currentTribeIndex = GameManagerCS.instance.avaliableTribes.Count - 1;
+
+        string _newTribe = GameManagerCS.instance.avaliableTribes[currentTribeIndex];
+        ClientSend.UpdateTribe(ClientCS.allClients[ClientCS.instance.myId]["Tribe"], _newTribe);
+    }
 
     static string GetPublicIPAddress()
     {
@@ -96,7 +129,7 @@ public class Lobby : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
-        ClientCS.allClients = new Dictionary<int, string>();
+        ClientCS.allClients = new Dictionary<int, Dictionary<string, string>>();
         ClientSS.allClients = new Dictionary<int, ClientSS>();
         // If player is host than close server and network manager
         if (Server.clients.Count > 0)

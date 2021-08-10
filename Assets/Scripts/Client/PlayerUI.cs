@@ -14,11 +14,11 @@ public class PlayerUI : MonoBehaviour
     // SKill Tree
     public Button roadSkillButton, wallSkillButton, armySkillButton, snipperSkillButton, missleSkillButton, defenseSkillButton,
                   stealthSkillButton, marketSkillButton, housingSkillButton, librarySkillButton, schoolSkillButton, domeSkillButton,
-                  sailingSkillButton, warshipSkillButton;
+                  sailingSkillButton, warshipSkillButton, farmSkillButton, mineSkillButton, lumberYardSkillButton;
 
     public TextMeshProUGUI roadSkillText, wallSkillText, armySkillText, snipperSkillText, missleSkillText, defenseSkillText,
                   stealthSkillText, marketSkillText, housingSkillText, librarySkillText, schoolSkillText, domeSkillText,
-                  sailingSkillText, warshipSkillText;
+                  sailingSkillText, warshipSkillText, farmSkillText, mineSkillText, lumberYardSkillText;
 
     public Dictionary<string, Button> skillButtons = new Dictionary<string, Button>();
     public Dictionary<string, TextMeshProUGUI> skillText = new Dictionary<string, TextMeshProUGUI>();
@@ -41,6 +41,9 @@ public class PlayerUI : MonoBehaviour
             { "Housing", housingSkillButton },
             { "Roads", roadSkillButton },
             { "Market", marketSkillButton },
+            { "Farm", farmSkillButton },
+            { "Mine", mineSkillButton },
+            { "LumeberYard", lumberYardSkillButton },
         };
 
         skillText = new Dictionary<string, TextMeshProUGUI>()
@@ -59,6 +62,9 @@ public class PlayerUI : MonoBehaviour
             { "Housing", housingSkillText },
             { "Roads", roadSkillText },
             { "Market", marketSkillText },
+            { "Farm", farmSkillText },
+            { "Mine", mineSkillText },
+            { "LumeberYard", lumberYardSkillText },
         };
     }
 

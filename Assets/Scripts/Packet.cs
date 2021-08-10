@@ -11,6 +11,8 @@ public enum ServerPackets
     welcome = 1,
     addClient,
     playerDisconnected,
+    sendTribes,
+    updateTribeChoice,
     worldCreated,
     spawnPlayer,
     sendTileInfo,
@@ -25,6 +27,7 @@ public enum ServerPackets
 public enum ClientPackets
 {
     welcomeReceived = 1,
+    changeTribe,
     startGame,
     endTurnTroopData,
     endTurnTileData,

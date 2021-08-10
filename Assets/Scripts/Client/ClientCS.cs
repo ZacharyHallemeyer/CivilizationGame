@@ -10,6 +10,7 @@ public class ClientCS : MonoBehaviour
 {
     public static ClientCS instance;
     public static int dataBufferSize = 4096;
+    public string tribe;
 
     public string ip = "127.0.0.1";
     public int port = 26950;
@@ -20,7 +21,7 @@ public class ClientCS : MonoBehaviour
     private bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
-    public static Dictionary<int, string> allClients = new Dictionary<int, string>();
+    public static Dictionary<int, Dictionary<string, string>> allClients = new Dictionary<int, Dictionary<string, string>>();
 
     public Lobby lobby;
 
@@ -294,6 +295,8 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.welcome, ClientHandle.Welcome },
             { (int)ServerPackets.addClient, ClientHandle.AddClient },
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
+            { (int)ServerPackets.updateTribeChoice, ClientHandle.RecieveUpdateTribeChoice },
+            { (int)ServerPackets.sendTribes, ClientHandle.RecieveAvaliableTribes },
             { (int)ServerPackets.worldCreated, ClientHandle.WorldCreated },
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.sendTileInfo, ClientHandle.CreateNewTile},

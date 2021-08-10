@@ -15,6 +15,7 @@ public class GameManagerCS : MonoBehaviour
     public int starCount = 100;
 
     public int currentTroopIndex = 0, currentCityIndex;
+    public List<string> avaliableTribes = new List<string>();
     public Dictionary<int, TroopInfo> troops = new Dictionary<int, TroopInfo>();
     public Dictionary<int, CityInfo> cities = new Dictionary<int, CityInfo>();
     public TileInfo[,] tiles;

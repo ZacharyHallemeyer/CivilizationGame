@@ -97,12 +97,14 @@ public class CityActionsCS : MonoBehaviour
     {
         ResetQuickMenu();
         quickMenuContainer.SetActive(false);
+        PlayerCS.instance.playerUI.menuButton.SetActive(true);
     }
 
     public void ShowQuickMenu()
     {
         PlayerCS.instance.HideQuckMenus();
         quickMenuContainer.SetActive(true);
+        PlayerCS.instance.playerUI.menuButton.SetActive(false);
     }
 
     public void ResetQuickMenu()

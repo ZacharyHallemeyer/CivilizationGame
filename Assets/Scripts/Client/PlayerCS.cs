@@ -118,7 +118,9 @@ public class PlayerCS : MonoBehaviour
             }
         }
 
+        // Troops can not commit actions while an animation is in progress
         if (isAnimInProgress || !isAbleToCommitActions) return;
+
         if (inputMaster.Player.Select.triggered)
         {
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());
@@ -306,22 +308,3 @@ public class PlayerCS : MonoBehaviour
         GameManagerCS.instance.isTurn = false;
     }
 }
-
-
-/*
-else
-{
-    differencePosition = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
-    if (!isDragging)
-    {
-        isDragging = true;
-        originPosition = cam.ScreenToViewportPoint(mouse.position.ReadValue());
-    }
-}
-
-        if (isDragging)
-        {
-            Vector3 _move = originPosition - differencePosition;
-            cam.transform.position = new Vector3(_move.x, cam.transform.position.y, _move.x);
-        }
-*/

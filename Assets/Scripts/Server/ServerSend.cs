@@ -97,6 +97,7 @@ public class ServerSend
         {
             _packet.Write(_client.id);
             _packet.Write(_client.userName);
+            _packet.Write(_client.tribe);
 
             SendTCPData(_toClient, _packet);
         }
@@ -123,6 +124,29 @@ public class ServerSend
     {
         using (Packet _packet = new Packet((int)ServerPackets.worldCreated))
         {
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void SendUpdatedTribeChoice(int _clientToBeUpdated)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.updateTribeChoice))
+        {
+            _packet.Write(_clientToBeUpdated);
+            _packet.Write(Server.clients[_clientToBeUpdated].tribe);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void SendAvaliableTribes(List<string> tribes)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.sendTribes))
+        {
+            _packet.Write(tribes.Count);
+            for (int i = 0; i < tribes.Count; i++)
+                _packet.Write(tribes[i]);
+
             SendTCPDataToAll(_packet);
         }
     }

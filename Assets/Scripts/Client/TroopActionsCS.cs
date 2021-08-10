@@ -797,11 +797,13 @@ public class TroopActionsCS : MonoBehaviour
 
     public void HideQuickMenu()
     {
+        PlayerCS.instance.playerUI.menuButton.SetActive(true);
         ResetQuickMenu();
     }
 
     public void ShowQuickMenu()
     {
+        PlayerCS.instance.playerUI.menuButton.SetActive(false);
         PlayerCS.instance.HideQuckMenus();
         DisplayerPossibleActions();
         quickMenuContainer.SetActive(true);

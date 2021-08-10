@@ -35,6 +35,17 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void UpdateTribe(string _oldTribe, string _newTribe)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.changeTribe))
+        {
+            _packet.Write(_oldTribe);
+            _packet.Write(_newTribe);
+
+            SendTCPData(_packet);
+        }
+    }
+
     public static void StartGame(string _sceneName)
     {
         using ( Packet _packet = new Packet((int)ClientPackets.startGame))

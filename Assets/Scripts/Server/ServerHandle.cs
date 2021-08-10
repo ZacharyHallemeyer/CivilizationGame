@@ -25,10 +25,13 @@ public class ServerHandle
         }
 
 
-        ClientSS _client = new ClientSS(_fromClient);
-        _client.userName = _username;
-        ClientSS.allClients.Add(_fromClient, _client);
+        //ClientSS _client = new ClientSS(_fromClient);
+        Server.clients[_fromClient].userName = _username;
+        Server.clients[_fromClient].tribe = GameManagerSS.instance.avaliableTribe[Random.Range(0, GameManagerSS.instance.avaliableTribe.Count)];
+        ClientSS.allClients.Add(_fromClient, Server.clients[_fromClient]);
         Server.clients[_fromClient].SendIntoLobby(_username);
+        GameManagerSS.instance.RemoveTribeFromTribeList(Server.clients[_fromClient].tribe);
+        ServerSend.SendAvaliableTribes(GameManagerSS.instance.avaliableTribe);
     }
 
     /// <summary>
@@ -56,6 +59,25 @@ public class ServerHandle
         ServerSend.SendModifiedTile(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
         ServerSend.SendModifiedCity(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
         ServerSend.PlayerStartTurn(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
+    }
+
+    public static void UpdateTribeChoice(int _fromClient, Packet _packet)
+    {
+        string _oldTribe = _packet.ReadString();
+        string _newTribe = _packet.ReadString();
+        Debug.Log("Old tribe: " + _oldTribe);
+        Debug.Log("New tribe: " + _newTribe);
+
+        // Check if new tribe has not been chosen by another player
+        if(GameManagerSS.instance.avaliableTribe.Contains(_newTribe))
+        {
+            Server.clients[_fromClient].tribe = _newTribe;
+            GameManagerSS.instance.RemoveTribeFromTribeList(_newTribe);
+            GameManagerSS.instance.AddTribeIntoTribeList(_oldTribe);
+        }
+
+        ServerSend.SendUpdatedTribeChoice(_fromClient);
+        ServerSend.SendAvaliableTribes(GameManagerSS.instance.avaliableTribe);
     }
 
     /// <summary>

@@ -29,8 +29,9 @@ public class ClientHandle : MonoBehaviour
     {
         int _clientId = _packet.ReadInt();
         string _clientUsername = _packet.ReadString();
+        string _clientTribe = _packet.ReadString();
 
-        ClientCS.allClients.Add(_clientId, _clientUsername);
+        ClientCS.allClients.Add(_clientId, new Dictionary<string, string>() { { "Username", _clientUsername}, { "Tribe", _clientTribe } });
         ClientCS.instance.lobby.InitLobbyUI();
     }
 
@@ -45,6 +46,23 @@ public class ClientHandle : MonoBehaviour
 
         ClientCS.allClients.Remove(_id);
         ClientCS.instance.lobby.InitLobbyUI();
+    }
+
+    public static void RecieveUpdateTribeChoice(Packet _packet)
+    {
+        int _clientId = _packet.ReadInt();
+        // Set Tribe
+        ClientCS.allClients[_clientId]["Tribe"] = _packet.ReadString();
+        ClientCS.instance.lobby.InitLobbyUI();
+    }
+
+    public static void RecieveAvaliableTribes(Packet _packet)
+    {
+        int _tribeLength = _packet.ReadInt();
+        GameManagerCS.instance.avaliableTribes = new List<string>();
+        // Add each tribe to avaliable tribe list
+        for (int i = 0; i < _tribeLength; i++)
+            GameManagerCS.instance.avaliableTribes.Add(_packet.ReadString());
     }
 
     /// <summary>

@@ -14,6 +14,7 @@ public class ClientSS
     public TCP tcp;
     public UDP udp;
     public PlayerSS player;
+    public string tribe;
 
     public static Dictionary<int, ClientSS> allClients = new Dictionary<int, ClientSS>();
 
