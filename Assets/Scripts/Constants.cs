@@ -602,44 +602,44 @@ public static class Constants
 
     public static List<string> tribes = new List<string>()
     {
-        "Red",
-        "Green",
-        "Yellow",
         "Blue",
-        "Purple",
         "Cyan",
+        "Green",
+        "Magenta",
+        "Purple",
         "Orange",
         "Pink",
-        "Magenta",
-        "White"
+        "Red",
+        "White",
+        "Yellow",
     };
 
     public static Dictionary<string, Color> tribeColors = new Dictionary<string, Color>()
     {
-        { "Red", new Color(0.6415094f, 0.08775366f, 0.08775366f) },
-        { "Green", new Color(0.09104663f, 0.6226415f, 1229981f) },
-        { "Yellow", new Color(0.9433962f, 0.8335572f, 0f) },
         { "Blue", new Color(0f, 0.102445f, 0.5471698f) },
-        { "Purple", new Color(0.4716981f, 0f, 0.4716878f) },
         { "Cyan", new Color(0f, 0.5607098f, 0.5660378f) },
+        { "Green", new Color(0.09104663f, 0.6226415f, 1229981f) },
+        { "Magenta", new Color(0.6226415f, 0.2672659f, 0.4626456f) },
+        { "Purple", new Color(0.4716981f, 0f, 0.4716878f) },
         { "Orange", new Color(0.8018868f, 0.476318f, 0f) },
         { "Pink", new Color(0.9056604f, 0f, 0.4993411f) },
-        { "Magenta", new Color(0.6226415f, 0.2672659f, 0.4626456f) },
+        { "Red", new Color(0.6415094f, 0.08775366f, 0.08775366f) },
         { "White", new Color(1f, 1f, 1f) },
+        { "Yellow", new Color(0.9433962f, 0.8335572f, 0f) },
     };
 
     public static Dictionary<string, string> tribeSkills = new Dictionary<string, string>()
     {
-        { "Red", "Army"},
-        { "Green", "Farm"},
-        { "Yellow", "Mine"},
         { "Blue", "LumberYard"},
-        { "Purple", "Walls"},
         { "Cyan", "Library"},
+        { "Green", "Farm"},
+        { "Purple", "Walls"},
+        { "Magenta", "Defense"},
         { "Orange", "Roads"},
         { "Pink", "Housing"},
-        { "Magenta", "Defense"},
+        { "Red", "Army"},
         { "White", "Stealth"},
+        { "Yellow", "Mine"},
     };
 
 

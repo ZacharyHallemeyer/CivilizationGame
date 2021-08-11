@@ -826,7 +826,7 @@ MonoBehaviour:
     m_Bits: 256
   cam: {fileID: 0}
   camRB: {fileID: 0}
-  playerUI: {fileID: 0}
+  playerUI: {fileID: 2379223932073230824}
   currentSelectedTroopId: -1
   currentSelectedCityId: -1
   morale: 0

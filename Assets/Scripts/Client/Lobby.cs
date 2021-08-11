@@ -15,6 +15,7 @@ public class Lobby : MonoBehaviour
         public GameObject lobbyRowGameObject;
         public TextMeshProUGUI username;
         public TextMeshProUGUI tribe;
+        public TextMeshProUGUI tribeSkill;
     }
 
     private int currentTribeIndex;
@@ -66,6 +67,8 @@ public class Lobby : MonoBehaviour
             lobbyRows[_clientId - 1].username.text = ClientCS.allClients[_clientId]["Username"];
             lobbyRows[_clientId - 1].tribe = _lobbyRow.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             lobbyRows[_clientId - 1].tribe.text = ClientCS.allClients[_clientId]["Tribe"];
+            lobbyRows[_clientId - 1].tribeSkill = _lobbyRow.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            lobbyRows[_clientId - 1].tribeSkill.text = "Skill: " + Constants.tribeSkills[ClientCS.allClients[_clientId]["Tribe"]];
             if (_clientId == ClientCS.instance.myId)
                 thisClientLobbyRow = lobbyRows[_clientId - 1];
         }

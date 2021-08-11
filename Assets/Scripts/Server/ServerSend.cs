@@ -141,6 +141,8 @@ public class ServerSend
 
     public static void SendAvaliableTribes(List<string> tribes)
     {
+        // Sort tribes alphabetically to ensure consistency
+        tribes.Sort();
         using (Packet _packet = new Packet((int)ServerPackets.sendTribes))
         {
             _packet.Write(tribes.Count);

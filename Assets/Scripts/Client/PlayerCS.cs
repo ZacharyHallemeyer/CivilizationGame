@@ -58,7 +58,6 @@ public class PlayerCS : MonoBehaviour
         inputMaster = new InputMaster();
         cam = FindObjectOfType<Camera>();
         camRB = cam.GetComponent<Rigidbody>();
-        playerUI = FindObjectOfType<PlayerUI>().GetComponent<PlayerUI>();
         mouse = Mouse.current;
         Cursor.lockState = CursorLockMode.Confined;
     }

@@ -232,6 +232,7 @@ public class ClientSS
     /// </summary>
     public void SendPlayerIntoGame()
     {
+        Debug.Log(ClientCS.allClients[ClientCS.instance.myId]["Tribe"]);
         player = NetworkManager.instance.InstantiatePlayer();
         player.InitPlayer(id, userName);
         Server.clients[id].player = player;

@@ -476,8 +476,8 @@ public class GameManagerCS : MonoBehaviour
     {
         if (!isTurn) return;
         isKingAlive = true;
-        playerUI.playerUIContainer.SetActive(true);
-        playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
+        PlayerCS.instance.playerUI.playerUIContainer.SetActive(true);
+        PlayerCS.instance.playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
                                   PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
         SpawnLocalTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
         startScreenUI.SetActive(false);
@@ -1004,7 +1004,8 @@ public class GameManagerCS : MonoBehaviour
                 PlayerCS.instance.population += _city.populationResourcesPerTurn;
             }
         }
-        playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money, PlayerCS.instance.population);
+        PlayerCS.instance.playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, 
+                                                       PlayerCS.instance.money, PlayerCS.instance.population);
         PlayerCS.instance.ResetMoraleAndEducation();
     }
 
