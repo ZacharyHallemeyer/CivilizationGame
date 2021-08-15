@@ -84,14 +84,16 @@ public class ClientHandle : MonoBehaviour
         string _username = _packet.ReadString();
         int _xSizeOfTiles = _packet.ReadInt();
         int _zSizeOfTiles = _packet.ReadInt();
+        string _tribe = _packet.ReadString();
         GameManagerCS.instance.tiles = new TileInfo[_xSizeOfTiles, _zSizeOfTiles];
+        ClientCS.instance.tribe = _tribe;
 
         // Turn off lobby UI if it has not already
         if (ClientCS.instance.lobby.lobbyParent.activeInHierarchy)
             ClientCS.instance.lobby.lobbyParent.SetActive(false);
         // Turn on spawn king UI
         GameManagerCS.instance.startScreenUI.SetActive(true);
-        GameManagerCS.instance.SpawnPlayer(_id, _username);
+        GameManagerCS.instance.SpawnPlayer(_id, _username, _tribe);
     }
     
     /// <summary>

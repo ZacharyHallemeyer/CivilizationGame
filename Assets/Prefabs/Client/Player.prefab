@@ -821,6 +821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   username: 
+  tribe: 
   whatIsIteractable:
     serializedVersion: 2
     m_Bits: 256
@@ -3043,9 +3044,9 @@ MonoBehaviour:
   domeSkillButton: {fileID: 3215582876976080628}
   sailingSkillButton: {fileID: 8420124663042264636}
   warshipSkillButton: {fileID: 4199985982744067795}
-  farmSkillButton: {fileID: 0}
-  mineSkillButton: {fileID: 0}
-  lumberYardSkillButton: {fileID: 0}
+  farmSkillButton: {fileID: 7184930316162068876}
+  mineSkillButton: {fileID: 8518573032330199113}
+  lumberYardSkillButton: {fileID: 6110637919664878579}
   roadSkillText: {fileID: 7727342198007556473}
   wallSkillText: {fileID: 2474273389782298312}
   armySkillText: {fileID: 4554783472038694715}
@@ -3060,9 +3061,9 @@ MonoBehaviour:
   domeSkillText: {fileID: 7136423487469060672}
   sailingSkillText: {fileID: 6823490811925271264}
   warshipSkillText: {fileID: 8036730352052953372}
-  farmSkillText: {fileID: 0}
-  mineSkillText: {fileID: 0}
-  lumberYardSkillText: {fileID: 0}
+  farmSkillText: {fileID: 2768607552147648173}
+  mineSkillText: {fileID: 3480883523504506904}
+  lumberYardSkillText: {fileID: 5076502384900169486}
 --- !u!1 &3608862057647221621
 GameObject:
   m_ObjectHideFlags: 0

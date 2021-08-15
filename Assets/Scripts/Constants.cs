@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class Constants
 {
+    public static Quaternion troopModelRotation = Quaternion.Euler(-90, 0, 0);
+
     public static Dictionary<string, Dictionary<string, float>> biomeInfo = new Dictionary<string, Dictionary<string, float>>
     {
         { "Desert", new Dictionary<string, float>
@@ -576,7 +578,10 @@ public static class Constants
         { "School", 300 },    
         { "Housing", 200 },    
         { "Roads", 100 },
-        { "Market", 300 },    
+        { "Market", 300 },
+        { "Farm", 100},
+        { "LumberYard", 100},
+        { "Mine", 100 },
     };
 
     public static Dictionary<string, string[]> neededSkillsForCertainSkills = new Dictionary<string, string[]>()
@@ -596,7 +601,7 @@ public static class Constants
         { "Roads", new string[0] },
         { "Market", new [] { "Roads" } },
         { "Farm", new string[0]},
-        { "LumberYard", new string[0]},
+        { "LumberYard", new string[0] },
         { "Mine", new string[0] },
     };
 

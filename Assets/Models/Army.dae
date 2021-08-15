@@ -5,13 +5,13 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.92.0 commit date:2021-02-24, commit time:16:25, hash:02948a2cab44</authoring_tool>
     </contributor>
-    <created>2021-08-02T11:14:39</created>
-    <modified>2021-08-02T11:14:39</modified>
+    <created>2021-08-15T11:54:16</created>
+    <modified>2021-08-15T11:54:16</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_effects>
-    <effect id="Material-effect">
+    <effect id="Body-effect">
       <profile_COMMON>
         <technique sid="common">
           <lambert>
@@ -36,7 +36,7 @@
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0.8 0.8 0.8 1</color>
+              <color sid="diffuse">0.8000001 0.7192432 0.7664697 1</color>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -48,8 +48,8 @@
   </library_effects>
   <library_images/>
   <library_materials>
-    <material id="Material-material" name="Material">
-      <instance_effect url="#Material-effect"/>
+    <material id="Body-material" name="Body">
+      <instance_effect url="#Body-effect"/>
     </material>
     <material id="Eye-material" name="Eye">
       <instance_effect url="#Eye-effect"/>
@@ -94,7 +94,7 @@
           <input semantic="VERTEX" source="#Cube-mesh-vertices" offset="0"/>
           <p>56 55 55 50 72 74 2 72 83 82 82 87 91 93 12 91 96 34 98 96 102 140</p>
         </lines>
-        <triangles material="Material-material" count="102">
+        <triangles material="Body-material" count="102">
           <input semantic="VERTEX" source="#Cube-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Cube-mesh-map-0" offset="2" set="0"/>
@@ -116,7 +116,7 @@
         <instance_geometry url="#Cube-mesh" name="Cube">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material-material" target="#Material-material">
+              <instance_material symbol="Body-material" target="#Body-material">
                 <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
               <instance_material symbol="Eye-material" target="#Eye-material">

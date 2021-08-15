@@ -402,37 +402,21 @@ MonoBehaviour:
     type: 3}
   marketPrefab: {fileID: 4356431058999883361, guid: 499eb70152d54c245bc480fab7bbd132,
     type: 3}
-  localScoutPrefab: {fileID: 8198270522462570844, guid: 1a54c4819433fda4094309022962ece5,
+  scoutPrefab: {fileID: 2813880598238819312, guid: 41c5f6606aefb1347ae9db2262ceaf60,
     type: 3}
-  localMilitiaPrefab: {fileID: 1207582696411582713, guid: 5f9af588d4b962f4a836c5cd65fe41e0,
+  militiaPrefab: {fileID: 1236843211704913220, guid: 938b557b2446af94988761051127033f,
     type: 3}
-  localArmyPrefab: {fileID: 8512569501075254353, guid: fda21be8151fcc5478af013375249008,
+  armyPrefab: {fileID: 5494763744330037135, guid: 71f74f44b78841944a31324e36ea4220,
     type: 3}
-  localMisslePrefab: {fileID: 6275343742745797467, guid: 20d0146a71ebd4f448f1d88b1a7c57ce,
+  misslePrefab: {fileID: 1281285985164659840, guid: 51159c1da0b872d4a945a72c764444d3,
     type: 3}
-  localDefensePrefab: {fileID: 2901119122802116360, guid: 0dd529be0a049de42a5e72f8f6f90221,
+  defensePrefab: {fileID: 9111744528169795964, guid: 26b650711c27ede45a01f1064feda3eb,
     type: 3}
-  localStealthPrefab: {fileID: 1429495126608331403, guid: 9767fa1870a647d428072ed86b5c0f08,
+  stealthPrefab: {fileID: 7821387573564270476, guid: 4c9b1d748d744c94db0aca64995b8b77,
     type: 3}
-  localSnipperPrefab: {fileID: 7936877972974874479, guid: 7045dff57947e5d409fb1ad2947ad132,
+  snipperPrefab: {fileID: 3210314386889937490, guid: f8aa524f901a03c45b2c7d334d19d195,
     type: 3}
-  localKingPrefab: {fileID: 5373495531832267383, guid: c59fe8be5d2479346a8fde15b0a506e8,
-    type: 3}
-  remoteScoutPrefab: {fileID: 200585977081987106, guid: 8adbee1fe1409a4479a492719f802d95,
-    type: 3}
-  remoteMilitiaPrefab: {fileID: 5957031840489018320, guid: a8de3bb2db545d647a4da6fdebdb1b46,
-    type: 3}
-  remoteArmyPrefab: {fileID: 8892006065523610130, guid: 98f5462e7de685b4fa8fc432bafbf4db,
-    type: 3}
-  remoteMisslePrefab: {fileID: 1368710987945545539, guid: 7e32c2d45665f2a40a23ffa982898fd1,
-    type: 3}
-  remoteDefensePrefab: {fileID: 5135823137092997501, guid: 7edbbb0654450ae4388fe86076703e8a,
-    type: 3}
-  remoteStealthPrefab: {fileID: 6148462462914081289, guid: beea13da8e292844fab68de8882c1db0,
-    type: 3}
-  remoteSnipperPrefab: {fileID: 1639460841114803359, guid: 798d7007308c2a149b3bf087ff5be646,
-    type: 3}
-  remoteKingPrefab: {fileID: 6233481866056760490, guid: f56c13a4f5b02f74ba1454f58c222575,
+  kingPrefab: {fileID: 8395236428337834917, guid: 25d7f2d2bef727b479ae651debc44029,
     type: 3}
   swordPrefab: {fileID: 4630392494860568018, guid: d230336b416688841982877f75e3a237,
     type: 3}

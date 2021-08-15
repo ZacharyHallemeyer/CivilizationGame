@@ -5,13 +5,13 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.92.0 commit date:2021-02-24, commit time:16:25, hash:02948a2cab44</authoring_tool>
     </contributor>
-    <created>2021-08-02T11:19:50</created>
-    <modified>2021-08-02T11:19:50</modified>
+    <created>2021-08-15T11:55:08</created>
+    <modified>2021-08-15T11:55:08</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_effects>
-    <effect id="Material-effect">
+    <effect id="Body-effect">
       <profile_COMMON>
         <technique sid="common">
           <lambert>
@@ -48,8 +48,8 @@
   </library_effects>
   <library_images/>
   <library_materials>
-    <material id="Material-material" name="Material">
-      <instance_effect url="#Material-effect"/>
+    <material id="Body-material" name="Body">
+      <instance_effect url="#Body-effect"/>
     </material>
     <material id="Eyes-material" name="Eyes">
       <instance_effect url="#Eyes-effect"/>
@@ -90,7 +90,7 @@
         <vertices id="Cube-mesh-vertices">
           <input semantic="POSITION" source="#Cube-mesh-positions"/>
         </vertices>
-        <triangles material="Material-material" count="186">
+        <triangles material="Body-material" count="186">
           <input semantic="VERTEX" source="#Cube-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Cube-mesh-map-0" offset="2" set="0"/>
@@ -112,7 +112,7 @@
         <instance_geometry url="#Cube-mesh" name="Cube">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material-material" target="#Material-material">
+              <instance_material symbol="Body-material" target="#Body-material">
                 <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
               <instance_material symbol="Eyes-material" target="#Eyes-material">

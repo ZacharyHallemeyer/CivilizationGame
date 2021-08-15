@@ -7,6 +7,7 @@ public class PlayerCS : MonoBehaviour
 {
     public int id;
     public string username;
+    public string tribe;
 
     public static PlayerCS instance;
     public InputMaster inputMaster;
@@ -75,15 +76,27 @@ public class PlayerCS : MonoBehaviour
     /// <summary>
     /// Init player info including id and username
     /// </summary>
-    public void InitPlayer(int _id, string _username)
+    public void InitPlayer(int _id, string _username, string _tribe)
     {
+        string _skill = Constants.tribeSkills[_tribe];
         id = _id;
         username = _username;
+        tribe = _tribe;
+
+        // Add tribe skills to player
+        skills.Add(_skill);
+        if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" || _skill == "Stealh")
+            Constants.avaliableTroops.Add(_skill);
+        else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market")
+            Constants.avaliableBuildings.Add(_skill);
     }
 
     // Read player input and start actions based on this input
     void Update()
     {
+        if(inputMaster.Player.Testing.triggered)
+            if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+                _troop.troopActions.HurtAnim();
         if (inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
 

@@ -166,6 +166,7 @@ public class ServerSend
             _packet.Write(_player.username);
             _packet.Write(WorldGeneratorSS.instance.tiles.GetLength(0));
             _packet.Write(WorldGeneratorSS.instance.tiles.GetLength(1));
+            _packet.Write(Server.clients[_toClient].tribe);
 
             SendTCPData(_toClient, _packet);
         }

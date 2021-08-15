@@ -42,11 +42,10 @@ public class TroopInfo : MonoBehaviour
     /// <summary>
     /// Init troop info for new troop and set values for troop to be used this round
     /// </summary>
-    public void InitTroopInfo(string _troopName, GameObject _troop, TroopActionsCS _troopActions, 
+    public void InitTroopInfo(string _troopName, TroopActionsCS _troopActions, 
                               int _id, int _ownerId, int _xIndex, int _zIndex)
     {
         troopName = _troopName;
-        troop = _troop;
         troopActions = _troopActions;
         troopActions.InitTroopActions(this);
         id = _id;
@@ -81,10 +80,9 @@ public class TroopInfo : MonoBehaviour
     /// <param name="_troopInfo"> Troop info </param>
     /// <param name="_troop"> troop gameobject </param>
     /// <param name="_troopActions"> troop actions component </param>
-    public void CopyTroopInfo(TroopInfo _troopInfo, GameObject _troop, TroopActionsCS _troopActions)
+    public void CopyTroopInfo(TroopInfo _troopInfo, TroopActionsCS _troopActions)
     {
         troopName = _troopInfo.troopName;
-        troop = _troop;
         troopActions = _troopActions;
         troopActions.InitTroopActions(this);
         id = _troopInfo.id;

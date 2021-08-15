@@ -43,7 +43,7 @@ public class PlayerUI : MonoBehaviour
             { "Market", marketSkillButton },
             { "Farm", farmSkillButton },
             { "Mine", mineSkillButton },
-            { "LumeberYard", lumberYardSkillButton },
+            { "LumberYard", lumberYardSkillButton },
         };
 
         skillText = new Dictionary<string, TextMeshProUGUI>()
@@ -64,7 +64,7 @@ public class PlayerUI : MonoBehaviour
             { "Market", marketSkillText },
             { "Farm", farmSkillText },
             { "Mine", mineSkillText },
-            { "LumeberYard", lumberYardSkillText },
+            { "LumberYard", lumberYardSkillText },
         };
     }
 
