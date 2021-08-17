@@ -4,7 +4,10 @@ using UnityEngine;
 
 public static class Constants
 {
-    public static Quaternion troopModelRotation = Quaternion.Euler(-90, 0, 0);
+    public static float troopYPosition = .899f;
+
+    public static float troopHealthYPositionDescend = -1.5f;
+    public static float troopHealthYPositionAscend = 0f;
 
     public static Dictionary<string, Dictionary<string, float>> biomeInfo = new Dictionary<string, Dictionary<string, float>>
     {
@@ -127,6 +130,17 @@ public static class Constants
                 { "MaxStartingPopulationResourcesPerTurn", 5f },
             }
         },
+    };
+
+    public static Dictionary<string, Color> tileColors = new Dictionary<string, Color>()
+    {
+        { "Desert", new Color(0.9302326f, 1f, 0f, 1f) },     
+        { "Forest", new Color(0.1394851f, 1f, 0f, 1f) },     
+        { "Grassland", new Color(0.443431f, 1f, 0.01415092f, 1f) },     
+        { "RainForest", new Color (0.2272161f, 0.6981132f, 0.4206657f, 1f) },     
+        { "Swamp", new Color (0.5849056f, 0.2498035f, 0f, 1f) },     
+        { "Tundra", new Color (0.8254717f, 1f, 0.9677305f, 1f) },     
+        { "Water", new Color (0f, 0.7060928f, 1f, .9f) },     
     };
 
     public static Dictionary<string, Dictionary<string, int>> troopInfoInt = new Dictionary<string, Dictionary<string, int>>
@@ -623,7 +637,7 @@ public static class Constants
     {
         { "Blue", new Color(0f, 0.102445f, 0.5471698f) },
         { "Cyan", new Color(0f, 0.5607098f, 0.5660378f) },
-        { "Green", new Color(0.09104663f, 0.6226415f, 1229981f) },
+        { "Green", new Color(0.09104663f, 0.6226415f, 0.1229981f) },
         { "Magenta", new Color(0.6226415f, 0.2672659f, 0.4626456f) },
         { "Purple", new Color(0.4716981f, 0f, 0.4716878f) },
         { "Orange", new Color(0.8018868f, 0.476318f, 0f) },

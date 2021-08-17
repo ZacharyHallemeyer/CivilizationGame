@@ -31,8 +31,7 @@ public class GameManagerCS : MonoBehaviour
     public GameObject localTroopPrefab, remoteTroopPrefab, blurredTroopPrefab;
     public GameObject troopHealthTextPrefab;
     public GameObject starPrefab;
-    public GameObject desertTilePrefab, forestTilePrefab, grasslandTilePrefab, rainForestTilePrefab, swampTilePrefab,
-                      tundraTilePrefab, waterTilePrefab;
+    public GameObject tilePrefab;
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab, obstaclePrefab;
     public GameObject cityPrefab, cityLevel1Prefab, cityLevel2Prefab, cityLevel3Prefab, cityLevel4Prefab, cityLevel5Prefab;
     public GameObject ownershipObjectPrefab;
@@ -184,46 +183,11 @@ public class GameManagerCS : MonoBehaviour
                               bool _isRoad, bool _isCity, bool _isOccupied, bool _isObstacle, Vector2 _position, int _xIndex,
                               int _zIndex, int _cityId, string _name)
     {
-        GameObject _tile = null;
-        if (_isWater)
-        {
-            _tile = Instantiate(waterTilePrefab, new Vector3(_position.x, 0, _position.y), Quaternion.identity);
-        }
-        else
-        {
-            switch (_biome)
-            {
-                case "Desert":
-                    _tile = Instantiate(desertTilePrefab, new Vector3(_position.x, 0, _position.y),
-                                             Quaternion.identity);
-                    break;
-                case "Forest":
-                    _tile = Instantiate(forestTilePrefab, new Vector3(_position.x, 0, _position.y),
-                                             Quaternion.identity);
-                    break;
-                case "Grassland":
-                    _tile = Instantiate(grasslandTilePrefab, new Vector3(_position.x, 0, _position.y),
-                                             Quaternion.identity);
-                    break;
-                case "RainForest":
-                    _tile = Instantiate(rainForestTilePrefab, new Vector3(_position.x, 0, _position.y),
-                                             Quaternion.identity);
-                    break;
-                case "Swamp":
-                    _tile = Instantiate(swampTilePrefab, new Vector3(_position.x, 0, _position.y),
-                                             Quaternion.identity);
-                    break;
-                case "Tundra":
-                    _tile = Instantiate(tundraTilePrefab, new Vector3(_position.x, 0, _position.y),
-                                             Quaternion.identity);
-                    break;
-                default:
-                    Debug.LogError("Could not find Biome");
-                    break;
-            }
-        }
+        GameObject _tile = Instantiate(tilePrefab, new Vector3(_position.x, 0, _position.y), tilePrefab.transform.localRotation);
+        // Set tile color, tile model is the first child of tile prefab
+        MeshRenderer _tileMeshRender = _tile.transform.GetChild(0).GetComponent<MeshRenderer>();
+        _tileMeshRender.material.color = Constants.tileColors[_biome];
         // Change tile color just a little bit
-        MeshRenderer _tileMeshRender = _tile.GetComponent<MeshRenderer>();
         _tileMeshRender.material.color = new Color(_tileMeshRender.material.color.r + Random.Range(-.1f, .1f),
                                                     _tileMeshRender.material.color.g + Random.Range(-.1f, .1f),
                                                     _tileMeshRender.material.color.b + Random.Range(-.1f, .1f),
@@ -232,8 +196,8 @@ public class GameManagerCS : MonoBehaviour
 
         _tile.transform.parent = transform;
         TileInfo _tileInfo = _tile.AddComponent<TileInfo>();
-        _tileInfo.moveUI = _tile.transform.GetChild(0).gameObject;  // Get move UI game object
-        _tileInfo.attackUI = _tile.transform.GetChild(1).gameObject;  // Get attack UI game object
+        _tileInfo.moveUI = _tile.transform.GetChild(1).gameObject;  // Get move UI game object
+        _tileInfo.attackUI = _tile.transform.GetChild(2).gameObject;  // Get attack UI game object
         _tile.name = _name;
         _tileInfo.tile = _tile;
         _tileInfo.id = _id;
@@ -328,7 +292,7 @@ public class GameManagerCS : MonoBehaviour
     {
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
-        GameObject _troop = Instantiate(localTroopPrefab, new Vector3(_xCoord, 1, _zCoord), localTroopPrefab.transform.localRotation);
+        GameObject _troop = Instantiate(localTroopPrefab, new Vector3(_xCoord, Constants.troopYPosition, _zCoord), localTroopPrefab.transform.localRotation);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
         _troopInfo.troop = _troop;
@@ -370,7 +334,7 @@ public class GameManagerCS : MonoBehaviour
     {
         int _xCoord = (int)tiles[_troopInfoToCopy.xIndex, _troopInfoToCopy.zIndex].position.x;
         int _zCoord = (int)tiles[_troopInfoToCopy.xIndex, _troopInfoToCopy.zIndex].position.y;
-        GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_xCoord, 1, _zCoord), localTroopPrefab.transform.localRotation);
+        GameObject _troop = Instantiate(remoteTroopPrefab, new Vector3(_xCoord, .899f, _zCoord), localTroopPrefab.transform.localRotation);
         TroopActionsCS _troopActions = _troop.GetComponent<TroopActionsCS>();
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
         _troopInfo.troop = _troop;
@@ -401,39 +365,39 @@ public class GameManagerCS : MonoBehaviour
         {
             case "Scout":
                 _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Militia":
                 _troop.troopModel = Instantiate(militiaPrefab, _troop.troop.transform.position, militiaPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Army":
                 _troop.troopModel = Instantiate(armyPrefab, _troop.troop.transform.position, armyPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Missle":
                 _troop.troopModel = Instantiate(misslePrefab, _troop.troop.transform.position, misslePrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Defense":
                 _troop.troopModel = Instantiate(defensePrefab, _troop.troop.transform.position, defensePrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Stealth":
                 _troop.troopModel = Instantiate(stealthPrefab, _troop.troop.transform.position, stealthPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Snipper":
                 _troop.troopModel = Instantiate(snipperPrefab, _troop.troop.transform.position, snipperPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "King":
                 _troop.troopModel = Instantiate(kingPrefab, _troop.troop.transform.position, kingPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             default:
                 _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.transform;
+                _troop.troopModel.transform.parent = _troop.troop.transform;
                 Debug.LogError("Could not find prefab for troop name: " + _troopName);
                 break;
         }
@@ -487,8 +451,7 @@ public class GameManagerCS : MonoBehaviour
         _troop.transform.position = new Vector3((int)tiles[_troopToCopy.xIndex, _troopToCopy.zIndex].position.x, 
                                                       _troop.transform.position.y,
                                                       (int)tiles[_troopToCopy.xIndex, _troopToCopy.zIndex].position.y);
-        _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x,
-                                                                 -1.5f,
+        _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x, Constants.troopHealthYPositionDescend,
                                                                  _troop.transform.position.z);
         StartCoroutine(AscendTroopMoveAnim(_troop));
     }
@@ -510,9 +473,9 @@ public class GameManagerCS : MonoBehaviour
                                                             _troop.transform.position.z);
             yield return new WaitForSeconds(.0001f);
         }
-        _troop.transform.position = new Vector3(_troop.transform.position.x, 1f, _troop.transform.position.z);
+        _troop.transform.position = new Vector3(_troop.transform.position.x, Constants.troopYPosition, _troop.transform.position.z);
         _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x,
-                                                                  0,
+                                                                  Constants.troopHealthYPositionAscend,
                                                                   _troop.transform.position.z);
         PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;

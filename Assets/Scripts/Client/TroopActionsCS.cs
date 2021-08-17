@@ -10,16 +10,13 @@ public class TroopActionsCS : MonoBehaviour
     private string moveableTileTag = "MoveableTile", attackableTileTag = "AttackableTile", defaultTileTag = "Tile";
     private string conquerableCityTag = "ConquerableCity", cityTag = "City", moveableCityTag = "MoveableCity";
     public TroopInfo troopInfo;
-    private MeshRenderer meshRenderer;
 
     // Quick Menu
     public GameObject quickMenuContainer, mainContainer, mainKingContainer;
     public Button createCityButton, conquerMainCityButton, conquerKingCityButton;
 
-    // Animations
-
-
     #region Set Up
+
     /// <summary>
     /// Init troop action variables
     /// </summary>
@@ -29,7 +26,6 @@ public class TroopActionsCS : MonoBehaviour
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
         troopInfo = _troopInfo;
-        meshRenderer = troopInfo.troopModel.GetComponent<MeshRenderer>();
     }
     #endregion
 
@@ -306,17 +302,15 @@ public class TroopActionsCS : MonoBehaviour
         }
         troopInfo.xIndex = (int)_newTile.position.x;
         troopInfo.zIndex = (int)_newTile.position.y;
-        troopInfo.troop.transform.position = new Vector3(troopInfo.xIndex, troopInfo.troop.transform.position.y,
-                                                            troopInfo.zIndex);
-        troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x,
-                                                        -1.5f,
-                                                        troopInfo.transform.position.z);
+        troopInfo.troop.transform.position = new Vector3(troopInfo.xIndex, troopInfo.transform.position.y, troopInfo.zIndex);
+        troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x, Constants.troopHealthYPositionDescend,
+                                                                    troopInfo.transform.position.z);
         StartCoroutine(RiseTroopMoveAnim(_oldTile, _newTile));
     }
 
     public IEnumerator RiseTroopMoveAnim(TileInfo _oldTile, TileInfo _newTile)
     {
-        while(transform.position.y < 1)
+        while(transform.position.y < Constants.troopYPosition)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + .1f, transform.position.z);
             if(troopInfo.healthTextObject.transform.position.y < 0)
@@ -330,9 +324,9 @@ public class TroopActionsCS : MonoBehaviour
             }
             yield return new WaitForSeconds(.0001f);
         }
-        transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, Constants.troopYPosition, transform.position.z);
         troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x,
-                                                                    0,
+                                                                    Constants.troopHealthYPositionAscend,
                                                                     troopInfo.transform.position.z);
         // Add Troopdata to send to server
         TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
@@ -798,12 +792,14 @@ public class TroopActionsCS : MonoBehaviour
     public void HideQuickMenu()
     {
         PlayerCS.instance.playerUI.menuButton.SetActive(true);
+        //PlayerCS.instance.isAbleToCommitActions = true;
         ResetQuickMenu();
     }
 
     public void ShowQuickMenu()
     {
         PlayerCS.instance.playerUI.menuButton.SetActive(false);
+        //PlayerCS.instance.isAbleToCommitActions = false;
         PlayerCS.instance.HideQuckMenus();
         DisplayerPossibleActions();
         quickMenuContainer.SetActive(true);
@@ -855,6 +851,7 @@ public class TroopActionsCS : MonoBehaviour
         mainContainer.SetActive(false);
         mainKingContainer.SetActive(false);
         createCityButton.enabled = true;
+        PlayerCS.instance.isAbleToCommitActions = true;
     }
 
     public void SetCurrentTroopId()

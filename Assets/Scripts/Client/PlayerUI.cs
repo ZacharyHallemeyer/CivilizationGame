@@ -134,12 +134,14 @@ public class PlayerUI : MonoBehaviour
     {
         quickMenuContainer.SetActive(true);
         menuButton.SetActive(false);
+        PlayerCS.instance.isAbleToCommitActions = false;
     }
 
     public void CloseMenu()
     {
         quickMenuContainer.SetActive(false);
         menuButton.SetActive(true);
+        PlayerCS.instance.isAbleToCommitActions = true;
     }
 
     public void PurchaseSkill(string _skill)

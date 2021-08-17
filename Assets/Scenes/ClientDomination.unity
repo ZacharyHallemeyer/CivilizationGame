@@ -350,19 +350,7 @@ MonoBehaviour:
     type: 3}
   starPrefab: {fileID: 4427113777878196774, guid: 1025e2eac4e5ae841b782374f3a07600,
     type: 3}
-  desertTilePrefab: {fileID: 1364257602559654584, guid: c7421042ab741bb4ab5da135c9cc8c05,
-    type: 3}
-  forestTilePrefab: {fileID: 7624027295002152066, guid: 47960891b7c8e7e45ab0da9df2c193c3,
-    type: 3}
-  grasslandTilePrefab: {fileID: 3838647907912414135, guid: 2882d2d74aeeaaa4fbff4243670b454d,
-    type: 3}
-  rainForestTilePrefab: {fileID: 4837849429224637319, guid: 19f905a8ffc060f41b6a4b0276c43b02,
-    type: 3}
-  swampTilePrefab: {fileID: 939584966464421611, guid: c27fc1a0aa7709b49b01dd91ca8048c0,
-    type: 3}
-  tundraTilePrefab: {fileID: 9049806272573930248, guid: d2731d6e331f1cf47b830548357c530c,
-    type: 3}
-  waterTilePrefab: {fileID: 4863744991225301313, guid: 9865774e06ac05a49abe30cf22ef839e,
+  tilePrefab: {fileID: 1978060863930935458, guid: 0ee416137c8e6d740acb33f018a2fa0a,
     type: 3}
   foodResourcePrefab: {fileID: 766388770729704792, guid: 700311a2b2419164581004f02f67fc62,
     type: 3}
@@ -419,8 +407,6 @@ MonoBehaviour:
   kingPrefab: {fileID: 8395236428337834917, guid: 25d7f2d2bef727b479ae651debc44029,
     type: 3}
   swordPrefab: {fileID: 4630392494860568018, guid: d230336b416688841982877f75e3a237,
-    type: 3}
-  gunPrefab: {fileID: 2306370904094242421, guid: 002af9e485242e04cb0c866aa91c69b6,
     type: 3}
   arrowPrefab: {fileID: 7690062439369146723, guid: 55bc64dbfe4d28d45a500c78df73d940,
     type: 3}
@@ -521,7 +507,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 0.25
@@ -986,7 +972,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1334,7 +1320,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 0.25
@@ -1951,7 +1937,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 0.25
@@ -3346,7 +3332,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 0.25

@@ -96,12 +96,14 @@ public class CityActionsCS : MonoBehaviour
     public void HideQuickMenu()
     {
         ResetQuickMenu();
+        PlayerCS.instance.isAbleToCommitActions = true;
         quickMenuContainer.SetActive(false);
         PlayerCS.instance.playerUI.menuButton.SetActive(true);
     }
 
     public void ShowQuickMenu()
     {
+        PlayerCS.instance.isAbleToCommitActions = false;
         PlayerCS.instance.HideQuckMenus();
         quickMenuContainer.SetActive(true);
         PlayerCS.instance.playerUI.menuButton.SetActive(false);
@@ -113,6 +115,7 @@ public class CityActionsCS : MonoBehaviour
         troopContainer.SetActive(false);
         constructContainer.SetActive(false);
         statsContainer.SetActive(false);
+        PlayerCS.instance.isAbleToCommitActions = false;
     }
 
     public void SetCurrentCityId()
