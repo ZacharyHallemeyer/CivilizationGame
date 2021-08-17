@@ -11,6 +11,8 @@ public class MainMenu : MonoBehaviour
 {
     public Text hostUserNameFieldText, joinUserNameFieldText;
     public Text hostUserNamePlaceholderText, joinUserNamePlaceholderText;
+    public Text hostPortPlaceholderText, hostPortFieldText;
+    public Text joinPortPlaceholderText, joinPortFieldText;
     public Text ipFieldText, ipFieldPlaceholderText;
 
     public GameObject mainMenuFirstButton, gameSelectionHostFirstButton, gameSelectionJoinFirstButton;
@@ -25,13 +27,20 @@ public class MainMenu : MonoBehaviour
 
     #region Set Up
 
+    public void SetUpPortField()
+    {
+        if (PlayerPrefs.GetInt("Port", -1) == -1)
+            PlayerPrefs.SetInt("Port", 26950);
+        hostPortPlaceholderText.text = PlayerPrefs.GetInt("Port").ToString();
+        joinPortPlaceholderText.text = PlayerPrefs.GetInt("Port").ToString();
+
+    }
+
     public void SetUpUserNameField()
     {
         // Create random username if no username is found
         if (PlayerPrefs.GetString("Username", "NULLNULL") == "NULLNULL")
             PlayerPrefs.SetString("Username", RandomUsernameGenerator(15));
-        hostUserNameFieldText.text = PlayerPrefs.GetString("Username", "NULLNULL");
-        joinUserNameFieldText.text = PlayerPrefs.GetString("Username", "NULLNULL");
         hostUserNamePlaceholderText.text = PlayerPrefs.GetString("Username", "NULLNULL");
         joinUserNamePlaceholderText.text = PlayerPrefs.GetString("Username", "NULLNULL");
     }
@@ -42,7 +51,6 @@ public class MainMenu : MonoBehaviour
         if (PlayerPrefs.GetString("HostIP", "NULL") == "NULL")
             PlayerPrefs.SetString("HostIP", "127.0.0.1");
         ipFieldPlaceholderText.text = PlayerPrefs.GetString("HostIP");
-        ipFieldText.text = PlayerPrefs.GetString("HostIP");
     }
 
     #endregion
@@ -93,10 +101,19 @@ public class MainMenu : MonoBehaviour
 
     #region Actions
 
+    public void ChangePort(string _portString)
+    {
+        int _portNum = int.Parse(_portString);
+        PlayerPrefs.SetInt("Port", _portNum);
+        hostPortPlaceholderText.text = _portString;
+        joinPortPlaceholderText.text = _portString;
+    }
+
     public void ChangeUsername(string _username)
     {
         PlayerPrefs.SetString("Username", _username);
-        SetUpUserNameField();
+        hostUserNameFieldText.text = _username;
+        joinUserNameFieldText.text = _username;
     }
 
     public void ChangeHostIP(string _ip)

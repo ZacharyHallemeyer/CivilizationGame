@@ -31,6 +31,7 @@ public class ClientCS : MonoBehaviour
 
     private void Awake()
     {
+        port = PlayerPrefs.GetInt("Port", 26950);
         if (instance == null)
         {
             instance = this;

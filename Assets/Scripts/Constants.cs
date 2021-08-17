@@ -633,7 +633,7 @@ public static class Constants
         "Yellow",
     };
 
-    public static Dictionary<string, Color> tribeColors = new Dictionary<string, Color>()
+    public static Dictionary<string, Color> tribeBodyColors = new Dictionary<string, Color>()
     {
         { "Blue", new Color(0f, 0.102445f, 0.5471698f) },
         { "Cyan", new Color(0f, 0.5607098f, 0.5660378f) },
@@ -645,6 +645,20 @@ public static class Constants
         { "Red", new Color(0.6415094f, 0.08775366f, 0.08775366f) },
         { "White", new Color(1f, 1f, 1f) },
         { "Yellow", new Color(0.9433962f, 0.8335572f, 0f) },
+    };
+
+    public static Dictionary<string, Color> tribeEyeColors = new Dictionary<string, Color>()
+    {
+        { "Blue", new Color(1f, 1f, 1) },
+        { "Cyan", new Color(0f, 0f, 0f) },
+        { "Green", new Color(0f, 0f, 0f) },
+        { "Magenta", new Color(1f, 1f, 1f) },
+        { "Purple", new Color(1f, 1f, 1f) },
+        { "Orange", new Color(0f, 0f, 0f) },
+        { "Pink", new Color(0f, 0f, 0f) },
+        { "Red", new Color(1f, 1f, 1f) },
+        { "White", new Color(0f, 0f, 0f) },
+        { "Yellow", new Color(0f, 0f, 0f) },
     };
 
     public static Dictionary<string, string> tribeSkills = new Dictionary<string, string>()

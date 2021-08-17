@@ -28,7 +28,7 @@ public class NetworkManager : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
 
-        Server.Start(50, 26950);
+        Server.Start(50, PlayerPrefs.GetInt("Port"));
     }
 
     public PlayerSS InstantiatePlayer()

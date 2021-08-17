@@ -309,7 +309,8 @@ public class GameManagerCS : MonoBehaviour
         _troopInfo.troopActions.CheckTroopSeeingRange();
 
         // Change color to tribe color
-        _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color = Constants.tribeColors[PlayerCS.instance.tribe];
+        _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color = Constants.tribeBodyColors[PlayerCS.instance.tribe];
+        _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].color = Constants.tribeEyeColors[PlayerCS.instance.tribe];
 
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;
@@ -354,7 +355,8 @@ public class GameManagerCS : MonoBehaviour
 
         // Change color to tribe color
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
-                                                                Constants.tribeColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
+                                                                Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
+        _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].color = Constants.tribeEyeColors[PlayerCS.instance.tribe];
 
         troops.Add(_troopInfo.id, _troopInfo);
     }

@@ -792,27 +792,31 @@ public class TroopActionsCS : MonoBehaviour
     public void HideQuickMenu()
     {
         PlayerCS.instance.playerUI.menuButton.SetActive(true);
-        //PlayerCS.instance.isAbleToCommitActions = true;
         ResetQuickMenu();
     }
 
     public void ShowQuickMenu()
     {
         PlayerCS.instance.playerUI.menuButton.SetActive(false);
-        //PlayerCS.instance.isAbleToCommitActions = false;
         PlayerCS.instance.HideQuckMenus();
-        DisplayerPossibleActions();
         quickMenuContainer.SetActive(true);
         if (troopInfo.troopName == "King")
-        {
             mainKingContainer.SetActive(true);
-        }
         else
             mainContainer.SetActive(true);
+
+        DisplayerPossibleActions();
     }
 
     public void DisplayerPossibleActions()
     {
+        int _currentXCoord = -700, _xCoordIncrement = 500, _currentYCoord = -400;
+
+        // Deactivate all action buttons beside close 
+        createCityButton.gameObject.SetActive(false);
+        conquerKingCityButton.gameObject.SetActive(false);
+        conquerMainCityButton.gameObject.SetActive(false);
+
         // Check if troop can conquer a city
         TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
         if(_tile.isCity )
@@ -821,27 +825,34 @@ public class TroopActionsCS : MonoBehaviour
             if(_city.isAbleToBeConquered)
             {
                 if (troopInfo.troopName == "King")
-                    conquerKingCityButton.enabled = true;
+                {
+                    conquerKingCityButton.gameObject.SetActive(true);
+                    conquerKingCityButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+                    _currentXCoord += _xCoordIncrement;
+                }
                 else
-                    conquerMainCityButton.enabled = true;
+                {
+                    conquerMainCityButton.gameObject.SetActive(true);
+                    conquerMainCityButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+                    _currentXCoord += _xCoordIncrement;
+                }
             }
-            else
-            {
-                conquerKingCityButton.enabled = false;
-                conquerMainCityButton.enabled = false;
-            }
-        }
-        else
-        {
-            conquerKingCityButton.enabled = false;
-            conquerMainCityButton.enabled = false;
         }
         if(troopInfo.troopName == "King")
         {
-            if (!CanCreateCity())
-                createCityButton.enabled = false;
-            else
-                createCityButton.enabled = true;
+            if (CanCreateCity())
+            {
+                createCityButton.gameObject.SetActive(true);
+                createCityButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+                _currentXCoord += _xCoordIncrement;
+            }
+        }
+
+        // If no actions possible then close quick menu
+        if (!conquerMainCityButton.gameObject.activeInHierarchy && !conquerKingCityButton.gameObject.activeInHierarchy && 
+            !createCityButton.gameObject.activeInHierarchy)
+        {
+            ResetQuickMenu();
         }
     }
 
@@ -850,8 +861,8 @@ public class TroopActionsCS : MonoBehaviour
         quickMenuContainer.SetActive(false);
         mainContainer.SetActive(false);
         mainKingContainer.SetActive(false);
-        createCityButton.enabled = true;
         PlayerCS.instance.isAbleToCommitActions = true;
+        PlayerCS.instance.playerUI.menuButton.SetActive(false);
     }
 
     public void SetCurrentTroopId()
