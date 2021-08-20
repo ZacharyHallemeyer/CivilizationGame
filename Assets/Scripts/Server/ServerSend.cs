@@ -267,6 +267,7 @@ public class ServerSend
         {
             foreach(TroopInfo _troop in _troopDict.Keys)
             {
+                
                 // Remove troop from list and remove component once troop info has been sent to call clients
                 if(_troop.idOfPlayerThatSentInfo == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
@@ -275,33 +276,94 @@ public class ServerSend
                 }
                 else
                 {
-                    using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
+                    // Check which command
+                    if (_troopDict[_troop] == "Spawn")
                     {
-                        _packet.Write(_troop.id);
-                        _packet.Write(_troop.ownerId);
-                        _packet.Write(_troop.troopName);
-                        _packet.Write(_troop.xIndex);
-                        _packet.Write(_troop.zIndex);
-                        _packet.Write(_troop.rotation);
-                        _packet.Write(_troop.health);
-                        _packet.Write(_troop.baseAttack);
-                        _packet.Write(_troop.stealthAttack);
-                        _packet.Write(_troop.counterAttack);
-                        _packet.Write(_troop.baseDefense);
-                        _packet.Write(_troop.facingDefense);
-                        _packet.Write(_troop.attackRange);
-                        _packet.Write(_troop.seeRange);
-                        _packet.Write(_troop.canMultyKill);
-                        _packet.Write(_troop.lastTroopAttackedId);
-                        _packet.Write(_troop.attackRotation);
-                        _packet.Write(_troopDict[_troop]);
-                        SendTCPData(_playerId, _packet);
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientSpawnTroopInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.ownerId);
+                            _packet.Write(_troop.troopName);
+                            _packet.Write(_troop.xIndex);
+                            _packet.Write(_troop.zIndex);
+                            _packet.Write(_troop.rotation);
+                            _packet.Write(_troop.health);
+                            _packet.Write(_troop.baseAttack);
+                            _packet.Write(_troop.stealthAttack);
+                            _packet.Write(_troop.counterAttack);
+                            _packet.Write(_troop.baseDefense);
+                            _packet.Write(_troop.facingDefense);
+                            _packet.Write(_troop.attackRange);
+                            _packet.Write(_troop.seeRange);
+                            _packet.Write(_troop.canMultyKill);
+                            _packet.Write(_troop.lastTroopAttackedId);
+                            _packet.Write(_troop.attackRotation);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_troopDict[_troop] == "Move")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientMoveTroopInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.xIndex);
+                            _packet.Write(_troop.zIndex);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_troopDict[_troop] == "Rotate")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientRotateTroopInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.rotation);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_troopDict[_troop] == "Attack")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientAttackTroopInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.lastTroopAttackedId);
+                            _packet.Write(_troop.attackRotation);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_troopDict[_troop] == "Hurt")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientHurtTroopInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.health);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_troopDict[_troop] == "Die")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientDieTroopInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
                     }
                 }
             }
         }
         // Write -1 for id so client knows when all data has been recieved
-        using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTroopInfo))
+        using (Packet _packet = new Packet((int)ServerPackets.sendClientUpdatedTroopInfo))
         {
             _packet.Write(-1);
 
@@ -338,29 +400,74 @@ public class ServerSend
                 }
                 else
                 {
-                    //Debug.Log("Sending tile " + _tile.id + " to client");
-                    using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTileInfo))
+                    // Check which command 
+                    if (_tileDict[_tile] == "OccupyChange")
                     {
-                        _packet.Write(_tile.id);
-                        _packet.Write(_tile.ownerId);
-                        _packet.Write(_tile.isRoad);
-                        _packet.Write(_tile.isCity);
-                        _packet.Write(_tile.isBuilding);
-                        _packet.Write(_tile.isOccupied);
-                        _packet.Write(_tile.occupyingObjectId);
-                        _packet.Write(_tile.xIndex);
-                        _packet.Write(_tile.zIndex);
-                        _packet.Write(_tile.cityId);
-                        _packet.Write(_tile.buildingName);
-                        _packet.Write(_tileDict[_tile]);
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientOccupyChangeTileInfo))
+                        {
+                            _packet.Write(_tile.id);
+                            _packet.Write(_tile.xIndex);
+                            _packet.Write(_tile.zIndex);
+                            _packet.Write(_tile.isOccupied);
+                            _packet.Write(_tile.occupyingObjectId);
+                            _packet.Write(_tileDict[_tile]);
 
-                        SendTCPData(_playerId, _packet);
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_tileDict[_tile] == "OwnershipChange")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientOwnershipChangeTileInfo))
+                        {
+                            _packet.Write(_tile.id);
+                            _packet.Write(_tile.xIndex);
+                            _packet.Write(_tile.zIndex);
+                            _packet.Write(_tile.ownerId);
+                            _packet.Write(_tileDict[_tile]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_tileDict[_tile] == "BuildBuilding")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientBuildBuildingTileInfo))
+                        {
+                            _packet.Write(_tile.id);
+                            _packet.Write(_tile.xIndex);
+                            _packet.Write(_tile.zIndex);
+                            _packet.Write(_tile.isRoad);
+                            _packet.Write(_tile.isBuilding);
+                            _packet.Write(_tile.buildingName);
+                            _packet.Write(_tileDict[_tile]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_tileDict[_tile] == "Update")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientUpdatedTileInfo))
+                        {
+                            _packet.Write(_tile.id);
+                            _packet.Write(_tile.ownerId);
+                            _packet.Write(_tile.isRoad);
+                            _packet.Write(_tile.isCity);
+                            _packet.Write(_tile.isBuilding);
+                            _packet.Write(_tile.isOccupied);
+                            _packet.Write(_tile.occupyingObjectId);
+                            _packet.Write(_tile.xIndex);
+                            _packet.Write(_tile.zIndex);
+                            _packet.Write(_tile.cityId);
+                            _packet.Write(_tile.buildingName);
+                            _packet.Write(_tileDict[_tile]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
                     }
                 }
             }
         }
         // Write -1 for id so client knows when all data has been recieved
-        using (Packet _packet = new Packet((int)ServerPackets.sendModifiedTileInfo))
+        using (Packet _packet = new Packet((int)ServerPackets.sendClientUpdatedTileInfo))
         {
             _packet.Write(-1);
 
@@ -394,34 +501,95 @@ public class ServerSend
                 }
                 else
                 {
-                    using (Packet _packet = new Packet((int)ServerPackets.sendModifiedCityInfo))
+                    if (_cityDict[_city] == "Spawn")
                     {
-                        _packet.Write(_city.id);
-                        _packet.Write(_city.ownerId);
-                        _packet.Write(_city.morale);
-                        _packet.Write(_city.education);
-                        _packet.Write(_city.ownerShipRange);
-                        _packet.Write(_city.woodResourcesPerTurn);
-                        _packet.Write(_city.metalResourcesPerTurn);
-                        _packet.Write(_city.foodResourcesPerTurn);
-                        _packet.Write(_city.moneyResourcesPerTurn);
-                        _packet.Write(_city.populationResourcesPerTurn);
-                        _packet.Write(_city.isBeingConquered);
-                        _packet.Write(_city.isConstructingBuilding);
-                        _packet.Write(_city.occupyingObjectId);
-                        _packet.Write(_city.xIndex);
-                        _packet.Write(_city.zIndex);
-                        _packet.Write(_city.level);
-                        _packet.Write(_city.experience);
-                        _packet.Write(_city.experienceToNextLevel);
-                        _packet.Write(_cityDict[_city]);
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientCreateCityInfo))
+                        {
+                            _packet.Write(_city.id);
+                            _packet.Write(_city.ownerId);
+                            _packet.Write(_city.morale);
+                            _packet.Write(_city.education);
+                            _packet.Write(_city.ownerShipRange);
+                            _packet.Write(_city.woodResourcesPerTurn);
+                            _packet.Write(_city.metalResourcesPerTurn);
+                            _packet.Write(_city.foodResourcesPerTurn);
+                            _packet.Write(_city.moneyResourcesPerTurn);
+                            _packet.Write(_city.populationResourcesPerTurn);
+                            _packet.Write(_city.isBeingConquered);
+                            _packet.Write(_city.isConstructingBuilding);
+                            _packet.Write(_city.occupyingObjectId);
+                            _packet.Write(_city.xIndex);
+                            _packet.Write(_city.zIndex);
+                            _packet.Write(_city.level);
+                            _packet.Write(_city.experience);
+                            _packet.Write(_city.experienceToNextLevel);
+                            _packet.Write(_cityDict[_city]);
 
-                        SendTCPData(_playerId, _packet);
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_cityDict[_city] == "LevelUp")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientLevelUpCityInfo))
+                        {
+                            _packet.Write(_city.id);
+                            _packet.Write(_city.ownerId);
+                            _packet.Write(_city.ownerShipRange);
+                            _packet.Write(_city.woodResourcesPerTurn);
+                            _packet.Write(_city.metalResourcesPerTurn);
+                            _packet.Write(_city.foodResourcesPerTurn);
+                            _packet.Write(_city.moneyResourcesPerTurn);
+                            _packet.Write(_city.populationResourcesPerTurn);
+                            _packet.Write(_city.level);
+                            _packet.Write(_city.experience);
+                            _packet.Write(_city.experienceToNextLevel);
+                            _packet.Write(_cityDict[_city]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_cityDict[_city] == "Conquer")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientConqueredCityInfo))
+                        {
+                            _packet.Write(_city.id);
+                            _packet.Write(_city.ownerId);
+                            _packet.Write(_cityDict[_city]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_cityDict[_city] == "Update")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientUpdatedCityInfo))
+                        {
+                            _packet.Write(_city.id);
+                            _packet.Write(_city.ownerId);
+                            _packet.Write(_city.morale);
+                            _packet.Write(_city.education);
+                            _packet.Write(_city.ownerShipRange);
+                            _packet.Write(_city.woodResourcesPerTurn);
+                            _packet.Write(_city.metalResourcesPerTurn);
+                            _packet.Write(_city.foodResourcesPerTurn);
+                            _packet.Write(_city.moneyResourcesPerTurn);
+                            _packet.Write(_city.populationResourcesPerTurn);
+                            _packet.Write(_city.isBeingConquered);
+                            _packet.Write(_city.isConstructingBuilding);
+                            _packet.Write(_city.occupyingObjectId);
+                            _packet.Write(_city.xIndex);
+                            _packet.Write(_city.zIndex);
+                            _packet.Write(_city.level);
+                            _packet.Write(_city.experience);
+                            _packet.Write(_city.experienceToNextLevel);
+                            _packet.Write(_cityDict[_city]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
                     }
                 }
             }
         }
-        using (Packet _packet = new Packet((int)ServerPackets.sendModifiedCityInfo))
+        using (Packet _packet = new Packet((int)ServerPackets.sendClientUpdatedCityInfo))
         {
             _packet.Write(-1);
 

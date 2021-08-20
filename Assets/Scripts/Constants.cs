@@ -385,6 +385,15 @@ public static class Constants
                 { "Population", 0 },
             }
         },
+        { "Port" , new Dictionary<string, int> 
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
         { "Market" , new Dictionary<string, int> 
             {
                 { "Food", 10 },
@@ -479,7 +488,7 @@ public static class Constants
 
     public static Dictionary<string, Dictionary<string, float>> buildingResourceGain = new Dictionary<string, Dictionary<string, float>>()
     {
-        { "Lumberyard" , new Dictionary<string, float> 
+        { "LumberYard" , new Dictionary<string, float> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
@@ -575,6 +584,18 @@ public static class Constants
                 { "Experience", 10f },
             } 
         },
+        { "Port" , new Dictionary<string, float> 
+            {
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 50 },
+                { "Population", 1 },
+                { "Morale", .15f },
+                { "Education", 0f },
+                { "Experience", 10f },
+            } 
+        },
     };
 
     public static Dictionary<string, int> allSkills = new Dictionary<string, int>()
@@ -584,7 +605,7 @@ public static class Constants
         { "Missle", 300 },    
         { "Defense", 200 },    
         { "Stealth", 200 },    
-        { "Sailing", 300 },    
+        { "Port", 300 },    
         { "Warship", 500 },    
         { "Walls", 100 },    
         { "Dome", 200 },    
@@ -605,8 +626,8 @@ public static class Constants
         { "Missle", new [] { "Army", "Snipper" } },
         { "Defense", new [] { "Army" } },
         { "Stealth", new [] { "Army" } },
-        { "Sailing", new string[0] },
-        { "Warship", new [] { "Sailing" } },
+        { "Port", new string[0] },
+        { "Warship", new [] { "Port" } },
         { "Walls", new [] { "Mine"} },
         { "Dome", new [] { "Mine", "Walls" } },
         { "Library", new string[0] },

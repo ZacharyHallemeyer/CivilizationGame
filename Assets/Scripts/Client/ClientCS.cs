@@ -302,9 +302,26 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.sendTileInfo, ClientHandle.CreateNewTile},
             { (int)ServerPackets.sendNeutralCityInfo, ClientHandle.CreateNeutralCity},
+            { (int)ServerPackets.sendClientSpawnTroopInfo, ClientHandle.ReceiveSpawnTroopInfo},
+            { (int)ServerPackets.sendClientMoveTroopInfo, ClientHandle.ReceiveMoveTroopInfo},
+            { (int)ServerPackets.sendClientRotateTroopInfo, ClientHandle.ReceiveRotateTroopInfo},
+            { (int)ServerPackets.sendClientAttackTroopInfo, ClientHandle.ReceiveAttackTroopInfo},
+            { (int)ServerPackets.sendClientHurtTroopInfo, ClientHandle.ReceiveHurtTroopInfo},
+            { (int)ServerPackets.sendClientDieTroopInfo, ClientHandle.ReceiveDieTroopInfo},
+            { (int)ServerPackets.sendClientUpdatedTroopInfo, ClientHandle.ReceiveUpdatedTroopInfo},
+            { (int)ServerPackets.sendClientOccupyChangeTileInfo, ClientHandle.ReceiveOccupyChangeTileInfo},
+            { (int)ServerPackets.sendClientOwnershipChangeTileInfo, ClientHandle.ReceiveOwnershipChangeTileInfo},
+            { (int)ServerPackets.sendClientBuildBuildingTileInfo, ClientHandle.ReceiveBuildBuildingTileInfo},
+            { (int)ServerPackets.sendClientUpdatedTileInfo, ClientHandle.ReceiveUpdatedTileInfo},
+            { (int)ServerPackets.sendClientCreateCityInfo, ClientHandle.ReceiveCreateCityInfo},
+            { (int)ServerPackets.sendClientConqueredCityInfo, ClientHandle.ReceiveConquerCityInfo},
+            { (int)ServerPackets.sendClientLevelUpCityInfo, ClientHandle.ReceiveLevelUpCityInfo},
+            { (int)ServerPackets.sendClientUpdatedCityInfo, ClientHandle.ReceiveUpdatedCityInfo},
+            /*
             { (int)ServerPackets.sendModifiedTroopInfo, ClientHandle.RecieveModifiedTroopInfo},
             { (int)ServerPackets.sendModifiedTileInfo, ClientHandle.RecieveModifiedTileInfo},
             { (int)ServerPackets.sendModifiedCityInfo, ClientHandle.RecieveModifiedCityInfo},
+            */
             { (int)ServerPackets.startTurn, ClientHandle.PlayerStartTurn},
         };
         //Debug.Log("Initialized packets.");

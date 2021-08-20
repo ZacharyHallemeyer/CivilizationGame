@@ -3042,7 +3042,7 @@ MonoBehaviour:
   librarySkillButton: {fileID: 8749374223883901764}
   schoolSkillButton: {fileID: 5251400060501388554}
   domeSkillButton: {fileID: 3215582876976080628}
-  sailingSkillButton: {fileID: 8420124663042264636}
+  portSkillButton: {fileID: 8420124663042264636}
   warshipSkillButton: {fileID: 4199985982744067795}
   farmSkillButton: {fileID: 7184930316162068876}
   mineSkillButton: {fileID: 8518573032330199113}
@@ -3059,7 +3059,7 @@ MonoBehaviour:
   librarySkillText: {fileID: 7603293304054394592}
   schoolSkillText: {fileID: 3855856683184402189}
   domeSkillText: {fileID: 7136423487469060672}
-  sailingSkillText: {fileID: 6823490811925271264}
+  portSkillText: {fileID: 6823490811925271264}
   warshipSkillText: {fileID: 8036730352052953372}
   farmSkillText: {fileID: 2768607552147648173}
   mineSkillText: {fileID: 3480883523504506904}
@@ -3398,7 +3398,7 @@ GameObject:
   - component: {fileID: 1975604704696642733}
   - component: {fileID: 8420124663042264636}
   m_Layer: 8
-  m_Name: Sailing
+  m_Name: Port
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3512,7 +3512,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Sailing
+          m_StringArgument: Port
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4140527020285875203
@@ -3728,7 +3728,7 @@ GameObject:
   - component: {fileID: 3397470037780757039}
   - component: {fileID: 6823490811925271264}
   m_Layer: 8
-  m_Name: SailingText
+  m_Name: PortText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3780,9 +3780,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Sailing
-
-'
+  m_text: Port
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

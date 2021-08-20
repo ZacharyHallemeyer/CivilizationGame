@@ -78,6 +78,8 @@ public class ServerHandle
         ServerSend.SendAvaliableTribes(GameManagerSS.instance.avaliableTribe);
     }
 
+    #region Troop Info
+
     /// <summary>
     /// Recieve all modified tile data from client and store in a dictionary
     /// </summary>
@@ -124,7 +126,248 @@ public class ServerHandle
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
-    public static void RecieveTileInfo(int _fromClient, Packet _packet)
+    public static void RecieveTroopSpawnInfo(int _fromClient, Packet _packet)
+    {
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _packet.ReadInt();
+        _troop.ownerId = _packet.ReadInt();
+        _troop.troopName = _packet.ReadString();
+        _troop.xIndex = _packet.ReadInt();
+        _troop.zIndex = _packet.ReadInt();
+        _troop.rotation = _packet.ReadInt();
+        _troop.health = _packet.ReadInt();
+        _troop.baseAttack = _packet.ReadInt();
+        _troop.stealthAttack = _packet.ReadInt();
+        _troop.counterAttack = _packet.ReadInt();
+        _troop.baseDefense = _packet.ReadInt();
+        _troop.facingDefense = _packet.ReadInt();
+        _troop.attackRange = _packet.ReadInt();
+        _troop.seeRange = _packet.ReadInt();
+        _troop.canMultyKill = _packet.ReadBool();
+        _troop.lastTroopAttackedId = _packet.ReadInt();
+        _troop.attackRotation = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTroopMoveInfo(int _fromClient, Packet _packet)
+    {
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _packet.ReadInt();
+        _troop.xIndex = _packet.ReadInt();
+        _troop.zIndex = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTroopRotateInfo(int _fromClient, Packet _packet)
+    {
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _packet.ReadInt();
+        _troop.rotation = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTroopAttackInfo(int _fromClient, Packet _packet)
+    {
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _packet.ReadInt();
+        _troop.lastTroopAttackedId = _packet.ReadInt();
+        _troop.attackRotation = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTroopHurtInfo(int _fromClient, Packet _packet)
+    {
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _packet.ReadInt();
+        _troop.health = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTroopDieInfo(int _fromClient, Packet _packet)
+    {
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTroopUpdatedInfo(int _fromClient, Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        if (_id == -1)       // If the id is equal to -1 then all data has been recieved
+        {
+            GameManagerSS.instance.isAllTroopInfoReceived = true;
+            return;
+        }
+
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _id;
+        _troop.ownerId = _packet.ReadInt();
+        _troop.troopName = _packet.ReadString();
+        _troop.xIndex = _packet.ReadInt();
+        _troop.zIndex = _packet.ReadInt();
+        _troop.rotation = _packet.ReadInt();
+        _troop.health = _packet.ReadInt();
+        _troop.baseAttack = _packet.ReadInt();
+        _troop.stealthAttack = _packet.ReadInt();
+        _troop.counterAttack = _packet.ReadInt();
+        _troop.baseDefense = _packet.ReadInt();
+        _troop.facingDefense = _packet.ReadInt();
+        _troop.attackRange = _packet.ReadInt();
+        _troop.seeRange = _packet.ReadInt();
+        _troop.canMultyKill = _packet.ReadBool();
+        _troop.lastTroopAttackedId = _packet.ReadInt();
+        _troop.attackRotation = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    #endregion
+
+    #region Tile Info
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTileOccupyChangeInfo(int _fromClient, Packet _packet)
+    {
+        TileInfo _tile = GameManagerSS.instance.gameObject.AddComponent<TileInfo>();
+
+        _tile.id = _packet.ReadInt();
+        _tile.xIndex = _packet.ReadInt();
+        _tile.zIndex = _packet.ReadInt();
+        _tile.isOccupied = _packet.ReadBool();
+        _tile.occupyingObjectId = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _tile.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile, _command} };
+        GameManagerSS.instance.modifiedTileInfo.Add(_tileData);     // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTileOwnershipChangeInfo(int _fromClient, Packet _packet)
+    {
+        TileInfo _tile = GameManagerSS.instance.gameObject.AddComponent<TileInfo>();
+
+        _tile.id = _packet.ReadInt();
+        _tile.xIndex = _packet.ReadInt();
+        _tile.zIndex = _packet.ReadInt();
+        _tile.ownerId = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _tile.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile, _command} };
+        GameManagerSS.instance.modifiedTileInfo.Add(_tileData);     // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveBuildBuildingInfo(int _fromClient, Packet _packet)
+    {
+        TileInfo _tile = GameManagerSS.instance.gameObject.AddComponent<TileInfo>();
+
+        _tile.id = _packet.ReadInt();
+        _tile.xIndex = _packet.ReadInt();
+        _tile.zIndex = _packet.ReadInt();
+        _tile.isRoad = _packet.ReadBool();
+        _tile.isBuilding = _packet.ReadBool();
+        _tile.buildingName = _packet.ReadString();
+        string _command = _packet.ReadString();
+        _tile.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile, _command} };
+        GameManagerSS.instance.modifiedTileInfo.Add(_tileData);     // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified tile data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveUpdatedTileInfo(int _fromClient, Packet _packet)
     {
         int _id = _packet.ReadInt();
         //Debug.Log("Recieved tile " + _id + " from client");
@@ -155,12 +398,16 @@ public class ServerHandle
         GameManagerSS.instance.modifiedTileInfo.Add(_tileData);     // Add data to dictionary that will be sent to all clients
     }
 
+    #endregion
+
+    #region City Info
+
     /// <summary>
     /// Recieve all modified city data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> client id that this data is being sent from </param>
     /// <param name="_packet"> Packet from client </param>
-    public static void RecieveCityInfo(int _fromClient, Packet _packet)
+    public static void RecieveSpawnCityInfo(int _fromClient, Packet _packet)
     {
         int _id = _packet.ReadInt();
         if (_id == -1)      // If the id is equal to -1 then all data has been recieved
@@ -195,6 +442,110 @@ public class ServerHandle
             { {_city, _command} };
         GameManagerSS.instance.modifiedCityInfo.Add(_cityData);     // Add data to dictionary that will be sent to all clients
     }
+
+
+
+    /// <summary>
+    /// Recieve all modified city data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> client id that this data is being sent from </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveLevelUpCityInfo(int _fromClient, Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
+        {
+            GameManagerSS.instance.isAllCityInfoReceived = true;
+            return;
+        }
+        CityInfo _city = GameManagerSS.instance.gameObject.AddComponent<CityInfo>();
+
+        _city.id = _id;
+        _city.ownerId = _packet.ReadInt();
+        _city.ownerShipRange = _packet.ReadInt();
+        _city.woodResourcesPerTurn = _packet.ReadInt();
+        _city.metalResourcesPerTurn = _packet.ReadInt();
+        _city.foodResourcesPerTurn = _packet.ReadInt();
+        _city.moneyResourcesPerTurn = _packet.ReadInt();
+        _city.populationResourcesPerTurn = _packet.ReadInt();
+        _city.level = _packet.ReadInt();
+        _city.experienceToNextLevel = _packet.ReadInt();
+        _city.experienceToNextLevel = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _city.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+            { {_city, _command} };
+        GameManagerSS.instance.modifiedCityInfo.Add(_cityData);     // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified city data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> client id that this data is being sent from </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveConquerCityInfo(int _fromClient, Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
+        {
+            GameManagerSS.instance.isAllCityInfoReceived = true;
+            return;
+        }
+        CityInfo _city = GameManagerSS.instance.gameObject.AddComponent<CityInfo>();
+
+        _city.id = _id;
+        _city.ownerId = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _city.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+            { {_city, _command} };
+        GameManagerSS.instance.modifiedCityInfo.Add(_cityData);     // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
+    /// Recieve all modified city data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> client id that this data is being sent from </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveUpdatedCityInfo(int _fromClient, Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
+        {
+            GameManagerSS.instance.isAllCityInfoReceived = true;
+            return;
+        }
+        CityInfo _city = GameManagerSS.instance.gameObject.AddComponent<CityInfo>();
+
+        _city.id = _id;
+        _city.ownerId = _packet.ReadInt();
+        _city.morale = _packet.ReadFloat();
+        _city.education = _packet.ReadFloat();
+        _city.ownerShipRange = _packet.ReadInt();
+        _city.woodResourcesPerTurn = _packet.ReadInt();
+        _city.metalResourcesPerTurn = _packet.ReadInt();
+        _city.foodResourcesPerTurn = _packet.ReadInt();
+        _city.moneyResourcesPerTurn = _packet.ReadInt();
+        _city.populationResourcesPerTurn = _packet.ReadInt();
+        _city.isBeingConquered = _packet.ReadBool();
+        _city.isConstructingBuilding = _packet.ReadBool();
+        _city.occupyingObjectId = _packet.ReadInt();
+        _city.xIndex = _packet.ReadInt();
+        _city.zIndex = _packet.ReadInt();
+        _city.level = _packet.ReadInt();
+        _city.experienceToNextLevel = _packet.ReadInt();
+        _city.experienceToNextLevel = _packet.ReadInt();
+        string _command = _packet.ReadString();
+        _city.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+            { {_city, _command} };
+        GameManagerSS.instance.modifiedCityInfo.Add(_cityData);     // Add data to dictionary that will be sent to all clients
+    }
+
+    #endregion
 
     /// <summary>
     /// End turn for current player and start turn for new player after all data have been recieved from client.

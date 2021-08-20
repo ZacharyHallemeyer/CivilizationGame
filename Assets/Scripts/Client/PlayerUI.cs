@@ -14,11 +14,11 @@ public class PlayerUI : MonoBehaviour
     // SKill Tree
     public Button roadSkillButton, wallSkillButton, armySkillButton, snipperSkillButton, missleSkillButton, defenseSkillButton,
                   stealthSkillButton, marketSkillButton, housingSkillButton, librarySkillButton, schoolSkillButton, domeSkillButton,
-                  sailingSkillButton, warshipSkillButton, farmSkillButton, mineSkillButton, lumberYardSkillButton;
+                  portSkillButton, warshipSkillButton, farmSkillButton, mineSkillButton, lumberYardSkillButton;
 
     public TextMeshProUGUI roadSkillText, wallSkillText, armySkillText, snipperSkillText, missleSkillText, defenseSkillText,
                   stealthSkillText, marketSkillText, housingSkillText, librarySkillText, schoolSkillText, domeSkillText,
-                  sailingSkillText, warshipSkillText, farmSkillText, mineSkillText, lumberYardSkillText;
+                  portSkillText, warshipSkillText, farmSkillText, mineSkillText, lumberYardSkillText;
 
     public Dictionary<string, Button> skillButtons = new Dictionary<string, Button>();
     public Dictionary<string, TextMeshProUGUI> skillText = new Dictionary<string, TextMeshProUGUI>();
@@ -32,7 +32,7 @@ public class PlayerUI : MonoBehaviour
             { "Missle", missleSkillButton },
             { "Defense", defenseSkillButton },
             { "Stealth", stealthSkillButton },
-            { "Sailing", sailingSkillButton },
+            { "Port", portSkillButton },
             { "Warship", warshipSkillButton },
             { "Walls", wallSkillButton },
             { "Dome", domeSkillButton },
@@ -53,7 +53,7 @@ public class PlayerUI : MonoBehaviour
             { "Missle", missleSkillText },
             { "Defense", defenseSkillText },
             { "Stealth", stealthSkillText },
-            { "Sailing", sailingSkillText },
+            { "Port", portSkillText },
             { "Warship", warshipSkillText },
             { "Walls", wallSkillText },
             { "Dome", domeSkillText },
@@ -151,7 +151,8 @@ public class PlayerUI : MonoBehaviour
 
         if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" || _skill == "Stealh")
             Constants.avaliableTroops.Add(_skill);
-        else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market")
+        else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market" || 
+                 _skill == "Port")
             Constants.avaliableBuildings.Add(_skill);
 
         InitSkillTree();

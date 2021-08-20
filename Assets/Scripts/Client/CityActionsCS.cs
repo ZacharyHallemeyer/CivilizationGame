@@ -10,11 +10,11 @@ public class CityActionsCS : MonoBehaviour
     public CityInfo cityInfo;
 
     // Buttons
+    public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton, portButton;
     public Button scoutButton, militiaButton, armyButton, missleButton, defenseButton, stealthButton, snipperButton;
-    public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton;
 
     // Resource Cost Text
-    public TextMeshProUGUI lumberYardText, schoolText, libraryText, domeText, housingText, farmText, mineText, marketText;
+    public TextMeshProUGUI lumberYardText, schoolText, libraryText, domeText, housingText, farmText, mineText, marketText, portText;
     public TextMeshProUGUI scoutText, militiaText, armyText, missleText, defenseText, stealthText, snipperText;
 
     public string currentTroopTraining, currentBuidlingToBuild;
@@ -67,6 +67,7 @@ public class CityActionsCS : MonoBehaviour
             { "Library", libraryButton },
             { "Market", marketButton },
             { "Dome", domeButton },
+            { "Port", portButton },
         };
         buildingResourceText = new Dictionary<string, TextMeshProUGUI>()
         {
@@ -78,6 +79,7 @@ public class CityActionsCS : MonoBehaviour
             { "Library", libraryText },
             { "Market", marketText },
             { "Dome", domeText },
+            { "Port", portText },
         };
     }
 
@@ -257,6 +259,10 @@ public class CityActionsCS : MonoBehaviour
             marketButton.enabled = true;
         else
             marketButton.enabled = false;
+        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Port"]))
+            portButton.enabled = true;
+        else
+            portButton.enabled = false;
     }
 
     /// <summary>
@@ -265,7 +271,6 @@ public class CityActionsCS : MonoBehaviour
     /// </summary>
     public void DisplayPossibleTroops()
     {
-        /*
         if(GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied)
         {
             scoutButton.enabled = false;
@@ -305,7 +310,6 @@ public class CityActionsCS : MonoBehaviour
             snipperButton.enabled = true;
         else
             snipperButton.enabled = false;
-        */
     }
 
     /// <summary>
@@ -341,8 +345,10 @@ public class CityActionsCS : MonoBehaviour
         IncreaseOwnerShipRange();
         IncreaseResourceGain();
 
+        CityInfo _cityInfo = GameManagerCS.instance.dataStoringObject.AddComponent<CityInfo>();
+        _cityInfo.CopyCityInfo(cityInfo);
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { { cityInfo, "LevelUp" } };
+        { { _cityInfo, "LevelUp" } };
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
     }
 
@@ -479,27 +485,10 @@ public class CityActionsCS : MonoBehaviour
                     _tile = GameManagerCS.instance.tiles[x, z];
                     if (cityInfo.ownerId == _tile.ownerId && !_tile.isCity && !_tile.isBuilding)
                     {
-                        if (currentBuidlingToBuild == "Farm")
+                        if (currentBuidlingToBuild == "Port")
                         {
-                            if(_tile.isFood)
-                            {
-                                _tile.tile.layer = whatIsInteractableValue;
-                                _tile.tile.tag = constructBuildingTag;
-                                _tile.moveUI.SetActive(true);
-                            }
-                        }
-                        else if (currentBuidlingToBuild == "LumberYard")
-                        {
-                            if (_tile.isWood)
-                            {
-                                _tile.tile.layer = whatIsInteractableValue;
-                                _tile.tile.tag = constructBuildingTag;
-                                _tile.moveUI.SetActive(true);
-                            }
-                        }
-                        else if(currentBuidlingToBuild == "Mine")
-                        {
-                            if (_tile.isMetal)
+                            // Only let player build port on water tiles
+                            if (_tile.isWater)
                             {
                                 _tile.tile.layer = whatIsInteractableValue;
                                 _tile.tile.tag = constructBuildingTag;
@@ -508,9 +497,39 @@ public class CityActionsCS : MonoBehaviour
                         }
                         else
                         {
-                            _tile.tile.layer = whatIsInteractableValue;
-                            _tile.tile.tag = constructBuildingTag;
-                            _tile.moveUI.SetActive(true);
+                            if (currentBuidlingToBuild == "Farm")
+                            {
+                                if(_tile.isFood)
+                                {
+                                    _tile.tile.layer = whatIsInteractableValue;
+                                    _tile.tile.tag = constructBuildingTag;
+                                    _tile.moveUI.SetActive(true);
+                                }
+                            }
+                            else if (currentBuidlingToBuild == "LumberYard")
+                            {
+                                if (_tile.isWood)
+                                {
+                                    _tile.tile.layer = whatIsInteractableValue;
+                                    _tile.tile.tag = constructBuildingTag;
+                                    _tile.moveUI.SetActive(true);
+                                }
+                            }
+                            else if(currentBuidlingToBuild == "Mine")
+                            {
+                                if (_tile.isMetal)
+                                {
+                                    _tile.tile.layer = whatIsInteractableValue;
+                                    _tile.tile.tag = constructBuildingTag;
+                                    _tile.moveUI.SetActive(true);
+                                }
+                            }
+                            else
+                            {
+                                _tile.tile.layer = whatIsInteractableValue;
+                                _tile.tile.tag = constructBuildingTag;
+                                _tile.moveUI.SetActive(true);
+                            }
                         }
                         objecstToBeReset[_index] = _tile;
                         _index++;

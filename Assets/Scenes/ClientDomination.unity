@@ -390,6 +390,8 @@ MonoBehaviour:
     type: 3}
   marketPrefab: {fileID: 4356431058999883361, guid: 499eb70152d54c245bc480fab7bbd132,
     type: 3}
+  portPrefab: {fileID: 2836029860735209040, guid: 6129b0d1e23207e42b10f014b6c3b4eb,
+    type: 3}
   scoutPrefab: {fileID: 2813880598238819312, guid: 41c5f6606aefb1347ae9db2262ceaf60,
     type: 3}
   militiaPrefab: {fileID: 1236843211704913220, guid: 938b557b2446af94988761051127033f,
@@ -405,6 +407,10 @@ MonoBehaviour:
   snipperPrefab: {fileID: 3210314386889937490, guid: f8aa524f901a03c45b2c7d334d19d195,
     type: 3}
   kingPrefab: {fileID: 8395236428337834917, guid: 25d7f2d2bef727b479ae651debc44029,
+    type: 3}
+  canoePrefab: {fileID: 2538669629880715580, guid: 77a5d93601b3ee24eb2ebdb00e076469,
+    type: 3}
+  warShipPrefab: {fileID: 7128440709228273435, guid: f190cc4450af1d649a4984dbc53dd5dd,
     type: 3}
   swordPrefab: {fileID: 4630392494860568018, guid: d230336b416688841982877f75e3a237,
     type: 3}

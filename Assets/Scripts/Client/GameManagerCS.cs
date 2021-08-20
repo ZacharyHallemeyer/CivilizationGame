@@ -35,9 +35,9 @@ public class GameManagerCS : MonoBehaviour
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab, obstaclePrefab;
     public GameObject cityPrefab, cityLevel1Prefab, cityLevel2Prefab, cityLevel3Prefab, cityLevel4Prefab, cityLevel5Prefab;
     public GameObject ownershipObjectPrefab;
-    public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab;
+    public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab, portPrefab;
     public GameObject scoutPrefab, militiaPrefab, armyPrefab, misslePrefab, defensePrefab, stealthPrefab,
-                      snipperPrefab, kingPrefab;
+                      snipperPrefab, kingPrefab, canoePrefab, warShipPrefab;
     public GameObject swordPrefab, arrowPrefab;
 
     public string[] troopNames;
@@ -61,6 +61,8 @@ public class GameManagerCS : MonoBehaviour
     private string cityTag = "City";
     public int whatIsInteractableValue, whatIsDefaultValue;
 
+    public Dictionary<string, GameObject> buildingPrefabs;
+
     #region Set Up Functions
 
     // Set instance or destroy if instance already exist
@@ -73,6 +75,18 @@ public class GameManagerCS : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+        buildingPrefabs = new Dictionary<string, GameObject>()
+        {
+            { "LumberYard", lumberYardPrefab},
+            { "Farm", farmPrefab},
+            { "Mine", minePrefab},
+            { "Housing", housingPrefab},
+            { "School", schoolPrefab},
+            { "Library", libraryPrefab},
+            { "Market", marketPrefab},
+            { "Dome", domePrefab},
+            { "Port", portPrefab},
+        };
     }
 
     // Init needed data
@@ -266,6 +280,18 @@ public class GameManagerCS : MonoBehaviour
         tiles[_tile.xIndex, _tile.zIndex].UpdateTileInfo(_tile);
     }
 
+    public void ChangeTileOccupation(TileInfo _tile)
+    {
+        tiles[_tile.xIndex, _tile.zIndex].isOccupied = _tile.isOccupied;
+        tiles[_tile.xIndex, _tile.zIndex].occupyingObjectId = _tile.occupyingObjectId;
+    }
+
+    public void ChangeTileOwnership(TileInfo _tile)
+    {
+        tiles[_tile.xIndex, _tile.zIndex].ownerId = _tile.ownerId;
+        tiles[_tile.xIndex, _tile.zIndex].ownerShipVisualObject.SetActive(true);
+    }
+
     /// <summary>
     /// Updates tile's owner and displays it through visual object
     /// </summary>
@@ -322,7 +348,7 @@ public class GameManagerCS : MonoBehaviour
         _tile.isOccupied = true;
         _tile.occupyingObjectId = _troop.GetComponent<TroopInfo>().id;
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-            { {_tile, "Update"} };
+            { {_tile, "OccupyChange"} };
         modifiedTileInfo.Add(_tileData);
     }
 
@@ -509,7 +535,9 @@ public class GameManagerCS : MonoBehaviour
         yield return new WaitForEndOfFrame();
         TroopInfo _troopToAttack = troops[_troopInfo.lastTroopAttackedId];
         TroopInfo _troopAttacking = troops[_troopInfo.id];
-        _troopAttacking.UpdateTroopInfo(_troopInfo);
+        _troopAttacking.lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
+        _troopAttacking.attackRotation = _troopInfo.attackRotation;
+        //_troopAttacking.UpdateTroopInfo(_troopInfo);
         int _distance = Mathf.Abs(_troopToAttack.xIndex - _troopAttacking.xIndex) + Mathf.Abs(_troopToAttack.zIndex - _troopAttacking.zIndex);
         if (_distance == 1)
             StartCoroutine(SwordAttackAnimation(_troopAttacking, _troopAttacking.attackRotation));
@@ -627,8 +655,6 @@ public class GameManagerCS : MonoBehaviour
     public IEnumerator RemoveTroopInfo(TroopInfo _troopInfo)
     {
         TroopInfo _troop = troops[_troopInfo.id];
-        _troop.lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
-        _troop.attackRotation = _troopInfo.attackRotation;
         // Die animation
         PlayerCS.instance.isAnimInProgress = true;
         while (_troop.troop.transform.localPosition.y > -1.5f)
@@ -730,7 +756,7 @@ public class GameManagerCS : MonoBehaviour
                                 _tile.ownerId = -1;
                                 _tile.ownerShipVisualObject.SetActive(false);
                                 _tileData = new Dictionary<TileInfo, string>()
-                                 { { _tile, "Owned"} };
+                                 { { _tile, "Ownership"} };
                                 modifiedTileInfo.Add(_tileData);
                             }
                         }
@@ -810,7 +836,7 @@ public class GameManagerCS : MonoBehaviour
 
         // Update city dicts
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { {_cityInfo, "Spawn" } };
+        { {_cityInfo, "Create" } };
         modifiedCityInfo.Add(_cityData);
 
         // Update tile
@@ -885,7 +911,7 @@ public class GameManagerCS : MonoBehaviour
                         _tile.ownerId = _cityInfo.ownerId;
                         _tile.ownerShipVisualObject.SetActive(true);
                         _tileData = new Dictionary<TileInfo, string>()
-                        { { _tile, "Owned"} };
+                        { { _tile, "OwnershipChange"} };
                         modifiedTileInfo.Add(_tileData);
                     }
                 }
@@ -898,28 +924,44 @@ public class GameManagerCS : MonoBehaviour
         cities[_cityToCopy.id].UpdateCityInfo(_cityToCopy);
     }
 
+    public void ConquerCityInfo(CityInfo _cityToCopy)
+    {
+        cities[_cityToCopy.id].ownerId = _cityToCopy.ownerId;
+    }
+
     public void LevelUpCity(CityInfo _cityToLevelUp)
     {
-        UpdateCityInfo(_cityToLevelUp);
-        Destroy(_cityToLevelUp.cityModel);
+        CityInfo _city = cities[_cityToLevelUp.id];
+        // Update necessary Info
+        _city.ownerShipRange = _cityToLevelUp.ownerShipRange;
+        _city.woodResourcesPerTurn = _cityToLevelUp.woodResourcesPerTurn;
+        _city.metalResourcesPerTurn = _cityToLevelUp.metalResourcesPerTurn;
+        _city.foodResourcesPerTurn = _cityToLevelUp.foodResourcesPerTurn;
+        _city.moneyResourcesPerTurn = _cityToLevelUp.moneyResourcesPerTurn;
+        _city.populationResourcesPerTurn = _cityToLevelUp.populationResourcesPerTurn;
+        _city.level = _cityToLevelUp.level;
+        _city.experience = _cityToLevelUp.experience;
+        _city.experienceToNextLevel = _cityToLevelUp.experienceToNextLevel;
+
+        // Destroy old model and instantiate new one
+        Destroy(_city.cityModel);
         GameObject _cityModel = null;
-        if (_cityToLevelUp.level == 2)
+        if (_city.level == 2)
         {
             _cityModel = cityLevel2Prefab;
         }
-        else if (_cityToLevelUp.level == 3)
+        else if (_city.level == 3)
         {
             _cityModel = cityLevel3Prefab;
         }
-        else if (_cityToLevelUp.level == 4)
+        else if (_city.level == 4)
         {
             _cityModel = cityLevel4Prefab;
         }
-        else if (_cityToLevelUp.level == 5)
+        else if (_city.level == 5)
         {
             _cityModel = cityLevel5Prefab;
         }
-        CityInfo _city = cities[_cityToLevelUp.id];
         _city.cityModel = Instantiate(_cityModel, new Vector3(_city.city.transform.position.x,
                                                               _cityModel.transform.position.y,
                                                               _city.city.transform.position.z),
@@ -972,45 +1014,12 @@ public class GameManagerCS : MonoBehaviour
     {
         int _xCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.x;
         int _zCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.y;
-        switch (_buildingName)
+        foreach(string _key in buildingPrefabs.Keys)
         {
-            case "LumberYard":
-                Instantiate(lumberYardPrefab, new Vector3(_xCoord, lumberYardPrefab.transform.position.y,
-                                                                       _tile.position.y), lumberYardPrefab.transform.localRotation);
-                break;
-            case "Farm":
-                Instantiate(farmPrefab, new Vector3(_xCoord, farmPrefab.transform.position.y,
-                                                       _zCoord), farmPrefab.transform.localRotation);
-                break;
-            case "Mine":
-                Instantiate(minePrefab, new Vector3(_xCoord, minePrefab.transform.position.y,
-                                                       _zCoord), minePrefab.transform.localRotation);
-                break;
-            case "School":
-                Instantiate(schoolPrefab, new Vector3(_xCoord, schoolPrefab.transform.position.y,
-                                                       _zCoord), schoolPrefab.transform.localRotation);
-                break;
-            case "Library":
-                Instantiate(libraryPrefab, new Vector3(_xCoord, libraryPrefab.transform.position.y,
-                                                       _zCoord), libraryPrefab.transform.localRotation);
-                break;
-            case "Dome":
-                Instantiate(domePrefab, new Vector3(_xCoord, domePrefab.transform.position.y,
-                                                       _zCoord), domePrefab.transform.localRotation);
-                break;
-            case "Housing":
-                Instantiate(housingPrefab, new Vector3(_xCoord, housingPrefab.transform.position.y,
-                                                       _zCoord), housingPrefab.transform.localRotation);
-                break;
-            case "Market":
-                Instantiate(marketPrefab, new Vector3(_xCoord, marketPrefab.transform.position.y,
-                                                       _zCoord), marketPrefab.transform.localRotation);
-                break;
-            default:
-                Debug.LogError("Building " + _buildingName + " not found");
-                break;
+            if(_key == _buildingName)
+                Instantiate(buildingPrefabs[_key], new Vector3(_xCoord, buildingPrefabs[_key].transform.position.y,
+                                                               _tile.position.y), buildingPrefabs[_key].transform.localRotation);
         }
-
         // Update player resource UI
         PlayerCS.instance.playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.wood, PlayerCS.instance.metal, PlayerCS.instance.money, PlayerCS.instance.population);
 
@@ -1030,6 +1039,9 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_tile"> tile to spawn building and contains building name to spawn </param>
     public void SpawnBuilding(TileInfo _tile)
     {
+        tiles[_tile.xIndex, _tile.zIndex].isRoad = _tile.isRoad;
+        tiles[_tile.xIndex, _tile.zIndex].isBuilding = _tile.isBuilding;
+        tiles[_tile.xIndex, _tile.zIndex].buildingName = _tile.buildingName;
         int _xCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.x;
         int _zCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.y;
         switch (_tile.buildingName)
@@ -1149,8 +1161,11 @@ public class GameManagerCS : MonoBehaviour
                     case "Update":
                         UpdateTileInfo(_tile);
                         break;
-                    case "Owned":
-                        UpdateOwnedTileInfo(_tile);
+                    case "OccupyChange":
+                        ChangeTileOccupation(_tile);
+                        break;
+                    case "OwnershipChange":
+                        ChangeTileOwnership(_tile);
                         break;
                     case "BuildBuilding":
                         SpawnBuilding(_tile);
@@ -1172,7 +1187,7 @@ public class GameManagerCS : MonoBehaviour
                 }
                 switch (_cityDict[_city])
                 {
-                    case "Spawn":
+                    case "Create":
                         SpawnCity(_city);
                         break;
                     case "Update":
@@ -1181,14 +1196,8 @@ public class GameManagerCS : MonoBehaviour
                     case "LevelUp":
                         LevelUpCity(_city);
                         break;
-                    case "TrainTroop":
-                        //UpdateCityInfo(_city);
-                        break;
                     case "Conquer":
                         UpdateCityInfo(_city);
-                        break;
-                    case "SpawnTroop":
-                        //UpdateCityInfo(_city);
                         break;
                     default:
                         Debug.LogError("Could not find city action: " + _cityDict[_city]);

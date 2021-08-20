@@ -280,10 +280,10 @@ public class TroopActionsCS : MonoBehaviour
         _newTile.occupyingObjectId = troopInfo.id;
         // Add tile data to send to server
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-            { {_oldTile, "Update"} };
+            { {_oldTile, "OccupyChange"} };
         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
         _tileData = new Dictionary<TileInfo, string>()
-            { {_newTile, "Update"} };
+            { {_newTile, "OccupyChange"} };
         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
     }
 
@@ -424,7 +424,7 @@ public class TroopActionsCS : MonoBehaviour
                         _tile.ownerId = _city.ownerId;
                         _tile.ownerShipVisualObject.SetActive(true);
                         _tileData = new Dictionary<TileInfo, string>()
-                        { { _tile, "Owned"} };
+                        { { _tile, "OwnershipChange"} };
                         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
                     }
                 }
@@ -862,7 +862,7 @@ public class TroopActionsCS : MonoBehaviour
         mainContainer.SetActive(false);
         mainKingContainer.SetActive(false);
         PlayerCS.instance.isAbleToCommitActions = true;
-        PlayerCS.instance.playerUI.menuButton.SetActive(false);
+        PlayerCS.instance.playerUI.menuButton.SetActive(true);
     }
 
     public void SetCurrentTroopId()

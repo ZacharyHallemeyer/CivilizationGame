@@ -32,6 +32,8 @@ public class TroopInfo : MonoBehaviour
     public bool canMultyKill;
     public bool canMoveAfterKill;
     public bool isExposed = false;
+    public bool isBoat = false;
+    public bool isWarship = false;
 
     public int idOfPlayerThatSentInfo;
 
