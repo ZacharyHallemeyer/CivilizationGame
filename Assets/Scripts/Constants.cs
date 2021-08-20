@@ -703,10 +703,6 @@ public static class Constants
         "Militia",
     };
 
-    public static List<string> avaliableBuildings = new List<string>()
-    { 
-        "Farm",
-        "LumberYard",
-        "Mine",
-    };
+    // This dict is empty on purpose (Player is not able to build any buildings without first buying appropriate skill)
+    public static List<string> avaliableBuildings = new List<string>();
 }

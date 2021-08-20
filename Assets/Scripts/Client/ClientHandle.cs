@@ -165,43 +165,9 @@ public class ClientHandle : MonoBehaviour
     #region Troop Info
 
     /// <summary>
-    /// Recieve modified troop data from server
+    /// Recieve new troop data from server
     /// </summary>
     /// <param name="_packet"> Packet containing modified troop info </param>
-    public static void RecieveModifiedTroopInfo(Packet _packet)
-    {
-        int _id = _packet.ReadInt();
-        if(_id == -1)       // If the id is equal to -1 then all data has been recieved
-        {
-            GameManagerCS.instance.isAllTroopInfoReceived = true;
-            return;
-        }
-        TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
-        _troop.id = _id;
-        _troop.ownerId = _packet.ReadInt();
-        _troop.troopName = _packet.ReadString();
-        _troop.xIndex = _packet.ReadInt();
-        _troop.zIndex = _packet.ReadInt();
-        _troop.rotation = _packet.ReadInt();
-        _troop.health = _packet.ReadInt();
-        _troop.baseAttack = _packet.ReadInt();
-        _troop.stealthAttack = _packet.ReadInt();
-        _troop.counterAttack = _packet.ReadInt();
-        _troop.baseDefense = _packet.ReadInt();
-        _troop.facingDefense = _packet.ReadInt();
-        _troop.attackRange = _packet.ReadInt();
-        _troop.seeRange = _packet.ReadInt();
-        _troop.canMultyKill= _packet.ReadBool();
-        _troop.lastTroopAttackedId = _packet.ReadInt();
-        _troop.attackRotation = _packet.ReadInt();
-        string _command = _packet.ReadString();
-
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_troop, _command} };
-        // Add data to dictionary to be used when displaying past moves
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);  
-    }
-
     public static void ReceiveSpawnTroopInfo(Packet _packet)
     {
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
@@ -230,6 +196,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Recieve moved troop data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveMoveTroopInfo(Packet _packet)
     {
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
@@ -244,6 +214,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Recieve rotated troop data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveRotateTroopInfo(Packet _packet)
     {
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
@@ -257,6 +231,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Recieve attack troop data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveAttackTroopInfo(Packet _packet)
     {
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
@@ -271,6 +249,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Recieve hurt troop data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveHurtTroopInfo(Packet _packet)
     {
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
@@ -284,6 +266,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Recieve dead troop data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveDieTroopInfo(Packet _packet)
     {
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
@@ -296,6 +282,11 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Recieve all updated troop data from server
+    /// When all modified troop data is sent from server. This function will receive a -1 for an id which represents all data was received
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveUpdatedTroopInfo(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -335,37 +326,9 @@ public class ClientHandle : MonoBehaviour
     #region Tile Info
 
     /// <summary>
-    /// Recieve modified tile data from server
+    /// Recieve Occupation change tile data from server
     /// </summary>
     /// <param name="_packet"> Packet containing modified tile info </param>
-    public static void RecieveModifiedTileInfo(Packet _packet)
-    {
-        int _id = _packet.ReadInt();
-        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
-        {
-            GameManagerCS.instance.isAllTileInfoReceived = true;
-            return;
-        }
-        TileInfo _tile = GameManagerCS.instance.gameObject.AddComponent<TileInfo>();
-        _tile.id = _id;
-        _tile.ownerId = _packet.ReadInt();
-        _tile.isRoad = _packet.ReadBool();
-        _tile.isCity = _packet.ReadBool();
-        _tile.isBuilding = _packet.ReadBool();
-        _tile.isOccupied = _packet.ReadBool();
-        _tile.occupyingObjectId = _packet.ReadInt();
-        _tile.xIndex = _packet.ReadInt();
-        _tile.zIndex = _packet.ReadInt();
-        _tile.cityId = _packet.ReadInt();
-        _tile.buildingName = _packet.ReadString();
-        string _command = _packet.ReadString();
-
-        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-            { {_tile, _command} };
-        // Add data to dictionary to be used when displaying past moves
-        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);  
-    }
-
     public static void ReceiveOccupyChangeTileInfo(Packet _packet)
     {
         TileInfo _tile = GameManagerCS.instance.gameObject.AddComponent<TileInfo>();
@@ -382,6 +345,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
     }
 
+    /// <summary>
+    /// Recieve ownership change tile data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified tile info </param>
     public static void ReceiveOwnershipChangeTileInfo(Packet _packet)
     {
         TileInfo _tile = GameManagerCS.instance.gameObject.AddComponent<TileInfo>();
@@ -397,6 +364,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
     }
 
+    /// <summary>
+    /// Recieve data to build a specific building on a certain tile from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified tile info </param>
     public static void ReceiveBuildBuildingTileInfo(Packet _packet)
     {
         TileInfo _tile = GameManagerCS.instance.gameObject.AddComponent<TileInfo>();
@@ -414,6 +385,11 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
     }
 
+    /// <summary>
+    /// Recieve all updated tile data from server
+    /// When all modified tile data is sent from server. This function will receive a -1 for an id which represents all data was received
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified tile info </param>
     public static void ReceiveUpdatedTileInfo(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -447,44 +423,9 @@ public class ClientHandle : MonoBehaviour
     #region City Info
 
     /// <summary>
-    /// Recieve modified city data from server
+    /// Recieve new city data from server to spawn on client side
     /// </summary>
     /// <param name="_packet"> Packet containing modified city info </param>
-    public static void RecieveModifiedCityInfo(Packet _packet)
-    {
-        int _id = _packet.ReadInt();
-        if (_id == -1)      // If the id is equal to -1 then all data has been recieved
-        {
-            GameManagerCS.instance.isAllCityInfoReceived = true;
-            return;
-        }
-        CityInfo _city = GameManagerCS.instance.gameObject.AddComponent<CityInfo>();
-        _city.id = _id;
-        _city.ownerId = _packet.ReadInt();
-        _city.morale = _packet.ReadFloat();
-        _city.education = _packet.ReadFloat();
-        _city.ownerShipRange = _packet.ReadInt();
-        _city.woodResourcesPerTurn = _packet.ReadInt();
-        _city.metalResourcesPerTurn = _packet.ReadInt();
-        _city.foodResourcesPerTurn = _packet.ReadInt();
-        _city.moneyResourcesPerTurn = _packet.ReadInt();
-        _city.populationResourcesPerTurn = _packet.ReadInt();
-        _city.isBeingConquered = _packet.ReadBool();
-        _city.isConstructingBuilding = _packet.ReadBool();
-        _city.occupyingObjectId = _packet.ReadInt();
-        _city.xIndex = _packet.ReadInt();
-        _city.zIndex = _packet.ReadInt();
-        _city.level = _packet.ReadInt();
-        _city.experience = _packet.ReadInt();
-        _city.experienceToNextLevel = _packet.ReadInt();
-        string _command = _packet.ReadString();
-
-        // Add data to dictionary to be used when displaying past moves
-        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-            { {_city, _command} };
-        GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
-    }
-
     public static void ReceiveCreateCityInfo(Packet _packet)
     {
         CityInfo _city = GameManagerCS.instance.gameObject.AddComponent<CityInfo>();
@@ -514,6 +455,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
     }
 
+    /// <summary>
+    /// Recieve city data to level up certain city from server on client side
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified city info </param>
     public static void ReceiveLevelUpCityInfo(Packet _packet)
     {
         CityInfo _city = GameManagerCS.instance.gameObject.AddComponent<CityInfo>();
@@ -536,6 +481,10 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
     }
 
+    /// <summary>
+    /// Recieve conquered city data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified city info </param>
     public static void ReceiveConquerCityInfo(Packet _packet)
     {
         CityInfo _city = GameManagerCS.instance.gameObject.AddComponent<CityInfo>();
@@ -551,6 +500,7 @@ public class ClientHandle : MonoBehaviour
 
     /// <summary>
     /// Recieve modified city data from server
+    /// When all modified tile data is sent from server. This function will receive a -1 for an id which represents all data was received
     /// </summary>
     /// <param name="_packet"> Packet containing modified city info </param>
     public static void ReceiveUpdatedCityInfo(Packet _packet)

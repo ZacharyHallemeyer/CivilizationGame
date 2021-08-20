@@ -81,48 +81,7 @@ public class ServerHandle
     #region Troop Info
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
-    /// </summary>
-    /// <param name="_fromClient"> Id of client sending this data </param>
-    /// <param name="_packet"> Packet from client </param>
-    public static void RecieveTroopInfo(int _fromClient, Packet _packet)
-    {
-        int _id = _packet.ReadInt();
-        if(_id == -1)       // If the id is equal to -1 then all data has been recieved
-        {
-            GameManagerSS.instance.isAllTroopInfoReceived = true;
-            return;
-        }
-
-        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
-
-        _troop.id = _id;
-        _troop.ownerId = _packet.ReadInt();
-        _troop.troopName = _packet.ReadString();
-        _troop.xIndex = _packet.ReadInt();
-        _troop.zIndex = _packet.ReadInt();
-        _troop.rotation = _packet.ReadInt();
-        _troop.health = _packet.ReadInt();
-        _troop.baseAttack = _packet.ReadInt();
-        _troop.stealthAttack = _packet.ReadInt();
-        _troop.counterAttack = _packet.ReadInt();
-        _troop.baseDefense = _packet.ReadInt();
-        _troop.facingDefense = _packet.ReadInt();
-        _troop.attackRange = _packet.ReadInt();
-        _troop.seeRange = _packet.ReadInt();
-        _troop.canMultyKill = _packet.ReadBool();
-        _troop.lastTroopAttackedId = _packet.ReadInt();
-        _troop.attackRotation = _packet.ReadInt();
-        string _command = _packet.ReadString();
-        _troop.idOfPlayerThatSentInfo = _fromClient;
-
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_troop, _command} };
-        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
-    }
-
-    /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve new troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -156,7 +115,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve move troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -176,7 +135,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve rotate troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -195,7 +154,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve attack troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -215,7 +174,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve hurt troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -234,7 +193,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve dead troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -252,7 +211,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve updated troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -297,7 +256,7 @@ public class ServerHandle
     #region Tile Info
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve occupation change tile data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -319,7 +278,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve ownership change tile data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -340,7 +299,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve all data necessary data to build a building from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
@@ -363,14 +322,14 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified tile data from client and store in a dictionary
+    /// Recieve updated tile data from client and store in a dictionary
+    /// If function a -1 as an id then that means all tile data has been received 
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
     /// <param name="_packet"> Packet from client </param>
     public static void RecieveUpdatedTileInfo(int _fromClient, Packet _packet)
     {
         int _id = _packet.ReadInt();
-        //Debug.Log("Recieved tile " + _id + " from client");
         if (_id == -1)          // If the id is equal to -1 then all data has been recieved
         {
             GameManagerSS.instance.isAllTileInfoReceived = true;
@@ -403,7 +362,7 @@ public class ServerHandle
     #region City Info
 
     /// <summary>
-    /// Recieve all modified city data from client and store in a dictionary
+    /// Recieve new city data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> client id that this data is being sent from </param>
     /// <param name="_packet"> Packet from client </param>
@@ -446,7 +405,7 @@ public class ServerHandle
 
 
     /// <summary>
-    /// Recieve all modified city data from client and store in a dictionary
+    /// Recieve level up city data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> client id that this data is being sent from </param>
     /// <param name="_packet"> Packet from client </param>
@@ -480,7 +439,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified city data from client and store in a dictionary
+    /// Recieve conquer city data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> client id that this data is being sent from </param>
     /// <param name="_packet"> Packet from client </param>
@@ -505,7 +464,7 @@ public class ServerHandle
     }
 
     /// <summary>
-    /// Recieve all modified city data from client and store in a dictionary
+    /// Recieve updated city data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> client id that this data is being sent from </param>
     /// <param name="_packet"> Packet from client </param>

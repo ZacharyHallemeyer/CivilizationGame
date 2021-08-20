@@ -67,7 +67,7 @@ public class ClientSend : MonoBehaviour
 
             foreach(TroopInfo _troop in _troopDict.Keys)
             {
-                // Check which command
+                // Check which command and send data appropriately
                 if (_troopDict[_troop] == "Spawn")
                 {
                     using (Packet _packet = new Packet((int)ClientPackets.sendSpawnTroopInfo))
@@ -152,7 +152,7 @@ public class ClientSend : MonoBehaviour
                 }
             }
         }
-        // Write -1 for id so client knows when all data has been recieved
+        // Write -1 for id so server knows when all data has been recieved
         using (Packet _packet = new Packet((int)ClientPackets.sendUpdatedTroopInfo))
         {
             _packet.Write(-1);
@@ -164,7 +164,7 @@ public class ClientSend : MonoBehaviour
         {
             foreach(TileInfo _tile in _tileDict.Keys)
             {
-                // Check which command 
+                // Check which command and send data appropriately
                 if (_tileDict[_tile] == "OccupyChange")
                 {
                     using (Packet _packet = new Packet((int)ClientPackets.sendOccupyChangeTileInfo))
@@ -229,7 +229,7 @@ public class ClientSend : MonoBehaviour
                 }
             }
         }
-        // Write -1 for id so client knows when all data has been recieved
+        // Write -1 for id so server knows when all data has been recieved
         using (Packet _packet = new Packet((int)ClientPackets.sendUpdatedTileInfo))
         {
             _packet.Write(-1);
@@ -242,7 +242,8 @@ public class ClientSend : MonoBehaviour
         {
             foreach (CityInfo _city in _cityDict.Keys)
             {
-                if(_cityDict[_city] == "Spawn")
+                // Check which command and send data appropriately
+                if (_cityDict[_city] == "Spawn")
                 {
                     using (Packet _packet = new Packet((int)ClientPackets.sendCreateCityInfo))
                     {
@@ -329,7 +330,7 @@ public class ClientSend : MonoBehaviour
                 }
             }
         }
-        // Write -1 for id so client knows when all data has been recieved
+        // Write -1 for id so server knows when all data has been recieved
         using (Packet _packet = new Packet((int)ClientPackets.sendUpdatedCityInfo))
         {
             _packet.Write(-1);

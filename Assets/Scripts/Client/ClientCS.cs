@@ -317,11 +317,6 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.sendClientConqueredCityInfo, ClientHandle.ReceiveConquerCityInfo},
             { (int)ServerPackets.sendClientLevelUpCityInfo, ClientHandle.ReceiveLevelUpCityInfo},
             { (int)ServerPackets.sendClientUpdatedCityInfo, ClientHandle.ReceiveUpdatedCityInfo},
-            /*
-            { (int)ServerPackets.sendModifiedTroopInfo, ClientHandle.RecieveModifiedTroopInfo},
-            { (int)ServerPackets.sendModifiedTileInfo, ClientHandle.RecieveModifiedTileInfo},
-            { (int)ServerPackets.sendModifiedCityInfo, ClientHandle.RecieveModifiedCityInfo},
-            */
             { (int)ServerPackets.startTurn, ClientHandle.PlayerStartTurn},
         };
         //Debug.Log("Initialized packets.");

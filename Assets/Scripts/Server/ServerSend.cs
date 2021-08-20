@@ -276,7 +276,7 @@ public class ServerSend
                 }
                 else
                 {
-                    // Check which command
+                    // Check which command and send data appropriately
                     if (_troopDict[_troop] == "Spawn")
                     {
                         using (Packet _packet = new Packet((int)ServerPackets.sendClientSpawnTroopInfo))
@@ -400,7 +400,7 @@ public class ServerSend
                 }
                 else
                 {
-                    // Check which command 
+                    // Check which command and send data appropriately
                     if (_tileDict[_tile] == "OccupyChange")
                     {
                         using (Packet _packet = new Packet((int)ServerPackets.sendClientOccupyChangeTileInfo))
@@ -501,6 +501,7 @@ public class ServerSend
                 }
                 else
                 {
+                    // Check which command and send data appropriately
                     if (_cityDict[_city] == "Spawn")
                     {
                         using (Packet _packet = new Packet((int)ServerPackets.sendClientCreateCityInfo))
