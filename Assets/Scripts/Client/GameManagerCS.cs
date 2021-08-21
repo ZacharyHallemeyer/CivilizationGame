@@ -492,6 +492,36 @@ public class GameManagerCS : MonoBehaviour
                                                       (int)tiles[_troopToCopy.xIndex, _troopToCopy.zIndex].position.y);
         _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x, Constants.troopHealthYPositionDescend,
                                                                  _troop.transform.position.z);
+
+        // Change to ship model if player moved onto a port
+        if (_troop.isBoat && !_troop.shipModel.gameObject.activeInHierarchy)
+        {
+            if (_troop.isExposed)
+            {
+                _troop.troopModel.SetActive(false);
+                _troop.shipModel.SetActive(true);
+            }
+            else
+            {
+                _troop.blurredTroopModel.SetActive(false);
+                _troop.blurredShipModel.SetActive(true);
+            }
+        }
+        // Change to troop model if player moved onto a land and was a boat before moving
+        else if (!_troop.isBoat && _troop.shipModel.gameObject.activeInHierarchy)
+        {
+            if (_troop.isExposed)
+            {
+                _troop.troopModel.SetActive(true);
+                _troop.shipModel.SetActive(false);
+            }
+            else
+            {
+                _troop.blurredTroopModel.SetActive(true);
+                _troop.blurredShipModel.SetActive(false);
+            }
+        }
+
         StartCoroutine(AscendTroopMoveAnim(_troop));
     }
 
@@ -687,6 +717,21 @@ public class GameManagerCS : MonoBehaviour
         _troop.troop.SetActive(false);
         troops.Remove(_troop.id);
         objectsToDestroy.Add(_troop.troop);
+        PlayerCS.instance.runningCoroutine = null;
+    }
+
+    /// <summary>
+    /// Plays troop die animation coming from server and removes troop from appropriate dicts/list
+    /// </summary>
+    /// <param name="_troopInfo"></param>
+    /// <returns></returns>
+    public IEnumerator SwitchLandOrSeaModelTroopInfo(TroopInfo _troopInfo)
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        TroopInfo _troop = troops[_troopInfo.id];
+        _troop.isBoat = _troopInfo.isBoat;
+        yield return null;
+        PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;
     }
 
@@ -1032,7 +1077,7 @@ public class GameManagerCS : MonoBehaviour
         {
             if(_key == _buildingName)
                 Instantiate(buildingPrefabs[_key], new Vector3(_xCoord, buildingPrefabs[_key].transform.position.y,
-                                                               _tile.position.y), buildingPrefabs[_key].transform.localRotation);
+                                                               _zCoord), buildingPrefabs[_key].transform.localRotation);
         }
         // Update player resource UI
         PlayerCS.instance.playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.wood, PlayerCS.instance.metal, PlayerCS.instance.money, PlayerCS.instance.population);
@@ -1091,6 +1136,10 @@ public class GameManagerCS : MonoBehaviour
             case "Market":
                 Instantiate(marketPrefab, new Vector3(_xCoord, marketPrefab.transform.position.y,
                                                        _zCoord), marketPrefab.transform.localRotation);
+                break;
+            case "Port":
+                Instantiate(portPrefab, new Vector3(_xCoord, portPrefab.transform.position.y,
+                                                    _zCoord), portPrefab.transform.localRotation);
                 break;
             default:
                 Debug.LogError("Building " + _tile.buildingName + " not found");
@@ -1158,6 +1207,9 @@ public class GameManagerCS : MonoBehaviour
                         break;
                     case "Die":
                         PlayerCS.instance.animationQueue.Enqueue(RemoveTroopInfo(_troop));
+                        break;
+                    case "SwitchModel":
+                        PlayerCS.instance.animationQueue.Enqueue(SwitchLandOrSeaModelTroopInfo(_troop));
                         break;
                     default:
                         Debug.LogError("Could not find troop action: " + _troopDict[_troop]);
@@ -1249,8 +1301,11 @@ public class GameManagerCS : MonoBehaviour
             if (_troop.ownerId != ClientCS.instance.myId)
             {
                 _troop.troopModel.SetActive(false);
-                _troop.healthTextObject.SetActive(false);
                 _troop.blurredTroopModel.SetActive(false);
+                _troop.shipModel.SetActive(false);
+                _troop.blurredShipModel.SetActive(false);
+                _troop.blurredTroopModel.SetActive(false);
+                _troop.healthTextObject.SetActive(false);
             }
         }
 

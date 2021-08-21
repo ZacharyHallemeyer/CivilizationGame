@@ -201,19 +201,36 @@ public class TroopActionsCS : MonoBehaviour
             _tile.tile.tag = portTag;
             _tile.moveUI.SetActive(true);
         }
-        else if (!_tile.isWater || troopInfo.isBoat)
+        else if (_tile.isWater)
+        {
+            if (troopInfo.isBoat)
+            {
+                _tile.tile.layer = whatIsInteractableValue;
+                _tile.tile.tag = moveableTileTag;
+                _tile.moveUI.SetActive(true);
+                // Only allow boat to move onto coast line
+                if (!_tile.isWater && troopInfo.isBoat)
+                {
+                    objecstToBeReset[_index] = _tile;
+                    return false;
+                }
+            }
+            else
+                return false;
+        }
+        else if (!_tile.isWater)
         {
             _tile.tile.layer = whatIsInteractableValue;
             _tile.tile.tag = moveableTileTag;
             _tile.moveUI.SetActive(true);
             // Only allow boat to move onto coast line
-            if (!_tile.isWater && troopInfo.isBoat)
+            if (troopInfo.isBoat)
             {
                 objecstToBeReset[_index] = _tile;
-                _index++;
                 return false;
             }
         }
+        
         objecstToBeReset[_index] = _tile;
         return true;
     }
@@ -288,7 +305,14 @@ public class TroopActionsCS : MonoBehaviour
         HideQuickMenu();
         // If player that was a boat moves onto land then change troop to land troop
         if (!_newTile.isWater && troopInfo.isBoat)
+        {
             troopInfo.isBoat = false;
+            TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
+            _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
+            Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_copiedTroop, "SwitchModel"} };
+            GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        }
         // Update old tile
         TileInfo _oldTile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
         _oldTile.isOccupied = false;
@@ -398,6 +422,11 @@ public class TroopActionsCS : MonoBehaviour
     {
         if(!troopInfo.isBoat)
             troopInfo.isBoat = true;
+        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
+        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_copiedTroop, "SwitchModel"} };
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
         MoveToNewTile(_tile);
     }
 
@@ -507,10 +536,19 @@ public class TroopActionsCS : MonoBehaviour
         if (!_troop.isExposed)
         {
             _troop.isExposed = true;
-            _troop.troopModel.SetActive(true);
+            if(_troop.isBoat)
+            {
+                _troop.shipModel.SetActive(true);
+                if (_troop.blurredShipModel.activeSelf)
+                    _troop.blurredShipModel.SetActive(false);
+            }
+            else
+            {
+                _troop.troopModel.SetActive(true);
+                if (_troop.blurredTroopModel.activeSelf)
+                    _troop.blurredTroopModel.SetActive(false);
+            }
             _troop.healthTextObject.SetActive(true);
-            if (_troop.blurredTroopModel.activeSelf)
-                _troop.blurredTroopModel.SetActive(false);
         }
         troopInfo.canAttack = false;
 
@@ -601,13 +639,24 @@ public class TroopActionsCS : MonoBehaviour
                             // Enemy troop within seeing range
                             if (_troop.isExposed)
                             {
-                                _troop.troopModel.SetActive(true);
                                 _troop.healthTextObject.SetActive(true);
+                                if(_troop.isBoat)
+                                    _troop.shipModel.SetActive(true);
+                                else
+                                    _troop.troopModel.SetActive(true);
+
                                 if (_troop.blurredTroopModel.activeSelf)
                                     _troop.blurredTroopModel.SetActive(false);
+                                else if (_troop.blurredShipModel.activeSelf)
+                                    _troop.blurredShipModel.SetActive(false);
                             }
                             else
-                                _troop.blurredTroopModel.SetActive(true);
+                            {
+                                if(_troop.isBoat)
+                                    _troop.blurredShipModel.SetActive(true);
+                                else 
+                                    _troop.blurredTroopModel.SetActive(true);
+                            }
                         }
                     }
                 }

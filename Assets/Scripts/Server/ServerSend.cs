@@ -359,6 +359,17 @@ public class ServerSend
                             SendTCPData(_playerId, _packet);
                         }
                     }
+                    else if (_troopDict[_troop] == "SwitchModel")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientSwitchLandOrSeaModelInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.isBoat);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
                 }
             }
         }
@@ -502,7 +513,7 @@ public class ServerSend
                 else
                 {
                     // Check which command and send data appropriately
-                    if (_cityDict[_city] == "Spawn")
+                    if (_cityDict[_city] == "Create")
                     {
                         using (Packet _packet = new Packet((int)ServerPackets.sendClientCreateCityInfo))
                         {

@@ -61,6 +61,12 @@ public class PlayerCS : MonoBehaviour
         camRB = cam.GetComponent<Rigidbody>();
         mouse = Mouse.current;
         Cursor.lockState = CursorLockMode.Confined;
+        // TESTING
+        money = 100000;
+        food = 100000;
+        metal = 100000;
+        wood = 100000;
+        // TESTING
     }
 
     private void OnEnable()

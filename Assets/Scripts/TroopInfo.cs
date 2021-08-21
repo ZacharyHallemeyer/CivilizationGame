@@ -128,6 +128,7 @@ public class TroopInfo : MonoBehaviour
         seeRange = _troopInfo.seeRange;
         canMultyKill = _troopInfo.canMultyKill;
         canMoveAfterKill = _troopInfo.canMoveAfterKill;
+        isBoat = _troopInfo.isBoat;
 
         lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
         attackRotation = _troopInfo.attackRotation;

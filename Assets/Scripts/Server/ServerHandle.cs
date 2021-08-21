@@ -211,6 +211,25 @@ public class ServerHandle
     }
 
     /// <summary>
+    /// Recieve switch land or sea model troop data from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveTroopSwitchLandOrSeaModelInfo(int _fromClient, Packet _packet)
+    {
+        TroopInfo _troop = GameManagerSS.instance.gameObject.AddComponent<TroopInfo>();
+
+        _troop.id = _packet.ReadInt();
+        _troop.isBoat = _packet.ReadBool();
+        string _command = _packet.ReadString();
+        _troop.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        GameManagerSS.instance.modifiedTroopInfo.Add(_troopData);    // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
     /// Recieve updated troop data from client and store in a dictionary
     /// </summary>
     /// <param name="_fromClient"> Id of client sending this data </param>
@@ -401,8 +420,6 @@ public class ServerHandle
             { {_city, _command} };
         GameManagerSS.instance.modifiedCityInfo.Add(_cityData);     // Add data to dictionary that will be sent to all clients
     }
-
-
 
     /// <summary>
     /// Recieve level up city data from client and store in a dictionary

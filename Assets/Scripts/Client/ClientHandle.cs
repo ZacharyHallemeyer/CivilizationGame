@@ -272,8 +272,27 @@ public class ClientHandle : MonoBehaviour
     /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveDieTroopInfo(Packet _packet)
     {
+        Debug.Log("Received switch model info from server");
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
         _troop.id = _packet.ReadInt();
+        string _command = _packet.ReadString();
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        // Add data to dictionary to be used when displaying past moves
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+    }
+    
+
+    /// <summary>
+    /// Recieve info on whether troop has switch to a ship or back into a troop troop data from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified troop info </param>
+    public static void ReceiveSwitchLandOrSeaModelTroopInfo(Packet _packet)
+    {
+        TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
+        _troop.id = _packet.ReadInt();
+        _troop.isBoat = _packet.ReadBool();
         string _command = _packet.ReadString();
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()

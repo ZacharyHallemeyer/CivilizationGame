@@ -150,6 +150,18 @@ public class ClientSend : MonoBehaviour
                         SendTCPData(_packet);
                     }
                 }
+                else if (_troopDict[_troop] == "SwitchModel")
+                {
+                    Debug.Log("Sending switch model info to server");
+                    using (Packet _packet = new Packet((int)ClientPackets.sendSwitchLandOrSeaModelInfo))
+                    {
+                        _packet.Write(_troop.id);
+                        _packet.Write(_troop.isBoat);
+                        _packet.Write(_troopDict[_troop]);
+
+                        SendTCPData(_packet);
+                    }
+                }
             }
         }
         // Write -1 for id so server knows when all data has been recieved
@@ -243,7 +255,7 @@ public class ClientSend : MonoBehaviour
             foreach (CityInfo _city in _cityDict.Keys)
             {
                 // Check which command and send data appropriately
-                if (_cityDict[_city] == "Spawn")
+                if (_cityDict[_city] == "Create")
                 {
                     using (Packet _packet = new Packet((int)ClientPackets.sendCreateCityInfo))
                     {
