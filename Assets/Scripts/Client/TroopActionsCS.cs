@@ -8,7 +8,7 @@ public class TroopActionsCS : MonoBehaviour
     public TileInfo[] objecstToBeReset;
     public int whatIsInteractableValue, whatIsDefaultValue;
     private string moveableTileTag = "MoveableTile", attackableTileTag = "AttackableTile", defaultTileTag = "Tile";
-    private string conquerableCityTag = "ConquerableCity", cityTag = "City", moveableCityTag = "MoveableCity";
+    private string conquerableCityTag = "ConquerableCity", cityTag = "City", moveableCityTag = "MoveableCity", portTag = "Port";
     public TroopInfo troopInfo;
 
     // Quick Menu
@@ -50,7 +50,11 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
                         if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
+                        {
+                            if (objecstToBeReset[_index] != null)
+                                _index++;
                             break;
+                        }
                         _index++;
                     }
                 }
@@ -61,7 +65,11 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
                         if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                        {
+                            if (objecstToBeReset[_index] != null)
+                                _index++;
                             break;
+                        }
                         _index++;
                     }
                 }
@@ -72,7 +80,11 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
                         if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
+                        {
+                            if (objecstToBeReset[_index] != null)
+                                _index++;
                             break;
+                        }
                         _index++;
                     }
                 }
@@ -83,7 +95,11 @@ public class TroopActionsCS : MonoBehaviour
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
                         if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                        {
+                            if (objecstToBeReset[_index] != null)
+                                _index++;
                             break;
+                        }
                         _index++;
                     }
                 }
@@ -169,7 +185,7 @@ public class TroopActionsCS : MonoBehaviour
     /// <param name="_index"> current index of objectsToBeReset array </param>
     public bool CreateInteractableTilesHelperMovement(TileInfo _tile, int _index)
     {
-        if (_tile.isWater || _tile.isOccupied || _tile.isObstacle) return false;
+        if (_tile.isOccupied || _tile.isObstacle) return false;
         if (_tile.isCity)
         {
             if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops &&
@@ -179,11 +195,24 @@ public class TroopActionsCS : MonoBehaviour
             _tile.tile.tag = moveableCityTag;
             _tile.moveUI.SetActive(true);
         }
-        else
+        else if(_tile.isBuilding && _tile.buildingName == "Port")
+        {
+            _tile.tile.layer = whatIsInteractableValue;
+            _tile.tile.tag = portTag;
+            _tile.moveUI.SetActive(true);
+        }
+        else if (!_tile.isWater || troopInfo.isBoat)
         {
             _tile.tile.layer = whatIsInteractableValue;
             _tile.tile.tag = moveableTileTag;
             _tile.moveUI.SetActive(true);
+            // Only allow boat to move onto coast line
+            if (!_tile.isWater && troopInfo.isBoat)
+            {
+                objecstToBeReset[_index] = _tile;
+                _index++;
+                return false;
+            }
         }
         objecstToBeReset[_index] = _tile;
         return true;
@@ -257,6 +286,9 @@ public class TroopActionsCS : MonoBehaviour
     {
         ResetAlteredTiles();
         HideQuickMenu();
+        // If player that was a boat moves onto land then change troop to land troop
+        if (!_newTile.isWater && troopInfo.isBoat)
+            troopInfo.isBoat = false;
         // Update old tile
         TileInfo _oldTile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
         _oldTile.isOccupied = false;
@@ -305,6 +337,18 @@ public class TroopActionsCS : MonoBehaviour
         troopInfo.troop.transform.position = new Vector3(troopInfo.xIndex, troopInfo.transform.position.y, troopInfo.zIndex);
         troopInfo.healthTextObject.transform.position = new Vector3(troopInfo.transform.position.x, Constants.troopHealthYPositionDescend,
                                                                     troopInfo.transform.position.z);
+        // Change to ship model if player moved onto a port
+        if(troopInfo.isBoat && !troopInfo.shipModel.gameObject.activeInHierarchy)
+        {
+            troopInfo.troopModel.SetActive(false);
+            troopInfo.shipModel.SetActive(true);
+        }
+        // Change to troop model if player moved onto a land and was a boat before moving
+        else if(!troopInfo.isBoat && troopInfo.shipModel.gameObject.activeInHierarchy)
+        {
+            troopInfo.troopModel.SetActive(true);
+            troopInfo.shipModel.SetActive(false);
+        }
         StartCoroutine(RiseTroopMoveAnim(_oldTile, _newTile));
     }
 
@@ -343,8 +387,17 @@ public class TroopActionsCS : MonoBehaviour
     {
         _city.isBeingConquered = true;
 
+        CityInfo _cityCopy = GameManagerCS.instance.dataStoringObject.AddComponent<CityInfo>();
+        _cityCopy.CopyCityInfo(_city);
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { { _city, "Update" } };
+        { { _cityCopy, "Update" } };
+        MoveToNewTile(_tile);
+    }
+
+    public void MoveOntoPort(TileInfo _tile)
+    {
+        if(!troopInfo.isBoat)
+            troopInfo.isBoat = true;
         MoveToNewTile(_tile);
     }
 
@@ -423,6 +476,9 @@ public class TroopActionsCS : MonoBehaviour
                     {
                         _tile.ownerId = _city.ownerId;
                         _tile.ownerShipVisualObject.SetActive(true);
+                        // Change color of ownership visual object
+                        _tile.ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
+                            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
                         _tileData = new Dictionary<TileInfo, string>()
                         { { _tile, "OwnershipChange"} };
                         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);

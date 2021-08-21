@@ -8,6 +8,8 @@ public class TroopInfo : MonoBehaviour
     public GameObject troop;
     public GameObject troopModel;
     public GameObject blurredTroopModel;
+    public GameObject shipModel;
+    public GameObject blurredShipModel;
     public TroopActionsCS troopActions;
     public GameObject healthTextObject;
     public TextMeshPro healthText;
@@ -33,7 +35,6 @@ public class TroopInfo : MonoBehaviour
     public bool canMoveAfterKill;
     public bool isExposed = false;
     public bool isBoat = false;
-    public bool isWarship = false;
 
     public int idOfPlayerThatSentInfo;
 

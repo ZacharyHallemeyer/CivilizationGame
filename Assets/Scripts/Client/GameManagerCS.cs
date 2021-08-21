@@ -286,20 +286,17 @@ public class GameManagerCS : MonoBehaviour
         tiles[_tile.xIndex, _tile.zIndex].occupyingObjectId = _tile.occupyingObjectId;
     }
 
-    public void ChangeTileOwnership(TileInfo _tile)
-    {
-        tiles[_tile.xIndex, _tile.zIndex].ownerId = _tile.ownerId;
-        tiles[_tile.xIndex, _tile.zIndex].ownerShipVisualObject.SetActive(true);
-    }
-
     /// <summary>
     /// Updates tile's owner and displays it through visual object
     /// </summary>
     /// <param name="_tile"></param>
-    public void UpdateOwnedTileInfo(TileInfo _tile)
+    public void ChangeTileOwnership(TileInfo _tile)
     {
+        tiles[_tile.xIndex, _tile.zIndex].ownerId = _tile.ownerId;
         tiles[_tile.xIndex, _tile.zIndex].ownerShipVisualObject.SetActive(true);
-        UpdateTileInfo(_tile);
+        // Change Color to tribe color
+        tiles[_tile.xIndex, _tile.zIndex].ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
+            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
     }
 
     #endregion
@@ -337,6 +334,8 @@ public class GameManagerCS : MonoBehaviour
         // Change color to tribe color
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color = Constants.tribeBodyColors[PlayerCS.instance.tribe];
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].color = Constants.tribeEyeColors[PlayerCS.instance.tribe];
+        _troopInfo.shipModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
+                                                        Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
 
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;
@@ -378,11 +377,19 @@ public class GameManagerCS : MonoBehaviour
         _troopInfo.blurredTroopModel = Instantiate(blurredTroopPrefab, _troop.transform.position, blurredTroopPrefab.transform.localRotation);
         _troopInfo.blurredTroopModel.transform.parent = _troop.transform;
         _troopInfo.blurredTroopModel.SetActive(false);
+        // Blurred ship model is just the canoe model without tribe color
+        _troopInfo.blurredShipModel = Instantiate(canoePrefab, _troop.transform.position, canoePrefab.transform.localRotation);
+        _troopInfo.blurredShipModel.transform.parent = _troop.transform;
+        _troopInfo.blurredShipModel.SetActive(false);
+        // Only deactivate troop model because it has already been spawned
+        _troopInfo.troopModel.SetActive(false);
 
         // Change color to tribe color
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
                                                                 Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].color = Constants.tribeEyeColors[PlayerCS.instance.tribe];
+        _troopInfo.shipModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
+                                                                Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
 
         troops.Add(_troopInfo.id, _troopInfo);
     }
@@ -429,6 +436,10 @@ public class GameManagerCS : MonoBehaviour
                 Debug.LogError("Could not find prefab for troop name: " + _troopName);
                 break;
         }
+        // Spawn canoe model and deactivate it because troop cannot be spawned as a ship
+        _troop.shipModel = Instantiate(canoePrefab, _troop.troop.transform.position, canoePrefab.transform.localRotation);
+        _troop.shipModel.transform.parent = _troop.troop.transform;
+        _troop.shipModel.SetActive(false);
     }
 
     /// <summary>
@@ -910,6 +921,9 @@ public class GameManagerCS : MonoBehaviour
                     { 
                         _tile.ownerId = _cityInfo.ownerId;
                         _tile.ownerShipVisualObject.SetActive(true);
+                        // Change color of ownership visual object
+                        _tile.ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
+                            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
                         _tileData = new Dictionary<TileInfo, string>()
                         { { _tile, "OwnershipChange"} };
                         modifiedTileInfo.Add(_tileData);

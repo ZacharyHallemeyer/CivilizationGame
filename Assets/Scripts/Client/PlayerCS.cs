@@ -199,6 +199,12 @@ public class PlayerCS : MonoBehaviour
                     if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.MoveOntoCity(_tileInfo, _cityInfo);
                 }
+                else if(_hit.collider.CompareTag("Port"))
+                {
+                    TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
+                    if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+                        _troop.troopActions.MoveOntoPort(_tileInfo);
+                }
                 else if(_hit.collider.CompareTag("ConstructBuilding"))
                 {
 
