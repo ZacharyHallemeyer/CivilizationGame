@@ -155,12 +155,14 @@ public class PlayerCS : MonoBehaviour
                         {
                             _troop.troopActions.HideQuickMenu();
                             currentSelectedTroopId = -1;
+                            _troop.rotationIndicationModel.SetActive(false);
                         }
                         // Select troop
                         else
                         {
                             _troop.troopActions.ShowQuickMenu();
                             currentSelectedTroopId = _troop.id;
+                            _troop.rotationIndicationModel.SetActive(true);
                             GameManagerCS.instance.troops[_troop.id].troopActions.CreateInteractableTiles();
                         }
                     }
@@ -262,7 +264,10 @@ public class PlayerCS : MonoBehaviour
     public void HideQuckMenus()
     {
         if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+        {
             _troop.troopActions.HideQuickMenu();
+            _troop.rotationIndicationModel.SetActive(false);
+        }
         if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
             _city.cityActions.HideQuickMenu();
     }

@@ -188,6 +188,17 @@ public class ClientHandle : MonoBehaviour
         _troop.canMultyKill = _packet.ReadBool();
         _troop.lastTroopAttackedId = _packet.ReadInt();
         _troop.attackRotation = _packet.ReadInt();
+        _troop.shipName = _packet.ReadString();
+        _troop.shipAttack = _packet.ReadInt();
+        _troop.shipStealthAttack = _packet.ReadInt();
+        _troop.shipCounterAttack = _packet.ReadInt();
+        _troop.shipBaseDefense = _packet.ReadInt();
+        _troop.shipFacingDefense = _packet.ReadInt();
+        _troop.shipMovementCost = _packet.ReadInt();
+        _troop.shipAttackRange = _packet.ReadInt();
+        _troop.shipSeeRange = _packet.ReadInt();
+        _troop.shipCanMultyKill = _packet.ReadBool();
+        _troop.shipCanMoveAfterKill = _packet.ReadBool();
         string _command = _packet.ReadString();
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()

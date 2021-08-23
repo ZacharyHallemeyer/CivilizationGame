@@ -29,7 +29,7 @@ public class GameManagerCS : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject localTroopPrefab, remoteTroopPrefab, blurredTroopPrefab;
-    public GameObject troopHealthTextPrefab;
+    public GameObject troopHealthTextPrefab, troopRotationIndicationPrefab;
     public GameObject starPrefab;
     public GameObject tilePrefab;
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab, obstaclePrefab;
@@ -320,8 +320,11 @@ public class GameManagerCS : MonoBehaviour
         TroopInfo _troopInfo = _troop.AddComponent<TroopInfo>();
         _troopInfo.troop = _troop;
         SpawnTroopModel(_troopInfo, _troopName);
-
-        _troopInfo.InitTroopInfo(_troopName, _troopActions, currentTroopIndex, _ownerId, _xIndex, _zIndex);
+        // Get rotation indication object from troop prefab 
+        _troopInfo.rotationIndicationModel = _troop.transform.GetChild(0).gameObject;
+        _troopInfo.rotationIndicationModel.SetActive(false);
+        // Spawn troop with canoe ship stats because they will always start as a canoe when they step onto a port for the first time
+        _troopInfo.InitTroopInfo(_troopName, _troopActions, currentTroopIndex, _ownerId, "Canoe", _xIndex, _zIndex);
         _troopInfo.isExposed = true;
         _troopInfo.healthTextObject = Instantiate(troopHealthTextPrefab, new Vector3(_troop.transform.position.x,
                                                                                     troopHealthTextPrefab.transform.position.y,
@@ -336,6 +339,8 @@ public class GameManagerCS : MonoBehaviour
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].color = Constants.tribeEyeColors[PlayerCS.instance.tribe];
         _troopInfo.shipModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
                                                         Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
+        _troopInfo.rotationIndicationModel.GetComponent<MeshRenderer>().material.color = 
+                                                    Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
 
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;

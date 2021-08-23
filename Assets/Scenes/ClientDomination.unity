@@ -348,6 +348,8 @@ MonoBehaviour:
     type: 3}
   troopHealthTextPrefab: {fileID: 9138482577062792796, guid: 40050abf244b74146a694ab354021874,
     type: 3}
+  troopRotationIndicationPrefab: {fileID: 5221773513245693993, guid: 4e3f3a35ad569914293ed7d931253b52,
+    type: 3}
   starPrefab: {fileID: 4427113777878196774, guid: 1025e2eac4e5ae841b782374f3a07600,
     type: 3}
   tilePrefab: {fileID: 1978060863930935458, guid: 0ee416137c8e6d740acb33f018a2fa0a,

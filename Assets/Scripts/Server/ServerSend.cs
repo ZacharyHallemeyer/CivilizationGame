@@ -298,6 +298,17 @@ public class ServerSend
                             _packet.Write(_troop.canMultyKill);
                             _packet.Write(_troop.lastTroopAttackedId);
                             _packet.Write(_troop.attackRotation);
+                            _packet.Write(_troop.shipName);
+                            _packet.Write(_troop.shipAttack);
+                            _packet.Write(_troop.shipStealthAttack);
+                            _packet.Write(_troop.shipCounterAttack);
+                            _packet.Write(_troop.shipBaseDefense);
+                            _packet.Write(_troop.shipFacingDefense);
+                            _packet.Write(_troop.shipMovementCost);
+                            _packet.Write(_troop.shipAttackRange);
+                            _packet.Write(_troop.shipSeeRange);
+                            _packet.Write(_troop.shipCanMultyKill);
+                            _packet.Write(_troop.shipCanMoveAfterKill);
                             _packet.Write(_troopDict[_troop]);
 
                             SendTCPData(_playerId, _packet);

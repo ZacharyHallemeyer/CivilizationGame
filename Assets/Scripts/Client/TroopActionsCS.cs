@@ -38,14 +38,16 @@ public class TroopActionsCS : MonoBehaviour
     {
         if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
         int _index = 0;
-        objecstToBeReset = new TileInfo[troopInfo.movementCost + troopInfo.attackRange];
+        int _movementCost = troopInfo.isBoat ? troopInfo.shipMovementCost : troopInfo.movementCost;
+        int _attackRange = troopInfo.isBoat ? troopInfo.shipAttackRange: troopInfo.attackRange;
+        objecstToBeReset = new TileInfo[_movementCost + _attackRange];
 
         // Create moveable tiles
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
         switch (troopInfo.rotation)
         {
             case 0:
-                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + troopInfo.movementCost + 1; z++)
+                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + _movementCost + 1; z++)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
@@ -60,7 +62,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 90:
-                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + troopInfo.movementCost + 1; x++)
+                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + _movementCost + 1; x++)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
@@ -75,7 +77,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 180:
-                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - troopInfo.movementCost - 1; z--)
+                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - _movementCost - 1; z--)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
@@ -90,7 +92,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 270:
-                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - troopInfo.movementCost - 1; x--)
+                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - _movementCost - 1; x--)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
@@ -116,7 +118,7 @@ public class TroopActionsCS : MonoBehaviour
         switch (troopInfo.rotation)
         {
             case 0:
-                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + troopInfo.attackRange + 1; z++)
+                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + _attackRange + 1; z++)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
@@ -126,7 +128,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 90:
-                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + troopInfo.attackRange + 1; x++)
+                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + _attackRange + 1; x++)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
@@ -136,7 +138,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 180:
-                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - troopInfo.attackRange - 1; z--)
+                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - _attackRange - 1; z--)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
@@ -146,7 +148,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 270:
-                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - troopInfo.attackRange - 1; x--)
+                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - _attackRange - 1; x--)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
@@ -527,11 +529,12 @@ public class TroopActionsCS : MonoBehaviour
     /// <param name="_tile"></param>
     public void Attack(TileInfo _tile)
     {
-        HideQuickMenu();
-        ResetAlteredTiles();
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         bool _attackedFromTheBack = _troop.rotation == troopInfo.rotation;
-        AttackAnim(_troop);
+        int _distance = Mathf.Abs(_troop.xIndex - troopInfo.xIndex) + Mathf.Abs(_troop.zIndex - troopInfo.zIndex);
+        HideQuickMenu();
+        ResetAlteredTiles();
+        AttackAnim(_troop, _distance);
         // Expose troop identity
         if (!_troop.isExposed)
         {
@@ -554,10 +557,16 @@ public class TroopActionsCS : MonoBehaviour
 
         // Check if attacking troop back
         if (_attackedFromTheBack)
-            _troop.health -= troopInfo.stealthAttack - _troop.baseDefense;
+            if(troopInfo.isBoat)
+                _troop.health -= troopInfo.stealthAttack - _troop.baseDefense;
+            else
+                _troop.health -= troopInfo.shipStealthAttack - _troop.baseDefense;
         else
         {
-            _troop.health -= troopInfo.baseAttack - _troop.facingDefense;
+            if(troopInfo.isBoat)
+                _troop.health -= troopInfo.shipAttack - _troop.facingDefense;
+            else 
+                _troop.health -= troopInfo.baseAttack - _troop.facingDefense;
         }
         // this troop killed the other troop
         if (_troop.health <= 0)
@@ -585,8 +594,8 @@ public class TroopActionsCS : MonoBehaviour
             // Check if can counter attack (only can counter attack if troop remains alive)
             if(!_attackedFromTheBack)
             {
-                // If troop is ranged then they are immune to counter attack
-                if (troopInfo.attackRange == 1)
+                // If attack was a melee and not a ranged attack then counter attack (counter attack can not be a ranged attack)
+                if(_distance == 1)
                     troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
             }
             // Play hurt animation
@@ -604,12 +613,13 @@ public class TroopActionsCS : MonoBehaviour
             GameManagerCS.instance.troops.Remove(troopInfo.id);
             GameManagerCS.instance.objectsToDestroy.Add(troopInfo.troop);
         }
-        else if(!_attackedFromTheBack && _troop.health > 0)
+        // This if statment is here and not in the one with the condition !_attackedFromTheBack for the sake of animations going in order
+        else if (!_attackedFromTheBack && _troop.health > 0)
         {
-            // Ranged troops are immune to counter attacks so only show counter attack info if the troop is not ranged
-            if(troopInfo.attackRange == 1)
+            // If attack was a melee and not a ranged attack then counter attack (counter attack can not be a ranged attack)
+            if (_distance == 1)
             {
-                _troop.troopActions.AttackAnim(troopInfo);
+                _troop.troopActions.AttackAnim(troopInfo, _distance);
                 HurtAnim();
             }
         }
@@ -672,7 +682,7 @@ public class TroopActionsCS : MonoBehaviour
     /// Sets up attack animations and adds attack information to modified troop dict to send to server
     /// </summary>
     /// <param name="_troopToAttack"></param>
-    public void AttackAnim(TroopInfo _troopToAttack)
+    public void AttackAnim(TroopInfo _troopToAttack, int _distance)
     {
         PlayerCS.instance.isAnimInProgress = true;
         int _attackDirection = 0;
@@ -685,7 +695,6 @@ public class TroopActionsCS : MonoBehaviour
         else if (_troopToAttack.zIndex < troopInfo.zIndex)
             _attackDirection = 180;
 
-        int _distance = Mathf.Abs(_troopToAttack.xIndex - troopInfo.xIndex) + Mathf.Abs(_troopToAttack.zIndex - troopInfo.zIndex);
         if (_distance == 1)
         {
             PlayerCS.instance.animationQueue.Enqueue(SwordAnim(_attackDirection));
@@ -834,11 +843,11 @@ public class TroopActionsCS : MonoBehaviour
         for (int i = 0; i < 18; i++)
         {
             yield return new WaitForSeconds(.01f);
-            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(0, 20, 0);
+            troopInfo.troop.transform.localRotation *= Quaternion.Euler(0, 20, 0);
         }
         PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;
-        troopInfo.troopModel.transform.rotation = Quaternion.Euler(0, troopInfo.rotation, 0);
+        troopInfo.troop.transform.rotation = Quaternion.Euler(0, troopInfo.rotation, 0);
     }
 
     /// <summary>
@@ -869,10 +878,10 @@ public class TroopActionsCS : MonoBehaviour
     public IEnumerator DieAnimHelper()
     {
         PlayerCS.instance.isAnimInProgress = true;
-        while (troopInfo.troopModel.transform.localPosition.y > -1.5f)
+        while (troopInfo.troop.transform.localPosition.y > -1.5f)
         {
-            troopInfo.troopModel.transform.localRotation *= Quaternion.Euler(5, 0, 5);
-            troopInfo.troopModel.transform.localPosition = new Vector3(troopInfo.troopModel.transform.localPosition.x,
+            troopInfo.troop.transform.localRotation *= Quaternion.Euler(5, 0, 5);
+            troopInfo.troop.transform.localPosition = new Vector3(troopInfo.troopModel.transform.localPosition.x,
                                                                        troopInfo.troopModel.transform.localPosition.y - .05f,
                                                                        troopInfo.troopModel.transform.localPosition.z);
             yield return new WaitForSeconds(.001f);

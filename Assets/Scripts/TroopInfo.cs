@@ -10,6 +10,7 @@ public class TroopInfo : MonoBehaviour
     public GameObject blurredTroopModel;
     public GameObject shipModel;
     public GameObject blurredShipModel;
+    public GameObject rotationIndicationModel;
     public TroopActionsCS troopActions;
     public GameObject healthTextObject;
     public TextMeshPro healthText;
@@ -42,11 +43,24 @@ public class TroopInfo : MonoBehaviour
     public int attackRotation;
     public int lastTroopAttackedId;
 
+    // Ship variables
+    public string shipName;
+    public int shipAttack;
+    public int shipStealthAttack;
+    public int shipCounterAttack;
+    public int shipBaseDefense;
+    public int shipFacingDefense;
+    public int shipMovementCost;
+    public int shipAttackRange;
+    public int shipSeeRange;
+    public bool shipCanMultyKill;
+    public bool shipCanMoveAfterKill;
+
     /// <summary>
     /// Init troop info for new troop and set values for troop to be used this round
     /// </summary>
-    public void InitTroopInfo(string _troopName, TroopActionsCS _troopActions, 
-                              int _id, int _ownerId, int _xIndex, int _zIndex)
+    public void InitTroopInfo(string _troopName, TroopActionsCS _troopActions, int _id, int _ownerId, 
+                              string _shipName, int _xIndex, int _zIndex)
     {
         troopName = _troopName;
         troopActions = _troopActions;
@@ -69,6 +83,20 @@ public class TroopInfo : MonoBehaviour
         canAttack = true;
         canMultyKill = Constants.troopInfoBool[_troopName]["CanMultyKill"];
         canMoveAfterKill = Constants.troopInfoBool[_troopName]["CanMoveAfterKill"];
+
+        shipName = _shipName;
+
+        shipAttack = Constants.shipInfoInt[_shipName]["BaseAttack"];
+        shipStealthAttack = Constants.shipInfoInt[_shipName]["StealthAttack"];
+        shipCounterAttack = Constants.shipInfoInt[_shipName]["CounterAttack"];
+        shipBaseDefense = Constants.shipInfoInt[_shipName]["BaseDefense"];
+        shipFacingDefense = Constants.shipInfoInt[_shipName]["FacingDefense"];
+        shipMovementCost = Constants.shipInfoInt[_shipName]["MovementCost"];
+        shipAttackRange = Constants.shipInfoInt[_shipName]["AttackRange"];
+        shipSeeRange = Constants.shipInfoInt[_shipName]["SeeRange"];
+
+        shipCanMultyKill = Constants.shipInfoBool[_shipName]["CanMultyKill"];
+        shipCanMoveAfterKill = Constants.shipInfoBool[_shipName]["CanMoveAfterKill"];
 
         if (GetComponent<BoxCollider>() != null)
         {
@@ -106,7 +134,20 @@ public class TroopInfo : MonoBehaviour
         lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
         canMultyKill = _troopInfo.canMultyKill;
         canMoveAfterKill = _troopInfo.canMoveAfterKill;
-    }
+
+        shipName = _troopInfo.shipName;
+        shipAttack = _troopInfo.shipAttack;
+        shipStealthAttack = _troopInfo.shipStealthAttack;
+        shipCounterAttack = _troopInfo.shipCounterAttack;
+        shipBaseDefense = _troopInfo.shipBaseDefense;
+        shipFacingDefense = _troopInfo.shipFacingDefense;
+        shipMovementCost = _troopInfo.shipMovementCost;
+        shipAttackRange = _troopInfo.shipAttackRange;
+        shipSeeRange = _troopInfo.shipSeeRange;
+
+        shipCanMultyKill = _troopInfo.shipCanMultyKill;
+        shipCanMoveAfterKill = _troopInfo.shipCanMoveAfterKill;
+}
 
     public void CopyNecessaryTroopInfoToSendToServer(TroopInfo _troopInfo)
     {
@@ -132,6 +173,19 @@ public class TroopInfo : MonoBehaviour
 
         lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
         attackRotation = _troopInfo.attackRotation;
+
+        shipName = _troopInfo.shipName;
+        shipAttack = _troopInfo.shipAttack;
+        shipStealthAttack = _troopInfo.shipStealthAttack;
+        shipCounterAttack = _troopInfo.shipCounterAttack;
+        shipBaseDefense = _troopInfo.shipBaseDefense;
+        shipFacingDefense = _troopInfo.shipFacingDefense;
+        shipMovementCost = _troopInfo.shipMovementCost;
+        shipAttackRange = _troopInfo.shipAttackRange;
+        shipSeeRange = _troopInfo.shipSeeRange;
+
+        shipCanMultyKill = _troopInfo.shipCanMultyKill;
+        shipCanMoveAfterKill = _troopInfo.shipCanMoveAfterKill;
     }
 
     /// <summary>
@@ -158,5 +212,18 @@ public class TroopInfo : MonoBehaviour
 
         lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
         attackRotation = _troopInfo.attackRotation;
+
+        shipName = _troopInfo.shipName;
+        shipAttack = _troopInfo.shipAttack;
+        shipStealthAttack = _troopInfo.shipStealthAttack;
+        shipCounterAttack = _troopInfo.shipCounterAttack;
+        shipBaseDefense = _troopInfo.shipBaseDefense;
+        shipFacingDefense = _troopInfo.shipFacingDefense;
+        shipMovementCost = _troopInfo.shipMovementCost;
+        shipAttackRange = _troopInfo.shipAttackRange;
+        shipSeeRange = _troopInfo.shipSeeRange;
+
+        shipCanMultyKill = _troopInfo.shipCanMultyKill;
+        shipCanMoveAfterKill = _troopInfo.shipCanMoveAfterKill;
     }
 }

@@ -89,6 +89,17 @@ public class ClientSend : MonoBehaviour
                         _packet.Write(_troop.canMultyKill);
                         _packet.Write(_troop.lastTroopAttackedId);
                         _packet.Write(_troop.attackRotation);
+                        _packet.Write(_troop.shipName);
+                        _packet.Write(_troop.shipAttack);
+                        _packet.Write(_troop.shipStealthAttack);
+                        _packet.Write(_troop.shipCounterAttack);
+                        _packet.Write(_troop.shipBaseDefense);
+                        _packet.Write(_troop.shipFacingDefense);
+                        _packet.Write(_troop.shipMovementCost);
+                        _packet.Write(_troop.shipAttackRange);
+                        _packet.Write(_troop.shipSeeRange);
+                        _packet.Write(_troop.shipCanMultyKill);
+                        _packet.Write(_troop.shipCanMoveAfterKill);
                         _packet.Write(_troopDict[_troop]);
 
                         SendTCPData(_packet);
@@ -152,7 +163,6 @@ public class ClientSend : MonoBehaviour
                 }
                 else if (_troopDict[_troop] == "SwitchModel")
                 {
-                    Debug.Log("Sending switch model info to server");
                     using (Packet _packet = new Packet((int)ClientPackets.sendSwitchLandOrSeaModelInfo))
                     {
                         _packet.Write(_troop.id);

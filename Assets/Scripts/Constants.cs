@@ -311,6 +311,51 @@ public static class Constants
         },
     };
 
+    public static Dictionary<string, Dictionary<string, int>> shipInfoInt = new Dictionary<string, Dictionary<string, int>>
+    {
+        { "Canoe", new Dictionary<string, int>
+          {
+                { "BaseAttack", 5},
+                { "StealthAttack", 7},
+                { "CounterAttack", 2},
+                { "BaseDefense", 1},
+                { "FacingDefense", 3},
+                { "MovementCost", 2},
+                { "AttackRange", 3},
+                { "SeeRange", 5},
+            }
+        },
+        { "Warship", new Dictionary<string, int>
+          {
+                { "BaseAttack", 7},
+                { "StealthAttack", 9},
+                { "CounterAttack", 5},
+                { "BaseDefense", 3},
+                { "FacingDefense", 4},
+                { "MovementCost", 5},
+                { "AttackRange", 5},
+                { "SeeRange", 5},
+            }
+        },
+    };
+
+    public static Dictionary<string, Dictionary<string, bool>> shipInfoBool = new Dictionary<string, Dictionary<string, bool>>
+    {
+        { "Canoe", new Dictionary<string, bool>
+            {
+                { "CanMultyKill", false},
+                { "CanMoveAfterKill", false},
+            }
+        },
+        { "Warship", new Dictionary<string, bool>
+            {
+                { "CanMultyKill", false},
+                { "CanMoveAfterKill", false},
+            }
+        },
+    };
+
+
     public static Dictionary<string, Dictionary<string, int>> prices = new Dictionary<string, Dictionary<string, int>>()
     {
         { "City" , new Dictionary<string, int> 
