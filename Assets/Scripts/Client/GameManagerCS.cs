@@ -62,6 +62,7 @@ public class GameManagerCS : MonoBehaviour
     public int whatIsInteractableValue, whatIsDefaultValue;
 
     public Dictionary<string, GameObject> buildingPrefabs;
+    public Dictionary<string, GameObject> shipModels;
 
     #region Set Up Functions
 
@@ -86,6 +87,12 @@ public class GameManagerCS : MonoBehaviour
             { "Market", marketPrefab},
             { "Dome", domePrefab},
             { "Port", portPrefab},
+        };
+
+        shipModels = new Dictionary<string, GameObject>()
+        {
+            { "Canoe", canoePrefab },
+            { "Warship", warShipPrefab },
         };
     }
 
@@ -725,6 +732,13 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.runningCoroutine = null;
     }
 
+    public IEnumerator UpdateTroopInfo(TroopInfo _troopInfo)
+    {
+        troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
+        PlayerCS.instance.runningCoroutine = null;
+        yield return null;
+    }
+
     /// <summary>
     /// Plays troop die animation coming from server and removes troop from appropriate dicts/list
     /// </summary>
@@ -735,6 +749,25 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.isAnimInProgress = true;
         TroopInfo _troop = troops[_troopInfo.id];
         _troop.isBoat = _troopInfo.isBoat;
+        yield return null;
+        PlayerCS.instance.isAnimInProgress = false;
+        PlayerCS.instance.runningCoroutine = null;
+    }
+
+    /// <summary>
+    /// Plays troop die animation coming from server and removes troop from appropriate dicts/list
+    /// </summary>
+    /// <param name="_troopInfo"></param>
+    /// <returns></returns>
+    public IEnumerator ChangeShipModelTroopInfo(TroopInfo _troopInfo)
+    {
+        PlayerCS.instance.isAnimInProgress = true;
+        TroopInfo _troop = troops[_troopInfo.id];
+        Destroy(_troop.shipModel);
+        _troop.shipModel = Instantiate(shipModels[_troopInfo.shipName], _troop.troop.transform.position, 
+                                       shipModels[_troopInfo.shipName].transform.localRotation);
+        _troop.shipModel.transform.parent = _troop.troop.transform;
+        _troop.shipModel.SetActive(false);
         yield return null;
         PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;
@@ -1108,47 +1141,11 @@ public class GameManagerCS : MonoBehaviour
         tiles[_tile.xIndex, _tile.zIndex].buildingName = _tile.buildingName;
         int _xCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.x;
         int _zCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.y;
-        switch (_tile.buildingName)
+        foreach (string _key in buildingPrefabs.Keys)
         {
-            case "LumberYard":
-                Instantiate(lumberYardPrefab, new Vector3(_xCoord, lumberYardPrefab.transform.position.y,
-                                                                       _tile.position.y), lumberYardPrefab.transform.localRotation);
-                break;
-            case "Farm":
-                Instantiate(farmPrefab, new Vector3(_xCoord, farmPrefab.transform.position.y,
-                                                       _zCoord), farmPrefab.transform.localRotation);
-                break;
-            case "Mine":
-                Instantiate(minePrefab, new Vector3(_xCoord, minePrefab.transform.position.y,
-                                                       _zCoord), minePrefab.transform.localRotation);
-                break;
-            case "School":
-                Instantiate(schoolPrefab, new Vector3(_xCoord, schoolPrefab.transform.position.y,
-                                                       _zCoord), schoolPrefab.transform.localRotation);
-                break;
-            case "Library":
-                Instantiate(libraryPrefab, new Vector3(_xCoord, libraryPrefab.transform.position.y,
-                                                       _zCoord), libraryPrefab.transform.localRotation);
-                break;
-            case "Dome":
-                Instantiate(domePrefab, new Vector3(_xCoord, domePrefab.transform.position.y,
-                                                       _zCoord), domePrefab.transform.localRotation);
-                break;
-            case "Housing":
-                Instantiate(housingPrefab, new Vector3(_xCoord, housingPrefab.transform.position.y,
-                                                       _zCoord), housingPrefab.transform.localRotation);
-                break;
-            case "Market":
-                Instantiate(marketPrefab, new Vector3(_xCoord, marketPrefab.transform.position.y,
-                                                       _zCoord), marketPrefab.transform.localRotation);
-                break;
-            case "Port":
-                Instantiate(portPrefab, new Vector3(_xCoord, portPrefab.transform.position.y,
-                                                    _zCoord), portPrefab.transform.localRotation);
-                break;
-            default:
-                Debug.LogError("Building " + _tile.buildingName + " not found");
-                break;
+            if (_key == _tile.buildingName)
+                Instantiate(buildingPrefabs[_key], new Vector3(_xCoord, buildingPrefabs[_key].transform.position.y,
+                                                               _zCoord), buildingPrefabs[_key].transform.localRotation);
         }
     }
 
@@ -1216,6 +1213,12 @@ public class GameManagerCS : MonoBehaviour
                     case "SwitchModel":
                         PlayerCS.instance.animationQueue.Enqueue(SwitchLandOrSeaModelTroopInfo(_troop));
                         break;
+                    case "Update":
+                        PlayerCS.instance.animationQueue.Enqueue(UpdateTroopInfo(_troop));
+                        break;
+                    case "ChangeShipModel":
+                        PlayerCS.instance.animationQueue.Enqueue(ChangeShipModelTroopInfo(_troop));
+                        break;
                     default:
                         Debug.LogError("Could not find troop action: " + _troopDict[_troop]);
                         break;
@@ -1252,10 +1255,6 @@ public class GameManagerCS : MonoBehaviour
         {
             foreach (CityInfo _city in _cityDict.Keys)
             {
-                if(_city.ownerId == ClientCS.instance.myId)
-                {
-                    Debug.Log("Found in first loop with value " + _city.isTrainingTroops);
-                }
                 switch (_cityDict[_city])
                 {
                     case "Create":

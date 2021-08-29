@@ -137,6 +137,7 @@ public class Server
             { (int)ClientPackets.sendHurtTroopInfo, ServerHandle.RecieveTroopHurtInfo },
             { (int)ClientPackets.sendDieTroopInfo, ServerHandle.RecieveTroopDieInfo },
             { (int)ClientPackets.sendSwitchLandOrSeaModelInfo, ServerHandle.RecieveTroopSwitchLandOrSeaModelInfo },
+            { (int)ClientPackets.sendChangeShipModel, ServerHandle.RecieveChangeShipModelInfo },
             { (int)ClientPackets.sendUpdatedTroopInfo, ServerHandle.RecieveTroopUpdatedInfo },
             { (int)ClientPackets.sendOccupyChangeTileInfo, ServerHandle.RecieveTileOccupyChangeInfo },
             { (int)ClientPackets.sendOwnershipChangeTileInfo, ServerHandle.RecieveTileOwnershipChangeInfo },

@@ -6,6 +6,9 @@ using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
+    public Canvas canvas;
+    public CanvasScaler canvasScaler;
+
     public GameObject playerUIContainer, mainContainer, skillTreeContainer, quickMenuContainer, menuButton;
 
     // Resource
@@ -25,6 +28,7 @@ public class PlayerUI : MonoBehaviour
 
     public void Start()
     {
+        // Fill in dict data
         skillButtons = new Dictionary<string, Button>()
         {
             { "Army", armySkillButton },
@@ -44,27 +48,6 @@ public class PlayerUI : MonoBehaviour
             { "Farm", farmSkillButton },
             { "Mine", mineSkillButton },
             { "LumberYard", lumberYardSkillButton },
-        };
-
-        skillText = new Dictionary<string, TextMeshProUGUI>()
-        {
-            { "Army", armySkillText },
-            { "Snipper", snipperSkillText },
-            { "Missle", missleSkillText },
-            { "Defense", defenseSkillText },
-            { "Stealth", stealthSkillText },
-            { "Port", portSkillText },
-            { "Warship", warshipSkillText },
-            { "Walls", wallSkillText },
-            { "Dome", domeSkillText },
-            { "Library", librarySkillText },
-            { "School", schoolSkillText },
-            { "Housing", housingSkillText },
-            { "Roads", roadSkillText },
-            { "Market", marketSkillText },
-            { "Farm", farmSkillText },
-            { "Mine", mineSkillText },
-            { "LumberYard", lumberYardSkillText },
         };
     }
 

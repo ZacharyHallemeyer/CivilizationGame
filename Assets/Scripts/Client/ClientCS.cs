@@ -309,6 +309,7 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.sendClientHurtTroopInfo, ClientHandle.ReceiveHurtTroopInfo},
             { (int)ServerPackets.sendClientDieTroopInfo, ClientHandle.ReceiveDieTroopInfo},
             { (int)ServerPackets.sendClientSwitchLandOrSeaModelInfo, ClientHandle.ReceiveSwitchLandOrSeaModelTroopInfo},
+            { (int)ServerPackets.sendClientChangeShipModel, ClientHandle.ReceiveChangeShipModel},
             { (int)ServerPackets.sendClientUpdatedTroopInfo, ClientHandle.ReceiveUpdatedTroopInfo},
             { (int)ServerPackets.sendClientOccupyChangeTileInfo, ClientHandle.ReceiveOccupyChangeTileInfo},
             { (int)ServerPackets.sendClientOwnershipChangeTileInfo, ClientHandle.ReceiveOwnershipChangeTileInfo},

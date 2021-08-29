@@ -20,6 +20,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+        Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
         MoveToMainMenu();
         SetUpUserNameField();
         SetUpIPField();

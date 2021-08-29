@@ -12,8 +12,8 @@ public class TroopActionsCS : MonoBehaviour
     public TroopInfo troopInfo;
 
     // Quick Menu
-    public GameObject quickMenuContainer, mainContainer, mainKingContainer;
-    public Button createCityButton, conquerMainCityButton, conquerKingCityButton;
+    public GameObject quickMenuContainer;
+    public Button createCityButton, conquerCityButton, upgradeShipButton;
 
     #region Set Up
 
@@ -489,8 +489,10 @@ public class TroopActionsCS : MonoBehaviour
 
         _city.ownerId = troopInfo.ownerId;
         _city.InitConqueredCity();
+        CityInfo _cityCopy = GameManagerCS.instance.dataStoringObject.AddComponent<CityInfo>();
+        _cityCopy.CopyCityInfo(_city);
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { { _city, "Conquer" } };
+        { { _cityCopy, "Conquer" } };
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
 
         Dictionary<TileInfo, string> _tileData;
@@ -510,8 +512,10 @@ public class TroopActionsCS : MonoBehaviour
                         // Change color of ownership visual object
                         _tile.ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
                             Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
+                        TileInfo _tileCopy = GameManagerCS.instance.dataStoringObject.AddComponent<TileInfo>();
+                        _tileCopy.CopyTileInfo(_tile);
                         _tileData = new Dictionary<TileInfo, string>()
-                        { { _tile, "OwnershipChange"} };
+                        { { _tileCopy, "OwnershipChange"} };
                         GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
                     }
                 }
@@ -521,6 +525,40 @@ public class TroopActionsCS : MonoBehaviour
         // Update morale and education
         PlayerCS.instance.ResetMoraleAndEducation();
         ResetAlteredTiles();
+    }
+
+    public void UpgradeShip(string _shipNameToUpgradeTo)
+    {
+        troopInfo.shipName = _shipNameToUpgradeTo;
+
+        troopInfo.shipAttack = Constants.shipInfoInt[_shipNameToUpgradeTo]["BaseAttack"];
+        troopInfo.shipStealthAttack = Constants.shipInfoInt[_shipNameToUpgradeTo]["StealthAttack"];
+        troopInfo.shipCounterAttack = Constants.shipInfoInt[_shipNameToUpgradeTo]["CounterAttack"];
+        troopInfo.shipBaseDefense = Constants.shipInfoInt[_shipNameToUpgradeTo]["BaseDefense"];
+        troopInfo.shipFacingDefense = Constants.shipInfoInt[_shipNameToUpgradeTo]["FacingDefense"];
+        troopInfo.shipMovementCost = Constants.shipInfoInt[_shipNameToUpgradeTo]["MovementCost"];
+        troopInfo.shipAttackRange = Constants.shipInfoInt[_shipNameToUpgradeTo]["AttackRange"];
+        troopInfo.shipSeeRange = Constants.shipInfoInt[_shipNameToUpgradeTo]["SeeRange"];
+
+        troopInfo.shipCanMultyKill = Constants.shipInfoBool[_shipNameToUpgradeTo]["CanMultyKill"];
+        troopInfo.shipCanMoveAfterKill = Constants.shipInfoBool[_shipNameToUpgradeTo]["CanMoveAfterKill"];
+
+        // Change Ship model
+        Destroy(troopInfo.shipModel);
+        troopInfo.shipModel = Instantiate(GameManagerCS.instance.shipModels[_shipNameToUpgradeTo], troopInfo.troop.transform.position,
+                                       GameManagerCS.instance.shipModels[_shipNameToUpgradeTo].transform.localRotation);
+        troopInfo.shipModel.transform.parent = troopInfo.troop.transform;
+        // Fix local rotation since setting parent transform might cause ship model to look in a wrong direction
+        troopInfo.shipModel.transform.localRotation = GameManagerCS.instance.shipModels[_shipNameToUpgradeTo].transform.localRotation;
+
+        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
+        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_copiedTroop, "Update"}};
+        Dictionary<TroopInfo, string> _troopData2 = new Dictionary<TroopInfo, string>()
+            { {_copiedTroop, "ChangeShipModel"}};
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData2);
     }
 
     /// <summary>
@@ -914,10 +952,6 @@ public class TroopActionsCS : MonoBehaviour
         PlayerCS.instance.playerUI.menuButton.SetActive(false);
         PlayerCS.instance.HideQuckMenus();
         quickMenuContainer.SetActive(true);
-        if (troopInfo.troopName == "King")
-            mainKingContainer.SetActive(true);
-        else
-            mainContainer.SetActive(true);
 
         DisplayerPossibleActions();
     }
@@ -928,8 +962,8 @@ public class TroopActionsCS : MonoBehaviour
 
         // Deactivate all action buttons beside close 
         createCityButton.gameObject.SetActive(false);
-        conquerKingCityButton.gameObject.SetActive(false);
-        conquerMainCityButton.gameObject.SetActive(false);
+        conquerCityButton.gameObject.SetActive(false);
+        upgradeShipButton.gameObject.SetActive(false);
 
         // Check if troop can conquer a city
         TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
@@ -940,14 +974,14 @@ public class TroopActionsCS : MonoBehaviour
             {
                 if (troopInfo.troopName == "King")
                 {
-                    conquerKingCityButton.gameObject.SetActive(true);
-                    conquerKingCityButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+                    conquerCityButton.gameObject.SetActive(true);
+                    conquerCityButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
                     _currentXCoord += _xCoordIncrement;
                 }
                 else
                 {
-                    conquerMainCityButton.gameObject.SetActive(true);
-                    conquerMainCityButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+                    conquerCityButton.gameObject.SetActive(true);
+                    conquerCityButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
                     _currentXCoord += _xCoordIncrement;
                 }
             }
@@ -961,9 +995,15 @@ public class TroopActionsCS : MonoBehaviour
                 _currentXCoord += _xCoordIncrement;
             }
         }
+        if(troopInfo.isBoat && troopInfo.shipName == "Canoe")
+        {
+            upgradeShipButton.gameObject.SetActive(true);
+            upgradeShipButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(_currentXCoord, _currentYCoord, 0);
+            _currentXCoord += _xCoordIncrement;
+        }
 
         // If no actions possible then close quick menu
-        if (!conquerMainCityButton.gameObject.activeInHierarchy && !conquerKingCityButton.gameObject.activeInHierarchy && 
+        if (!conquerCityButton.gameObject.activeInHierarchy && !upgradeShipButton.gameObject.activeInHierarchy && 
             !createCityButton.gameObject.activeInHierarchy)
         {
             ResetQuickMenu();
@@ -973,8 +1013,6 @@ public class TroopActionsCS : MonoBehaviour
     public void ResetQuickMenu()
     {
         quickMenuContainer.SetActive(false);
-        mainContainer.SetActive(false);
-        mainKingContainer.SetActive(false);
         PlayerCS.instance.isAbleToCommitActions = true;
         PlayerCS.instance.playerUI.menuButton.SetActive(true);
     }

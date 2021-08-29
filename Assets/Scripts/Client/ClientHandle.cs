@@ -312,6 +312,19 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
     }
 
+    public static void ReceiveChangeShipModel(Packet _packet)
+    {
+        TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
+        _troop.id = _packet.ReadInt();
+        _troop.shipName = _packet.ReadString();
+        string _command = _packet.ReadString();
+
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_troop, _command} };
+        // Add data to dictionary to be used when displaying past moves
+        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+    }
+
     /// <summary>
     /// Recieve all updated troop data from server
     /// When all modified troop data is sent from server. This function will receive a -1 for an id which represents all data was received
@@ -343,6 +356,17 @@ public class ClientHandle : MonoBehaviour
         _troop.canMultyKill = _packet.ReadBool();
         _troop.lastTroopAttackedId = _packet.ReadInt();
         _troop.attackRotation = _packet.ReadInt();
+        _troop.shipName = _packet.ReadString();
+        _troop.shipAttack = _packet.ReadInt();
+        _troop.shipStealthAttack = _packet.ReadInt();
+        _troop.shipCounterAttack = _packet.ReadInt();
+        _troop.shipBaseDefense = _packet.ReadInt();
+        _troop.shipFacingDefense = _packet.ReadInt();
+        _troop.shipMovementCost = _packet.ReadInt();
+        _troop.shipAttackRange = _packet.ReadInt();
+        _troop.shipSeeRange = _packet.ReadInt();
+        _troop.shipCanMultyKill = _packet.ReadBool();
+        _troop.shipCanMoveAfterKill = _packet.ReadBool();
         string _command = _packet.ReadString();
 
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()

@@ -5,9 +5,10 @@ using UnityEngine;
 public static class Constants
 {
     public static float troopYPosition = .899f;
-
     public static float troopHealthYPositionDescend = -1.5f;
     public static float troopHealthYPositionAscend = 0f;
+
+    public static float canvaseWidthRes = 1920, canvasHeightRes = 1920;
 
     public static Dictionary<string, Dictionary<string, float>> biomeInfo = new Dictionary<string, Dictionary<string, float>>
     {

@@ -381,6 +381,54 @@ public class ServerSend
                             SendTCPData(_playerId, _packet);
                         }
                     }
+                    else if (_troopDict[_troop] == "ChangeShipModel")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientChangeShipModel))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.shipName);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
+                    else if (_troopDict[_troop] == "Update")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientUpdatedTroopInfo))
+                        {
+                            _packet.Write(_troop.id);
+                            _packet.Write(_troop.ownerId);
+                            _packet.Write(_troop.troopName);
+                            _packet.Write(_troop.xIndex);
+                            _packet.Write(_troop.zIndex);
+                            _packet.Write(_troop.rotation);
+                            _packet.Write(_troop.health);
+                            _packet.Write(_troop.baseAttack);
+                            _packet.Write(_troop.stealthAttack);
+                            _packet.Write(_troop.counterAttack);
+                            _packet.Write(_troop.baseDefense);
+                            _packet.Write(_troop.facingDefense);
+                            _packet.Write(_troop.attackRange);
+                            _packet.Write(_troop.seeRange);
+                            _packet.Write(_troop.canMultyKill);
+                            _packet.Write(_troop.lastTroopAttackedId);
+                            _packet.Write(_troop.attackRotation);
+                            _packet.Write(_troop.shipName);
+                            _packet.Write(_troop.shipAttack);
+                            _packet.Write(_troop.shipStealthAttack);
+                            _packet.Write(_troop.shipCounterAttack);
+                            _packet.Write(_troop.shipBaseDefense);
+                            _packet.Write(_troop.shipFacingDefense);
+                            _packet.Write(_troop.shipMovementCost);
+                            _packet.Write(_troop.shipAttackRange);
+                            _packet.Write(_troop.shipSeeRange);
+                            _packet.Write(_troop.shipCanMultyKill);
+                            _packet.Write(_troop.shipCanMoveAfterKill);
+                            _packet.Write(_troopDict[_troop]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
                 }
             }
         }
