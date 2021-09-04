@@ -399,7 +399,7 @@ public class CityActionsCS : MonoBehaviour
     #region Troops
 
     /// <summary>
-    /// Starts training troop
+    /// Subtracts troop resource cost from player and spawn troop that can not be used until next turn
     /// </summary>
     /// <param name="_troopName"> type of troop to spawn </param>
     public void StartTrainTroop(string _troopName)
@@ -414,15 +414,8 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.population -= Constants.prices[currentTroopTraining]["Population"];
         PlayerCS.instance.playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.wood, PlayerCS.instance.metal,
                                                        PlayerCS.instance.money, PlayerCS.instance.population);
+        GameManagerCS.instance.SpawnLocalTroop(ClientCS.instance.myId, currentTroopTraining, cityInfo.xIndex, cityInfo.zIndex, 0, false);
         HideQuickMenu();
-    }
-
-    /// <summary>
-    /// Spawn troop that was being trained last turn
-    /// </summary>
-    public void SpawnTroop()
-    {
-        GameManagerCS.instance.SpawnLocalTroop(ClientCS.instance.myId, currentTroopTraining, cityInfo.xIndex, cityInfo.zIndex, 0);
     }
 
     #endregion

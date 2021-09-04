@@ -49,6 +49,26 @@ public class PlayerUI : MonoBehaviour
             { "Mine", mineSkillButton },
             { "LumberYard", lumberYardSkillButton },
         };
+        skillText = new Dictionary<string, TextMeshProUGUI>()
+        {
+            { "Army", armySkillText },
+            { "Snipper", snipperSkillText },
+            { "Missle", missleSkillText },
+            { "Defense", defenseSkillText },
+            { "Stealth", stealthSkillText },
+            { "Port", portSkillText },
+            { "Warship", warshipSkillText },
+            { "Walls", wallSkillText },
+            { "Dome", domeSkillText },
+            { "Library", librarySkillText },
+            { "School", schoolSkillText },
+            { "Housing", housingSkillText },
+            { "Roads", roadSkillText },
+            { "Market", marketSkillText },
+            { "Farm", farmSkillText },
+            { "Mine", mineSkillText },
+            { "LumberYard", lumberYardSkillText },
+        };
     }
 
     /// <summary>

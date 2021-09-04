@@ -15,6 +15,8 @@ public class TroopActionsCS : MonoBehaviour
     public GameObject quickMenuContainer;
     public Button createCityButton, conquerCityButton, upgradeShipButton;
 
+    private bool troopInAttackRange;
+
     #region Set Up
 
     /// <summary>
@@ -114,6 +116,7 @@ public class TroopActionsCS : MonoBehaviour
 
         // Create attackable tiles
         if (!troopInfo.canAttack) return;
+        troopInAttackRange = false;
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
         switch (troopInfo.rotation)
         {
@@ -191,16 +194,24 @@ public class TroopActionsCS : MonoBehaviour
         if (_tile.isCity)
         {
             if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops &&
-                GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)
+                GameManagerCS.instance.cities[_tile.cityId].ownerId == ClientCS.instance.myId)
                 return false;
+
             _tile.tile.layer = whatIsInteractableValue;
-            _tile.tile.tag = moveableCityTag;
+            // If city is an enemy set it to moveable city tag otherwise set it to a normal 
+            if(GameManagerCS.instance.cities[_tile.cityId].ownerId != ClientCS.instance.myId)
+                _tile.tile.tag = moveableCityTag;
+            else    
+                _tile.tile.tag = moveableTileTag;
             _tile.moveUI.SetActive(true);
         }
         else if(_tile.isBuilding && _tile.buildingName == "Port")
         {
             _tile.tile.layer = whatIsInteractableValue;
-            _tile.tile.tag = portTag;
+            if(!troopInfo.isBoat)
+                _tile.tile.tag = portTag;
+            else    
+                _tile.tile.tag = moveableTileTag;
             _tile.moveUI.SetActive(true);
         }
         else if (_tile.isWater)
@@ -245,6 +256,7 @@ public class TroopActionsCS : MonoBehaviour
         {
             if (GameManagerCS.instance.troops[_tile.occupyingObjectId].ownerId != troopInfo.ownerId)
             {
+                troopInAttackRange = true;
                 _tile.tile.layer = whatIsInteractableValue;
                 _tile.tile.tag = attackableTileTag;
                 _tile.attackUI.SetActive(true);
@@ -333,7 +345,6 @@ public class TroopActionsCS : MonoBehaviour
 
         // Update new tile
         troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.zIndex - _oldTile.zIndex);
-        if (troopInfo.movementCost < 0) troopInfo.movementCost = 0;
         _newTile.isOccupied = true;
         _newTile.occupyingObjectId = troopInfo.id;
         // Add tile data to send to server
@@ -405,10 +416,13 @@ public class TroopActionsCS : MonoBehaviour
         { {_copiedTroop, "Move"} };
         GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
         CheckTroopSeeingRange();
+        CreateInteractableTiles();
+        CheckCanCommitAnyActions();
         PlayerCS.instance.isAnimInProgress = false;
         PlayerCS.instance.runningCoroutine = null;
     }
 
+    // Move onto enemy city
     public void MoveOntoCity(TileInfo _tile, CityInfo _city)
     {
         _city.isBeingConquered = true;
@@ -420,10 +434,32 @@ public class TroopActionsCS : MonoBehaviour
         MoveToNewTile(_tile);
     }
 
+    /// <summary>
+    /// Switches player to canoe stats if player is not a boat when it move to port
+    /// </summary>
+    /// <param name="_tile"></param>
     public void MoveOntoPort(TileInfo _tile)
     {
         if(!troopInfo.isBoat)
             troopInfo.isBoat = true;
+
+        // Assign canoe stats if canoe stats are not already used
+        if(troopInfo.shipName != "Canoe")
+        {
+            troopInfo.shipName = "Canoe";
+            troopInfo.shipAttack = Constants.shipInfoInt["Canoe"]["BaseAttack"];
+            troopInfo.shipStealthAttack = Constants.shipInfoInt["Canoe"]["StealthAttack"];
+            troopInfo.shipCounterAttack = Constants.shipInfoInt["Canoe"]["CounterAttack"];
+            troopInfo.shipBaseDefense = Constants.shipInfoInt["Canoe"]["BaseDefense"];
+            troopInfo.shipFacingDefense = Constants.shipInfoInt["Canoe"]["FacingDefense"];
+            troopInfo.shipMovementCost = Constants.shipInfoInt["Canoe"]["MovementCost"];
+            troopInfo.shipAttackRange = Constants.shipInfoInt["Canoe"]["AttackRange"];
+            troopInfo.shipSeeRange = Constants.shipInfoInt["Canoe"]["SeeRange"];
+
+            troopInfo.shipCanMultyKill = Constants.shipInfoBool["Canoe"]["CanMultyKill"];
+            troopInfo.shipCanMoveAfterKill = Constants.shipInfoBool["Canoe"]["CanMoveAfterKill"];
+        }
+
         TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
         _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
@@ -437,7 +473,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void Rotate(int _rotateValue)
     {
-        if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
+        if (troopInfo.movementCost <= 0 && !troopInAttackRange) return;
         // rotate counter clockwise
         if (_rotateValue == -1)
         {
@@ -469,6 +505,9 @@ public class TroopActionsCS : MonoBehaviour
 
     #region Actions
 
+    /// <summary>
+    /// Called from troop quick menu
+    /// </summary>
     public void ConquerCity()
     {
         HideQuickMenu();
@@ -477,15 +516,22 @@ public class TroopActionsCS : MonoBehaviour
         ConquerCity(_tile, _city);
     }
 
+    /// <summary>
+    /// Conquers city that troop is standing on
+    /// </summary>
+    /// <param name="_tile"> Tile troop is standing on </param>
+    /// <param name="_city"> City troop wants to conquer </param>
     public void ConquerCity(TileInfo _tile, CityInfo _city)
     {
         int _previousCityOwnerId = _city.ownerId;
         _tile.tile.tag = cityTag;
         _tile.tile.layer = whatIsInteractableValue;
-        troopInfo.movementCost = 0;
-        troopInfo.canAttack = false;
         _city.isAbleToBeConquered = false;
         _city.isBeingConquered = false;
+
+        troopInfo.movementCost = 0;
+        troopInfo.canAttack = false;
+        TroopCanNotCommitAnyMoreActions();
 
         _city.ownerId = troopInfo.ownerId;
         _city.InitConqueredCity();
@@ -527,6 +573,10 @@ public class TroopActionsCS : MonoBehaviour
         ResetAlteredTiles();
     }
 
+    /// <summary>
+    /// Called from troop quick menu
+    /// </summary>
+    /// <param name="_shipNameToUpgradeTo"></param>
     public void UpgradeShip(string _shipNameToUpgradeTo)
     {
         troopInfo.shipName = _shipNameToUpgradeTo;
@@ -661,6 +711,10 @@ public class TroopActionsCS : MonoBehaviour
                 HurtAnim();
             }
         }
+
+        CreateInteractableTiles();
+        if(troopInfo.health > 0)
+            CheckCanCommitAnyActions();
     }
 
 
@@ -710,6 +764,26 @@ public class TroopActionsCS : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Checks if troop can commit anymore actions
+    /// If troop can't then it calls TroopCanNotCommitAnyMoreActions function
+    /// </summary>
+    private void CheckCanCommitAnyActions()
+    {
+        if (troopInfo.movementCost <= 0 && (!troopInAttackRange || !troopInfo.canAttack))
+            TroopCanNotCommitAnyMoreActions();
+    }
+
+    public void TroopCanNotCommitAnyMoreActions()
+    {
+        troopInfo.exhaustedParicleSystem.Play();
+    }
+
+    public void TroopCanCommitMoreActions()
+    {
+        troopInfo.exhaustedParicleSystem.Stop();
     }
 
     #endregion

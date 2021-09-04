@@ -318,7 +318,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_xCoord"> x coord to spawn troop </param>
     /// <param name="_zCoord"> z coord to spawn troop </param>
     /// <param name="_rotation"> rotation of new troop </param>
-    public void SpawnLocalTroop(int _ownerId, string _troopName, int _xIndex, int _zIndex, int _rotation)
+    public void SpawnLocalTroop(int _ownerId, string _troopName, int _xIndex, int _zIndex, int _rotation, bool _canUseThisWave)
     {
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
@@ -330,6 +330,8 @@ public class GameManagerCS : MonoBehaviour
         // Get rotation indication object from troop prefab 
         _troopInfo.rotationIndicationModel = _troop.transform.GetChild(0).gameObject;
         _troopInfo.rotationIndicationModel.SetActive(false);
+        // Get exhausted particle system
+        _troopInfo.exhaustedParicleSystem = _troop.transform.GetChild(1).GetComponent<ParticleSystem>();
         // Spawn troop with canoe ship stats because they will always start as a canoe when they step onto a port for the first time
         _troopInfo.InitTroopInfo(_troopName, _troopActions, currentTroopIndex, _ownerId, "Canoe", _xIndex, _zIndex);
         _troopInfo.isExposed = true;
@@ -351,6 +353,14 @@ public class GameManagerCS : MonoBehaviour
 
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;
+
+        if(!_canUseThisWave)
+        {
+            _troopInfo.movementCost = 0;
+            _troopInfo.canAttack = false;
+            _troopInfo.troopActions.TroopCanNotCommitAnyMoreActions();
+        }
+
         Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
             { {_troopInfo, "Spawn"} };
         modifiedTroopInfo.Add(_troopData);
@@ -464,7 +474,7 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.playerUI.playerUIContainer.SetActive(true);
         PlayerCS.instance.playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
                                   PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
-        SpawnLocalTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0);
+        SpawnLocalTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0, true);
         startScreenUI.SetActive(false);
     }
 
@@ -785,6 +795,7 @@ public class GameManagerCS : MonoBehaviour
                 _troop.movementCost = Constants.troopInfoInt[_troop.troopName]["MovementCost"];
                 _troop.canAttack = true;
                 _troop.boxCollider.enabled = true;
+                _troop.troopActions.TroopCanCommitMoreActions();
             }
         }
         PlayerCS.instance.runningCoroutine = null;
@@ -1289,6 +1300,7 @@ public class GameManagerCS : MonoBehaviour
                 _city.isAbleToBeConquered = false;
             if(_city.ownerId == ClientCS.instance.myId)
             {
+                /*
                 if(_city.isTrainingTroops)
                 {
                     _city.isTrainingTroops = false;
@@ -1296,6 +1308,7 @@ public class GameManagerCS : MonoBehaviour
                     if(!tiles[_city.xIndex, _city.zIndex].isOccupied)
                         _city.cityActions.SpawnTroop();
                 }
+                */
             }
         }
 

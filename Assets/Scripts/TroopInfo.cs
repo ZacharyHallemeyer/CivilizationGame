@@ -15,6 +15,7 @@ public class TroopInfo : MonoBehaviour
     public GameObject healthTextObject;
     public TextMeshPro healthText;
     public BoxCollider boxCollider;
+    public ParticleSystem exhaustedParicleSystem;
     public string troopName;
 
     public int id;
