@@ -56,8 +56,6 @@ public class GameManagerCS : MonoBehaviour
     // King Death Screen
     public GameObject kingDeathScreen;
 
-    public PlayerUI playerUI;
-
     private string cityTag = "City";
     public int whatIsInteractableValue, whatIsDefaultValue;
 
@@ -991,6 +989,8 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.food += (int)Constants.biomeInfo[_biomeName]["Food"];
         PlayerCS.instance.wood += (int)Constants.biomeInfo[_biomeName]["Wood"];
         PlayerCS.instance.metal += (int)Constants.biomeInfo[_biomeName]["Metal"];
+        PlayerCS.instance.population += (int)Constants.biomeInfo[_biomeName]["Population"];
+        PlayerCS.instance.playerUI.SetAllIntResourceUI();
 
         // Update morale and education
         PlayerCS.instance.ResetMoraleAndEducation();
@@ -1119,6 +1119,49 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.playerUI.SetAllIntResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, 
                                                        PlayerCS.instance.money, PlayerCS.instance.population);
         PlayerCS.instance.ResetMoraleAndEducation();
+    }
+
+    /// <summary>
+    /// Returns amount of resource that player will recieve next turn based on resource type given
+    /// </summary>
+    /// <param name="_resourceType"> Has to be "Wood", "Metal", "Food", "Money", "Population" </param>
+    /// <returns></returns>
+    public int GetCityResourcesAddedNextTurn(string _resourceType)
+    {
+        int _resourceAmount = 0;
+
+        if(_resourceType == "Wood")
+        {
+            foreach (CityInfo _city in cities.Values)
+                if (_city.ownerId == ClientCS.instance.myId && !_city.isBeingConquered)
+                    _resourceAmount += _city.woodResourcesPerTurn;
+        }
+        else if(_resourceType == "Metal")
+        {
+            foreach (CityInfo _city in cities.Values)
+                if (_city.ownerId == ClientCS.instance.myId && !_city.isBeingConquered)
+                    _resourceAmount += _city.metalResourcesPerTurn;
+        }
+        else if(_resourceType == "Food")
+        {
+            foreach (CityInfo _city in cities.Values)
+                if (_city.ownerId == ClientCS.instance.myId && !_city.isBeingConquered)
+                    _resourceAmount += _city.foodResourcesPerTurn;
+        }
+        else if(_resourceType == "Money")
+        {
+            foreach (CityInfo _city in cities.Values)
+                if (_city.ownerId == ClientCS.instance.myId && !_city.isBeingConquered)
+                    _resourceAmount += _city.moneyResourcesPerTurn;
+        }
+        else if(_resourceType == "Population")
+        {
+            foreach (CityInfo _city in cities.Values)
+                if (_city.ownerId == ClientCS.instance.myId && !_city.isBeingConquered)
+                    _resourceAmount += _city.populationResourcesPerTurn;
+        }
+
+        return _resourceAmount;
     }
 
     public IEnumerator ResetCities()

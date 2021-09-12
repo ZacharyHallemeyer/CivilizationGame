@@ -513,7 +513,7 @@ public class TroopActionsCS : MonoBehaviour
         HideQuickMenu();
         TileInfo _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
         CityInfo _city = GameManagerCS.instance.cities[_tile.cityId];
-        ConquerCity(_tile, _city);
+        ConquerCityHelper(_tile, _city);
     }
 
     /// <summary>
@@ -521,7 +521,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     /// <param name="_tile"> Tile troop is standing on </param>
     /// <param name="_city"> City troop wants to conquer </param>
-    public void ConquerCity(TileInfo _tile, CityInfo _city)
+    public void ConquerCityHelper(TileInfo _tile, CityInfo _city)
     {
         int _previousCityOwnerId = _city.ownerId;
         _tile.tile.tag = cityTag;
@@ -567,7 +567,13 @@ public class TroopActionsCS : MonoBehaviour
                 }
             }
         }
-
+        // Add resources and update resource text
+        PlayerCS.instance.food += (int)Constants.biomeInfo[_tile.biome]["Food"];
+        PlayerCS.instance.wood += (int)Constants.biomeInfo[_tile.biome]["Wood"];
+        PlayerCS.instance.metal += (int)Constants.biomeInfo[_tile.biome]["Metal"];
+        PlayerCS.instance.money += (int)Constants.biomeInfo[_tile.biome]["Money"];
+        PlayerCS.instance.population += (int)Constants.biomeInfo[_tile.biome]["Population"];
+        PlayerCS.instance.playerUI.SetAllIntResourceUI();
         // Update morale and education
         PlayerCS.instance.ResetMoraleAndEducation();
         ResetAlteredTiles();
@@ -645,10 +651,12 @@ public class TroopActionsCS : MonoBehaviour
 
         // Check if attacking troop back
         if (_attackedFromTheBack)
+        {
             if(troopInfo.isBoat)
-                _troop.health -= troopInfo.stealthAttack - _troop.baseDefense;
-            else
                 _troop.health -= troopInfo.shipStealthAttack - _troop.baseDefense;
+            else
+                _troop.health -= troopInfo.stealthAttack - _troop.baseDefense;
+        }
         else
         {
             if(troopInfo.isBoat)
@@ -993,9 +1001,9 @@ public class TroopActionsCS : MonoBehaviour
         while (troopInfo.troop.transform.localPosition.y > -1.5f)
         {
             troopInfo.troop.transform.localRotation *= Quaternion.Euler(5, 0, 5);
-            troopInfo.troop.transform.localPosition = new Vector3(troopInfo.troopModel.transform.localPosition.x,
-                                                                       troopInfo.troopModel.transform.localPosition.y - .05f,
-                                                                       troopInfo.troopModel.transform.localPosition.z);
+            troopInfo.troop.transform.localPosition = new Vector3(troopInfo.troop.transform.localPosition.x,
+                                                                       troopInfo.troop.transform.localPosition.y - .05f,
+                                                                       troopInfo.troop.transform.localPosition.z);
             yield return new WaitForSeconds(.001f);
         }
         troopInfo.troop.SetActive(false);

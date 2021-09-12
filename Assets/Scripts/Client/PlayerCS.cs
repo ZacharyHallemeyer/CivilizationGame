@@ -63,10 +63,10 @@ public class PlayerCS : MonoBehaviour
         mouse = Mouse.current;
         Cursor.lockState = CursorLockMode.Confined;
         // TESTING
-        money = 100000;
-        food = 100000;
-        metal = 100000;
-        wood = 100000;
+        //money = 100000;
+        //food = 100000;
+        //metal = 100000;
+        //wood = 100000;
         // TESTING
     }
 

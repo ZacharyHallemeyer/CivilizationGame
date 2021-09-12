@@ -71,11 +71,11 @@ public class CityInfo : MonoBehaviour
         morale = Mathf.FloorToInt(Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]));
         education = Mathf.FloorToInt(Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]));
 
-        woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
-        metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
-        foodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingFoodResourcesPerTurn"]);
-        moneyResourcesPerTurn = Random.Range(25, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoneyResourcesPerTurn"]);
-        populationResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingPopulationResourcesPerTurn"]);
+        woodResourcesPerTurn = Random.Range(2, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
+        metalResourcesPerTurn = Random.Range(2, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
+        foodResourcesPerTurn = Random.Range(2, (int)Constants.biomeInfo[_biomeName]["MaxStartingFoodResourcesPerTurn"]);
+        moneyResourcesPerTurn = Random.Range(50, (int)Constants.biomeInfo[_biomeName]["MaxStartingMoneyResourcesPerTurn"]);
+        populationResourcesPerTurn = Random.Range(2, (int)Constants.biomeInfo[_biomeName]["MaxStartingPopulationResourcesPerTurn"]);
 
         xIndex = _xIndex;
         zIndex = _zIndex;

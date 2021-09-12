@@ -317,12 +317,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8263757394128702888}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -750, y: 250}
-  m_SizeDelta: {x: 100, y: -50}
+  m_AnchoredPosition: {x: -750, y: 235}
+  m_SizeDelta: {x: 100, y: -80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8767269776732630731
 CanvasRenderer:
@@ -398,7 +398,7 @@ MonoBehaviour:
   m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 0
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -1491,7 +1491,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Farm
+          m_StringArgument: LumberYard
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1428573400763318405
@@ -2050,7 +2050,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Farm
+          m_StringArgument: Mine
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &2225618873488978233
@@ -3093,9 +3093,9 @@ RectTransform:
   - {fileID: 751550507290224553}
   - {fileID: 1263140402372723983}
   - {fileID: 6937787182602461497}
+  - {fileID: 2985448792685071384}
   - {fileID: 4618157298802822599}
   - {fileID: 2030090133153780417}
-  - {fileID: 2985448792685071384}
   - {fileID: 8947398402051044312}
   m_Father: {fileID: 3154343165406098676}
   m_RootOrder: 0
@@ -5261,12 +5261,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8263757394128702888}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -750, y: 220}
-  m_SizeDelta: {x: 100, y: -50}
+  m_AnchoredPosition: {x: -750, y: 250}
+  m_SizeDelta: {x: 100, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2433181064835051461
 CanvasRenderer:
@@ -8342,12 +8342,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8263757394128702888}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -750, y: 280}
-  m_SizeDelta: {x: 100, y: -50}
+  m_AnchoredPosition: {x: -750, y: 265}
+  m_SizeDelta: {x: 100, y: -80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &497999686137295479
 CanvasRenderer:
@@ -8423,7 +8423,7 @@ MonoBehaviour:
   m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 0
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0

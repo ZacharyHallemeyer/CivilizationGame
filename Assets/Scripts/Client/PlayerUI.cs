@@ -88,6 +88,7 @@ public class PlayerUI : MonoBehaviour
 
     /// <summary>
     /// Set player resource UI for all int values
+    /// Note: Overload Method
     /// </summary>
     public void SetAllIntResourceUI(int _foodAmount, int _woodAmount, int _metalAmount, int _moneyAmount, int _populationAmount)
     {
@@ -98,24 +99,37 @@ public class PlayerUI : MonoBehaviour
         SetPopulationText(_populationAmount);
     }
 
+    /// <summary>
+    /// Set player resource UI for all int values
+    /// Note: Overload Method
+    /// </summary>
+    public void SetAllIntResourceUI()
+    {
+        SetFoodAmountUI(PlayerCS.instance.food);
+        SetWoodAmountUI(PlayerCS.instance.wood);
+        SetMetalAmountUI(PlayerCS.instance.metal);
+        SetMoneyAmount(PlayerCS.instance.money);
+        SetPopulationText(PlayerCS.instance.population);
+    }
+
     public void SetFoodAmountUI(int _foodAmount)
     {
-        foodText.text = "Food: " + _foodAmount;
+        foodText.text = "Food: " + _foodAmount + " + " + GameManagerCS.instance.GetCityResourcesAddedNextTurn("Food");
     }
 
     public void SetWoodAmountUI(int _woodAmount)
     {
-        woodText.text = "Wood: " + _woodAmount;
+        woodText.text = "Wood: " + _woodAmount + " + " + GameManagerCS.instance.GetCityResourcesAddedNextTurn("Wood");
     }
 
     public void SetMetalAmountUI(int _metalAmount)
     {
-        metalText.text = "Metal: " + _metalAmount;
+        metalText.text = "Metal: " + _metalAmount + " + " + GameManagerCS.instance.GetCityResourcesAddedNextTurn("Metal");
     }
 
     public void SetMoneyAmount(int _moneyAmount)
     {
-        moneyText.text = "Money: " + _moneyAmount;
+        moneyText.text = "Money: " + _moneyAmount + " + " + GameManagerCS.instance.GetCityResourcesAddedNextTurn("Money");
     }
 
     public void SetMoraleAmount(int _moraleAmount)
@@ -130,7 +144,8 @@ public class PlayerUI : MonoBehaviour
 
     public void SetPopulationText(float _populationAmount)
     {
-        populationText.text = "Population: " + _populationAmount;
+        populationText.text = "Population: " + _populationAmount + " + " 
+                               + GameManagerCS.instance.GetCityResourcesAddedNextTurn("Population");
     }
 
     public void OpenMenu()
