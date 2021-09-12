@@ -43,6 +43,23 @@ public class ServerHandle
     {
         GameManagerSS.instance.InitPlayerTurnList();
         string gameModeName = _packet.ReadString();
+        // Randomize turn order
+        int[] _tempArray = new int[GameManagerSS.instance.playerIds.Count];
+        int _randomElement;
+        for (int _index = 0; _index < _tempArray.Length; _index++)
+        {
+            _randomElement = GameManagerSS.instance.playerIds[Random.Range(0, GameManagerSS.instance.playerIds.Count)];
+            _tempArray[_index] = _randomElement;
+            GameManagerSS.instance.playerIds.Remove(_randomElement);
+        }
+        for(int _index = 0; _index < _tempArray.Length; _index++)
+        {
+            GameManagerSS.instance.playerIds.Add(_tempArray[_index]);
+        }
+
+        foreach (int _id in GameManagerSS.instance.playerIds)
+            Debug.Log(_id);
+
 
         foreach (ClientSS _client in ClientSS.allClients.Values)
         {

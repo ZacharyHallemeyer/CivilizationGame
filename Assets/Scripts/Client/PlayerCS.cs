@@ -8,6 +8,7 @@ public class PlayerCS : MonoBehaviour
     public int id;
     public string username;
     public string tribe;
+    public Vector2 kingSpawn;
 
     public static PlayerCS instance;
     public InputMaster inputMaster;

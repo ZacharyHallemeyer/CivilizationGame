@@ -472,9 +472,34 @@ public class GameManagerCS : MonoBehaviour
         if (!isTurn) return;
         isKingAlive = true;
         PlayerCS.instance.playerUI.playerUIContainer.SetActive(true);
-        PlayerCS.instance.playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, PlayerCS.instance.money,
-                                  PlayerCS.instance.morale, PlayerCS.instance.education, PlayerCS.instance.population);
-        SpawnLocalTroop(ClientCS.instance.myId, "King", Random.Range(0, 10), Random.Range(0, 10), 0, true);
+        PlayerCS.instance.playerUI.SetAllResourceUI(PlayerCS.instance.food, PlayerCS.instance.food, PlayerCS.instance.metal, 
+                                                    PlayerCS.instance.money, PlayerCS.instance.morale, PlayerCS.instance.education, 
+                                                    PlayerCS.instance.population);
+        // Find king spawn
+        int _xPos = 0, _yPos = 0;
+        int _distanceLimiterX = tiles.GetLength(0) / ClientCS.allClients.Count;
+        int _distanceLimiterY = tiles.GetLength(1) / ClientCS.allClients.Count;
+        Debug.Log(_distanceLimiterX);
+        Debug.Log(_distanceLimiterY);
+        bool _isSpawnPointGood = false;
+        while(!_isSpawnPointGood)
+        {
+            _isSpawnPointGood = true;
+            _xPos = Random.Range(0, tiles.GetLength(0));
+            _yPos = Random.Range(0, tiles.GetLength(1));
+            for(int _index = 0; _index < troops.Count; _index++)
+            {
+                if( Mathf.Abs(troops[_index].xIndex - _xPos) < _distanceLimiterX 
+                    || Mathf.Abs(troops[_index].zIndex - _yPos) < _distanceLimiterY
+                    || !tiles[_xPos, _yPos].isWater)
+                {
+                    _isSpawnPointGood = false;
+                }
+            }
+        }
+
+        SpawnLocalTroop(ClientCS.instance.myId, "King", _xPos, _yPos, 0, true);
+        
         startScreenUI.SetActive(false);
     }
 
