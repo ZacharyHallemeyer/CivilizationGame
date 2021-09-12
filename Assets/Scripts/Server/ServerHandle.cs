@@ -57,10 +57,6 @@ public class ServerHandle
             GameManagerSS.instance.playerIds.Add(_tempArray[_index]);
         }
 
-        foreach (int _id in GameManagerSS.instance.playerIds)
-            Debug.Log(_id);
-
-
         foreach (ClientSS _client in ClientSS.allClients.Values)
         {
             switch (gameModeName)
@@ -455,8 +451,8 @@ public class ServerHandle
 
         _city.id = _id;
         _city.ownerId = _packet.ReadInt();
-        _city.morale = _packet.ReadFloat();
-        _city.education = _packet.ReadFloat();
+        _city.morale = _packet.ReadInt();
+        _city.education = _packet.ReadInt();
         _city.ownerShipRange = _packet.ReadInt();
         _city.woodResourcesPerTurn = _packet.ReadInt();
         _city.metalResourcesPerTurn = _packet.ReadInt();
@@ -555,8 +551,8 @@ public class ServerHandle
 
         _city.id = _id;
         _city.ownerId = _packet.ReadInt();
-        _city.morale = _packet.ReadFloat();
-        _city.education = _packet.ReadFloat();
+        _city.morale = _packet.ReadInt();
+        _city.education = _packet.ReadInt();
         _city.ownerShipRange = _packet.ReadInt();
         _city.woodResourcesPerTurn = _packet.ReadInt();
         _city.metalResourcesPerTurn = _packet.ReadInt();

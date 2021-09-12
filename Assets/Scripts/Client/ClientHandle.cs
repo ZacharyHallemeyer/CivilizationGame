@@ -110,7 +110,6 @@ public class ClientHandle : MonoBehaviour
             return;
         }
         int _ownerId = _packet.ReadInt();
-        int _movementCost = _packet.ReadInt();
         int _occupyingObjectId = _packet.ReadInt();
         string _biome = _packet.ReadString();
         float _temperature = _packet.ReadFloat();
@@ -129,7 +128,7 @@ public class ClientHandle : MonoBehaviour
         int _cityId = _packet.ReadInt();
         string _name = "ClientTile " + _xIndex + " " + _zIndex;
 
-        GameManagerCS.instance.CreateNewTile(_id, _ownerId, _movementCost, _occupyingObjectId, _biome, _temperature,
+        GameManagerCS.instance.CreateNewTile(_id, _ownerId, _occupyingObjectId, _biome, _temperature,
                                             _height, _isWater, _isFood, _isWood, _isMetal, _isRoad, _isCity, _isOccupied, 
                                             _isObstacle, _position, _xIndex, _zIndex, _cityId ,_name);
     }
@@ -144,8 +143,8 @@ public class ClientHandle : MonoBehaviour
             return;
         }
         int _ownerId = _packet.ReadInt();
-        float _morale = _packet.ReadFloat();
-        float _education = _packet.ReadFloat();
+        int _morale = _packet.ReadInt();
+        int _education = _packet.ReadInt();
         int _ownerShipRange = _packet.ReadInt();
         int _woodResourcePerTurn = _packet.ReadInt();
         int _metalResourcePerTurn = _packet.ReadInt();
@@ -485,8 +484,8 @@ public class ClientHandle : MonoBehaviour
         CityInfo _city = GameManagerCS.instance.gameObject.AddComponent<CityInfo>();
         _city.id = _packet.ReadInt();
         _city.ownerId = _packet.ReadInt();
-        _city.morale = _packet.ReadFloat();
-        _city.education = _packet.ReadFloat();
+        _city.morale = _packet.ReadInt();
+        _city.education = _packet.ReadInt();
         _city.ownerShipRange = _packet.ReadInt();
         _city.woodResourcesPerTurn = _packet.ReadInt();
         _city.metalResourcesPerTurn = _packet.ReadInt();
@@ -568,8 +567,8 @@ public class ClientHandle : MonoBehaviour
         CityInfo _city = GameManagerCS.instance.gameObject.AddComponent<CityInfo>();
         _city.id = _id;
         _city.ownerId = _packet.ReadInt();
-        _city.morale = _packet.ReadFloat();
-        _city.education = _packet.ReadFloat();
+        _city.morale = _packet.ReadInt();
+        _city.education = _packet.ReadInt();
         _city.ownerShipRange = _packet.ReadInt();
         _city.woodResourcesPerTurn = _packet.ReadInt();
         _city.metalResourcesPerTurn = _packet.ReadInt();

@@ -9,7 +9,6 @@ public class TileInfo : MonoBehaviour
     public GameObject attackUI;
     public int id;
     public int ownerId = -1;
-    public int movementCost;
     public string biome;
     public float temperature;       // Range -1 to 1
     public float height;            // Range -1 to 1
@@ -40,7 +39,6 @@ public class TileInfo : MonoBehaviour
         biome = _biomeName;
         temperature = Constants.biomeInfo[_biomeName]["Temperature"];
         height = Constants.biomeInfo[_biomeName]["Height"];
-        movementCost = (int)Constants.biomeInfo[_biomeName]["MovementCost"];
         position = new Vector2((int)_tile.transform.position.x, (int)_tile.transform.position.z);
         xIndex = _xIndex;
         zIndex = _yIndex;
@@ -78,7 +76,6 @@ public class TileInfo : MonoBehaviour
         biome = _tileToCopy.biome;
         temperature = _tileToCopy.temperature;
         height = _tileToCopy.height;
-        movementCost = _tileToCopy.movementCost;
         position = _tileToCopy.position;
         isWater = _tileToCopy.isWater;
         isFood = _tileToCopy.isFood;

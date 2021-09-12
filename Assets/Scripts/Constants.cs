@@ -8,7 +8,8 @@ public static class Constants
     public static float troopHealthYPositionDescend = -1.5f;
     public static float troopHealthYPositionAscend = 0f;
 
-    public static float canvaseWidthRes = 1920, canvasHeightRes = 1920;
+    public static float educationMultiplier = 10;
+    public static float moraleMultiplier = .25f;
 
     public static Dictionary<string, Dictionary<string, float>> biomeInfo = new Dictionary<string, Dictionary<string, float>>
     {
@@ -21,9 +22,8 @@ public static class Constants
                 { "Food", 2f },
                 { "MaxStartingManPower", 5f },
                 { "MaxStartingMoney", 2f },
-                { "MaxStartingMorale", 5f },
-                { "MaxStartingEducation", 3f },
-                { "MovementCost", 1f },
+                { "MaxStartingMorale", 1f },
+                { "MaxStartingEducation", 1f },
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 2f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
@@ -41,9 +41,8 @@ public static class Constants
                 { "Food", 10f },
                 { "MaxStartingManPower", 5f },
                 { "MaxStartingMoney", 4f },
-                { "MaxStartingMorale", 3f },
+                { "MaxStartingMorale", 2f },
                 { "MaxStartingEducation", 1f },
-                { "MovementCost", 1f },
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
@@ -61,9 +60,8 @@ public static class Constants
                 { "Food", 15f },
                 { "MaxStartingManPower", 5f },
                 { "MaxStartingMoney", 3f },
-                { "MaxStartingMorale", 5f },
+                { "MaxStartingMorale", 1f },
                 { "MaxStartingEducation", 2f },
-                { "MovementCost", 1f },
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
@@ -81,9 +79,8 @@ public static class Constants
                 { "Food", 10f },
                 { "MaxStartingManPower", 5f },
                 { "MaxStartingMoney", 2f },
-                { "MaxStartingMorale", 5f },
-                { "MaxStartingEducation", 3f },
-                { "MovementCost", 1f },
+                { "MaxStartingMorale", 2f },
+                { "MaxStartingEducation", 1f },
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
@@ -101,9 +98,8 @@ public static class Constants
                 { "Food", 5f },
                 { "MaxStartingManPower", 5f },
                 { "MaxStartingMoney", 3f },
-                { "MaxStartingMorale", 5f },
-                { "MaxStartingEducation", 2f },
-                { "MovementCost", 2f },
+                { "MaxStartingMorale", 3f },
+                { "MaxStartingEducation", 0f },
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
@@ -121,9 +117,8 @@ public static class Constants
                 { "Food", 2f },
                 { "MaxStartingManPower", 5f },
                 { "MaxStartingMoney", 4f },
-                { "MaxStartingMorale", 5f },
-                { "MaxStartingEducation", 1f },
-                { "MovementCost", 1f },
+                { "MaxStartingMorale", 3f },
+                { "MaxStartingEducation", 0f },
                 { "MaxStartingWoodResourcesPerTurn", 1f },
                 { "MaxStartingMetalResourcesPerTurn", 1f },
                 { "MaxStartingFoodResourcesPerTurn", 1f },
@@ -356,6 +351,180 @@ public static class Constants
         },
     };
 
+    public static Dictionary<string, Dictionary<string, int>> basePrices = new Dictionary<string, Dictionary<string, int>>()
+    {
+        { "City" , new Dictionary<string, int>
+            {
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
+                { "Money", 50 },
+                { "Population", 5 },
+            }
+        },
+        { "LumberYard" , new Dictionary<string, int>
+            {
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 100 },
+                { "Population", 0 },
+            }
+        },
+        { "Farm" , new Dictionary<string, int>
+            {
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 100 },
+                { "Population", 0 },
+            }
+        },
+        { "Mine" , new Dictionary<string, int>
+            {
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 100 },
+                { "Population", 0 },
+            }
+        },
+        { "Housing" , new Dictionary<string, int>
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
+        { "School" , new Dictionary<string, int>
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
+        { "Library" , new Dictionary<string, int>
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
+        { "Dome" , new Dictionary<string, int>
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
+        { "Port" , new Dictionary<string, int>
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
+        { "Market" , new Dictionary<string, int>
+            {
+                { "Food", 10 },
+                { "Metal", 10 },
+                { "Wood", 10 },
+                { "Money", 200 },
+                { "Population", 0 },
+            }
+        },
+        { "Road" , new Dictionary<string, int>
+            {
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
+                { "Money", 10 },
+                { "Population", 0 },
+            }
+        },
+        { "Wall" , new Dictionary<string, int>
+            {
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
+                { "Money", 10 },
+                { "Population", 0 },
+            }
+        },
+        { "Scout" , new Dictionary<string, int>
+            {
+                { "Food", 1 },
+                { "Metal", 1 },
+                { "Wood", 1 },
+                { "Money", 50 },
+                { "Population", 2 },
+            }
+        },
+        { "Militia" , new Dictionary<string, int>
+            {
+                { "Food", 1 },
+                { "Metal", 2 },
+                { "Wood", 2 },
+                { "Money", 50 },
+                { "Population", 5 },
+            }
+        },
+        { "Army" , new Dictionary<string, int>
+            {
+                { "Food", 2 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 5 },
+            }
+        },
+        { "Missle" , new Dictionary<string, int>
+            {
+                { "Food", 2 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 5 },
+            }
+        },
+        { "Defense" , new Dictionary<string, int>
+            {
+                { "Food", 3 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 5 },
+            }
+        },
+        { "Stealth" , new Dictionary<string, int>
+            {
+                { "Food", 3 },
+                { "Metal", 3 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 3 },
+            }
+        },
+        { "Snipper" , new Dictionary<string, int>
+            {
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 200 },
+                { "Population", 5 },
+            }
+        },
+    };
 
     public static Dictionary<string, Dictionary<string, int>> prices = new Dictionary<string, Dictionary<string, int>>()
     {
@@ -532,57 +701,57 @@ public static class Constants
         },
     };
 
-    public static Dictionary<string, Dictionary<string, float>> buildingResourceGain = new Dictionary<string, Dictionary<string, float>>()
+    public static Dictionary<string, Dictionary<string, int>> buildingResourceGain = new Dictionary<string, Dictionary<string, int>>()
     {
-        { "LumberYard" , new Dictionary<string, float> 
+        { "LumberYard" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 10 },
                 { "Money", 100 },
                 { "Population", 1 },
-                { "Morale", 0 },
-                { "Education", .05f },
-                { "Experience", 10f },
+                { "Morale", 1 },
+                { "Education", 0 },
+                { "Experience", 10 },
             } 
         },
-        { "Farm" , new Dictionary<string, float> 
+        { "Farm" , new Dictionary<string, int> 
             {
                 { "Food", 10 },
                 { "Metal", 0 },
                 { "Wood", 0 },
                 { "Money", 100 },
                 { "Population", 1 },
-                { "Morale", 0 },
-                { "Education", .05f },
-                { "Experience", 10f },
+                { "Morale", 1 },
+                { "Education", 0 },
+                { "Experience", 10 },
             } 
         },
-        { "Mine" , new Dictionary<string, float> 
+        { "Mine" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 10 },
                 { "Wood", 0 },
                 { "Money", 100 },
                 { "Population", 1 },
-                { "Morale", 0 },
-                { "Education", .05f },
-                { "Experience", 10f },
+                { "Morale", 1 },
+                { "Education", 0 },
+                { "Experience", 10 },
             } 
         },
-        { "Housing" , new Dictionary<string, float> 
+        { "Housing" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 0 },
                 { "Money", 50 },
                 { "Population", 5 },
-                { "Morale", .05f },
+                { "Morale", 1 },
                 { "Education", 0 },
-                { "Experience", 10f },
+                { "Experience", 10 },
             } 
         },
-        { "School" , new Dictionary<string, float> 
+        { "School" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
@@ -590,61 +759,82 @@ public static class Constants
                 { "Money", 0 },
                 { "Population", 0 },
                 { "Morale", 0 },
-                { "Education", .1f },
-                { "Experience", 10f },
+                { "Education", 1 },
+                { "Experience", 10 },
             } 
         },
-        { "Library" , new Dictionary<string, float> 
+        { "Library" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 0 },
                 { "Money", 00 },
                 { "Population", 5 },
-                { "Morale", .1f },
-                { "Education", .05f },
-                { "Experience", 10f },
+                { "Morale", 0 },
+                { "Education", 1 },
+                { "Experience", 10 },
             } 
         },
-        { "Market" , new Dictionary<string, float> 
+        { "Market" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 0 },
                 { "Money", 200 },
                 { "Population", 1 },
-                { "Morale", .05f },
+                { "Morale", 1 },
                 { "Education", 0 },
-                { "Experience", 10f },
+                { "Experience", 10 },
             } 
         },
-        { "Dome" , new Dictionary<string, float> 
+        { "Dome" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 0 },
                 { "Money", 50 },
                 { "Population", 1 },
-                { "Morale", .15f },
-                { "Education", 0 },
-                { "Experience", 10f },
+                { "Morale", 0 },
+                { "Education", 1 },
+                { "Experience", 1 },
             } 
         },
-        { "Port" , new Dictionary<string, float> 
+        { "Port" , new Dictionary<string, int> 
             {
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 0 },
                 { "Money", 50 },
                 { "Population", 1 },
-                { "Morale", .15f },
-                { "Education", 0f },
-                { "Experience", 10f },
+                { "Morale", 1 },
+                { "Education", 0 },
+                { "Experience", 10 },
             } 
         },
     };
 
     public static Dictionary<string, int> allSkills = new Dictionary<string, int>()
+    {
+        { "Army", 100 },    
+        { "Snipper", 200 },    
+        { "Missle", 300 },    
+        { "Defense", 200 },    
+        { "Stealth", 200 },    
+        { "Port", 300 },    
+        { "Warship", 500 },    
+        { "Walls", 100 },    
+        { "Dome", 200 },    
+        { "Library", 200 },    
+        { "School", 300 },    
+        { "Housing", 200 },    
+        { "Roads", 100 },
+        { "Market", 300 },
+        { "Farm", 100},
+        { "LumberYard", 100},
+        { "Mine", 100 },
+    };
+
+    public static Dictionary<string, int> allSkillsBasePrice = new Dictionary<string, int>()
     {
         { "Army", 100 },    
         { "Snipper", 200 },    
@@ -742,12 +932,56 @@ public static class Constants
         { "Yellow", "Mine"},
     };
 
-
     public static List<string> avaliableTroops = new List<string>()
     { 
         "Scout",
         "Militia",
     };
+
+    public static Dictionary<int, Dictionary<string, int>> cityFeedValues = new Dictionary<int, Dictionary<string, int>>()
+    {
+        { 1, new Dictionary<string, int>
+            {
+                {"Food", 1},
+                {"Metal", 1},
+                {"Wood", 1},
+                {"Money", 10},
+            } 
+        },
+        { 2, new Dictionary<string, int>
+            {
+                {"Food", 1},
+                {"Metal", 1},
+                {"Wood", 1},
+                {"Money", 50},
+            } 
+        },
+        { 3, new Dictionary<string, int>
+            {
+                {"Food", 1},
+                {"Metal", 1},
+                {"Wood", 1},
+                {"Money", 100},
+            } 
+        },
+        { 4, new Dictionary<string, int>
+            {
+                {"Food", 3},
+                {"Metal", 3},
+                {"Wood", 3},
+                {"Money", 150},
+            } 
+        },
+        { 5, new Dictionary<string, int>
+            {
+                {"Food", 3},
+                {"Metal", 3},
+                {"Wood", 3},
+                {"Money", 200},
+            } 
+        },
+    };
+
 
     // This dict is empty on purpose (Player is not able to build any buildings without first buying appropriate skill)
     public static List<string> avaliableBuildings = new List<string>();

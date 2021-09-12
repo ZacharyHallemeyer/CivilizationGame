@@ -9,7 +9,7 @@ public class PlayerUI : MonoBehaviour
     public Canvas canvas;
     public CanvasScaler canvasScaler;
 
-    public GameObject playerUIContainer, mainContainer, skillTreeContainer, quickMenuContainer, menuButton;
+    public GameObject playerUIContainer, mainContainer, skillTreeContainer, quickMenuContainer, menuButton, feedButton;
 
     // Resource
     public TextMeshProUGUI foodText, woodText, metalText, moneyText, moraleText, educationText, populationText;
@@ -74,8 +74,8 @@ public class PlayerUI : MonoBehaviour
     /// <summary>
     /// Set player resource UI
     /// </summary>
-    public void SetAllResourceUI(int _foodAmount, int _woodAmount, int _metalAmount, int _moneyAmount, float _moraleAmount,
-                                 float _educationAmount, int _populationAmount)
+    public void SetAllResourceUI(int _foodAmount, int _woodAmount, int _metalAmount, int _moneyAmount, int _moraleAmount,
+                                 int _educationAmount, int _populationAmount)
     {
         SetFoodAmountUI(_foodAmount);
         SetWoodAmountUI(_woodAmount);
@@ -118,14 +118,14 @@ public class PlayerUI : MonoBehaviour
         moneyText.text = "Money: " + _moneyAmount;
     }
 
-    public void SetMoraleAmount(float _moraleAmount)
+    public void SetMoraleAmount(int _moraleAmount)
     {
-        moraleText.text = "Morale: " + string.Format("{0:N2}", _moraleAmount);
+        moraleText.text = "Morale: " + _moraleAmount;
     }
 
-    public void SetEducationText(float _educationAmount)
+    public void SetEducationText(int _educationAmount)
     {
-        educationText.text = "Education: " + string.Format("{0:N2}", _educationAmount);
+        educationText.text = "Education: " + _educationAmount;
     }
 
     public void SetPopulationText(float _populationAmount)
@@ -136,6 +136,13 @@ public class PlayerUI : MonoBehaviour
     public void OpenMenu()
     {
         quickMenuContainer.SetActive(true);
+        feedButton.SetActive(false);
+        // Not optimized but should not matter
+        foreach(CityInfo _city in GameManagerCS.instance.cities.Values)
+        {
+            if (_city.ownerId == ClientCS.instance.myId && !_city.isFeed)
+                feedButton.SetActive(true);
+        }
         menuButton.SetActive(false);
         PlayerCS.instance.isAbleToCommitActions = false;
     }
@@ -151,6 +158,7 @@ public class PlayerUI : MonoBehaviour
     {
         PlayerCS.instance.money -= Constants.allSkills[_skill];
         PlayerCS.instance.skills.Add(_skill);
+        SetMoneyAmount(PlayerCS.instance.money);
 
         if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" || _skill == "Stealh")
             Constants.avaliableTroops.Add(_skill);
@@ -206,5 +214,38 @@ public class PlayerUI : MonoBehaviour
     {
         skillTreeContainer.SetActive(false);
         OpenMenu();
+    }
+
+    public void FeedCities()
+    {
+        bool _feedCompleted = true;
+        int _cityIndex = 0, _cityLevel;
+
+        while(_feedCompleted && _cityIndex < GameManagerCS.instance.cities.Count)
+        {
+            if(GameManagerCS.instance.cities[_cityIndex].ownerId == ClientCS.instance.myId
+               && !GameManagerCS.instance.cities[_cityIndex].isFeed)
+            {
+                _cityLevel = GameManagerCS.instance.cities[_cityIndex].level;
+                if (PlayerCS.instance.food >= Constants.cityFeedValues[_cityLevel]["Food"]
+                    && PlayerCS.instance.metal >= Constants.cityFeedValues[_cityLevel]["Metal"]
+                    && PlayerCS.instance.wood >= Constants.cityFeedValues[_cityLevel]["Wood"]
+                    && PlayerCS.instance.money >= Constants.cityFeedValues[_cityLevel]["Money"])
+                {
+                    PlayerCS.instance.food -= Constants.cityFeedValues[_cityLevel]["Food"];
+                    PlayerCS.instance.metal -= Constants.cityFeedValues[_cityLevel]["Metal"];
+                    PlayerCS.instance.wood -= Constants.cityFeedValues[_cityLevel]["Wood"];
+                    PlayerCS.instance.money -= Constants.cityFeedValues[_cityLevel]["Money"];
+                    GameManagerCS.instance.cities[_cityIndex].isFeed = true;
+                }
+                else
+                {
+                    _feedCompleted = false;
+                }
+            }
+            _cityIndex++;
+        }
+        if (_feedCompleted)
+            feedButton.SetActive(false);
     }
 }

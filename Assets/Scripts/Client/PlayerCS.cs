@@ -21,8 +21,8 @@ public class PlayerCS : MonoBehaviour
     public int currentSelectedCityId  = -1;
 
     // Stats
-    public float morale = 0;
-    public float education = 0;
+    public int morale = 0;
+    public int education = 0;
     public int population = 5;
     public int money = 100;
     public int metal = 1;
@@ -319,12 +319,14 @@ public class PlayerCS : MonoBehaviour
         }
         playerUI.SetMoraleAmount(morale);
         playerUI.SetEducationText(education);
+        GameManagerCS.instance.UpdatePrices();
     }
 
     public void EndTurn()
     {
         enabled = false;
         ResetAlteredTiles();
+        playerUI.FeedCities();
         // Turn off any quick menus
         if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
             _troop.troopActions.HideQuickMenu();

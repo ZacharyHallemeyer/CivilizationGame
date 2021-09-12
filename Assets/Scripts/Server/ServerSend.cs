@@ -188,7 +188,6 @@ public class ServerSend
                     TileInfo _tile = _tiles[x, z];
                     _packet.Write(_tile.id);
                     _packet.Write(_tile.ownerId);
-                    _packet.Write(_tile.movementCost);
                     _packet.Write(_tile.occupyingObjectId);
                     _packet.Write(_tile.biome);
                     _packet.Write(_tile.temperature);

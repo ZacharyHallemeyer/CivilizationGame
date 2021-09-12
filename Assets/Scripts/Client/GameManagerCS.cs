@@ -199,7 +199,7 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_xIndex"> Tile xIndex </param>
     /// <param name="_zIndex"> Tile zIndex </param>
     /// <param name="_name"> Tile name </param>
-    public void CreateNewTile(int _id, int _ownerId, int _movementCost, int _occupyingObjectId, string _biome,
+    public void CreateNewTile(int _id, int _ownerId, int _occupyingObjectId, string _biome,
                               float _temp, float _height, bool _isWater, bool _isFood, bool _isWood, bool _isMetal,
                               bool _isRoad, bool _isCity, bool _isOccupied, bool _isObstacle, Vector2 _position, int _xIndex,
                               int _zIndex, int _cityId, string _name)
@@ -223,7 +223,6 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.tile = _tile;
         _tileInfo.id = _id;
         _tileInfo.ownerId = _ownerId;
-        _tileInfo.movementCost = _movementCost;
         _tileInfo.occupyingObjectId = _occupyingObjectId;
         _tileInfo.biome = _biome;
         _tileInfo.temperature = _temp;
@@ -479,8 +478,6 @@ public class GameManagerCS : MonoBehaviour
         int _xPos = 0, _yPos = 0;
         int _distanceLimiterX = tiles.GetLength(0) / ClientCS.allClients.Count;
         int _distanceLimiterY = tiles.GetLength(1) / ClientCS.allClients.Count;
-        Debug.Log(_distanceLimiterX);
-        Debug.Log(_distanceLimiterY);
         bool _isSpawnPointGood = false;
         while(!_isSpawnPointGood)
         {
@@ -909,7 +906,7 @@ public class GameManagerCS : MonoBehaviour
     /// Create New neutral city
     /// Does NOT update modified cities dict.
     /// </summary>
-    public void CreateNewNeutralCity(int _id, int _ownerId, float _moral, float _education, int _ownerShipRange, int _woodResourcesPerTurn, 
+    public void CreateNewNeutralCity(int _id, int _ownerId, int _morale, int _education, int _ownerShipRange, int _woodResourcesPerTurn, 
                                      int _metalResourcesPerTurn, int _foodResourcesPerTurn, int _moneyResourcesPerTurn, int _populationResourcesPerTurn,
                                      int _xIndex, int _zIndex, int _level)
     {
@@ -926,7 +923,7 @@ public class GameManagerCS : MonoBehaviour
         _cityInfo.city = _city;
         _cityInfo.id = _id;
         _cityInfo.ownerId = _ownerId;
-        _cityInfo.morale = _moral;
+        _cityInfo.morale = _morale;
         _cityInfo.education = _education;
         _cityInfo.ownerShipRange = _ownerShipRange;
         _cityInfo.woodResourcesPerTurn = _woodResourcesPerTurn;
@@ -989,6 +986,11 @@ public class GameManagerCS : MonoBehaviour
         {
             Constants.prices["City"][_priceKeys[i]] *= 2;
         }
+
+        // Add resources based on biome info
+        PlayerCS.instance.food += (int)Constants.biomeInfo[_biomeName]["Food"];
+        PlayerCS.instance.wood += (int)Constants.biomeInfo[_biomeName]["Wood"];
+        PlayerCS.instance.metal += (int)Constants.biomeInfo[_biomeName]["Metal"];
 
         // Update morale and education
         PlayerCS.instance.ResetMoraleAndEducation();
@@ -1323,17 +1325,23 @@ public class GameManagerCS : MonoBehaviour
                 _city.isAbleToBeConquered = true;
             else
                 _city.isAbleToBeConquered = false;
-            if(_city.ownerId == ClientCS.instance.myId)
+            if (_city.ownerId == ClientCS.instance.myId)
             {
-                /*
-                if(_city.isTrainingTroops)
+                if (_city.isFeed)
                 {
-                    _city.isTrainingTroops = false;
-                    // Can not spawn troop on city that is being occupied
-                    if(!tiles[_city.xIndex, _city.zIndex].isOccupied)
-                        _city.cityActions.SpawnTroop();
+                    if (_city.morale < _city.maxMorale)
+                        _city.morale++;
+                    if (_city.education < _city.maxEducation)
+                        _city.education++;
                 }
-                */
+                else
+                {
+                    _city.morale--;
+                    _city.education--;
+                }
+
+                // Reset feed bool flag
+                _city.isFeed = false;
             }
         }
 
@@ -1360,6 +1368,36 @@ public class GameManagerCS : MonoBehaviour
 
         AddCityResourcesAtStartOfTurn();
         PlayerCS.instance.enabled = true;
+    }
+
+    public void UpdatePrices()
+    {
+        foreach(string _priceKey in Constants.prices.Keys)
+        {
+            Constants.prices[_priceKey]["Food"] = Constants.basePrices[_priceKey]["Food"] - (int)(PlayerCS.instance.morale * Constants.moraleMultiplier);
+            Constants.prices[_priceKey]["Metal"] = Constants.basePrices[_priceKey]["Metal"] - (int)(PlayerCS.instance.morale * Constants.moraleMultiplier);
+            Constants.prices[_priceKey]["Wood"] = Constants.basePrices[_priceKey]["Wood"] - (int)(PlayerCS.instance.morale * Constants.moraleMultiplier);
+            Constants.prices[_priceKey]["Money"] = Constants.basePrices[_priceKey]["Money"] - (int)(PlayerCS.instance.morale * Constants.moraleMultiplier);
+            
+            if (Constants.prices[_priceKey]["Food"] < 1)
+                Constants.prices[_priceKey]["Food"] = 1;
+            if (Constants.prices[_priceKey]["Metal"] < 1)
+                Constants.prices[_priceKey]["Metal"] = 1;
+            if (Constants.prices[_priceKey]["Wood"] < 1)
+                Constants.prices[_priceKey]["Wood"] = 1;
+            if (Constants.prices[_priceKey]["Money"] < 50)
+                Constants.prices[_priceKey]["Money"] = 50;
+        }
+
+        List<string> _skillPriceKeys = Constants.allSkills.Keys.ToList();
+
+        foreach(string _priceKey in _skillPriceKeys)
+        {
+            Constants.allSkills[_priceKey] = Constants.allSkillsBasePrice[_priceKey]
+                                             - (int)(PlayerCS.instance.education * Constants.educationMultiplier);
+            if (Constants.allSkills[_priceKey] < 50)
+                Constants.allSkills[_priceKey] = 50;
+        }
     }
 
     #endregion

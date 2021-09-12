@@ -9,8 +9,10 @@ public class CityInfo : MonoBehaviour
     public CityActionsCS cityActions;
 
     // resource variables
-    public float morale;
-    public float education;
+    public int maxMorale;
+    public int maxEducation;
+    public int morale;
+    public int education;
     public int ownerShipRange = 1;
 
     // resource increase variables
@@ -31,6 +33,7 @@ public class CityInfo : MonoBehaviour
     public int level = 1;
     public int experience = 0;
     public int experienceToNextLevel = 10;
+    public bool isFeed;
 
     // Identity variables
     public int id;
@@ -44,8 +47,10 @@ public class CityInfo : MonoBehaviour
 
         id = _id;
         ownerId = _ownerId;
-        morale = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]);
-        education = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]);
+        maxMorale = Mathf.FloorToInt(Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]));
+        maxEducation = Mathf.FloorToInt(Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]));
+        morale = maxMorale;
+        education = maxEducation;
 
         woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
         metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);
@@ -63,8 +68,8 @@ public class CityInfo : MonoBehaviour
     {
         id = _id;
         ownerId = _ownerId;
-        morale = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]);
-        education = Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]);
+        morale = Mathf.FloorToInt(Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingMorale"]));
+        education = Mathf.FloorToInt(Random.Range(1, Constants.biomeInfo[_biomeName]["MaxStartingEducation"]));
 
         woodResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingWoodResourcesPerTurn"]);
         metalResourcesPerTurn = Random.Range(1, (int)Constants.biomeInfo[_biomeName]["MaxStartingMetalResourcesPerTurn"]);

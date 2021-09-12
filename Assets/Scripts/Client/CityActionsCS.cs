@@ -439,8 +439,10 @@ public class CityActionsCS : MonoBehaviour
         cityInfo.woodResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Wood"];
         cityInfo.moneyResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Money"];
         cityInfo.populationResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Population"];
+        cityInfo.maxMorale += Constants.buildingResourceGain[currentBuidlingToBuild]["Morale"];
         cityInfo.morale += Constants.buildingResourceGain[currentBuidlingToBuild]["Morale"];
         cityInfo.education += Constants.buildingResourceGain[currentBuidlingToBuild]["Education"];
+        cityInfo.maxEducation += Constants.buildingResourceGain[currentBuidlingToBuild]["Education"];
         PlayerCS.instance.ResetMoraleAndEducation();
         // Subtract resource cost
         PlayerCS.instance.food -= Constants.prices[currentBuidlingToBuild]["Food"];
@@ -565,5 +567,14 @@ public class CityActionsCS : MonoBehaviour
         }
         objecstToBeReset = null;
     }
+    #endregion
+
+    #region Morale and Education
+
+    public void Feed()
+    {
+
+    }
+
     #endregion
 }
