@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -234,14 +235,18 @@ public class PlayerUI : MonoBehaviour
     public void FeedCities()
     {
         bool _feedCompleted = true;
-        int _cityIndex = 0, _cityLevel;
+        int _cityIndex = 0, _cityKey, _cityLevel;
+        
+        List<int> _cityKeys = GameManagerCS.instance.cities.Keys.ToList();
 
-        while(_feedCompleted && _cityIndex < GameManagerCS.instance.cities.Count)
+        while (_feedCompleted && _cityIndex < _cityKeys.Count)
         {
-            if(GameManagerCS.instance.cities[_cityIndex].ownerId == ClientCS.instance.myId
-               && !GameManagerCS.instance.cities[_cityIndex].isFeed)
+            _cityKey = _cityKeys[_cityIndex];
+            if(GameManagerCS.instance.cities[_cityKey].ownerId == ClientCS.instance.myId
+               && !GameManagerCS.instance.cities[_cityKey].isFeed)
             {
-                _cityLevel = GameManagerCS.instance.cities[_cityIndex].level;
+                _cityLevel = GameManagerCS.instance.cities[_cityKey].level;
+
                 if (PlayerCS.instance.food >= Constants.cityFeedValues[_cityLevel]["Food"]
                     && PlayerCS.instance.metal >= Constants.cityFeedValues[_cityLevel]["Metal"]
                     && PlayerCS.instance.wood >= Constants.cityFeedValues[_cityLevel]["Wood"]
@@ -254,10 +259,10 @@ public class PlayerUI : MonoBehaviour
                     GameManagerCS.instance.cities[_cityIndex].isFeed = true;
                 }
                 else
-                {
                     _feedCompleted = false;
-                }
+
             }
+
             _cityIndex++;
         }
         if (_feedCompleted)

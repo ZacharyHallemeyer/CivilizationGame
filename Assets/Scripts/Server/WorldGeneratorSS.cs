@@ -56,11 +56,13 @@ public class WorldGeneratorSS : MonoBehaviour
     /// </summary>
     public void GenerateWorld()
     {
+        int _groundTiles = 0, _difference;
         tiles = new TileInfo[(int)groundXSize, (int)groundZSize];
         allCubes = new GameObject[(int)groundXSize * (int)groundZSize];
         xPerlinOffset = Random.Range(0, 10000);
         yPerlinOffset = Random.Range(0, 10000);
         GenerateWorleyPoints();
+
         for (int x = 0; x < groundXSize; x++)
         {
             for (int z = 0; z < groundZSize; z++)
@@ -78,6 +80,7 @@ public class WorldGeneratorSS : MonoBehaviour
                 }
                 else if (value <= landLevel)
                 {
+                    _groundTiles++;
                     string _biomeType = biomes[GenerateWorleyNoise(x, z)];
                     GameObject _tile = InstaniateCube(tile, x, z);
                     _tile.transform.parent = transform;
@@ -88,63 +91,106 @@ public class WorldGeneratorSS : MonoBehaviour
                 }
             }
         }
-        int _xIndex, _zIndex, _infiniteLoopCatcher;
+
+        _difference = (_groundTiles - (amountOfFoodTiles + amountOfMetalTiles + amountofWoodTiles
+                                    + amountOfNeutralCities + amountOfObstacles));
+        // Check there are enough tiles to spawn all resources, obstacles, and cities wanted by player
+        if(_difference < 0)
+        {
+            // Decrement amount of resources, obstacles, and cities
+            while(_difference < 0)
+            {
+                amountOfFoodTiles--;
+                amountofWoodTiles--;
+                amountOfMetalTiles--;
+                amountOfObstacles--;
+                amountOfNeutralCities--;
+                _difference += 5;
+            }
+        }
+
+        CreateResourceTiles();
+        CreateObstacles();
+        CreateNeutralCities();
+
+        ServerSend.WorldCreated();
+    }
+
+    public void CreateResourceTiles()
+    {
+        int _xIndex, _zIndex;
         TileInfo _tileInfo;
+
         // Init food and resource tiles
         for (int i = 0; i < amountOfFoodTiles; i++)
         {
-            _infiniteLoopCatcher = 0;
             do
             {
                 _xIndex = Random.Range(0, (int)groundXSize);
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
-                _infiniteLoopCatcher++;
-                if (_infiniteLoopCatcher > 1000) break;
             }
             while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
             _tileInfo.isFood = true;
         }
-        for(int i = 0; i < amountofWoodTiles; i++)
+        for (int i = 0; i < amountofWoodTiles; i++)
         {
-            _infiniteLoopCatcher = 0;
             do
             {
                 _xIndex = Random.Range(0, (int)groundXSize);
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
-                _infiniteLoopCatcher++;
-                if (_infiniteLoopCatcher > 1000) break;
             }
             while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
             _tileInfo.isWood = true;
         }
-        for(int i = 0; i < amountOfMetalTiles; i++)
+        for (int i = 0; i < amountOfMetalTiles; i++)
         {
-            _infiniteLoopCatcher = 0;
             do
             {
                 _xIndex = Random.Range(0, (int)groundXSize);
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
-                _infiniteLoopCatcher++;
-                if (_infiniteLoopCatcher > 1000) break;
             }
             while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
             _tileInfo.isMetal = true;
         }
+    }
 
-        // Create neutral cities
-        for(int i = 0; i < amountOfNeutralCities; i++)
+    public void CreateObstacles()
+    {
+        int _xIndex, _zIndex;
+        TileInfo _tileInfo;
+
+        // Create Obstacles
+        for (int i = 0; i < amountOfObstacles; i++)
         {
-            _infiniteLoopCatcher = 0;
             do
             {
                 _xIndex = Random.Range(0, (int)groundXSize);
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
-                _infiniteLoopCatcher++;
-                if (_infiniteLoopCatcher > 1000) break;
+            }
+            while ((_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal || _tileInfo.isCity) &&
+                   (_xIndex == 0 && _xIndex == tiles.GetLength(0) && _zIndex == 0 && _zIndex == tiles.GetLength(1)));
+            _tileInfo.isObstacle = true;
+            GameManagerSS.instance.currentCityId++;
+        }
+    }
+
+    public void CreateNeutralCities()
+    {
+        int _xIndex, _zIndex;
+        TileInfo _tileInfo;
+
+        // Create neutral cities
+        for (int i = 0; i < amountOfNeutralCities; i++)
+        {
+            do
+            {
+                _xIndex = Random.Range(0, (int)groundXSize);
+                _zIndex = Random.Range(0, (int)groundZSize);
+                _tileInfo = tiles[_xIndex, _zIndex];
             }
             while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
             _tileInfo.isCity = true;
@@ -154,26 +200,6 @@ public class WorldGeneratorSS : MonoBehaviour
             neutralCities.Add(_city);
             GameManagerSS.instance.currentCityId++;
         }
-
-        // Create Obstacles
-        for (int i = 0; i < amountOfObstacles; i++)
-        {
-            _infiniteLoopCatcher = 0;
-            do
-            {
-                _xIndex = Random.Range(0, (int)groundXSize);
-                _zIndex = Random.Range(0, (int)groundZSize);
-                _tileInfo = tiles[_xIndex, _zIndex];
-                _infiniteLoopCatcher++;
-                if (_infiniteLoopCatcher > 1000) break;
-            }
-            while ((_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal || _tileInfo.isCity) &&
-                   (_xIndex == 0 && _xIndex == tiles.GetLength(0) && _zIndex == 0 && _zIndex == tiles.GetLength(1)));
-            _tileInfo.isObstacle = true;
-            GameManagerSS.instance.currentCityId++;
-        }
-
-        ServerSend.WorldCreated();
     }
 
     public GameObject InstaniateCube(GameObject _cube, float x, float z)

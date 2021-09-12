@@ -61,35 +61,6 @@
                 
                 //outColor = _Color * (random(i.uv.xx)/10, random(i.uv.xx)/10, random(i.uv.xx)/10, 1);
                 float randNum = random(i.uv);
-                /*
-                if(true)
-                {
-                    return (1,0,0,1);
-                }
-                else if(randNum <= 0)
-                {
-                    return (0,1,0,1);
-                }
-                else if(randNum >= 1)
-                {
-                    return (0,0,1,1);
-                }
-                else if(randNum > .5)
-                {
-                    return (1,0,0,1);
-                }
-                else if(randNum <= .5)
-                {
-                    return (1,1,1,1);
-                }
-                else 
-                {
-                    outColor = (_Color.r + random(i.uv)/100000, _Color.g + random(i.uv)/100000, _Color.b + random(i.uv)/100000, 1);
-                    
-                    return _Color;
-                }
-                */
-                //return (0,.5,.3 ,1);
                 if(2>1)
                 {
                     return _Color;

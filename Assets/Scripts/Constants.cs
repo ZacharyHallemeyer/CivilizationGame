@@ -932,6 +932,21 @@ public static class Constants
         { "Yellow", "Mine"},
     };
 
+    // Desert, forest, grassland, rain forest, tundra, swamp
+    public static Dictionary<string, string> tribeNativeEnvironment = new Dictionary<string, string>()
+    {
+        { "Blue", "Tundra"},
+        { "Cyan", "Forest"},
+        { "Green", "Grassland"},
+        { "Purple", "RainForest"},
+        { "Magenta", "Grassland"},
+        { "Orange", "Swamp"},
+        { "Pink", "Forest"},
+        { "Red", "Swamp"},
+        { "White", "Tundra"},
+        { "Yellow", "Desert"},
+    };
+
     public static List<string> avaliableTroops = new List<string>()
     { 
         "Scout",

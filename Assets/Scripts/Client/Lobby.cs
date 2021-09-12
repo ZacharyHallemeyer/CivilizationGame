@@ -14,8 +14,10 @@ public class Lobby : MonoBehaviour
     {
         public GameObject lobbyRowGameObject;
         public TextMeshProUGUI username;
+        public GameObject tribeContainer;
         public TextMeshProUGUI tribe;
         public TextMeshProUGUI tribeSkill;
+        public TextMeshProUGUI tribeEnvironment;
     }
 
     private int currentTribeIndex;
@@ -42,7 +44,9 @@ public class Lobby : MonoBehaviour
     public void InitLobbyUI()
     {
         GameObject _lobbyRow = null;
-        float _yPos = 230f;
+        int _yPos = 300, _tribeContainerXPos = -1200;
+        bool _rightSide = true;
+
         if (lobbyRows != null)
         {
             foreach (LobbyRow _existingLobbyRow in lobbyRows)
@@ -50,6 +54,7 @@ public class Lobby : MonoBehaviour
                 Destroy(_existingLobbyRow.lobbyRowGameObject);
             }
         }
+
         lobbyRows = new LobbyRow[ClientCS.allClients.Count];
         foreach(int _clientId in ClientCS.allClients.Keys)
         {
@@ -65,10 +70,25 @@ public class Lobby : MonoBehaviour
             lobbyRows[_clientId - 1].lobbyRowGameObject = _lobbyRow;
             lobbyRows[_clientId - 1].username = _lobbyRow.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             lobbyRows[_clientId - 1].username.text = ClientCS.allClients[_clientId]["Username"];
-            lobbyRows[_clientId - 1].tribe = _lobbyRow.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            lobbyRows[_clientId - 1].tribeContainer = _lobbyRow.transform.GetChild(1).gameObject;
+            lobbyRows[_clientId - 1].tribe = lobbyRows[_clientId - 1].tribeContainer.transform.GetChild(0)
+                                                                                    .GetComponent<TextMeshProUGUI>();
             lobbyRows[_clientId - 1].tribe.text = ClientCS.allClients[_clientId]["Tribe"];
-            lobbyRows[_clientId - 1].tribeSkill = _lobbyRow.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            lobbyRows[_clientId - 1].tribeSkill = lobbyRows[_clientId - 1].tribeContainer.transform.GetChild(1)
+                                                                                         .GetComponent<TextMeshProUGUI>();
             lobbyRows[_clientId - 1].tribeSkill.text = "Skill: " + Constants.tribeSkills[ClientCS.allClients[_clientId]["Tribe"]];
+            lobbyRows[_clientId - 1].tribeEnvironment = lobbyRows[_clientId - 1].tribeContainer.transform.GetChild(2)
+                                                                                         .GetComponent<TextMeshProUGUI>();
+            lobbyRows[_clientId - 1].tribeEnvironment.text = Constants.tribeNativeEnvironment[
+                                                                ClientCS.allClients[_clientId]["Tribe"]];
+
+            if (!_rightSide)
+            {
+                lobbyRows[_clientId - 1].tribeContainer.GetComponent<RectTransform>().anchoredPosition
+                    = new Vector3(_tribeContainerXPos, 0, 0);
+            }
+            _rightSide = !_rightSide;
+
             if (_clientId == ClientCS.instance.myId)
                 thisClientLobbyRow = lobbyRows[_clientId - 1];
         }

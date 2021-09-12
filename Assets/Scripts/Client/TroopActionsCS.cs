@@ -626,9 +626,16 @@ public class TroopActionsCS : MonoBehaviour
         TroopInfo _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
         bool _attackedFromTheBack = _troop.rotation == troopInfo.rotation;
         int _distance = Mathf.Abs(_troop.xIndex - troopInfo.xIndex) + Mathf.Abs(_troop.zIndex - troopInfo.zIndex);
+        int _troopAttackedEnvironmentBuff = _tile.biome
+                                            == Constants.tribeNativeEnvironment[ClientCS.allClients[_troop.ownerId]["Tribe"]]
+                                            ? 1 : 0;
+        int _troopAttackingEnvironmentBuff = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex].biome 
+                                             == PlayerCS.instance.tribe ? 1 : 0;
+
         HideQuickMenu();
         ResetAlteredTiles();
         AttackAnim(_troop, _distance);
+
         // Expose troop identity
         if (!_troop.isExposed)
         {
@@ -653,16 +660,20 @@ public class TroopActionsCS : MonoBehaviour
         if (_attackedFromTheBack)
         {
             if(troopInfo.isBoat)
-                _troop.health -= troopInfo.shipStealthAttack - _troop.baseDefense;
+                _troop.health -= troopInfo.shipStealthAttack + _troopAttackingEnvironmentBuff
+                                 - _troop.baseDefense - _troopAttackedEnvironmentBuff;
             else
-                _troop.health -= troopInfo.stealthAttack - _troop.baseDefense;
+                _troop.health -= troopInfo.stealthAttack + _troopAttackingEnvironmentBuff 
+                                 - _troop.baseDefense - _troopAttackedEnvironmentBuff;
         }
         else
         {
             if(troopInfo.isBoat)
-                _troop.health -= troopInfo.shipAttack - _troop.facingDefense;
+                _troop.health -= troopInfo.shipAttack + _troopAttackingEnvironmentBuff 
+                                 - _troop.facingDefense - _troopAttackedEnvironmentBuff;
             else 
-                _troop.health -= troopInfo.baseAttack - _troop.facingDefense;
+                _troop.health -= troopInfo.baseAttack + _troopAttackingEnvironmentBuff 
+                                 - _troop.facingDefense - _troopAttackedEnvironmentBuff;
         }
         // this troop killed the other troop
         if (_troop.health <= 0)
@@ -692,7 +703,8 @@ public class TroopActionsCS : MonoBehaviour
             {
                 // If attack was a melee and not a ranged attack then counter attack (counter attack can not be a ranged attack)
                 if(_distance == 1)
-                    troopInfo.health -= _troop.counterAttack - troopInfo.baseDefense;
+                    troopInfo.health -= _troop.counterAttack + _troopAttackedEnvironmentBuff 
+                                        - troopInfo.baseDefense - _troopAttackingEnvironmentBuff;
             }
             // Play hurt animation
             _troop.troopActions.HurtAnim();
