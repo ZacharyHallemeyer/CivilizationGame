@@ -567,7 +567,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
             }
         }
-        // Add resources and update resource text
+        // Add resources and update resource text   
         PlayerCS.instance.food += (int)Constants.biomeInfo[_tile.biome]["Food"];
         PlayerCS.instance.wood += (int)Constants.biomeInfo[_tile.biome]["Wood"];
         PlayerCS.instance.metal += (int)Constants.biomeInfo[_tile.biome]["Metal"];

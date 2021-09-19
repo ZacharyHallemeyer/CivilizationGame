@@ -11,11 +11,13 @@ public class CityActionsCS : MonoBehaviour
 
     // Buttons
     public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton, portButton;
-    public Button scoutButton, militiaButton, armyButton, missleButton, defenseButton, stealthButton, snipperButton;
+    public Button scoutButton, militiaButton, armyButton, missleButton, defenseButton, stealthButton, snipperButton, heavyHitterButton,
+                  watchTowerButton;
 
     // Resource Cost Text
     public TextMeshProUGUI lumberYardText, schoolText, libraryText, domeText, housingText, farmText, mineText, marketText, portText;
-    public TextMeshProUGUI scoutText, militiaText, armyText, missleText, defenseText, stealthText, snipperText;
+    public TextMeshProUGUI scoutText, militiaText, armyText, missleText, defenseText, stealthText, snipperText, heavyHitterText, 
+                           watchTowerText;
 
     public string currentTroopTraining, currentBuidlingToBuild;
 
@@ -45,6 +47,8 @@ public class CityActionsCS : MonoBehaviour
             { "Defense", defenseButton },
             { "Stealth", stealthButton },
             { "Snipper", snipperButton },
+            { "HeavyHitter", heavyHitterButton },
+            { "WatchTower", watchTowerButton },
         };
         troopResourceText = new Dictionary<string, TextMeshProUGUI>()
         {
@@ -55,6 +59,8 @@ public class CityActionsCS : MonoBehaviour
             { "Defense", defenseText },
             { "Stealth", stealthText },
             { "Snipper", snipperText },
+            { "HeavyHitter", heavyHitterText },
+            { "WatchTower", watchTowerText },
         };
 
         buildingButtons = new Dictionary<string, Button>()
@@ -405,7 +411,6 @@ public class CityActionsCS : MonoBehaviour
     public void StartTrainTroop(string _troopName)
     {
         if (GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied || cityInfo.isTrainingTroops) return;
-        cityInfo.isTrainingTroops = true;
         currentTroopTraining = _troopName;
         PlayerCS.instance.food -= Constants.prices[currentTroopTraining]["Food"];
         PlayerCS.instance.wood -= Constants.prices[currentTroopTraining]["Wood"];

@@ -253,6 +253,34 @@ public static class Constants
                 { "SeeRange", 5},
             }
         },
+        { "HeavyHitter", new Dictionary<string, int>
+            {
+                { "Rotation", 0 },
+                { "Health", 1 },
+                { "BaseAttack", 25},
+                { "StealthAttack", 25},
+                { "CounterAttack", 0},
+                { "BaseDefense", 0},
+                { "FacingDefense", 0},
+                { "MovementCost", 1},
+                { "AttackRange", 1},
+                { "SeeRange", 2},
+            }
+        },
+        { "WatchTower", new Dictionary<string, int>
+            {
+                { "Rotation", 0 },
+                { "Health", 5 },
+                { "BaseAttack", 0},
+                { "StealthAttack", 1},
+                { "CounterAttack", 1},
+                { "BaseDefense", 0},
+                { "FacingDefense", 0},
+                { "MovementCost", 2},
+                { "AttackRange", 0},
+                { "SeeRange", 10},
+            }
+        },
     };
 
     public static Dictionary<string, Dictionary<string, bool>> troopInfoBool = new Dictionary<string, Dictionary<string, bool>>
@@ -300,6 +328,18 @@ public static class Constants
             }
         },
         { "King", new Dictionary<string, bool>
+            {
+                { "CanMultyKill", false},
+                { "CanMoveAfterKill", true},
+            }
+        },
+        { "HeavyHitter", new Dictionary<string, bool>
+            {
+                { "CanMultyKill", false},
+                { "CanMoveAfterKill", true},
+            }
+        },
+        { "WatchTower", new Dictionary<string, bool>
             {
                 { "CanMultyKill", false},
                 { "CanMoveAfterKill", true},
@@ -443,7 +483,7 @@ public static class Constants
                 { "Population", 0 },
             }
         },
-        { "Road" , new Dictionary<string, int>
+        { "Roads" , new Dictionary<string, int>
             {
                 { "Food", 1 },
                 { "Metal", 1 },
@@ -452,7 +492,7 @@ public static class Constants
                 { "Population", 0 },
             }
         },
-        { "Wall" , new Dictionary<string, int>
+        { "Walls" , new Dictionary<string, int>
             {
                 { "Food", 1 },
                 { "Metal", 1 },
@@ -521,6 +561,24 @@ public static class Constants
                 { "Metal", 5 },
                 { "Wood", 5 },
                 { "Money", 200 },
+                { "Population", 5 },
+            }
+        },
+        { "HeavyHitter" , new Dictionary<string, int>
+            {
+                { "Food", 3 },
+                { "Metal", 5 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 3 },
+            }
+        },
+        { "WatchTower" , new Dictionary<string, int>
+            {
+                { "Food", 2 },
+                { "Metal", 2 },
+                { "Wood", 2 },
+                { "Money", 100 },
                 { "Population", 5 },
             }
         },
@@ -618,7 +676,7 @@ public static class Constants
                 { "Population", 0 },
             }
         },
-        { "Road" , new Dictionary<string, int> 
+        { "Roads" , new Dictionary<string, int> 
             {
                 { "Food", 1 },
                 { "Metal", 1 },
@@ -627,7 +685,7 @@ public static class Constants
                 { "Population", 0 },
             }
         },
-        { "Wall" , new Dictionary<string, int> 
+        { "Walls" , new Dictionary<string, int> 
             {
                 { "Food", 1 },
                 { "Metal", 1 },
@@ -696,6 +754,24 @@ public static class Constants
                 { "Metal", 5 },
                 { "Wood", 5 },
                 { "Money", 200 },
+                { "Population", 5 },
+            } 
+        },
+        { "HeavyHitter" , new Dictionary<string, int> 
+            {
+                { "Food", 3 },
+                { "Metal", 5 },
+                { "Wood", 3 },
+                { "Money", 100 },
+                { "Population", 3 },
+            } 
+        },
+        { "WatchTower" , new Dictionary<string, int> 
+            {
+                { "Food", 2 },
+                { "Metal", 2 },
+                { "Wood", 2 },
+                { "Money", 100 },
                 { "Population", 5 },
             } 
         },
@@ -820,6 +896,8 @@ public static class Constants
         { "Missle", 300 },    
         { "Defense", 200 },    
         { "Stealth", 200 },    
+        { "HeavyHitter", 200 },    
+        { "WatchTower", 200 },    
         { "Port", 300 },    
         { "Warship", 500 },    
         { "Walls", 100 },    
@@ -840,7 +918,9 @@ public static class Constants
         { "Snipper", 200 },    
         { "Missle", 300 },    
         { "Defense", 200 },    
-        { "Stealth", 200 },    
+        { "Stealth", 200 },
+        { "HeavyHitter", 200 },
+        { "WatchTower", 200 },
         { "Port", 300 },    
         { "Warship", 500 },    
         { "Walls", 100 },    
@@ -858,19 +938,21 @@ public static class Constants
     public static Dictionary<string, string[]> neededSkillsForCertainSkills = new Dictionary<string, string[]>()
     {
         { "Army", new string[0] },
-        { "Snipper", new [] { "Army", "Defense" } },
-        { "Missle", new [] { "Army", "Snipper" } },
-        { "Defense", new [] { "Army" } },
+        { "Snipper", new [] { "Army", "Missle" } },
+        { "Missle", new [] { "Army" } },
+        { "Defense", new [] { "Army", "Stealth" } },
         { "Stealth", new [] { "Army" } },
+        { "HeavyHitter", new [] { "Army", "Stealth", "Defense" } },
+        { "WatchTower", new [] { "Army", "Stealth" } },
         { "Port", new string[0] },
         { "Warship", new [] { "Port" } },
-        { "Walls", new [] { "Mine"} },
-        { "Dome", new [] { "Mine", "Walls" } },
-        { "Library", new string[0] },
-        { "School", new [] { "Library" } },
-        { "Housing", new string[0] },
-        { "Roads", new string[0] },
-        { "Market", new [] { "Roads" } },
+        { "Walls", new [] { "Mine", "Dome"} },
+        { "Dome", new [] { "Mine" } },
+        { "Library", new [] { "LumberYard", "Housing" }  },
+        { "School", new [] { "Farm", "Market" } },
+        { "Housing", new [] { "LumberYard" } },
+        { "Roads", new [] { "LumberYard", "Housing", "Library" } },
+        { "Market", new [] { "Farm" } },
         { "Farm", new string[0]},
         { "LumberYard", new string[0] },
         { "Mine", new string[0] },

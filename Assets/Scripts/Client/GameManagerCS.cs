@@ -36,8 +36,8 @@ public class GameManagerCS : MonoBehaviour
     public GameObject cityPrefab, cityLevel1Prefab, cityLevel2Prefab, cityLevel3Prefab, cityLevel4Prefab, cityLevel5Prefab;
     public GameObject ownershipObjectPrefab;
     public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab, portPrefab;
-    public GameObject scoutPrefab, militiaPrefab, armyPrefab, misslePrefab, defensePrefab, stealthPrefab,
-                      snipperPrefab, kingPrefab, canoePrefab, warShipPrefab;
+    public GameObject scoutPrefab, militiaPrefab, armyPrefab, misslePrefab, defensePrefab, stealthPrefab,  
+                      snipperPrefab, kingPrefab, canoePrefab, warShipPrefab, watchTowerPrefab, heavyHitterPrefab;
     public GameObject swordPrefab, arrowPrefab;
 
     public string[] troopNames;
@@ -419,42 +419,40 @@ public class GameManagerCS : MonoBehaviour
         {
             case "Scout":
                 _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Militia":
                 _troop.troopModel = Instantiate(militiaPrefab, _troop.troop.transform.position, militiaPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Army":
                 _troop.troopModel = Instantiate(armyPrefab, _troop.troop.transform.position, armyPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Missle":
                 _troop.troopModel = Instantiate(misslePrefab, _troop.troop.transform.position, misslePrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Defense":
                 _troop.troopModel = Instantiate(defensePrefab, _troop.troop.transform.position, defensePrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Stealth":
                 _troop.troopModel = Instantiate(stealthPrefab, _troop.troop.transform.position, stealthPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "Snipper":
                 _troop.troopModel = Instantiate(snipperPrefab, _troop.troop.transform.position, snipperPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 break;
             case "King":
                 _troop.troopModel = Instantiate(kingPrefab, _troop.troop.transform.position, kingPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
+                break;
+            case "HeavyHitter":
+                _troop.troopModel = Instantiate(heavyHitterPrefab, _troop.troop.transform.position, heavyHitterPrefab.transform.localRotation);
+                break;
+            case "WatchTower":
+                _troop.troopModel = Instantiate(watchTowerPrefab, _troop.troop.transform.position, watchTowerPrefab.transform.localRotation);
                 break;
             default:
                 _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
-                _troop.troopModel.transform.parent = _troop.troop.transform;
                 Debug.LogError("Could not find prefab for troop name: " + _troopName);
                 break;
         }
+        _troop.troopModel.transform.parent = _troop.troop.transform;
         // Spawn canoe model and deactivate it because troop cannot be spawned as a ship
         _troop.shipModel = Instantiate(canoePrefab, _troop.troop.transform.position, canoePrefab.transform.localRotation);
         _troop.shipModel.transform.parent = _troop.troop.transform;

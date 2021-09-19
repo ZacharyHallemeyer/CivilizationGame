@@ -17,15 +17,24 @@ public class PlayerUI : MonoBehaviour
 
     // SKill Tree
     public Button roadSkillButton, wallSkillButton, armySkillButton, snipperSkillButton, missleSkillButton, defenseSkillButton,
-                  stealthSkillButton, marketSkillButton, housingSkillButton, librarySkillButton, schoolSkillButton, domeSkillButton,
-                  portSkillButton, warshipSkillButton, farmSkillButton, mineSkillButton, lumberYardSkillButton;
+                  stealthSkillButton, heavyHitterButton, watchTowerButton, marketSkillButton, housingSkillButton, 
+                  librarySkillButton, schoolSkillButton, domeSkillButton, portSkillButton, warshipSkillButton, 
+                  farmSkillButton, mineSkillButton, lumberYardSkillButton;
 
     public TextMeshProUGUI roadSkillText, wallSkillText, armySkillText, snipperSkillText, missleSkillText, defenseSkillText,
-                  stealthSkillText, marketSkillText, housingSkillText, librarySkillText, schoolSkillText, domeSkillText,
-                  portSkillText, warshipSkillText, farmSkillText, mineSkillText, lumberYardSkillText;
+                  stealthSkillText, heavyHitterText, watchTowerText, marketSkillText, housingSkillText, librarySkillText, 
+                  schoolSkillText, domeSkillText, portSkillText, warshipSkillText, farmSkillText, mineSkillText, 
+                  lumberYardSkillText;
+
+    // Purchase Indicator = PI
+    public RawImage roadSkillPI, wallSkillPI, armySkillPI, snipperSkillPI, missleSkillPI, defenseSkillPI,
+                  stealthSkillPI, heavyHitterPI, watchTowerPI, marketSkillPI, housingSkillPI, librarySkillPI,
+                  schoolSkillPI, domeSkillPI, portSkillPI, warshipSkillPI, farmSkillPI, mineSkillPI,
+                  lumberYardSkillPI;
 
     public Dictionary<string, Button> skillButtons = new Dictionary<string, Button>();
     public Dictionary<string, TextMeshProUGUI> skillText = new Dictionary<string, TextMeshProUGUI>();
+    public Dictionary<string, RawImage> skillPurchaseIndicators = new Dictionary<string, RawImage>();
 
     public void Start()
     {
@@ -37,6 +46,8 @@ public class PlayerUI : MonoBehaviour
             { "Missle", missleSkillButton },
             { "Defense", defenseSkillButton },
             { "Stealth", stealthSkillButton },
+            { "HeavyHitter", heavyHitterButton },
+            { "WatchTower", watchTowerButton },
             { "Port", portSkillButton },
             { "Warship", warshipSkillButton },
             { "Walls", wallSkillButton },
@@ -57,6 +68,8 @@ public class PlayerUI : MonoBehaviour
             { "Missle", missleSkillText },
             { "Defense", defenseSkillText },
             { "Stealth", stealthSkillText },
+            { "HeavyHitter", heavyHitterText },
+            { "WatchTower", watchTowerText },
             { "Port", portSkillText },
             { "Warship", warshipSkillText },
             { "Walls", wallSkillText },
@@ -70,6 +83,29 @@ public class PlayerUI : MonoBehaviour
             { "Mine", mineSkillText },
             { "LumberYard", lumberYardSkillText },
         };
+        skillPurchaseIndicators = new Dictionary<string, RawImage>()
+        {
+            { "Army", armySkillPI },
+            { "Snipper", snipperSkillPI},
+            { "Missle", missleSkillPI },
+            { "Defense", defenseSkillPI },
+            { "Stealth", stealthSkillPI },
+            { "HeavyHitter", heavyHitterPI },
+            { "WatchTower", watchTowerPI },
+            { "Port", portSkillPI },
+            { "Warship", warshipSkillPI },
+            { "Walls", wallSkillPI },
+            { "Dome", domeSkillPI },
+            { "Library", librarySkillPI },
+            { "School", schoolSkillPI },
+            { "Housing", housingSkillPI },
+            { "Roads", roadSkillPI },
+            { "Market", marketSkillPI },
+            { "Farm", farmSkillPI },
+            { "Mine", mineSkillPI },
+            { "LumberYard", lumberYardSkillPI },
+        };
+        InitSkillTree();
     }
 
     /// <summary>
@@ -176,7 +212,8 @@ public class PlayerUI : MonoBehaviour
         PlayerCS.instance.skills.Add(_skill);
         SetMoneyAmount(PlayerCS.instance.money);
 
-        if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" || _skill == "Stealh")
+        if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" 
+            || _skill == "Stealh" || _skill == "HeavyHitter" || _skill == "WatchTower" )
             Constants.avaliableTroops.Add(_skill);
         else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market" || 
                  _skill == "Port")
@@ -192,10 +229,12 @@ public class PlayerUI : MonoBehaviour
         foreach(string _key in skillButtons.Keys)
         {
             _hasPreviousSkills = true;
+            // Check if skill has been purchased
             if(PlayerCS.instance.skills.Contains(_key))
             {
                 skillButtons[_key].enabled = false;
-                skillText[_key].color = new Color(1f, 1f, 1f);
+                skillPurchaseIndicators[_key].gameObject.SetActive(true);
+                skillText[_key].color = new Color(1f, 1f, 1f, 1f);
             }
             else
             {
@@ -205,15 +244,16 @@ public class PlayerUI : MonoBehaviour
                     if (!PlayerCS.instance.skills.Contains(_neededSkill))
                         _hasPreviousSkills = false;
                 }
+                // Check if player has enough money to purchase skill
                 if (PlayerCS.instance.money >= Constants.allSkills[_key] && _hasPreviousSkills)
                 {
                     skillButtons[_key].enabled = true;
-                    skillText[_key].color = new Color(0f, 1f, 0f);
+                    skillText[_key].color = new Color(1f, 1f, 1f, 1f);
                 }
                 else
                 {
                     skillButtons[_key].enabled = false;
-                    skillText[_key].color = new Color(1f, 0.4858491f, 0.4858491f);
+                    skillText[_key].color = new Color(1f, 1f, 1f, .5f);
                 }
             }
         }
@@ -221,7 +261,6 @@ public class PlayerUI : MonoBehaviour
 
     public void DisplaySkillTree()
     {
-        InitSkillTree();
         skillTreeContainer.SetActive(true);
         CloseMenu();
     }
@@ -256,7 +295,7 @@ public class PlayerUI : MonoBehaviour
                     PlayerCS.instance.metal -= Constants.cityFeedValues[_cityLevel]["Metal"];
                     PlayerCS.instance.wood -= Constants.cityFeedValues[_cityLevel]["Wood"];
                     PlayerCS.instance.money -= Constants.cityFeedValues[_cityLevel]["Money"];
-                    GameManagerCS.instance.cities[_cityIndex].isFeed = true;
+                    GameManagerCS.instance.cities[_cityKey].isFeed = true;
                 }
                 else
                     _feedCompleted = false;

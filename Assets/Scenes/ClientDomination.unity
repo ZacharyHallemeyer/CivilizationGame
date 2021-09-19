@@ -414,6 +414,10 @@ MonoBehaviour:
     type: 3}
   warShipPrefab: {fileID: 7128440709228273435, guid: f190cc4450af1d649a4984dbc53dd5dd,
     type: 3}
+  watchTowerPrefab: {fileID: 4569155644984859200, guid: a463eb683e8b37643a1d313920a78172,
+    type: 3}
+  heavyHitterPrefab: {fileID: 667949986819127897, guid: 940a4d05c92448744b03d228bcfd2cf4,
+    type: 3}
   swordPrefab: {fileID: 4630392494860568018, guid: d230336b416688841982877f75e3a237,
     type: 3}
   arrowPrefab: {fileID: 7690062439369146723, guid: 55bc64dbfe4d28d45a500c78df73d940,
