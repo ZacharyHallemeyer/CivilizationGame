@@ -384,6 +384,7 @@ public class ServerHandle
         _tile.xIndex = _packet.ReadInt();
         _tile.zIndex = _packet.ReadInt();
         _tile.isRoad = _packet.ReadBool();
+        _tile.isWall = _packet.ReadBool();
         _tile.isBuilding = _packet.ReadBool();
         _tile.buildingName = _packet.ReadString();
         string _command = _packet.ReadString();
@@ -414,6 +415,7 @@ public class ServerHandle
         _tile.id = _id;
         _tile.ownerId = _packet.ReadInt();
         _tile.isRoad = _packet.ReadBool();
+        _tile.isWall = _packet.ReadBool();
         _tile.isCity = _packet.ReadBool();
         _tile.isBuilding = _packet.ReadBool();
         _tile.isOccupied = _packet.ReadBool();

@@ -12,15 +12,18 @@ public class TileInfo : MonoBehaviour
     public string biome;
     public float temperature;       // Range -1 to 1
     public float height;            // Range -1 to 1
+
     public bool isWater = false;
     public bool isFood = false;
     public bool isWood = false;
     public bool isMetal = false;
     public bool isRoad = false;
+    public bool isWall = false;
     public bool isCity = false;
     public bool isBuilding = false;
     public bool isOccupied = false;
     public bool isObstacle = false;
+
     public int occupyingObjectId = -1;
     public int cityId = -1;
     public int xIndex;
@@ -61,6 +64,7 @@ public class TileInfo : MonoBehaviour
         ownerId = _tileToCopy.ownerId;
         isRoad = _tileToCopy.isRoad;
         isCity = _tileToCopy.isCity;
+        isWall = _tileToCopy.isWall;
         isBuilding = _tileToCopy.isBuilding;
         isOccupied = _tileToCopy.isOccupied;
         occupyingObjectId = _tileToCopy.occupyingObjectId;

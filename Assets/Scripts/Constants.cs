@@ -687,10 +687,10 @@ public static class Constants
         },
         { "Walls" , new Dictionary<string, int> 
             {
-                { "Food", 1 },
-                { "Metal", 1 },
-                { "Wood", 1 },
-                { "Money", 10 },
+                { "Food", 5 },
+                { "Metal", 5 },
+                { "Wood", 5 },
+                { "Money", 200 },
                 { "Population", 0 },
             }
         },
@@ -885,6 +885,18 @@ public static class Constants
                 { "Morale", 1 },
                 { "Education", 0 },
                 { "Experience", 10 },
+            } 
+        },
+        { "Walls" , new Dictionary<string, int> 
+            {
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 0 },
+                { "Population", 0 },
+                { "Morale", 0 },
+                { "Education", 0 },
+                { "Experience", 0 },
             } 
         },
     };

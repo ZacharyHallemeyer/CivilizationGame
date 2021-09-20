@@ -10,12 +10,14 @@ public class CityActionsCS : MonoBehaviour
     public CityInfo cityInfo;
 
     // Buttons
-    public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton, portButton;
+    public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton, 
+                  portButton, wallsButton;
     public Button scoutButton, militiaButton, armyButton, missleButton, defenseButton, stealthButton, snipperButton, heavyHitterButton,
                   watchTowerButton;
 
     // Resource Cost Text
-    public TextMeshProUGUI lumberYardText, schoolText, libraryText, domeText, housingText, farmText, mineText, marketText, portText;
+    public TextMeshProUGUI lumberYardText, schoolText, libraryText, domeText, housingText, farmText, mineText, marketText, portText,
+                           wallsText;
     public TextMeshProUGUI scoutText, militiaText, armyText, missleText, defenseText, stealthText, snipperText, heavyHitterText, 
                            watchTowerText;
 
@@ -74,6 +76,7 @@ public class CityActionsCS : MonoBehaviour
             { "Market", marketButton },
             { "Dome", domeButton },
             { "Port", portButton },
+            { "Walls", wallsButton },
         };
         buildingResourceText = new Dictionary<string, TextMeshProUGUI>()
         {
@@ -86,6 +89,7 @@ public class CityActionsCS : MonoBehaviour
             { "Market", marketText },
             { "Dome", domeText },
             { "Port", portText },
+            { "Walls", wallsText },
         };
     }
 
@@ -438,6 +442,9 @@ public class CityActionsCS : MonoBehaviour
     {
         if (_tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal)
             Destroy(_tileInfo.resourceObject);
+        if (currentBuidlingToBuild == "Walls")
+            _tileInfo.isWall = true;
+
         // Update resource per turn
         cityInfo.foodResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Food"];
         cityInfo.metalResourcesPerTurn += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Metal"];
@@ -483,12 +490,12 @@ public class CityActionsCS : MonoBehaviour
                     && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1))
                 {
                     _tile = GameManagerCS.instance.tiles[x, z];
-                    if (cityInfo.ownerId == _tile.ownerId && !_tile.isCity && !_tile.isBuilding)
+                    if (cityInfo.ownerId == _tile.ownerId && !_tile.isCity && !_tile.isBuilding && !_tile.isObstacle)
                     {
-                        if (currentBuidlingToBuild == "Port")
+                        if (_tile.isWater)
                         {
                             // Only let player build port on water tiles
-                            if (_tile.isWater)
+                            if (currentBuidlingToBuild == "Port")
                             {
                                 _tile.tile.layer = whatIsInteractableValue;
                                 _tile.tile.tag = constructBuildingTag;

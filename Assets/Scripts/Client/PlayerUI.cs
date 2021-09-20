@@ -216,7 +216,7 @@ public class PlayerUI : MonoBehaviour
             || _skill == "Stealh" || _skill == "HeavyHitter" || _skill == "WatchTower" )
             Constants.avaliableTroops.Add(_skill);
         else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market" || 
-                 _skill == "Port")
+                 _skill == "Port" || _skill == "Walls")
             Constants.avaliableBuildings.Add(_skill);
 
         InitSkillTree();

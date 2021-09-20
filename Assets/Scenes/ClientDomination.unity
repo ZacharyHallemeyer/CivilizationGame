@@ -394,6 +394,8 @@ MonoBehaviour:
     type: 3}
   portPrefab: {fileID: 2836029860735209040, guid: 6129b0d1e23207e42b10f014b6c3b4eb,
     type: 3}
+  wallsPrefab: {fileID: 8416912455269613653, guid: a87beb55eeb622846a6ad2b37bfab663,
+    type: 3}
   scoutPrefab: {fileID: 2813880598238819312, guid: 41c5f6606aefb1347ae9db2262ceaf60,
     type: 3}
   militiaPrefab: {fileID: 1236843211704913220, guid: 938b557b2446af94988761051127033f,

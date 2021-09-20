@@ -197,6 +197,7 @@ public class ServerSend
                     _packet.Write(_tile.isWood);
                     _packet.Write(_tile.isMetal);
                     _packet.Write(_tile.isRoad);
+                    _packet.Write(_tile.isWall);
                     _packet.Write(_tile.isCity);
                     _packet.Write(_tile.isOccupied);
                     _packet.Write(_tile.isObstacle);
@@ -505,6 +506,7 @@ public class ServerSend
                             _packet.Write(_tile.xIndex);
                             _packet.Write(_tile.zIndex);
                             _packet.Write(_tile.isRoad);
+                            _packet.Write(_tile.isWall);
                             _packet.Write(_tile.isBuilding);
                             _packet.Write(_tile.buildingName);
                             _packet.Write(_tileDict[_tile]);
@@ -519,6 +521,7 @@ public class ServerSend
                             _packet.Write(_tile.id);
                             _packet.Write(_tile.ownerId);
                             _packet.Write(_tile.isRoad);
+                            _packet.Write(_tile.isWall);
                             _packet.Write(_tile.isCity);
                             _packet.Write(_tile.isBuilding);
                             _packet.Write(_tile.isOccupied);

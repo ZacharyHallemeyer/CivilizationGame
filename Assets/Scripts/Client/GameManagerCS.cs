@@ -35,7 +35,8 @@ public class GameManagerCS : MonoBehaviour
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab, obstaclePrefab;
     public GameObject cityPrefab, cityLevel1Prefab, cityLevel2Prefab, cityLevel3Prefab, cityLevel4Prefab, cityLevel5Prefab;
     public GameObject ownershipObjectPrefab;
-    public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab, portPrefab;
+    public GameObject lumberYardPrefab, farmPrefab, minePrefab, schoolPrefab, libraryPrefab, domePrefab, housingPrefab, marketPrefab, 
+                      portPrefab, wallsPrefab;
     public GameObject scoutPrefab, militiaPrefab, armyPrefab, misslePrefab, defensePrefab, stealthPrefab,  
                       snipperPrefab, kingPrefab, canoePrefab, warShipPrefab, watchTowerPrefab, heavyHitterPrefab;
     public GameObject swordPrefab, arrowPrefab;
@@ -85,6 +86,7 @@ public class GameManagerCS : MonoBehaviour
             { "Market", marketPrefab},
             { "Dome", domePrefab},
             { "Port", portPrefab},
+            { "Walls", wallsPrefab},
         };
 
         shipModels = new Dictionary<string, GameObject>()
@@ -199,8 +201,8 @@ public class GameManagerCS : MonoBehaviour
     /// <param name="_name"> Tile name </param>
     public void CreateNewTile(int _id, int _ownerId, int _occupyingObjectId, string _biome,
                               float _temp, float _height, bool _isWater, bool _isFood, bool _isWood, bool _isMetal,
-                              bool _isRoad, bool _isCity, bool _isOccupied, bool _isObstacle, Vector2 _position, int _xIndex,
-                              int _zIndex, int _cityId, string _name)
+                              bool _isRoad, bool _isWall, bool _isCity, bool _isOccupied, bool _isObstacle, Vector2 _position, 
+                              int _xIndex, int _zIndex, int _cityId, string _name)
     {
         GameObject _tile = Instantiate(tilePrefab, new Vector3(_position.x, 0, _position.y), tilePrefab.transform.localRotation);
         // Set tile color, tile model is the first child of tile prefab
@@ -230,6 +232,7 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.isWood = _isWood;
         _tileInfo.isMetal = _isMetal;
         _tileInfo.isRoad = _isRoad;
+        _tileInfo.isWall = _isWall;
         _tileInfo.isCity = _isCity;
         _tileInfo.isOccupied = _isOccupied;
         _tileInfo.isObstacle = _isObstacle;
@@ -1217,6 +1220,7 @@ public class GameManagerCS : MonoBehaviour
     {
         tiles[_tile.xIndex, _tile.zIndex].isRoad = _tile.isRoad;
         tiles[_tile.xIndex, _tile.zIndex].isBuilding = _tile.isBuilding;
+        tiles[_tile.xIndex, _tile.zIndex].isWall = _tile.isBuilding;
         tiles[_tile.xIndex, _tile.zIndex].buildingName = _tile.buildingName;
         int _xCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.x;
         int _zCoord = (int)tiles[_tile.xIndex, _tile.zIndex].position.y;

@@ -745,6 +745,7 @@ public class TroopActionsCS : MonoBehaviour
     {
         TileInfo _tile;
         TroopInfo _troop;
+
         for (int x = troopInfo.xIndex - troopInfo.seeRange; x < troopInfo.xIndex + troopInfo.seeRange + 1; x++)
         {
             for (int z = troopInfo.zIndex - troopInfo.seeRange; z < troopInfo.zIndex + troopInfo.seeRange + 1; z++)
@@ -752,11 +753,13 @@ public class TroopActionsCS : MonoBehaviour
                 if (x >= 0 && x < GameManagerCS.instance.tiles.GetLength(0)
                     && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1))
                 {
+
                     _tile = GameManagerCS.instance.tiles[x, z];
                     if (_tile.isOccupied)
                     {
                         _troop = GameManagerCS.instance.troops[_tile.occupyingObjectId];
-                        if (_troop.ownerId != troopInfo.ownerId)
+                        if (_troop.ownerId != troopInfo.ownerId
+                            && !IsVisionBlocked(x, z))
                         {
                             // Enemy troop within seeing range
                             if (_troop.isExposed)
@@ -781,9 +784,41 @@ public class TroopActionsCS : MonoBehaviour
                             }
                         }
                     }
+
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Returns true if there is a troop within 1 tiles from a wall  
+    /// and this troop is not withing the 1 tile radius
+    /// </summary>
+    /// <returns></returns>
+    private bool IsVisionBlocked(int _troopXIndex, int _troopZIndex)
+    {
+        int _xIndex, _zIndex, _distanceFromVisionBlockX, _distanceFromVisionBlockZ, _visionBlockRadius = 1;
+
+        for(_xIndex = _troopXIndex - _visionBlockRadius; _xIndex <= _troopXIndex + _visionBlockRadius; _xIndex++)
+        {
+            for (_zIndex = _troopZIndex - _visionBlockRadius; _zIndex <= _troopZIndex + _visionBlockRadius; _zIndex++)
+            {
+                // First check if x index and z index is a valid index of a tile
+                // Next check if current tile is a vision blocker
+                if ( _xIndex >= 0 && _xIndex < GameManagerCS.instance.tiles.GetLength(0)
+                    && _zIndex >= 0 && _zIndex < GameManagerCS.instance.tiles.GetLength(1)
+                    && GameManagerCS.instance.tiles[_xIndex, _zIndex].isWall )
+                {
+                    _distanceFromVisionBlockX = Mathf.Abs(troopInfo.xIndex - _xIndex);
+                    _distanceFromVisionBlockZ = Mathf.Abs(troopInfo.zIndex - _zIndex);
+
+                    if(Mathf.Max(_distanceFromVisionBlockX, _distanceFromVisionBlockZ) > _visionBlockRadius)
+                        return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
