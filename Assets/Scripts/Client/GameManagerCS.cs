@@ -216,11 +216,8 @@ public class GameManagerCS : MonoBehaviour
         // End of changing tile color
 
         _tile.transform.parent = transform;
-        TileInfo _tileInfo = _tile.AddComponent<TileInfo>();
-        _tileInfo.moveUI = _tile.transform.GetChild(1).gameObject;  // Get move UI game object
-        _tileInfo.attackUI = _tile.transform.GetChild(2).gameObject;  // Get attack UI game object
+        TileInfo _tileInfo = _tile.GetComponent<TileInfo>();
         _tile.name = _name;
-        _tileInfo.tile = _tile;
         _tileInfo.id = _id;
         _tileInfo.ownerId = _ownerId;
         _tileInfo.occupyingObjectId = _occupyingObjectId;
@@ -240,6 +237,12 @@ public class GameManagerCS : MonoBehaviour
         _tileInfo.zIndex = _zIndex;
         _tileInfo.cityId = _cityId;
         _tileInfo.position = _position;
+
+        if (_isCity)
+        {
+            _tileInfo.fixedCell = true;
+            _tileInfo.collider.enabled = true;
+        }
 
         tiles[_xIndex, _zIndex] = _tileInfo;
 
@@ -945,6 +948,7 @@ public class GameManagerCS : MonoBehaviour
     {
         if (tiles[_xIndex, _zIndex].isWater || tiles[_xIndex, _zIndex].isCity) return;
         tiles[_xIndex, _zIndex].tile.tag = "City";
+        tiles[_xIndex, _zIndex].fixedCell = true;
         int _xCoord = (int)tiles[_xIndex, _zIndex].position.x;
         int _zCoord = (int)tiles[_xIndex, _zIndex].position.y;
         string _biomeName = tiles[_xIndex, _zIndex].biome;

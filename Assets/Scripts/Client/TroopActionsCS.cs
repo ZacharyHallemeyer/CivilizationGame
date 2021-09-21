@@ -204,6 +204,7 @@ public class TroopActionsCS : MonoBehaviour
             else    
                 _tile.tile.tag = moveableTileTag;
             _tile.moveUI.SetActive(true);
+            _tile.collider.enabled = true;
         }
         else if(_tile.isBuilding && _tile.buildingName == "Port")
         {
@@ -213,6 +214,7 @@ public class TroopActionsCS : MonoBehaviour
             else    
                 _tile.tile.tag = moveableTileTag;
             _tile.moveUI.SetActive(true);
+            _tile.collider.enabled = true;
         }
         else if (_tile.isWater)
         {
@@ -221,6 +223,7 @@ public class TroopActionsCS : MonoBehaviour
                 _tile.tile.layer = whatIsInteractableValue;
                 _tile.tile.tag = moveableTileTag;
                 _tile.moveUI.SetActive(true);
+                _tile.collider.enabled = true;
                 // Only allow boat to move onto coast line
                 if (!_tile.isWater && troopInfo.isBoat)
                 {
@@ -236,6 +239,7 @@ public class TroopActionsCS : MonoBehaviour
             _tile.tile.layer = whatIsInteractableValue;
             _tile.tile.tag = moveableTileTag;
             _tile.moveUI.SetActive(true);
+            _tile.collider.enabled = true;
             // Only allow boat to move onto coast line
             if (troopInfo.isBoat)
             {
@@ -260,6 +264,7 @@ public class TroopActionsCS : MonoBehaviour
                 _tile.tile.layer = whatIsInteractableValue;
                 _tile.tile.tag = attackableTileTag;
                 _tile.attackUI.SetActive(true);
+                _tile.collider.enabled = true;
             }
         }
         objecstToBeReset[_index] = _tile;
@@ -286,20 +291,15 @@ public class TroopActionsCS : MonoBehaviour
             if (_tile != null)
             {
                 if (_tile.isCity)
-                {
-                    _tile.tile.layer = whatIsDefaultValue;
                     _tile.tile.tag = cityTag;
-                    _tile.moveUI.SetActive(false);
-                    _tile.attackUI.SetActive(false);
-                }
                 else
-                {
-                    _tile.tile.layer = whatIsDefaultValue;
                     _tile.tile.tag = defaultTileTag;
-                    _tile.moveUI.SetActive(false);
-                    _tile.attackUI.SetActive(false);
-                }
+
+                _tile.tile.layer = whatIsDefaultValue;
                 _tile.moveUI.SetActive(false);
+                _tile.moveUI.SetActive(false);
+                if(!_tile.fixedCell)
+                    _tile.collider.enabled = false;
             }
         }
         objecstToBeReset = null;

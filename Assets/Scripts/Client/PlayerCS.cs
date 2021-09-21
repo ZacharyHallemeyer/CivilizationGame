@@ -31,10 +31,18 @@ public class PlayerCS : MonoBehaviour
 
     // Camera movement
     public Mouse mouse;
+    private bool isMoving = false;
+    private Vector2 originalPosition;
+    private Vector2 differencePosition;
+    private float camMoveScaler = 1500;
+    /*
     public bool isRotating = false;
     public Vector3 originRotation;
     public Vector3 differenceRotation;
     public float camForce, camCounterForce;
+    */
+
+
 
     // Status variables
     public bool isAnimInProgress = false;
@@ -101,12 +109,33 @@ public class PlayerCS : MonoBehaviour
     // Read player input and start actions based on this input
     void Update()
     {
-        if(inputMaster.Player.Testing.triggered)
-            if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
-                _troop.troopActions.HurtAnim();
+        PlayerInput();
+
+        // Handle animations
+        // Start next animation if current animation is done and if there are more animations in queue
+        if(animationQueue.Count > 0 && runningCoroutine == null)
+        {
+            runningCoroutine = animationQueue.Dequeue();
+            StartCoroutine(runningCoroutine);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // Move Camera
+        //MoveCamera(inputMaster.Player.Move.ReadValue<Vector2>());
+        if (isMoving)
+            MoveCamera();
+    }
+
+    private void PlayerInput()
+    {
+        bool _objectSelected = false;
+
         if (inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
 
+        /*
         // Rotate Camera
         if (inputMaster.Player.RightClick.ReadValue<float>() != 0 && camRB.velocity.magnitude < 1f)
         {
@@ -123,19 +152,9 @@ public class PlayerCS : MonoBehaviour
         // Rotate camera if player wants to
         if (isRotating)
         {
-            if (differenceRotation.x - originRotation.x > .01)
-            {
-                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                                               cam.transform.localEulerAngles.y + 1f,
-                                                               cam.transform.localEulerAngles.z);
-            }
-            else if (differenceRotation.x - originRotation.x < -.01)
-            {
-                cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                                   cam.transform.localEulerAngles.y - 1f,
-                                                   cam.transform.localEulerAngles.z);
-            }
+            RotateCamera();
         }
+        */
 
         // Troops can not commit actions while an animation is in progress
         if (isAnimInProgress || !isAbleToCommitActions) return;
@@ -145,6 +164,7 @@ public class PlayerCS : MonoBehaviour
             Ray _ray = cam.ScreenPointToRay(inputMaster.Player.Mouse.ReadValue<Vector2>());
             if (Physics.Raycast(_ray, out RaycastHit _hit, whatIsIteractable))
             {
+                _objectSelected = true;
                 if (_hit.collider.CompareTag("Troop"))
                 {
                     ResetAlteredTiles();
@@ -152,7 +172,7 @@ public class PlayerCS : MonoBehaviour
                     if (_troop.ownerId == id)
                     {
                         // Deselect troop if troop that has been already selected is selected again
-                        if(currentSelectedTroopId == _troop.id)
+                        if (currentSelectedTroopId == _troop.id)
                         {
                             _troop.troopActions.HideQuickMenu();
                             currentSelectedTroopId = -1;
@@ -182,14 +202,14 @@ public class PlayerCS : MonoBehaviour
                     if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.Attack(_tileInfo);
                 }
-                else if(_hit.collider.CompareTag("City"))
+                else if (_hit.collider.CompareTag("City"))
                 {
                     ResetAlteredTiles();
                     TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
                     CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
                     if (_cityInfo.ownerId == id)
                     {
-                        if(currentSelectedCityId == _cityInfo.id)
+                        if (currentSelectedCityId == _cityInfo.id)
                         {
                             currentSelectedCityId = -1;
                             GameManagerCS.instance.cities[_cityInfo.id].cityActions.HideQuickMenu();
@@ -201,20 +221,20 @@ public class PlayerCS : MonoBehaviour
                         }
                     }
                 }
-                else if(_hit.collider.CompareTag("MoveableCity"))
+                else if (_hit.collider.CompareTag("MoveableCity"))
                 {
                     TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
                     CityInfo _cityInfo = GameManagerCS.instance.cities[_tileInfo.cityId];
                     if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.MoveOntoCity(_tileInfo, _cityInfo);
                 }
-                else if(_hit.collider.CompareTag("Port"))
+                else if (_hit.collider.CompareTag("Port"))
                 {
                     TileInfo _tileInfo = _hit.collider.GetComponent<TileInfo>();
                     if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
                         _troop.troopActions.MoveOntoPort(_tileInfo);
                 }
-                else if(_hit.collider.CompareTag("ConstructBuilding"))
+                else if (_hit.collider.CompareTag("ConstructBuilding"))
                 {
 
                     TileInfo _tile = _hit.collider.GetComponent<TileInfo>();
@@ -224,35 +244,77 @@ public class PlayerCS : MonoBehaviour
             }
         }
 
-        // Rotate current selected troop
-        if (inputMaster.Player.Rotate.triggered && currentSelectedTroopId >= 0)       
+        if(inputMaster.Player.Select.ReadValue<float>() != 0 && !_objectSelected)
         {
-            if(GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
+            if (!isMoving)
+            {
+                isMoving = true;
+                originalPosition = mouse.position.ReadValue();
+            }
+        }
+        else
+        {
+            isMoving = false;
+        }
+
+        // Rotate current selected troop
+        if (inputMaster.Player.Rotate.triggered && currentSelectedTroopId >= 0)
+        {
+            if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
             {
                 _troop.troopActions.Rotate(1);
             }
         }
         // End Turn
-        if (inputMaster.Player.EndTurn.triggered)       
+        if (inputMaster.Player.EndTurn.triggered)
         {
             EndTurn();
         }
-        // Zoom Camera in and out
+    }
 
-        // Handle animations
-        // Start next animation if current animation is done and if there are more animations in queue
-        if(animationQueue.Count > 0 && runningCoroutine == null)
+    private void MoveCamera()
+    {
+        Vector3 _camPosition = cam.transform.position;
+        differencePosition = -(mouse.position.ReadValue() - originalPosition) / camMoveScaler;
+        Debug.Log("X: " +differencePosition.x+ " Y: " + differencePosition.y);
+        if(Mathf.Abs(differencePosition.y) > Mathf.Abs(differencePosition.x))
         {
-            runningCoroutine = animationQueue.Dequeue();
-            StartCoroutine(runningCoroutine);
+            differencePosition /= 1.5f;
+            cam.transform.position = new Vector3(_camPosition.x + differencePosition.x + differencePosition.y,
+                         _camPosition.y,
+                         _camPosition.z + differencePosition.x + differencePosition.y);
+        }
+        else if(differencePosition.x > 0)
+        {
+            cam.transform.position = new Vector3(_camPosition.x + differencePosition.x + differencePosition.y,
+                                     _camPosition.y,
+                                     _camPosition.z - differencePosition.x);
+        }
+        else
+        {
+            cam.transform.position = new Vector3(_camPosition.x + differencePosition.x + differencePosition.y,
+                                     _camPosition.y,
+                                     _camPosition.z - differencePosition.x);
         }
     }
 
-    private void FixedUpdate()
+    /*
+    private void RotateCamera()
     {
-        // Move Camera
-        MoveCamera(inputMaster.Player.Move.ReadValue<Vector2>());
+        if (differenceRotation.x - originRotation.x > .01)
+        {
+            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                                           cam.transform.localEulerAngles.y + 1f,
+                                                           cam.transform.localEulerAngles.z);
+        }
+        else if (differenceRotation.x - originRotation.x < -.01)
+        {
+            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                               cam.transform.localEulerAngles.y - 1f,
+                                               cam.transform.localEulerAngles.z);
+        }
     }
+    */
 
     public void ResetAlteredTiles()
     {
@@ -287,6 +349,7 @@ public class PlayerCS : MonoBehaviour
         cam.transform.position = new Vector3(_newX, _newY, _newZ);
     }
 
+    /*
     /// <summary>
     /// Move camera using physics and provide counter movement if velocity is not 0
     /// </summary>
@@ -303,6 +366,7 @@ public class PlayerCS : MonoBehaviour
             camRB.AddForce(-camRB.velocity * camCounterForce * Time.deltaTime);
         }
     }
+    */
 
     public void ResetMoraleAndEducation()
     {

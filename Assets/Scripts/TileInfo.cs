@@ -7,6 +7,7 @@ public class TileInfo : MonoBehaviour
     public GameObject tile;
     public GameObject moveUI;
     public GameObject attackUI;
+    public BoxCollider collider;
     public int id;
     public int ownerId = -1;
     public string biome;
@@ -23,6 +24,7 @@ public class TileInfo : MonoBehaviour
     public bool isBuilding = false;
     public bool isOccupied = false;
     public bool isObstacle = false;
+    public bool fixedCell = false;
 
     public int occupyingObjectId = -1;
     public int cityId = -1;
