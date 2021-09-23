@@ -81,6 +81,14 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Mouse2"",
+                    ""type"": ""Value"",
+                    ""id"": ""9c5a433b-8d2d-468f-8c01-ef253accbe0e"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -215,6 +223,17 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""action"": ""Testing"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""babe6b70-1529-4abe-b49a-c7d4b4c4c1cd"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -231,6 +250,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         m_Player_Scrool = m_Player.FindAction("Scrool", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Testing = m_Player.FindAction("Testing", throwIfNotFound: true);
+        m_Player_Mouse2 = m_Player.FindAction("Mouse2", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -288,6 +308,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Scrool;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Testing;
+    private readonly InputAction m_Player_Mouse2;
     public struct PlayerActions
     {
         private @InputMaster m_Wrapper;
@@ -300,6 +321,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         public InputAction @Scrool => m_Wrapper.m_Player_Scrool;
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Testing => m_Wrapper.m_Player_Testing;
+        public InputAction @Mouse2 => m_Wrapper.m_Player_Mouse2;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -333,6 +355,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Testing.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTesting;
                 @Testing.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTesting;
                 @Testing.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTesting;
+                @Mouse2.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse2;
+                @Mouse2.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse2;
+                @Mouse2.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse2;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -361,6 +386,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Testing.started += instance.OnTesting;
                 @Testing.performed += instance.OnTesting;
                 @Testing.canceled += instance.OnTesting;
+                @Mouse2.started += instance.OnMouse2;
+                @Mouse2.performed += instance.OnMouse2;
+                @Mouse2.canceled += instance.OnMouse2;
             }
         }
     }
@@ -375,5 +403,6 @@ public class @InputMaster : IInputActionCollection, IDisposable
         void OnScrool(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnTesting(InputAction.CallbackContext context);
+        void OnMouse2(InputAction.CallbackContext context);
     }
 }

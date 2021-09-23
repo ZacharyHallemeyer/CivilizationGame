@@ -62,6 +62,7 @@ public class GameManagerCS : MonoBehaviour
 
     public Dictionary<string, GameObject> buildingPrefabs;
     public Dictionary<string, GameObject> shipModels;
+    public Dictionary<string, GameObject> troopModels;
 
     #region Set Up Functions
 
@@ -93,6 +94,20 @@ public class GameManagerCS : MonoBehaviour
         {
             { "Canoe", canoePrefab },
             { "Warship", warShipPrefab },
+        };
+
+        troopModels = new Dictionary<string, GameObject>()
+        {
+            { "Scout", scoutPrefab },
+            { "Militia", militiaPrefab },
+            { "Army", armyPrefab },
+            { "Missle", misslePrefab },
+            { "Defense", defensePrefab },
+            { "Stealth", stealthPrefab },
+            { "Snipper", snipperPrefab },
+            { "King", kingPrefab },
+            { "HeavyHitter", heavyHitterPrefab },
+            { "WatchTower", watchTowerPrefab },
         };
     }
 
@@ -241,7 +256,7 @@ public class GameManagerCS : MonoBehaviour
         if (_isCity)
         {
             _tileInfo.fixedCell = true;
-            _tileInfo.collider.enabled = true;
+            _tileInfo.boxCollider.enabled = true;
         }
 
         tiles[_xIndex, _zIndex] = _tileInfo;
@@ -421,44 +436,18 @@ public class GameManagerCS : MonoBehaviour
 
     public void SpawnTroopModel(TroopInfo _troop, string _troopName)
     {
-        switch (_troopName)
+        _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
+        foreach(string _troopKey in troopModels.Keys)
         {
-            case "Scout":
-                _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
-                break;
-            case "Militia":
-                _troop.troopModel = Instantiate(militiaPrefab, _troop.troop.transform.position, militiaPrefab.transform.localRotation);
-                break;
-            case "Army":
-                _troop.troopModel = Instantiate(armyPrefab, _troop.troop.transform.position, armyPrefab.transform.localRotation);
-                break;
-            case "Missle":
-                _troop.troopModel = Instantiate(misslePrefab, _troop.troop.transform.position, misslePrefab.transform.localRotation);
-                break;
-            case "Defense":
-                _troop.troopModel = Instantiate(defensePrefab, _troop.troop.transform.position, defensePrefab.transform.localRotation);
-                break;
-            case "Stealth":
-                _troop.troopModel = Instantiate(stealthPrefab, _troop.troop.transform.position, stealthPrefab.transform.localRotation);
-                break;
-            case "Snipper":
-                _troop.troopModel = Instantiate(snipperPrefab, _troop.troop.transform.position, snipperPrefab.transform.localRotation);
-                break;
-            case "King":
-                _troop.troopModel = Instantiate(kingPrefab, _troop.troop.transform.position, kingPrefab.transform.localRotation);
-                break;
-            case "HeavyHitter":
-                _troop.troopModel = Instantiate(heavyHitterPrefab, _troop.troop.transform.position, heavyHitterPrefab.transform.localRotation);
-                break;
-            case "WatchTower":
-                _troop.troopModel = Instantiate(watchTowerPrefab, _troop.troop.transform.position, watchTowerPrefab.transform.localRotation);
-                break;
-            default:
-                _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
-                Debug.LogError("Could not find prefab for troop name: " + _troopName);
-                break;
+            if(_troopKey == _troopName)
+            {
+                _troop.troopModel = Instantiate(troopModels[_troopKey], _troop.troop.transform.position,
+                                                troopModels[_troopKey].transform.localRotation);
+            }
         }
+
         _troop.troopModel.transform.parent = _troop.troop.transform;
+
         // Spawn canoe model and deactivate it because troop cannot be spawned as a ship
         _troop.shipModel = Instantiate(canoePrefab, _troop.troop.transform.position, canoePrefab.transform.localRotation);
         _troop.shipModel.transform.parent = _troop.troop.transform;
@@ -490,7 +479,7 @@ public class GameManagerCS : MonoBehaviour
             {
                 if( Mathf.Abs(troops[_index].xIndex - _xPos) < _distanceLimiterX 
                     || Mathf.Abs(troops[_index].zIndex - _yPos) < _distanceLimiterY
-                    || !tiles[_xPos, _yPos].isWater)
+                    || tiles[_xPos, _yPos].isWater)
                 {
                     _isSpawnPointGood = false;
                 }
@@ -849,12 +838,6 @@ public class GameManagerCS : MonoBehaviour
     /// <returns></returns>
     public IEnumerator KingIsDeadHelper()
     {
-        // TEMP - until animations playe
-        foreach(TroopInfo _troop in troops.Values)
-        {
-            _troop.healthTextObject.SetActive(false);
-        }
-        // TEMP
         isKingAlive = false;
         kingDeathScreen.SetActive(true);
         PlayerCS.instance.isAbleToCommitActions = false;
@@ -922,20 +905,9 @@ public class GameManagerCS : MonoBehaviour
                                                                         _city.transform.position.z),
                                                             cityLevel1Prefab.transform.localRotation);
         _cityInfo.cityModel.transform.parent = _city.transform;
-        _cityInfo.city = _city;
-        _cityInfo.id = _id;
-        _cityInfo.ownerId = _ownerId;
-        _cityInfo.morale = _morale;
-        _cityInfo.education = _education;
-        _cityInfo.ownerShipRange = _ownerShipRange;
-        _cityInfo.woodResourcesPerTurn = _woodResourcesPerTurn;
-        _cityInfo.metalResourcesPerTurn = _metalResourcesPerTurn;
-        _cityInfo.foodResourcesPerTurn = _foodResourcesPerTurn;
-        _cityInfo.moneyResourcesPerTurn = _moneyResourcesPerTurn;
-        _cityInfo.populationResourcesPerTurn = _populationResourcesPerTurn;
-        _cityInfo.xIndex = _xIndex;
-        _cityInfo.zIndex = _zIndex;
-        _cityInfo.level = _level;
+        _cityInfo.CopyNeutralCityData(_city, _id, _ownerId, _morale, _education, _ownerShipRange, _woodResourcesPerTurn, 
+                                      _metalResourcesPerTurn, _foodResourcesPerTurn, _moneyResourcesPerTurn, _populationResourcesPerTurn, 
+                                      _xIndex, _zIndex, _level);
         cities.Add(_cityInfo.id, _cityInfo);
     }
 
@@ -976,6 +948,7 @@ public class GameManagerCS : MonoBehaviour
         _tile.ownerId = _cityInfo.ownerId;
         _tile.tile.tag = cityTag;
         _tile.tile.layer = whatIsInteractableValue;
+        _tile.fixedCell = true;
         Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
         { { _tile, "Update"} };
         modifiedTileInfo.Add(_tileData);
@@ -1087,21 +1060,13 @@ public class GameManagerCS : MonoBehaviour
         Destroy(_city.cityModel);
         GameObject _cityModel = null;
         if (_city.level == 2)
-        {
             _cityModel = cityLevel2Prefab;
-        }
         else if (_city.level == 3)
-        {
             _cityModel = cityLevel3Prefab;
-        }
         else if (_city.level == 4)
-        {
             _cityModel = cityLevel4Prefab;
-        }
         else if (_city.level == 5)
-        {
             _cityModel = cityLevel5Prefab;
-        }
         _city.cityModel = Instantiate(_cityModel, new Vector3(_city.city.transform.position.x,
                                                               _cityModel.transform.position.y,
                                                               _city.city.transform.position.z),
@@ -1167,21 +1132,6 @@ public class GameManagerCS : MonoBehaviour
         }
 
         return _resourceAmount;
-    }
-
-    public IEnumerator ResetCities()
-    {
-        /*
-        foreach (CityInfo _city in cities.Values)
-        {
-            if (_city.ownerId == ClientCS.instance.myId)
-            {
-                //_city.isTrainingTroops = false;
-            }
-        }
-        */
-        PlayerCS.instance.runningCoroutine = null;
-        yield return new WaitForEndOfFrame();
     }
 
     #endregion
@@ -1365,7 +1315,6 @@ public class GameManagerCS : MonoBehaviour
         }
         ClearModifiedData();
         PlayerCS.instance.animationQueue.Enqueue(ResetTroops());
-        PlayerCS.instance.animationQueue.Enqueue(ResetCities());
 
         // Start of turn city stuff
         foreach(CityInfo _city in cities.Values)

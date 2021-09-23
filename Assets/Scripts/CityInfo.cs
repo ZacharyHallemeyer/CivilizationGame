@@ -64,6 +64,26 @@ public class CityInfo : MonoBehaviour
         cityActions = _cityActions;
     }
 
+    public void CopyNeutralCityData(GameObject _cityObject, int _id, int _ownerId, int _morale, int _education, int _ownershipRange,
+                                    int _woodPerTurn, int _metalPerTurn, int _foodPerTurn, int _moneyPerTurn, int _popPerTurn,
+                                    int _xIndex, int _zIndex, int _level)
+    {
+        city = _cityObject;
+        id = _id;
+        ownerId = _ownerId;
+        morale = _morale;
+        education = _education;
+        ownerShipRange = _ownershipRange;
+        woodResourcesPerTurn = _woodPerTurn;
+        metalResourcesPerTurn = _metalPerTurn;
+        foodResourcesPerTurn = _foodPerTurn;
+        moneyResourcesPerTurn = _moneyPerTurn;
+        populationResourcesPerTurn = _popPerTurn;
+        xIndex = _xIndex;
+        zIndex = _zIndex;
+        level = _level;
+    }
+
     public void InitCityServerSide(string _biomeName, int _id, int _ownerId, int _xIndex, int _zIndex)
     {
         id = _id;

@@ -7,7 +7,7 @@ public class TileInfo : MonoBehaviour
     public GameObject tile;
     public GameObject moveUI;
     public GameObject attackUI;
-    public BoxCollider collider;
+    public BoxCollider boxCollider;
     public int id;
     public int ownerId = -1;
     public string biome;

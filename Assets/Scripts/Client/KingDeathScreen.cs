@@ -8,6 +8,9 @@ public class KingDeathScreen : MonoBehaviour
 {
     public GameObject mainContainer, backGround, kingDeathText, endTurnButton;
 
+    /// <summary>
+    /// Called from UI
+    /// </summary>
     public void EndTurn()
     {
         PlayerCS.instance.EndTurn();

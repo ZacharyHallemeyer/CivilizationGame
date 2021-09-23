@@ -14,6 +14,7 @@ public class PlayerCS : MonoBehaviour
     public InputMaster inputMaster;
     public LayerMask whatIsIteractable;
     public Camera cam;
+    public Transform camTransform;
     public Rigidbody camRB;
     public PlayerUI playerUI;
 
@@ -32,15 +33,8 @@ public class PlayerCS : MonoBehaviour
     // Camera movement
     public Mouse mouse;
     private bool isMoving = false;
-    private Vector2 originalPosition;
-    private Vector2 differencePosition;
-    private float camMoveScaler = 1500;
-    /*
-    public bool isRotating = false;
-    public Vector3 originRotation;
-    public Vector3 differenceRotation;
-    public float camForce, camCounterForce;
-    */
+    public float dragSpeed = 2;
+    private Vector2 dragOrigin;
 
 
 
@@ -67,6 +61,7 @@ public class PlayerCS : MonoBehaviour
 
         inputMaster = new InputMaster();
         cam = FindObjectOfType<Camera>();
+        camTransform = cam.transform.parent;
         camRB = cam.GetComponent<Rigidbody>();
         mouse = Mouse.current;
         Cursor.lockState = CursorLockMode.Confined;
@@ -249,7 +244,8 @@ public class PlayerCS : MonoBehaviour
             if (!isMoving)
             {
                 isMoving = true;
-                originalPosition = mouse.position.ReadValue();
+                //originalPosition = mouse.position.ReadValue();
+                dragOrigin = mouse.position.ReadValue();
             }
         }
         else
@@ -274,47 +270,12 @@ public class PlayerCS : MonoBehaviour
 
     private void MoveCamera()
     {
-        Vector3 _camPosition = cam.transform.position;
-        differencePosition = -(mouse.position.ReadValue() - originalPosition) / camMoveScaler;
-        Debug.Log("X: " +differencePosition.x+ " Y: " + differencePosition.y);
-        if(Mathf.Abs(differencePosition.y) > Mathf.Abs(differencePosition.x))
-        {
-            differencePosition /= 1.5f;
-            cam.transform.position = new Vector3(_camPosition.x + differencePosition.x + differencePosition.y,
-                         _camPosition.y,
-                         _camPosition.z + differencePosition.x + differencePosition.y);
-        }
-        else if(differencePosition.x > 0)
-        {
-            cam.transform.position = new Vector3(_camPosition.x + differencePosition.x + differencePosition.y,
-                                     _camPosition.y,
-                                     _camPosition.z - differencePosition.x);
-        }
-        else
-        {
-            cam.transform.position = new Vector3(_camPosition.x + differencePosition.x + differencePosition.y,
-                                     _camPosition.y,
-                                     _camPosition.z - differencePosition.x);
-        }
-    }
+        Vector3 _pos = cam.ScreenToViewportPoint(mouse.position.ReadValue() - dragOrigin);
+        Vector3 _move = new Vector3(_pos.x * dragSpeed, 0, _pos.y * dragSpeed);
 
-    /*
-    private void RotateCamera()
-    {
-        if (differenceRotation.x - originRotation.x > .01)
-        {
-            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                                           cam.transform.localEulerAngles.y + 1f,
-                                                           cam.transform.localEulerAngles.z);
-        }
-        else if (differenceRotation.x - originRotation.x < -.01)
-        {
-            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                               cam.transform.localEulerAngles.y - 1f,
-                                               cam.transform.localEulerAngles.z);
-        }
+        cam.transform.Translate(-_move.x * camTransform.right, Space.World);
+        cam.transform.Translate(-_move.z * camTransform.forward, Space.World);
     }
-    */
 
     public void ResetAlteredTiles()
     {
@@ -348,25 +309,6 @@ public class PlayerCS : MonoBehaviour
         float _newZ = cam.transform.position.z;
         cam.transform.position = new Vector3(_newX, _newY, _newZ);
     }
-
-    /*
-    /// <summary>
-    /// Move camera using physics and provide counter movement if velocity is not 0
-    /// </summary>
-    /// <param name="_direction"></param>
-    public void MoveCamera(Vector2 _direction)
-    {
-        Vector3 _camOrientationRight = new Vector3(cam.transform.right.x, 0, cam.transform.right.z);
-        Vector3 _camOrientationForward = new Vector3(cam.transform.forward.x, 0, cam.transform.forward.z);
-        camRB.AddForce(_camOrientationRight * _direction.x * camForce * Time.deltaTime, ForceMode.Impulse);
-        camRB.AddForce(_camOrientationForward * _direction.y * camForce * Time.deltaTime, ForceMode.Impulse);
-
-        if(camRB.velocity.magnitude != 0)
-        {
-            camRB.AddForce(-camRB.velocity * camCounterForce * Time.deltaTime);
-        }
-    }
-    */
 
     public void ResetMoraleAndEducation()
     {
