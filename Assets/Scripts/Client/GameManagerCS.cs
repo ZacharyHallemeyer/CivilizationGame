@@ -31,7 +31,7 @@ public class GameManagerCS : MonoBehaviour
     public GameObject localTroopPrefab, remoteTroopPrefab, blurredTroopPrefab;
     public GameObject troopHealthTextPrefab, troopRotationIndicationPrefab;
     public GameObject starPrefab;
-    public GameObject tilePrefab;
+    public GameObject tilePrefab, roadBlock;
     public GameObject foodResourcePrefab, woodResourcePrefab, metalResourcePrefab, obstaclePrefab;
     public GameObject cityPrefab, cityLevel1Prefab, cityLevel2Prefab, cityLevel3Prefab, cityLevel4Prefab, cityLevel5Prefab;
     public GameObject ownershipObjectPrefab;
@@ -436,7 +436,6 @@ public class GameManagerCS : MonoBehaviour
 
     public void SpawnTroopModel(TroopInfo _troop, string _troopName)
     {
-        _troop.troopModel = Instantiate(scoutPrefab, _troop.troop.transform.position, scoutPrefab.transform.localRotation);
         foreach(string _troopKey in troopModels.Keys)
         {
             if(_troopKey == _troopName)
@@ -1183,6 +1182,111 @@ public class GameManagerCS : MonoBehaviour
             if (_key == _tile.buildingName)
                 Instantiate(buildingPrefabs[_key], new Vector3(_xCoord, buildingPrefabs[_key].transform.position.y,
                                                                _zCoord), buildingPrefabs[_key].transform.localRotation);
+        }
+    }
+
+    #endregion
+
+    #region Roads
+
+    /// <summary>
+    /// Updates all road models that connect to original road tile passed into function
+    /// </summary>
+    /// <param name="_xIndex"> x tile index of road </param>
+    /// <param name="_zIndex"> x tile index of road </param>
+    public void UpdateRoadModels(int _xIndex, int _zIndex)
+    {
+        float _coordOffset = .3f;
+        TileInfo _tile = tiles[_xIndex, _zIndex];
+        TileInfo _nextTile;
+        GameObject _roadBlock;
+
+        if(_tile.roadPositions["Center"] == null)
+        {
+            _roadBlock = Instantiate(roadBlock, _tile.tile.transform);
+            _tile.roadPositions["Center"] = _roadBlock;
+        }
+
+        // Check tiles above, below, left, and right 
+        if(_xIndex + 1 < tiles.GetLength(0) && tiles[_xIndex + 1, _zIndex].isRoad)
+        {
+            if (_tile.roadPositions["East"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _tile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x + _coordOffset,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z);
+                _tile.roadPositions["East"] = _roadBlock;
+            }
+            _nextTile = tiles[_xIndex + 1, _zIndex];
+            if (_nextTile.roadPositions["West"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _nextTile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x - _coordOffset,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z);
+                _nextTile.roadPositions["West"] = _roadBlock;
+            }
+        }
+        if(_xIndex - 1 >= 0 && tiles[_xIndex - 1, _zIndex].isRoad)
+        {
+            if (_tile.roadPositions["West"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _tile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x - _coordOffset,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z);
+                _tile.roadPositions["West"] = _roadBlock;
+            }
+            _nextTile = tiles[_xIndex - 1, _zIndex];
+            if (_nextTile.roadPositions["East"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _nextTile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x + _coordOffset,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z);
+                _nextTile.roadPositions["East"] = _roadBlock;
+            }
+        }
+        if(_zIndex + 1 < tiles.GetLength(1) && tiles[_xIndex, _zIndex + 1].isRoad)
+        {
+            if (_tile.roadPositions["North"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _tile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z + _coordOffset);
+                _tile.roadPositions["North"] = _roadBlock;
+            }
+            _nextTile = tiles[_xIndex, _zIndex + 1];
+            if (_nextTile.roadPositions["South"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _nextTile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z - _coordOffset);
+                _nextTile.roadPositions["South"] = _roadBlock;
+            }
+        }
+        if(_zIndex - 1 >= 0 && tiles[_xIndex, _zIndex - 1].isRoad)
+        {
+            if (_tile.roadPositions["South"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _tile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z - _coordOffset);
+                _tile.roadPositions["South"] = _roadBlock;
+            }
+            _nextTile = tiles[_xIndex, _zIndex - 1];
+            if (_nextTile.roadPositions["North"] == null)
+            {
+                _roadBlock = Instantiate(roadBlock, _nextTile.tile.transform);
+                _roadBlock.transform.position = new Vector3(_roadBlock.transform.position.x,
+                                                            _roadBlock.transform.position.y,
+                                                            _roadBlock.transform.position.z + _coordOffset);
+                _nextTile.roadPositions["North"] = _roadBlock;
+            }
         }
     }
 

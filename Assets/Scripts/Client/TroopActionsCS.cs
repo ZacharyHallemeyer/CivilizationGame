@@ -528,10 +528,17 @@ public class TroopActionsCS : MonoBehaviour
         _tile.tile.layer = whatIsInteractableValue;
         _city.isAbleToBeConquered = false;
         _city.isBeingConquered = false;
-
         troopInfo.movementCost = 0;
         troopInfo.canAttack = false;
         TroopCanNotCommitAnyMoreActions();
+
+        // Add resources and update resource text   
+        PlayerCS.instance.food += (int)Constants.biomeInfo[_tile.biome]["Food"];
+        PlayerCS.instance.wood += (int)Constants.biomeInfo[_tile.biome]["Wood"];
+        PlayerCS.instance.metal += (int)Constants.biomeInfo[_tile.biome]["Metal"];
+        PlayerCS.instance.money += (int)Constants.biomeInfo[_tile.biome]["Money"];
+        PlayerCS.instance.population += (int)Constants.biomeInfo[_tile.biome]["Population"];
+        PlayerCS.instance.playerUI.SetAllIntResourceUI();
 
         _city.ownerId = troopInfo.ownerId;
         _city.InitConqueredCity();
@@ -567,13 +574,6 @@ public class TroopActionsCS : MonoBehaviour
                 }
             }
         }
-        // Add resources and update resource text   
-        PlayerCS.instance.food += (int)Constants.biomeInfo[_tile.biome]["Food"];
-        PlayerCS.instance.wood += (int)Constants.biomeInfo[_tile.biome]["Wood"];
-        PlayerCS.instance.metal += (int)Constants.biomeInfo[_tile.biome]["Metal"];
-        PlayerCS.instance.money += (int)Constants.biomeInfo[_tile.biome]["Money"];
-        PlayerCS.instance.population += (int)Constants.biomeInfo[_tile.biome]["Population"];
-        PlayerCS.instance.playerUI.SetAllIntResourceUI();
         // Update morale and education
         PlayerCS.instance.ResetMoraleAndEducation();
         ResetAlteredTiles();

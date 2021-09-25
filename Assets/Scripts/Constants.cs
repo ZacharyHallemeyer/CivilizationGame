@@ -899,6 +899,18 @@ public static class Constants
                 { "Experience", 0 },
             } 
         },
+        { "Roads" , new Dictionary<string, int> 
+            {
+                { "Food", 0 },
+                { "Metal", 0 },
+                { "Wood", 0 },
+                { "Money", 0 },
+                { "Population", 0 },
+                { "Morale", 0 },
+                { "Education", 0 },
+                { "Experience", 0 },
+            } 
+        },
     };
 
     public static Dictionary<string, int> allSkills = new Dictionary<string, int>()

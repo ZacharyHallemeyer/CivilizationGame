@@ -19,6 +19,7 @@ public class TileInfo : MonoBehaviour
     public bool isWood = false;
     public bool isMetal = false;
     public bool isRoad = false;
+    public bool roadCounted = false;
     public bool isWall = false;
     public bool isCity = false;
     public bool isBuilding = false;
@@ -36,6 +37,16 @@ public class TileInfo : MonoBehaviour
     public string buildingName = "";
     public GameObject resourceObject;
     public GameObject ownerShipVisualObject;
+
+    // Road 
+    public Dictionary<string, GameObject> roadPositions = new Dictionary<string, GameObject>()
+    {
+        { "Center", null },
+        { "North", null },
+        { "East", null },
+        { "South", null },
+        { "West", null },
+    };
 
     public void InitTileInfo(GameObject _tile, string _biomeName, int _id, int _ownerId, int _xIndex, int _yIndex)
     {

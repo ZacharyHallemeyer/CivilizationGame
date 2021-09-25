@@ -35,6 +35,11 @@ public class PlayerCS : MonoBehaviour
     private bool isMoving = false;
     public float dragSpeed = 2;
     private Vector2 dragOrigin;
+    // Camera rotation
+    public bool isRotating = false;
+    public Vector3 originRotation;
+    public Vector3 differenceRotation;
+    public float camForce, camCounterForce;
 
 
 
@@ -95,9 +100,11 @@ public class PlayerCS : MonoBehaviour
 
         // Add tribe skills to player
         skills.Add(_skill);
-        if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" || _skill == "Stealh")
+        if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" 
+            || _skill == "Stealh")
             Constants.avaliableTroops.Add(_skill);
-        else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market")
+        else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market"
+                 || _skill == "Roads" || _skill == "Walls")
             Constants.avaliableBuildings.Add(_skill);
     }
 
@@ -119,7 +126,7 @@ public class PlayerCS : MonoBehaviour
     {
         // Move Camera
         //MoveCamera(inputMaster.Player.Move.ReadValue<Vector2>());
-        if (isMoving)
+        if (isMoving && isAbleToCommitActions)
             MoveCamera();
     }
 
@@ -130,7 +137,6 @@ public class PlayerCS : MonoBehaviour
         if (inputMaster.Player.Scrool.ReadValue<Vector2>().y != 0)
             ModifyCameraZoom(inputMaster.Player.Scrool.ReadValue<Vector2>().y);
 
-        /*
         // Rotate Camera
         if (inputMaster.Player.RightClick.ReadValue<float>() != 0 && camRB.velocity.magnitude < 1f)
         {
@@ -149,7 +155,6 @@ public class PlayerCS : MonoBehaviour
         {
             RotateCamera();
         }
-        */
 
         // Troops can not commit actions while an animation is in progress
         if (isAnimInProgress || !isAbleToCommitActions) return;
@@ -234,17 +239,22 @@ public class PlayerCS : MonoBehaviour
 
                     TileInfo _tile = _hit.collider.GetComponent<TileInfo>();
                     if (GameManagerCS.instance.cities.TryGetValue(currentSelectedCityId, out CityInfo _city))
-                        _city.cityActions.BuildBuilding(_tile);
+                    {
+                        if (_city.cityActions.currentBuidlingToBuild == "Roads")
+                            _city.cityActions.BuildRoad(_tile);
+                        else 
+                            _city.cityActions.BuildBuilding(_tile);
+                    }
                 }
             }
         }
 
+        // Check if player is holding select button and no object has been selected (Ray did not hit collider in previous if statment)
         if(inputMaster.Player.Select.ReadValue<float>() != 0 && !_objectSelected)
         {
             if (!isMoving)
             {
                 isMoving = true;
-                //originalPosition = mouse.position.ReadValue();
                 dragOrigin = mouse.position.ReadValue();
             }
         }
@@ -275,6 +285,22 @@ public class PlayerCS : MonoBehaviour
 
         cam.transform.Translate(-_move.x * camTransform.right, Space.World);
         cam.transform.Translate(-_move.z * camTransform.forward, Space.World);
+    }
+
+    private void RotateCamera()
+    {
+        if (differenceRotation.x - originRotation.x > .01)
+        {
+            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                                           cam.transform.localEulerAngles.y + 1f,
+                                                           cam.transform.localEulerAngles.z);
+        }
+        else if (differenceRotation.x - originRotation.x < -.01)
+        {
+            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
+                                               cam.transform.localEulerAngles.y - 1f,
+                                               cam.transform.localEulerAngles.z);
+        }
     }
 
     public void ResetAlteredTiles()

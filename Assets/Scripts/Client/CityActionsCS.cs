@@ -11,13 +11,13 @@ public class CityActionsCS : MonoBehaviour
 
     // Buttons
     public Button lumberYardButton, farmButton, mineButton, housingButton, schoolButton, libraryButton, domeButton, marketButton, 
-                  portButton, wallsButton;
+                  portButton, wallsButton, roadsButton;
     public Button scoutButton, militiaButton, armyButton, missleButton, defenseButton, stealthButton, snipperButton, heavyHitterButton,
                   watchTowerButton;
 
     // Resource Cost Text
     public TextMeshProUGUI lumberYardText, schoolText, libraryText, domeText, housingText, farmText, mineText, marketText, portText,
-                           wallsText;
+                           wallsText, roadsText;
     public TextMeshProUGUI scoutText, militiaText, armyText, missleText, defenseText, stealthText, snipperText, heavyHitterText, 
                            watchTowerText;
 
@@ -77,6 +77,7 @@ public class CityActionsCS : MonoBehaviour
             { "Dome", domeButton },
             { "Port", portButton },
             { "Walls", wallsButton },
+            { "Roads", roadsButton },
         };
         buildingResourceText = new Dictionary<string, TextMeshProUGUI>()
         {
@@ -90,6 +91,7 @@ public class CityActionsCS : MonoBehaviour
             { "Dome", domeText },
             { "Port", portText },
             { "Walls", wallsText },
+            { "Roads", roadsText },
         };
     }
 
@@ -438,6 +440,16 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.currentSelectedCityId = cityInfo.id;
     }
 
+    /// <summary>
+    /// Only used for when building a road as it is a different process from building all other buildings
+    /// </summary>
+    public void SelectedRoadToBuild()
+    {
+        currentBuidlingToBuild = "Roads";
+        CreateInteractableTileToBuildRoadsOn();
+        PlayerCS.instance.currentSelectedCityId = cityInfo.id;
+    }
+
     public void BuildBuilding(TileInfo _tileInfo)
     {
         if (_tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal)
@@ -467,6 +479,18 @@ public class CityActionsCS : MonoBehaviour
         cityInfo.experience += (int)Constants.buildingResourceGain[currentBuidlingToBuild]["Experience"];
         CheckLevel();
         ResetAlteredObjects();
+    }
+
+    public void BuildRoad(TileInfo _tile)
+    {
+        _tile.isRoad = true;
+        PlayerCS.instance.food -= Constants.prices[currentBuidlingToBuild]["Food"];
+        PlayerCS.instance.wood -= Constants.prices[currentBuidlingToBuild]["Wood"];
+        PlayerCS.instance.metal -= Constants.prices[currentBuidlingToBuild]["Metal"];
+        PlayerCS.instance.money -= Constants.prices[currentBuidlingToBuild]["Money"];
+        GameManagerCS.instance.UpdateRoadModels(_tile.xIndex, _tile.zIndex);
+        ResetAlteredObjects();
+        //SelectedRoadToBuild();
     }
 
     #endregion
@@ -546,6 +570,114 @@ public class CityActionsCS : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Roads can be built if tile is connected to a city or other road
+    /// </summary>
+    public void CreateInteractableTileToBuildRoadsOn()
+    {
+        TileInfo _tile;
+        int _index = 0;
+        objecstToBeReset = new TileInfo[8];
+
+        for (int x = cityInfo.xIndex - 1; x <= cityInfo.xIndex + 1; x++)
+        {
+            for (int z = cityInfo.zIndex - 1; z <= cityInfo.zIndex + 1; z++)
+            {
+                // Check if tile exists
+                if (x >= 0 && x < GameManagerCS.instance.tiles.GetLength(0)
+                    && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1)
+                    && (x != cityInfo.xIndex || z != cityInfo.zIndex))
+                {
+                    if (_index >= objecstToBeReset.Length)
+                    {
+                        ResizeAlteredObjectsArray();
+                    }
+                    _tile = GameManagerCS.instance.tiles[x, z];
+                    if(_tile.isRoad && !_tile.roadCounted)
+                    {
+                        _tile.roadCounted = true;
+                        objecstToBeReset[_index] = _tile;
+                        _index++;
+                        _index = CreateInteractableTileToBuildRoadsOnHelper(_tile, _index);
+                    }
+                    else if(!_tile.isWater && !_tile.isObstacle && !_tile.isWall)
+                    {
+                        _tile.tile.layer = whatIsInteractableValue;
+                        _tile.tile.tag = constructBuildingTag;
+                        _tile.moveUI.SetActive(true);
+                        _tile.boxCollider.enabled = true;
+
+                        objecstToBeReset[_index] = _tile;
+                        _index++;
+                    }
+                }
+            }
+        }
+    }
+
+    // Find the end of a road path
+    private int CreateInteractableTileToBuildRoadsOnHelper(TileInfo _tile, int _index)
+    {
+        Debug.Log("Tile X: " + _tile.xIndex + " Y: " + _tile.zIndex + "has been called");
+        TileInfo _currentTile;
+        for (int x = _tile.xIndex - 1; x <= _tile.xIndex + 1; x++)
+        {
+            for (int z = _tile.zIndex - 1; z <= _tile.zIndex + 1; z++)
+            {
+                // Check if tile exists
+                if (x >= 0 && x < GameManagerCS.instance.tiles.GetLength(0)
+                    && z >= 0 && z < GameManagerCS.instance.tiles.GetLength(1)
+                    && (x != _tile.xIndex || z != _tile.zIndex))
+                {
+                    if (_index >= objecstToBeReset.Length)
+                    {
+                        ResizeAlteredObjectsArray();
+                    }
+                    _currentTile = GameManagerCS.instance.tiles[x, z];
+                    if (_currentTile.isRoad && !_currentTile.roadCounted)
+                    {
+                        _currentTile.roadCounted = true;
+                        objecstToBeReset[_index] = _currentTile;
+                        _index++;
+                        _index = CreateInteractableTileToBuildRoadsOnHelper(_currentTile, _index);
+                    }
+                    else if (!_currentTile.isWater && !_currentTile.isObstacle && !_currentTile.isWall 
+                             && !_currentTile.isCity && !_currentTile.isBuilding)
+                    {
+                        _currentTile.tile.layer = whatIsInteractableValue;
+                        _currentTile.tile.tag = constructBuildingTag;
+                        _currentTile.moveUI.SetActive(true);
+                        _currentTile.boxCollider.enabled = true;
+
+                        objecstToBeReset[_index] = _currentTile;
+                        _index++;
+                    }
+                }
+            }
+        }
+
+        return _index;
+    }
+
+    private void ResizeAlteredObjectsArray()
+    {
+        int _index;
+        TileInfo[] _tempArray = new TileInfo[objecstToBeReset.Length];
+
+        for (_index = 0; _index < _tempArray.Length; _index++)
+        {
+            _tempArray[_index] = objecstToBeReset[_index];
+        }
+
+        // Resize array
+        objecstToBeReset = new TileInfo[objecstToBeReset.Length * 2];
+        for(_index = 0; _index < _tempArray.Length; _index++)
+        {
+            objecstToBeReset[_index] = _tempArray[_index];
+        }
+    }
+    
     /// <summary>
     /// Reset all altered tiles to default layer and tag
     /// </summary>
@@ -558,23 +690,21 @@ public class CityActionsCS : MonoBehaviour
             {
                 if (_tile.isCity)
                 {
-                    _tile.tile.layer = whatIsDefaultValue;
+                    _tile.tile.layer = whatIsInteractableValue;
                     _tile.tile.tag = cityTag;
-                    _tile.moveUI.SetActive(false);
                 }
                 if (_tile.isBuilding)
                 {
                     _tile.tile.layer = whatIsDefaultValue;
                     _tile.tile.tag = buildingTag;
-                    _tile.moveUI.SetActive(false);
                 }
                 else
                 {
                     _tile.tile.layer = whatIsDefaultValue;
                     _tile.tile.tag = defaultTileTag;
-                    _tile.moveUI.SetActive(false);
                 }
                 _tile.moveUI.SetActive(false);
+                _tile.roadCounted = false;
             }
         }
         objecstToBeReset = null;

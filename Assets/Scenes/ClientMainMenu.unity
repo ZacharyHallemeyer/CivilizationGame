@@ -1337,6 +1337,45 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 299166895}
   m_CullTransparentMesh: 0
+--- !u!1 &329828030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 329828032}
+  - component: {fileID: 329828031}
+  m_Layer: 0
+  m_Name: AudioListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &329828031
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329828030}
+  m_Enabled: 1
+--- !u!4 &329828032
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329828030}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &346562009
 GameObject:
   m_ObjectHideFlags: 0
@@ -7942,6 +7981,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1808788498}
   m_CullTransparentMesh: 0
+--- !u!1 &1868168145
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1868168147}
+  - component: {fileID: 1868168146}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1868168146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868168145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bbdea9d5418d4845b44875d6c35ea34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: BackgroundMusic
+    clip: {fileID: 8300000, guid: f9f44998c6abf6b4bb81dfead0434155, type: 3}
+    volume: 0.752
+    pitch: 0.73
+    looping: 1
+    isSoundEffect: 0
+    source: {fileID: 0}
+  - name: Hit
+    clip: {fileID: 0}
+    volume: 0
+    pitch: 0
+    looping: 0
+    isSoundEffect: 0
+    source: {fileID: 0}
+  - name: Death
+    clip: {fileID: 0}
+    volume: 0
+    pitch: 0
+    looping: 0
+    isSoundEffect: 0
+    source: {fileID: 0}
+  - name: UI Click
+    clip: {fileID: 0}
+    volume: 0
+    pitch: 0
+    looping: 0
+    isSoundEffect: 0
+    source: {fileID: 0}
+  - name: Win Music
+    clip: {fileID: 0}
+    volume: 0
+    pitch: 0
+    looping: 0
+    isSoundEffect: 0
+    source: {fileID: 0}
+--- !u!4 &1868168147
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868168145}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1887615167
 GameObject:
   m_ObjectHideFlags: 0
