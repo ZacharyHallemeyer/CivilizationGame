@@ -441,6 +441,25 @@ public class ClientHandle : MonoBehaviour
     }
 
     /// <summary>
+    /// Recieve data to build a road on a certain tile from server
+    /// </summary>
+    /// <param name="_packet"> Packet containing modified tile info </param>
+    public static void ReceiveBuildRoadTileInfo(Packet _packet)
+    {
+        TileInfo _tile = GameManagerCS.instance.gameObject.AddComponent<TileInfo>();
+        _tile.id = _packet.ReadInt();
+        _tile.xIndex = _packet.ReadInt();
+        _tile.zIndex = _packet.ReadInt();
+        _tile.isRoad = _packet.ReadBool();
+        string _command = _packet.ReadString();
+
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile, _command} };
+        // Add data to dictionary to be used when displaying past moves
+        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
+    }
+
+    /// <summary>
     /// Recieve all updated tile data from server
     /// When all modified tile data is sent from server. This function will receive a -1 for an id which represents all data was received
     /// </summary>

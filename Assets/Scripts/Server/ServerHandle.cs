@@ -396,6 +396,27 @@ public class ServerHandle
     }
 
     /// <summary>
+    /// Recieve all data necessary data to build a road from client and store in a dictionary
+    /// </summary>
+    /// <param name="_fromClient"> Id of client sending this data </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveBuildRoadInfo(int _fromClient, Packet _packet)
+    {
+        TileInfo _tile = GameManagerSS.instance.gameObject.AddComponent<TileInfo>();
+
+        _tile.id = _packet.ReadInt();
+        _tile.xIndex = _packet.ReadInt();
+        _tile.zIndex = _packet.ReadInt();
+        _tile.isRoad = _packet.ReadBool();
+        string _command = _packet.ReadString();
+        _tile.idOfPlayerThatSentInfo = _fromClient;
+
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_tile, _command} };
+        GameManagerSS.instance.modifiedTileInfo.Add(_tileData);     // Add data to dictionary that will be sent to all clients
+    }
+
+    /// <summary>
     /// Recieve updated tile data from client and store in a dictionary
     /// If function a -1 as an id then that means all tile data has been received 
     /// </summary>

@@ -130,7 +130,7 @@ public class WorldGeneratorSS : MonoBehaviour
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
             }
-            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
+            while (_tileInfo.isWater || _tileInfo.isFood);
             _tileInfo.isFood = true;
         }
         for (int i = 0; i < amountofWoodTiles; i++)
@@ -141,7 +141,7 @@ public class WorldGeneratorSS : MonoBehaviour
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
             }
-            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
+            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood);
             _tileInfo.isWood = true;
         }
         for (int i = 0; i < amountOfMetalTiles; i++)
@@ -171,8 +171,9 @@ public class WorldGeneratorSS : MonoBehaviour
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
             }
-            while ((_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal || _tileInfo.isCity) &&
-                   (_xIndex == 0 && _xIndex == tiles.GetLength(0) && _zIndex == 0 && _zIndex == tiles.GetLength(1)));
+            // Check if tile is water, a resource, or at an edge of the playable area
+            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal ||
+                   _xIndex == 0 || _xIndex == tiles.GetLength(0) || _zIndex == 0 || _zIndex == tiles.GetLength(1));
             _tileInfo.isObstacle = true;
             GameManagerSS.instance.currentCityId++;
         }
@@ -192,7 +193,8 @@ public class WorldGeneratorSS : MonoBehaviour
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
             }
-            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal);
+            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal
+                   || _tileInfo.isObstacle || _tileInfo.isCity);
             _tileInfo.isCity = true;
             _tileInfo.cityId = GameManagerSS.instance.currentCityId;
             CityInfo _city = gameObject.AddComponent<CityInfo>();

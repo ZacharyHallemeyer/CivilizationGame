@@ -142,6 +142,7 @@ public class Server
             { (int)ClientPackets.sendOccupyChangeTileInfo, ServerHandle.RecieveTileOccupyChangeInfo },
             { (int)ClientPackets.sendOwnershipChangeTileInfo, ServerHandle.RecieveTileOwnershipChangeInfo },
             { (int)ClientPackets.sendBuildBuildingTileInfo, ServerHandle.RecieveBuildBuildingInfo },
+            { (int)ClientPackets.sendBuildRoadTileInfo, ServerHandle.RecieveBuildRoadInfo },
             { (int)ClientPackets.sendUpdatedTileInfo, ServerHandle.RecieveUpdatedTileInfo },
             { (int)ClientPackets.sendCreateCityInfo, ServerHandle.RecieveSpawnCityInfo },
             { (int)ClientPackets.sendConqueredCityInfo, ServerHandle.RecieveConquerCityInfo },

@@ -247,6 +247,10 @@ public class PlayerCS : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                ResetAlteredTiles();
+            }
         }
 
         // Check if player is holding select button and no object has been selected (Ray did not hit collider in previous if statment)

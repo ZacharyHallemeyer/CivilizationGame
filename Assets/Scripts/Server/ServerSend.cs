@@ -514,6 +514,19 @@ public class ServerSend
                             SendTCPData(_playerId, _packet);
                         }
                     }
+                    else if (_tileDict[_tile] == "BuildRoad")
+                    {
+                        using (Packet _packet = new Packet((int)ServerPackets.sendClientBuildRoadTileInfo))
+                        {
+                            _packet.Write(_tile.id);
+                            _packet.Write(_tile.xIndex);
+                            _packet.Write(_tile.zIndex);
+                            _packet.Write(_tile.isRoad);
+                            _packet.Write(_tileDict[_tile]);
+
+                            SendTCPData(_playerId, _packet);
+                        }
+                    }
                     else if (_tileDict[_tile] == "Update")
                     {
                         using (Packet _packet = new Packet((int)ServerPackets.sendClientUpdatedTileInfo))

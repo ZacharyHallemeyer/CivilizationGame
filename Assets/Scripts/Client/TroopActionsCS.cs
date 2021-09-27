@@ -321,11 +321,7 @@ public class TroopActionsCS : MonoBehaviour
         if (!_newTile.isWater && troopInfo.isBoat)
         {
             troopInfo.isBoat = false;
-            TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-            _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-            Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "SwitchModel"} };
-            GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+            GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "SwitchModel");
         }
         // Update old tile
         TileInfo _oldTile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
@@ -339,7 +335,6 @@ public class TroopActionsCS : MonoBehaviour
         }
 
         // Move troop while doing the move animation
-        //StartCoroutine(DescendTroopMoveAnim(_oldTile, _newTile));
         PlayerCS.instance.isAnimInProgress = true;
         PlayerCS.instance.animationQueue.Enqueue(DescendTroopMoveAnim(_oldTile, _newTile));
 
@@ -348,12 +343,8 @@ public class TroopActionsCS : MonoBehaviour
         _newTile.isOccupied = true;
         _newTile.occupyingObjectId = troopInfo.id;
         // Add tile data to send to server
-        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-            { {_oldTile, "OccupyChange"} };
-        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
-        _tileData = new Dictionary<TileInfo, string>()
-            { {_newTile, "OccupyChange"} };
-        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
+        GameManagerCS.instance.StoreModifiedTileInfo(_oldTile, "OccupyChange");
+        GameManagerCS.instance.StoreModifiedTileInfo(_newTile, "OccupyChange");
     }
 
     public IEnumerator DescendTroopMoveAnim(TileInfo _oldTile, TileInfo _newTile)
@@ -410,11 +401,7 @@ public class TroopActionsCS : MonoBehaviour
                                                                     Constants.troopHealthYPositionAscend,
                                                                     troopInfo.transform.position.z);
         // Add Troopdata to send to server
-        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-        { {_copiedTroop, "Move"} };
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Move");
         CheckTroopSeeingRange();
         CreateInteractableTiles();
         CheckCanCommitAnyActions();
@@ -427,10 +414,7 @@ public class TroopActionsCS : MonoBehaviour
     {
         _city.isBeingConquered = true;
 
-        CityInfo _cityCopy = GameManagerCS.instance.dataStoringObject.AddComponent<CityInfo>();
-        _cityCopy.CopyCityInfo(_city);
-        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { { _cityCopy, "Update" } };
+        GameManagerCS.instance.StoreModifiedCityInfo(_city, "Update");
         MoveToNewTile(_tile);
     }
 
@@ -460,11 +444,7 @@ public class TroopActionsCS : MonoBehaviour
             troopInfo.shipCanMoveAfterKill = Constants.shipInfoBool["Canoe"]["CanMoveAfterKill"];
         }
 
-        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "SwitchModel"} };
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "SwitchModel");
         MoveToNewTile(_tile);
     }
 
@@ -492,11 +472,7 @@ public class TroopActionsCS : MonoBehaviour
         }
         troopInfo.troop.transform.localRotation = Quaternion.Euler(troopInfo.troop.transform.localEulerAngles.x, troopInfo.rotation,
                                                                    troopInfo.troop.transform.localEulerAngles.z);
-        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "Rotate"} };
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Rotate");
         ResetAlteredTiles();
         CreateInteractableTiles();
     }
@@ -542,11 +518,7 @@ public class TroopActionsCS : MonoBehaviour
 
         _city.ownerId = troopInfo.ownerId;
         _city.InitConqueredCity();
-        CityInfo _cityCopy = GameManagerCS.instance.dataStoringObject.AddComponent<CityInfo>();
-        _cityCopy.CopyCityInfo(_city);
-        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { { _cityCopy, "Conquer" } };
-        GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
+        GameManagerCS.instance.StoreModifiedCityInfo(_city, "Conquer");
 
         Dictionary<TileInfo, string> _tileData;
         for (int x = _city.xIndex - _city.ownerShipRange; x < _city.xIndex + _city.ownerShipRange + 1; x++)
@@ -565,11 +537,7 @@ public class TroopActionsCS : MonoBehaviour
                         // Change color of ownership visual object
                         _tile.ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
                             Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
-                        TileInfo _tileCopy = GameManagerCS.instance.dataStoringObject.AddComponent<TileInfo>();
-                        _tileCopy.CopyTileInfo(_tile);
-                        _tileData = new Dictionary<TileInfo, string>()
-                        { { _tileCopy, "OwnershipChange"} };
-                        GameManagerCS.instance.modifiedTileInfo.Add(_tileData);
+                        GameManagerCS.instance.StoreModifiedTileInfo(_tile, "OwnershipChange");
                     }
                 }
             }
@@ -607,14 +575,8 @@ public class TroopActionsCS : MonoBehaviour
         // Fix local rotation since setting parent transform might cause ship model to look in a wrong direction
         troopInfo.shipModel.transform.localRotation = GameManagerCS.instance.shipModels[_shipNameToUpgradeTo].transform.localRotation;
 
-        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "Update"}};
-        Dictionary<TroopInfo, string> _troopData2 = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "ChangeShipModel"}};
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData2);
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Update");
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "ChangeShipModel");
     }
 
     /// <summary>
@@ -871,11 +833,7 @@ public class TroopActionsCS : MonoBehaviour
 
         troopInfo.attackRotation = _attackDirection;
         troopInfo.lastTroopAttackedId = _troopToAttack.id;
-        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "Attack"} };
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Attack");
     }
 
     /// <summary>
@@ -900,13 +858,10 @@ public class TroopActionsCS : MonoBehaviour
     /// <returns></returns>
     public IEnumerator SwordAnimHelper()
     {
-        int errorCatcher = 0;
-        while (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f || GameManagerCS.instance.sword.transform.localEulerAngles.x > 10.1f)
+        while (GameManagerCS.instance.sword.transform.localEulerAngles.x < .1f 
+              || GameManagerCS.instance.sword.transform.localEulerAngles.x > 10.1f)
         {
-            if (errorCatcher > 10000)
-                break;
             GameManagerCS.instance.sword.transform.localRotation *= Quaternion.Euler(10, 0, 0);
-            errorCatcher++;
             yield return new WaitForSeconds(.01f);
         }
         GameManagerCS.instance.sword.SetActive(false);
@@ -992,11 +947,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void HurtAnim()
     {
-        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "Hurt"} };
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Hurt");
         PlayerCS.instance.animationQueue.Enqueue(HurtAnimHelper());
     }
 
@@ -1022,11 +973,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void DieAnim()
     {
-        TroopInfo _copiedTroop = GameManagerCS.instance.dataStoringObject.AddComponent<TroopInfo>();
-        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(troopInfo);
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_copiedTroop, "Die"} };
-        GameManagerCS.instance.modifiedTroopInfo.Add(_troopData);
+        GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Die");
         troopInfo.healthTextObject.SetActive(false);
         // Reset altered tiles and hide troop quick menu if this is a local rather than remote troop
         if(troopInfo.ownerId == ClientCS.instance.myId)

@@ -38,7 +38,7 @@ public class TileInfo : MonoBehaviour
     public GameObject resourceObject;
     public GameObject ownerShipVisualObject;
 
-    // Road 
+    // Road Positions
     public Dictionary<string, GameObject> roadPositions = new Dictionary<string, GameObject>()
     {
         { "Center", null },

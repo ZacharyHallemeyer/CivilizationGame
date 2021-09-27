@@ -278,6 +278,19 @@ public class ClientSend : MonoBehaviour
                         SendTCPData(_packet);
                     }
                 }
+                else if (_tileDict[_tile] == "BuildRoad")
+                {
+                    using (Packet _packet = new Packet((int)ClientPackets.sendBuildRoadTileInfo))
+                    {
+                        _packet.Write(_tile.id);
+                        _packet.Write(_tile.xIndex);
+                        _packet.Write(_tile.zIndex);
+                        _packet.Write(_tile.isRoad);
+                        _packet.Write(_tileDict[_tile]);
+
+                        SendTCPData(_packet);
+                    }
+                }
                 else if (_tileDict[_tile] == "Update")
                 {
                     using (Packet _packet = new Packet((int)ClientPackets.sendUpdatedTileInfo))

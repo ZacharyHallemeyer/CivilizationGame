@@ -314,6 +314,7 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.sendClientOccupyChangeTileInfo, ClientHandle.ReceiveOccupyChangeTileInfo},
             { (int)ServerPackets.sendClientOwnershipChangeTileInfo, ClientHandle.ReceiveOwnershipChangeTileInfo},
             { (int)ServerPackets.sendClientBuildBuildingTileInfo, ClientHandle.ReceiveBuildBuildingTileInfo},
+            { (int)ServerPackets.sendClientBuildRoadTileInfo, ClientHandle.ReceiveBuildRoadTileInfo},
             { (int)ServerPackets.sendClientUpdatedTileInfo, ClientHandle.ReceiveUpdatedTileInfo},
             { (int)ServerPackets.sendClientCreateCityInfo, ClientHandle.ReceiveCreateCityInfo},
             { (int)ServerPackets.sendClientConqueredCityInfo, ClientHandle.ReceiveConquerCityInfo},

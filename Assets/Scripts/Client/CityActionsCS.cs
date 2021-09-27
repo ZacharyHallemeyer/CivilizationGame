@@ -489,8 +489,9 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.metal -= Constants.prices[currentBuidlingToBuild]["Metal"];
         PlayerCS.instance.money -= Constants.prices[currentBuidlingToBuild]["Money"];
         GameManagerCS.instance.UpdateRoadModels(_tile.xIndex, _tile.zIndex);
+        GameManagerCS.instance.StoreModifiedTileInfo(_tile, "BuildRoad");
         ResetAlteredObjects();
-        //SelectedRoadToBuild();
+        SelectedRoadToBuild();
     }
 
     #endregion
@@ -601,7 +602,9 @@ public class CityActionsCS : MonoBehaviour
                         _index++;
                         _index = CreateInteractableTileToBuildRoadsOnHelper(_tile, _index);
                     }
-                    else if(!_tile.isWater && !_tile.isObstacle && !_tile.isWall)
+                    else if(!_tile.isWater && !_tile.isObstacle && !_tile.isWall 
+                            && (_tile.ownerId == ClientCS.instance.myId  || _tile.ownerId == -1)
+                            && !_tile.isCity && !_tile.isBuilding)
                     {
                         _tile.tile.layer = whatIsInteractableValue;
                         _tile.tile.tag = constructBuildingTag;
@@ -619,7 +622,6 @@ public class CityActionsCS : MonoBehaviour
     // Find the end of a road path
     private int CreateInteractableTileToBuildRoadsOnHelper(TileInfo _tile, int _index)
     {
-        Debug.Log("Tile X: " + _tile.xIndex + " Y: " + _tile.zIndex + "has been called");
         TileInfo _currentTile;
         for (int x = _tile.xIndex - 1; x <= _tile.xIndex + 1; x++)
         {
@@ -643,6 +645,7 @@ public class CityActionsCS : MonoBehaviour
                         _index = CreateInteractableTileToBuildRoadsOnHelper(_currentTile, _index);
                     }
                     else if (!_currentTile.isWater && !_currentTile.isObstacle && !_currentTile.isWall 
+                             && (_tile.ownerId == ClientCS.instance.myId || _tile.ownerId == -1)
                              && !_currentTile.isCity && !_currentTile.isBuilding)
                     {
                         _currentTile.tile.layer = whatIsInteractableValue;

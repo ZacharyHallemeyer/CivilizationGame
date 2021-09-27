@@ -379,16 +379,12 @@ public class GameManagerCS : MonoBehaviour
             _troopInfo.troopActions.TroopCanNotCommitAnyMoreActions();
         }
 
-        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
-            { {_troopInfo, "Spawn"} };
-        modifiedTroopInfo.Add(_troopData);
-
+        StoreModifiedTroopInfo(_troopInfo, "Spawn")
+;
         TileInfo _tile = tiles[_xIndex, _zIndex];
         _tile.isOccupied = true;
         _tile.occupyingObjectId = _troop.GetComponent<TroopInfo>().id;
-        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-            { {_tile, "OccupyChange"} };
-        modifiedTileInfo.Add(_tileData);
+        StoreModifiedTileInfo(_tile, "OccupyChange");
     }
 
     /// <summary>
@@ -474,11 +470,18 @@ public class GameManagerCS : MonoBehaviour
             _isSpawnPointGood = true;
             _xPos = Random.Range(0, tiles.GetLength(0));
             _yPos = Random.Range(0, tiles.GetLength(1));
+
+            // Check if random tile is water, a city, or an obstacle
+            if(tiles[_xPos, _yPos].isWater || tiles[_xPos, _yPos].isCity || tiles[_xPos, _yPos].isObstacle)
+            {
+                _isSpawnPointGood = false;
+            }
+
+            // Check each troop spawned in to make sure the king is far away enough from others
             for(int _index = 0; _index < troops.Count; _index++)
             {
                 if( Mathf.Abs(troops[_index].xIndex - _xPos) < _distanceLimiterX 
-                    || Mathf.Abs(troops[_index].zIndex - _yPos) < _distanceLimiterY
-                    || tiles[_xPos, _yPos].isWater)
+                    || Mathf.Abs(troops[_index].zIndex - _yPos) < _distanceLimiterY)
                 {
                     _isSpawnPointGood = false;
                 }
@@ -805,6 +808,7 @@ public class GameManagerCS : MonoBehaviour
             if (_troop.ownerId == ClientCS.instance.myId)
             {
                 _troop.movementCost = Constants.troopInfoInt[_troop.troopName]["MovementCost"];
+                _troop.potentialRoadMovementCost = _troop.movementCost / 2 > 0 ? _troop.movementCost / 2 : 1;
                 _troop.canAttack = true;
                 _troop.boxCollider.enabled = true;
                 _troop.troopActions.TroopCanCommitMoreActions();
@@ -866,18 +870,14 @@ public class GameManagerCS : MonoBehaviour
                             {
                                 _tile.ownerId = -1;
                                 _tile.ownerShipVisualObject.SetActive(false);
-                                _tileData = new Dictionary<TileInfo, string>()
-                                 { { _tile, "Ownership"} };
-                                modifiedTileInfo.Add(_tileData);
+                                StoreModifiedTileInfo(_tile, "OwnershipChange");
                             }
                         }
                     }
                 }
                 // Change all owned cities to neutral
                 _cityInfo.ownerId = -1;
-                _cityData = new Dictionary<CityInfo, string>()
-                { { _cityInfo, "Conquer" } };
-                modifiedCityInfo.Add(_cityData);
+                StoreModifiedCityInfo(_cityInfo, "Conquer");
             }
         }
     }
@@ -936,9 +936,7 @@ public class GameManagerCS : MonoBehaviour
         cities.Add(_cityInfo.id, _cityInfo);
 
         // Update city dicts
-        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
-        { {_cityInfo, "Create" } };
-        modifiedCityInfo.Add(_cityData);
+        StoreModifiedCityInfo(_cityInfo, "Create");
 
         // Update tile
         TileInfo _tile = tiles[_xIndex, _zIndex];
@@ -948,9 +946,7 @@ public class GameManagerCS : MonoBehaviour
         _tile.tile.tag = cityTag;
         _tile.tile.layer = whatIsInteractableValue;
         _tile.fixedCell = true;
-        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-        { { _tile, "Update"} };
-        modifiedTileInfo.Add(_tileData);
+        StoreModifiedTileInfo(_tile, "Update");
 
         // Create owned tiles
         CreateOwnedTiles(_cityInfo);
@@ -1022,9 +1018,7 @@ public class GameManagerCS : MonoBehaviour
                         // Change color of ownership visual object
                         _tile.ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
                             Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
-                        _tileData = new Dictionary<TileInfo, string>()
-                        { { _tile, "OwnershipChange"} };
-                        modifiedTileInfo.Add(_tileData);
+                        StoreModifiedTileInfo(_tile, "OwnershipChange");
                     }
                 }
             }
@@ -1159,9 +1153,7 @@ public class GameManagerCS : MonoBehaviour
         _tile.isBuilding = true;
         _tile.buildingName = _buildingName;
 
-        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
-        { { _tile, "BuildBuilding"} };
-        modifiedTileInfo.Add(_tileData);
+        StoreModifiedTileInfo(_tile, "BuildBuilding");
     }
 
     /// <summary>
@@ -1290,6 +1282,12 @@ public class GameManagerCS : MonoBehaviour
         }
     }
 
+    public void UpdateRoadModelsFromServer(TileInfo _tile)
+    {
+        tiles[_tile.xIndex, _tile.zIndex].isRoad = _tile.isRoad;
+        UpdateRoadModels(_tile.xIndex, _tile.zIndex);
+    }
+
     #endregion
 
     #region Turn Functions
@@ -1384,6 +1382,9 @@ public class GameManagerCS : MonoBehaviour
                         break;
                     case "BuildBuilding":
                         SpawnBuilding(_tile);
+                        break;
+                    case "BuildRoad":
+                        UpdateRoadModelsFromServer(_tile);
                         break;
                     default:
                         Debug.LogError("Could not find tile action: " + _tileDict[_tile]);
@@ -1500,6 +1501,37 @@ public class GameManagerCS : MonoBehaviour
             if (Constants.allSkills[_priceKey] < 50)
                 Constants.allSkills[_priceKey] = 50;
         }
+    }
+
+    #endregion
+
+    #region Tools
+
+    public void StoreModifiedTroopInfo(TroopInfo _troop, string _command)
+    {
+        TroopInfo _copiedTroop = dataStoringObject.AddComponent<TroopInfo>();
+        _copiedTroop.CopyNecessaryTroopInfoToSendToServer(_troop);
+        Dictionary<TroopInfo, string> _troopData = new Dictionary<TroopInfo, string>()
+            { {_copiedTroop, _command} };
+        modifiedTroopInfo.Add(_troopData);
+    }
+
+    public void StoreModifiedTileInfo(TileInfo _tile, string _command)
+    {
+        TileInfo _copiedTile = dataStoringObject.AddComponent<TileInfo>();
+        _copiedTile.CopyTileInfo(_tile);
+        Dictionary<TileInfo, string> _tileData = new Dictionary<TileInfo, string>()
+            { {_copiedTile, _command} };
+        modifiedTileInfo.Add(_tileData);
+    }
+
+    public void StoreModifiedCityInfo(CityInfo _city, string _command)
+    {
+        CityInfo _copiedCity = dataStoringObject.AddComponent<CityInfo>();
+        _copiedCity.CopyCityInfo(_city);
+        Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
+            { {_copiedCity, _command} };
+        modifiedCityInfo.Add(_cityData);
     }
 
     #endregion
