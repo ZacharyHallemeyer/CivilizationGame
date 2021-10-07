@@ -197,6 +197,7 @@ public class PlayerUI : MonoBehaviour
         }
         menuButton.SetActive(false);
         PlayerCS.instance.isAbleToCommitActions = false;
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void CloseMenu()
@@ -204,6 +205,7 @@ public class PlayerUI : MonoBehaviour
         quickMenuContainer.SetActive(false);
         menuButton.SetActive(true);
         PlayerCS.instance.isAbleToCommitActions = true;
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void PurchaseSkill(string _skill)
@@ -220,6 +222,7 @@ public class PlayerUI : MonoBehaviour
             Constants.avaliableBuildings.Add(_skill);
 
         InitSkillTree();
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void InitSkillTree()
@@ -263,12 +266,14 @@ public class PlayerUI : MonoBehaviour
     {
         skillTreeContainer.SetActive(true);
         CloseMenu();
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void HideSkillTree()
     {
         skillTreeContainer.SetActive(false);
         OpenMenu();
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void FeedCities()
@@ -306,5 +311,6 @@ public class PlayerUI : MonoBehaviour
         }
         if (_feedCompleted)
             feedButton.SetActive(false);
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 }

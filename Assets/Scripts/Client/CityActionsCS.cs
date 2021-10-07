@@ -113,6 +113,7 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.isAbleToCommitActions = true;
         quickMenuContainer.SetActive(false);
         PlayerCS.instance.playerUI.menuButton.SetActive(true);
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void ShowQuickMenu()
@@ -121,6 +122,7 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.HideQuckMenus();
         quickMenuContainer.SetActive(true);
         PlayerCS.instance.playerUI.menuButton.SetActive(false);
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void ResetQuickMenu()
@@ -130,6 +132,7 @@ public class CityActionsCS : MonoBehaviour
         constructContainer.SetActive(false);
         statsContainer.SetActive(false);
         PlayerCS.instance.isAbleToCommitActions = false;
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void SetCurrentCityId()
@@ -192,6 +195,7 @@ public class CityActionsCS : MonoBehaviour
         }
 
         DisplayPossibleTroops();
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void InitBuildingMenu()
@@ -219,6 +223,7 @@ public class CityActionsCS : MonoBehaviour
             }
         }
         DisplayPossibleBuildings();
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     /// <summary>
@@ -227,6 +232,8 @@ public class CityActionsCS : MonoBehaviour
     /// </summary>
     public void DisplayPossibleBuildings()
     {
+        // TODO: Refactor with loop
+
         if(cityInfo.isBeingConquered)
         {
             lumberYardButton.enabled = false;
@@ -275,6 +282,8 @@ public class CityActionsCS : MonoBehaviour
             portButton.enabled = true;
         else
             portButton.enabled = false;
+
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     /// <summary>
@@ -283,6 +292,7 @@ public class CityActionsCS : MonoBehaviour
     /// </summary>
     public void DisplayPossibleTroops()
     {
+        // TODO: Refactor with loop
         if(GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied)
         {
             scoutButton.enabled = false;
@@ -322,6 +332,7 @@ public class CityActionsCS : MonoBehaviour
             snipperButton.enabled = true;
         else
             snipperButton.enabled = false;
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     /// <summary>

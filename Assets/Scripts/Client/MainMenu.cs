@@ -61,6 +61,7 @@ public class MainMenu : MonoBehaviour
     {
         SetCurrentEvent(null);
         SetCurrentEvent(mainMenuFirstButton);
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     private void MoveToGameModeSelectionHost()
@@ -96,6 +97,8 @@ public class MainMenu : MonoBehaviour
     public void SetCurrentEvent(GameObject currentObject)
     {
         EventSystem.current.SetSelectedGameObject(currentObject);
+        if(currentObject != null)
+            AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     #endregion
@@ -108,6 +111,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("Port", _portNum);
         hostPortPlaceholderText.text = _portString;
         joinPortPlaceholderText.text = _portString;
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void ChangeUsername(string _username)
@@ -115,12 +119,14 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetString("Username", _username);
         hostUserNameFieldText.text = _username;
         joinUserNameFieldText.text = _username;
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void ChangeHostIP(string _ip)
     {
         PlayerPrefs.SetString("HostIP", _ip);
         SetUpUserNameField();
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public void ChangeServerGameMode(string _gameModeName)
@@ -135,6 +141,7 @@ public class MainMenu : MonoBehaviour
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(_gameModeName));
             ChangeClientScene("Client" + _gameModeName.Substring(6));
         }
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     public IEnumerator WaitAndSetActiveScene(AsyncOperation _asyncOperation, string _gameModeName)
@@ -182,6 +189,7 @@ public class MainMenu : MonoBehaviour
 
     public void Quit()
     {
+        AudioManager.instance.Play(Constants.uiClickAudio);
         Application.Quit();
     }
 

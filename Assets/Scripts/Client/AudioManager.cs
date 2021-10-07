@@ -66,7 +66,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        Play("BackgroundMusic");
+        //Play("BackgroundMusic");
     }
 
     /// <summary>

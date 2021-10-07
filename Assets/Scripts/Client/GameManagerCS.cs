@@ -494,259 +494,17 @@ public class GameManagerCS : MonoBehaviour
     }
 
     /// <summary>
-    /// Move troop to new tile and update modified troop and tile dicts
-    /// Does NOT update modified troop and tile dicts.
-    /// </summary>
-    /// <param name="_troopInfo"></param>
-    public IEnumerator MoveTroopToNewTile(TroopInfo _troopToCopy)
-    {
-        TroopInfo _troop = troops[_troopToCopy.id];
-        PlayerCS.instance.isAnimInProgress = true;
-        StartCoroutine(DescendTroopMoveAnin(_troop, _troopToCopy));
-        yield return new WaitForEndOfFrame();
-    }
-
-    /// <summary>
-    ///  Troop descends below current tile and teleports to the tile that _troopToCopy is at.
-    ///  Then this function calls AscendTroopMoveAnim
-    /// </summary>
-    /// <param name="_troop"> Troop to move </param>
-    /// <param name="_troopToCopy"> Troop containing the info on where to move to </param>
-    public IEnumerator DescendTroopMoveAnin(TroopInfo _troop, TroopInfo _troopToCopy)
-    {
-        while (_troop.transform.position.y > -.2f)
-        {
-            _troop.transform.position = new Vector3(_troop.transform.position.x, _troop.transform.position.y - .1f, _troop.transform.position.z);
-            // Using overlay texture so turn off health text when troop is under a tile
-            if (_troop.healthTextObject.transform.position.y < -1 && _troop.healthTextObject.activeSelf)
-                _troop.healthTextObject.SetActive(false);
-            yield return new WaitForSeconds(.0001f);
-        }
-        _troop.xIndex = _troopToCopy.xIndex;
-        _troop.zIndex = _troopToCopy.zIndex;
-        _troop.transform.position = new Vector3((int)tiles[_troopToCopy.xIndex, _troopToCopy.zIndex].position.x, 
-                                                      _troop.transform.position.y,
-                                                      (int)tiles[_troopToCopy.xIndex, _troopToCopy.zIndex].position.y);
-        _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x, Constants.troopHealthYPositionDescend,
-                                                                 _troop.transform.position.z);
-
-        // Change to ship model if player moved onto a port
-        if (_troop.isBoat && !_troop.shipModel.gameObject.activeInHierarchy)
-        {
-            if (_troop.isExposed)
-            {
-                _troop.troopModel.SetActive(false);
-                _troop.shipModel.SetActive(true);
-            }
-            else
-            {
-                _troop.blurredTroopModel.SetActive(false);
-                _troop.blurredShipModel.SetActive(true);
-            }
-        }
-        // Change to troop model if player moved onto a land and was a boat before moving
-        else if (!_troop.isBoat && _troop.shipModel.gameObject.activeInHierarchy)
-        {
-            if (_troop.isExposed)
-            {
-                _troop.troopModel.SetActive(true);
-                _troop.shipModel.SetActive(false);
-            }
-            else
-            {
-                _troop.blurredTroopModel.SetActive(true);
-                _troop.blurredShipModel.SetActive(false);
-            }
-        }
-
-        StartCoroutine(AscendTroopMoveAnim(_troop));
-    }
-
-    /// <summary>
-    /// Troop ascends above the current tile it is under
-    /// </summary>
-    /// <param name="_troop"> Troop to move </param>
-    public IEnumerator AscendTroopMoveAnim(TroopInfo _troop)
-    {
-        while (_troop.transform.position.y < 1)
-        {
-            _troop.transform.position = new Vector3(_troop.transform.position.x, _troop.transform.position.y + .1f, _troop.transform.position.z);
-            // Using overlay texture so turn on health text when troop is above a tile
-            if (_troop.healthTextObject.transform.position.y > -1 && !_troop.healthTextObject.activeSelf && _troop.isExposed)
-                _troop.healthTextObject.SetActive(true);
-            _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x,
-                                                            _troop.healthTextObject.transform.position.y + .1f,
-                                                            _troop.transform.position.z);
-            yield return new WaitForSeconds(.0001f);
-        }
-        _troop.transform.position = new Vector3(_troop.transform.position.x, Constants.troopYPosition, _troop.transform.position.z);
-        _troop.healthTextObject.transform.position = new Vector3(_troop.transform.position.x,
-                                                                  Constants.troopHealthYPositionAscend,
-                                                                  _troop.transform.position.z);
-        PlayerCS.instance.isAnimInProgress = false;
-        PlayerCS.instance.runningCoroutine = null;
-    }
-
-    /// <summary>
-    /// Rotates troop with the information in _troopInfo
-    /// Does NOT update modified troop and tile dicts.
-    /// </summary>
-    /// <param name="_troopInfo"> Troop info class containing rotation to update with </param>
-    /// <returns></returns>
-    public IEnumerator RotateTroop(TroopInfo _troopInfo)
-    {
-        yield return new WaitForEndOfFrame();
-        troops[_troopInfo.id].rotation = _troopInfo.rotation;
-        troops[_troopInfo.id].troop.transform.localRotation = Quaternion.Euler(troops[_troopInfo.id].troop.transform.localEulerAngles.x,
-                                                                               troops[_troopInfo.id].rotation,
-                                                                               troops[_troopInfo.id].troop.transform.localEulerAngles.z);
-        PlayerCS.instance.runningCoroutine = null;
-    }
-
-    /// <summary>
-    /// Sets up attack animation coming from server and updates troop info 
-    /// </summary>
-    /// <param name="_troopInfo"> Troop that is attack </param>
-    /// <returns></returns>
-    public IEnumerator AttackTroop(TroopInfo _troopInfo)
-    {
-        yield return new WaitForEndOfFrame();
-        TroopInfo _troopToAttack = troops[_troopInfo.lastTroopAttackedId];
-        TroopInfo _troopAttacking = troops[_troopInfo.id];
-        _troopAttacking.lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
-        _troopAttacking.attackRotation = _troopInfo.attackRotation;
-        //_troopAttacking.UpdateTroopInfo(_troopInfo);
-        int _distance = Mathf.Abs(_troopToAttack.xIndex - _troopAttacking.xIndex) + Mathf.Abs(_troopToAttack.zIndex - _troopAttacking.zIndex);
-        if (_distance == 1)
-            StartCoroutine(SwordAttackAnimation(_troopAttacking, _troopAttacking.attackRotation));
-        else
-            StartCoroutine(ArrowAttackAnimation(_troopAttacking, _troopToAttack));
-    }
-
-    /// <summary>
-    /// Plays sword attack animation comming from server
-    /// </summary>
-    /// <param name="_troopAttacking"> Troop that is attacking </param>
-    /// <param name="_localXRotation"> rotation to attack in </param>
-    /// <returns></returns>
-    public IEnumerator SwordAttackAnimation(TroopInfo _troopAttacking, int _localXRotation)
-    {
-        int _xCoord = (int)tiles[_troopAttacking.xIndex, _troopAttacking.zIndex].position.x;
-        int _zCoord = (int)tiles[_troopAttacking.xIndex, _troopAttacking.zIndex].position.y;
-        PlayerCS.instance.isAnimInProgress = true;
-        sword.transform.position = new Vector3(_xCoord, 2, _zCoord);
-        sword.transform.localRotation = Quaternion.Euler(-90, _localXRotation, 0);
-        sword.SetActive(true);
-        while (sword.transform.localEulerAngles.x < .1f || sword.transform.localEulerAngles.x > 10.1f)
-        {
-            sword.transform.localRotation *= Quaternion.Euler(10, 0, 0);
-            yield return new WaitForSeconds(.001f);
-        }
-        sword.SetActive(false);
-        sword.transform.localRotation = Quaternion.Euler(-90, 0, 0);
-        PlayerCS.instance.isAnimInProgress = false;
-        PlayerCS.instance.runningCoroutine = null;
-    }
-
-    /// <summary>
-    /// Plays arrow attack animation comming from server
-    /// </summary>
-    /// <param name="_troopAttacking"> Troop attacking </param>
-    /// <param name="_troopToAttack"> Troop to attack </param>
-    /// <returns></returns>
-    public IEnumerator ArrowAttackAnimation(TroopInfo _troopAttacking, TroopInfo _troopToAttack)
-    {
-        PlayerCS.instance.isAnimInProgress = true;
-        TileInfo _tile = tiles[_troopAttacking.xIndex, _troopAttacking.zIndex];
-        switch (_troopAttacking.rotation)
-        {
-            case 0:
-                arrow.transform.position = new Vector3(_tile.transform.position.x,
-                                                        1,
-                                                        _tile.transform.position.z + 1);
-                break;
-            case 90:
-                arrow.transform.position = new Vector3(_tile.transform.position.x + 1,
-                                                        1,
-                                                        _tile.transform.position.z);
-                break;
-            case 180:
-                arrow.transform.position = new Vector3(_tile.transform.position.x,
-                                                        1,
-                                                        _tile.transform.position.z - 1);
-                break;
-            case 270:
-                arrow.transform.position = new Vector3(_tile.transform.position.x - 1,
-                                                        1,
-                                                        _tile.transform.position.z);
-                break;
-            default:
-                Debug.LogError("Could not accomplish task with rotation " + _troopAttacking.rotation);
-                break;
-        }
-        arrow.transform.localRotation = Quaternion.Euler(arrow.transform.localEulerAngles.x, _troopAttacking.rotation, 0);
-        arrow.SetActive(true);
-
-        TileInfo _tileToGoTo = tiles[_troopToAttack.xIndex, _troopToAttack.zIndex];
-
-        arrowRB.AddForce(_troopAttacking.troopModel.transform.forward * 200 * Time.deltaTime, ForceMode.Impulse);
-
-        while (Mathf.Abs(arrow.transform.position.x - _tileToGoTo.transform.position.x) > .5f)
-        {
-            yield return new WaitForSeconds(.01f);
-        }
-        while (Mathf.Abs(arrow.transform.position.z - _tileToGoTo.transform.position.z) > .5f)
-        {
-            yield return new WaitForSeconds(.01f);
-        }
-        arrow.SetActive(false);
-        PlayerCS.instance.isAnimInProgress = false;
-        PlayerCS.instance.runningCoroutine = null;
-    }
-
-    /// <summary>
-    /// Plays troop hurt animation and updates troop info 
-    /// </summary>
-    /// <param name="_troopToCopy"> Troop info class containing information to copy </param>
-    /// <returns></returns>
-    public IEnumerator HurtTroop(TroopInfo _troopToCopy)
-    {
-        TroopInfo _troopInfo = troops[_troopToCopy.id];
-        PlayerCS.instance.isAnimInProgress = true;
-        _troopInfo.health = _troopToCopy.health;
-        _troopInfo.healthText.text = _troopInfo.health.ToString();
-        for (int i = 0; i < 18; i++)
-        {
-            yield return new WaitForSeconds(.01f);
-            _troopInfo.troop.transform.localRotation *= Quaternion.Euler(0, 20, 0);
-        }
-        _troopInfo.troop.transform.rotation = Quaternion.Euler(0, _troopInfo.rotation, 0);
-        PlayerCS.instance.isAnimInProgress = false;
-        PlayerCS.instance.runningCoroutine = null;
-    }
-
-    /// <summary>
     /// Plays troop die animation coming from server and removes troop from appropriate dicts/list
     /// </summary>
     /// <param name="_troopInfo"></param>
     /// <returns></returns>
     public IEnumerator RemoveTroopInfo(TroopInfo _troopInfo)
     {
+        yield return null;
         TroopInfo _troop = troops[_troopInfo.id];
         // Die animation
         PlayerCS.instance.isAnimInProgress = true;
-        while (_troop.troop.transform.localPosition.y > -1.5f)
-        {
-            _troop.troop.transform.localRotation *= Quaternion.Euler(5, 0, 5);
-            _troop.troop.transform.localPosition = new Vector3(_troop.troop.transform.localPosition.x,
-                                                                        _troop.troop.transform.localPosition.y - .05f,
-                                                                        _troop.troop.transform.localPosition.z);
-            yield return new WaitForSeconds(.001f);
-        }
-        _troop.troop.SetActive(false);
-        _troop.healthTextObject.SetActive(false);
-        PlayerCS.instance.isAnimInProgress = false;
-        PlayerCS.instance.runningCoroutine = null;
+        _troop.troopActions.DieAnimHelper(false);
         
         // Remove Troop
         if (_troop.troopName == "King" && _troop.ownerId == ClientCS.instance.myId)
@@ -850,8 +608,6 @@ public class GameManagerCS : MonoBehaviour
     public void ResetOwnedCitiesAndTiles(int _ownerId)
     {
         TileInfo _tile;
-        Dictionary<TileInfo, string> _tileData;
-        Dictionary<CityInfo, string> _cityData;
         // Change all owned tiles and all owned cities to netural
         foreach (CityInfo _cityInfo in cities.Values)
         {
@@ -1001,7 +757,6 @@ public class GameManagerCS : MonoBehaviour
     public void CreateOwnedTiles(CityInfo _cityInfo)
     {
         TileInfo _tile;
-        Dictionary<TileInfo, string> _tileData;
         // Create owned tiles
         for (int x = _cityInfo.xIndex - _cityInfo.ownerShipRange; x < _cityInfo.xIndex + _cityInfo.ownerShipRange + 1; x++)
         {
@@ -1335,16 +1090,17 @@ public class GameManagerCS : MonoBehaviour
                         SpawnRemoteTroop(_troop);
                         break;
                     case "Move":
-                        PlayerCS.instance.animationQueue.Enqueue(MoveTroopToNewTile(_troop));
+                        PlayerCS.instance.animationQueue.Enqueue(troops[_troop.id].troopActions.MoveToNewTileRemote(
+                                                                 _troop.xIndex, _troop.zIndex));
                         break;
                     case "Rotate":
-                        PlayerCS.instance.animationQueue.Enqueue(RotateTroop(_troop));
+                        PlayerCS.instance.animationQueue.Enqueue(troops[_troop.id].troopActions.RotateRemote(_troop.rotation));
                         break;
                     case "Attack":
-                        PlayerCS.instance.animationQueue.Enqueue(AttackTroop(_troop));
+                        PlayerCS.instance.animationQueue.Enqueue(troops[_troop.id].troopActions.AttackTroopRemote(_troop));
                         break;
                     case "Hurt":
-                        PlayerCS.instance.animationQueue.Enqueue(HurtTroop(_troop));
+                        PlayerCS.instance.animationQueue.Enqueue(troops[_troop.id].troopActions.HurtAnimRemote(_troop));
                         break;
                     case "Die":
                         PlayerCS.instance.animationQueue.Enqueue(RemoveTroopInfo(_troop));

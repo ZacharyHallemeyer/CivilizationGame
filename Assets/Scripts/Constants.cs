@@ -11,6 +11,12 @@ public static class Constants
     public static float educationMultiplier = 10;
     public static float moraleMultiplier = .25f;
 
+    // Audio names
+    public static string uiClickAudio = "UIClick";
+    public static string hitAudio = "Hit";
+    public static string deathAudio = "Death";
+    public static string winMusic = "Win Music";
+
     public static Dictionary<string, Dictionary<string, float>> biomeInfo = new Dictionary<string, Dictionary<string, float>>
     {
         { "Desert", new Dictionary<string, float>

@@ -193,7 +193,7 @@ public class PlayerCS : MonoBehaviour
                     TileInfo _tileInfo = GameManagerCS.instance.tiles[(int)_hit.transform.position.x,
                                                                       (int)_hit.transform.position.z];
                     if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
-                        _troop.troopActions.MoveToNewTile(_tileInfo);
+                        _troop.troopActions.MoveToNewTileLocal(_tileInfo);
                 }
                 else if (_hit.collider.CompareTag("AttackableTile"))
                 {
@@ -272,7 +272,7 @@ public class PlayerCS : MonoBehaviour
         {
             if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
             {
-                _troop.troopActions.Rotate(1);
+                _troop.troopActions.RotateLocal(1);
             }
         }
         // End Turn
