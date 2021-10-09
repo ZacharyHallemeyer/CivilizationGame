@@ -1037,18 +1037,6 @@ public class TroopActionsCS : MonoBehaviour
         troopInfo.health = _troopToCopy.health;
         StartCoroutine(HurtAnimHelper());
         yield return null;
-        /*
-        PlayerCS.instance.isAnimInProgress = true;
-        troopInfo.healthText.text = troopInfo.health.ToString();
-        for (int i = 0; i < 18; i++)
-        {
-            yield return new WaitForSeconds(.01f);
-            troopInfo.troop.transform.localRotation *= Quaternion.Euler(0, 20, 0);
-        }
-        troopInfo.troop.transform.rotation = Quaternion.Euler(0, troopInfo.rotation, 0);
-        PlayerCS.instance.isAnimInProgress = false;
-        PlayerCS.instance.runningCoroutine = null;
-        */
     }
 
     /// <summary>
@@ -1058,6 +1046,7 @@ public class TroopActionsCS : MonoBehaviour
     {
         GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Die");
         troopInfo.healthTextObject.SetActive(false);
+
         // Reset altered tiles and hide troop quick menu if this is a local rather than remote troop
         if(troopInfo.ownerId == ClientCS.instance.myId)
         {

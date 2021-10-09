@@ -236,6 +236,11 @@ public class CityActionsCS : MonoBehaviour
 
         if(cityInfo.isBeingConquered)
         {
+            foreach (string _buildingKey in buildingButtons.Keys)
+            {
+                buildingButtons[_buildingKey].enabled = false;
+            }
+            /*
             lumberYardButton.enabled = false;
             farmButton.enabled = false;
             mineButton.enabled = false;
@@ -244,8 +249,19 @@ public class CityActionsCS : MonoBehaviour
             libraryButton.enabled = false;
             domeButton.enabled = false;
             marketButton.enabled = false;
+            */
             return;
         }
+
+        foreach(string _buildingKey in buildingButtons.Keys)
+        {
+            if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices[_buildingKey]))
+                buildingButtons[_buildingKey].enabled = true;
+            else
+                buildingButtons[_buildingKey].enabled = false;
+        }
+
+        /*
         if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["LumberYard"]))
             lumberYardButton.enabled = true;
         else 
@@ -282,6 +298,7 @@ public class CityActionsCS : MonoBehaviour
             portButton.enabled = true;
         else
             portButton.enabled = false;
+        */
 
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
@@ -295,6 +312,11 @@ public class CityActionsCS : MonoBehaviour
         // TODO: Refactor with loop
         if(GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied)
         {
+            foreach( string _troopKey in troopButtons.Keys )
+            {
+                troopButtons[_troopKey].enabled = false;
+            }
+            /*
             scoutButton.enabled = false;
             militiaButton.enabled = false;
             armyButton.enabled = false;
@@ -302,8 +324,19 @@ public class CityActionsCS : MonoBehaviour
             defenseButton.enabled = false;
             stealthButton.enabled = false;
             snipperButton.enabled = false;
+            */
             return;
         }
+
+        foreach (string _troopKey in troopButtons.Keys)
+        {
+            if(DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices[_troopKey]))
+                troopButtons[_troopKey].enabled = true;
+            else
+                troopButtons[_troopKey].enabled = false;
+        }
+
+        /*
         if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Scout"]))
             scoutButton.enabled = true;
         else
@@ -332,6 +365,8 @@ public class CityActionsCS : MonoBehaviour
             snipperButton.enabled = true;
         else
             snipperButton.enabled = false;
+        */
+
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
@@ -729,7 +764,7 @@ public class CityActionsCS : MonoBehaviour
 
     public void Feed()
     {
-
+        // TODO
     }
 
     #endregion
