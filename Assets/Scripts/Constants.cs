@@ -12,7 +12,7 @@ public static class Constants
     public static float moraleMultiplier = .25f;
 
     // Audio names
-    public static string uiClickAudio = "UIClick";
+    public static string uiClickAudio = "UI Click";
     public static string hitAudio = "Hit";
     public static string deathAudio = "Death";
     public static string winMusic = "Win Music";

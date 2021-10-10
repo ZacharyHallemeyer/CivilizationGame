@@ -452,7 +452,7 @@ public class ServerSend
 
     public static void SendPlayerStats(int _playerId)
     {
-        using (Packet _packet = new Packet((int)ServerPackets.sendClientOccupyChangeTileInfo))
+        using (Packet _packet = new Packet((int)ServerPackets.sendClientPlayerStats))
         {
             _packet.Write(ClientSS.allClients.Count - 1);
             foreach (ClientSS _client in ClientSS.allClients.Values)
@@ -463,6 +463,7 @@ public class ServerSend
                     _packet.Write(_client.player.troopsKilled);
                     _packet.Write(_client.player.ownedTroopsKilled);
                     _packet.Write(_client.player.citiesOwned);
+                    Debug.Log("Sending: " + _client.id + " Cities: " + _client.player.citiesOwned);
                 }
             }
 

@@ -571,6 +571,7 @@ public class CityActionsCS : MonoBehaviour
                                 _tile.tile.layer = whatIsInteractableValue;
                                 _tile.tile.tag = constructBuildingTag;
                                 _tile.moveUI.SetActive(true);
+                                _tile.boxCollider.enabled = true;
                             }
                         }
                         else
@@ -582,6 +583,7 @@ public class CityActionsCS : MonoBehaviour
                                     _tile.tile.layer = whatIsInteractableValue;
                                     _tile.tile.tag = constructBuildingTag;
                                     _tile.moveUI.SetActive(true);
+                                    _tile.boxCollider.enabled = true;
                                 }
                             }
                             else if (currentBuidlingToBuild == "LumberYard")
@@ -591,6 +593,7 @@ public class CityActionsCS : MonoBehaviour
                                     _tile.tile.layer = whatIsInteractableValue;
                                     _tile.tile.tag = constructBuildingTag;
                                     _tile.moveUI.SetActive(true);
+                                    _tile.boxCollider.enabled = true;
                                 }
                             }
                             else if(currentBuidlingToBuild == "Mine")
@@ -600,6 +603,7 @@ public class CityActionsCS : MonoBehaviour
                                     _tile.tile.layer = whatIsInteractableValue;
                                     _tile.tile.tag = constructBuildingTag;
                                     _tile.moveUI.SetActive(true);
+                                    _tile.boxCollider.enabled = true;
                                 }
                             }
                             else
@@ -607,6 +611,7 @@ public class CityActionsCS : MonoBehaviour
                                 _tile.tile.layer = whatIsInteractableValue;
                                 _tile.tile.tag = constructBuildingTag;
                                 _tile.moveUI.SetActive(true);
+                                _tile.boxCollider.enabled = true;
                             }
                         }
                         objecstToBeReset[_index] = _tile;
@@ -754,6 +759,7 @@ public class CityActionsCS : MonoBehaviour
                 }
                 _tile.moveUI.SetActive(false);
                 _tile.roadCounted = false;
+                _tile.boxCollider.enabled = false;
             }
         }
         objecstToBeReset = null;

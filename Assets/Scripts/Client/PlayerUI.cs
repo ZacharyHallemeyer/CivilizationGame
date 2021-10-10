@@ -10,7 +10,8 @@ public class PlayerUI : MonoBehaviour
     public Canvas canvas;
     public CanvasScaler canvasScaler;
 
-    public GameObject playerUIContainer, mainContainer, skillTreeContainer, quickMenuContainer, menuButton, feedButton;
+    public GameObject playerUIContainer, mainContainer, skillTreeContainer, quickMenuContainer, menuButton, feedButton,
+                      settingsMenuContainer, statsMenuContainer;
 
     // Resource
     public TextMeshProUGUI foodText, woodText, metalText, moneyText, moraleText, educationText, populationText;
@@ -31,6 +32,27 @@ public class PlayerUI : MonoBehaviour
                   stealthSkillPI, heavyHitterPI, watchTowerPI, marketSkillPI, housingSkillPI, librarySkillPI,
                   schoolSkillPI, domeSkillPI, portSkillPI, warshipSkillPI, farmSkillPI, mineSkillPI,
                   lumberYardSkillPI;
+
+    // Settings Menu
+    public Slider musicSlider, soundEffectSlider, dragSpeedSlider,   rotationSpeedSlider;
+
+    // Stats Menu
+    public class PlayerStatObject
+    {
+        public GameObject container;
+        public TextMeshProUGUI playerName;
+        public TextMeshProUGUI troopsKilled;
+        public TextMeshProUGUI troopsDied;
+        public TextMeshProUGUI citiesOwned;
+
+        public int clientId;
+        public int troopsKilledInt;
+        public int troopsDiedInt;
+        public int citiesOwnedInt;
+    }
+    public GameObject playerStatsPrefab;
+    public PlayerStatObject[] playerStatsObjects;
+
 
     public Dictionary<string, Button> skillButtons = new Dictionary<string, Button>();
     public Dictionary<string, TextMeshProUGUI> skillText = new Dictionary<string, TextMeshProUGUI>();
@@ -187,6 +209,7 @@ public class PlayerUI : MonoBehaviour
 
     public void OpenMenu()
     {
+        AudioManager.instance.Play(Constants.uiClickAudio);
         quickMenuContainer.SetActive(true);
         feedButton.SetActive(false);
         // Not optimized but should not matter
@@ -197,15 +220,16 @@ public class PlayerUI : MonoBehaviour
         }
         menuButton.SetActive(false);
         PlayerCS.instance.isAbleToCommitActions = false;
-        AudioManager.instance.Play(Constants.uiClickAudio);
+        Time.timeScale = 0;
     }
 
     public void CloseMenu()
     {
+        AudioManager.instance.Play(Constants.uiClickAudio);
         quickMenuContainer.SetActive(false);
         menuButton.SetActive(true);
         PlayerCS.instance.isAbleToCommitActions = true;
-        AudioManager.instance.Play(Constants.uiClickAudio);
+        Time.timeScale = 1;
     }
 
     public void PurchaseSkill(string _skill)
@@ -267,6 +291,7 @@ public class PlayerUI : MonoBehaviour
         skillTreeContainer.SetActive(true);
         CloseMenu();
         AudioManager.instance.Play(Constants.uiClickAudio);
+        Time.timeScale = 0;
     }
 
     public void HideSkillTree()
@@ -313,4 +338,228 @@ public class PlayerUI : MonoBehaviour
             feedButton.SetActive(false);
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
+
+    #region Settings
+
+    public void DisplaySettingsMenu()
+    {
+        settingsMenuContainer.SetActive(true);
+        CloseMenu();
+        AudioManager.instance.Play(Constants.uiClickAudio);
+        Time.timeScale = 0;
+    }
+
+    public void CloseSettingsMenu()
+    {
+        settingsMenuContainer.SetActive(false);
+        OpenMenu();
+        AudioManager.instance.Play(Constants.uiClickAudio);
+        Time.timeScale = 1;
+    }
+
+    /// <summary>
+    /// Sets option sliders to player prefs values
+    /// </summary>
+    public virtual void SetSliderUI()
+    {
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .75f);
+        soundEffectSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", .75f);
+        dragSpeedSlider.value = PlayerPrefs.GetFloat("DragSpeed", 2f);
+        rotationSpeedSlider.value = PlayerPrefs.GetFloat("RotationSpeed", 2f);
+    }
+
+    /// <summary>
+    /// Sets player prefs and audio volume in regard to general volume
+    /// </summary>
+    public virtual void SetMusicVolumePreference(float volume)
+    {
+        PlayerPrefs.SetFloat("MusicVolume", volume);
+        if (AudioManager.instance == null)
+            AudioManager.instance = FindObjectOfType<AudioManager>();
+        AudioManager.instance.SetMusicVolume();
+    }
+
+    /// <summary>
+    /// Sets player prefs and audio volume in regard to general volume
+    /// </summary>
+    public virtual void SetSoundEffectsPreference(float volume)
+    {
+        PlayerPrefs.SetFloat("SoundEffectsVolume", volume);
+        if (AudioManager.instance == null)
+            AudioManager.instance = FindObjectOfType<AudioManager>();
+        AudioManager.instance.SetSoundEffectVolume();
+    }
+
+    /// <summary>
+    /// Sets new drag speed
+    /// </summary>
+    /// <param name="_dragSpeed"> new drag speed </param>
+    public void UpdateDragSpeed(float _dragSpeed)
+    {
+        PlayerPrefs.SetFloat("DragSpeed", _dragSpeed);
+        if (PlayerCS.instance != null)
+            PlayerCS.instance.dragSpeed = _dragSpeed;
+    }
+
+    /// <summary>
+    /// Sets new rotate speed
+    /// </summary>
+    /// <param name="_rotateSpeed"> new rotation speed</param>
+    public void UpdateRotateSpeed(float _rotateSpeed)
+    {
+        PlayerPrefs.SetFloat("RotationSpeed", _rotateSpeed);
+        if(PlayerCS.instance != null)
+            PlayerCS.instance.rotationSpeed = _rotateSpeed;
+    }
+
+    #endregion
+
+    #region Stats
+
+    public void OpenStatsMenu()
+    {
+        statsMenuContainer.SetActive(true);
+        CloseMenu();
+        AudioManager.instance.Play(Constants.uiClickAudio);
+        UpdateStatsMenu();
+        Time.timeScale = 0;
+    }
+
+    public void CloseStatsMenu()
+    {
+        statsMenuContainer.SetActive(false);
+        OpenMenu();
+        AudioManager.instance.Play(Constants.uiClickAudio);
+    }
+
+    public void InitStatsMenu()
+    {
+        int _currentId;
+        playerStatsObjects = new PlayerStatObject[ClientCS.allClients.Count];
+
+        for (int index = 0; index < playerStatsObjects.Length; index++)
+        {
+            _currentId = ClientCS.allClients[index + 1].id;
+            if(_currentId != ClientCS.instance.myId)
+            {
+                playerStatsObjects[index] = new PlayerStatObject();
+                playerStatsObjects[index].container = Instantiate(playerStatsPrefab, statsMenuContainer.transform);
+                playerStatsObjects[index].playerName = 
+                    playerStatsObjects[index].container.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                playerStatsObjects[index].troopsKilled = 
+                    playerStatsObjects[index].container.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                playerStatsObjects[index].troopsDied = 
+                    playerStatsObjects[index].container.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+                playerStatsObjects[index].citiesOwned = 
+                    playerStatsObjects[index].container.transform.GetChild(3).GetComponent<TextMeshProUGUI>();
+
+                playerStatsObjects[index].clientId = _currentId;
+                playerStatsObjects[index].playerName.text = ClientCS.allClients[_currentId].username;
+                playerStatsObjects[index].troopsKilled.text = ClientCS.allClients[_currentId].troopsKilled.ToString();
+                playerStatsObjects[index].troopsDied.text = ClientCS.allClients[_currentId].ownedTroopsKilled.ToString();
+                playerStatsObjects[index].citiesOwned.text = ClientCS.allClients[_currentId].citiesOwned.ToString();
+            
+                playerStatsObjects[index].troopsKilledInt = ClientCS.allClients[_currentId].troopsKilled;
+                playerStatsObjects[index].troopsDiedInt = ClientCS.allClients[_currentId].ownedTroopsKilled;
+                playerStatsObjects[index].citiesOwnedInt = ClientCS.allClients[_currentId].citiesOwned;
+            }
+            else
+            {
+                playerStatsObjects[index] = new PlayerStatObject();
+                playerStatsObjects[index].container = Instantiate(playerStatsPrefab, statsMenuContainer.transform);
+                playerStatsObjects[index].playerName =
+                    playerStatsObjects[index].container.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                playerStatsObjects[index].troopsKilled =
+                    playerStatsObjects[index].container.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                playerStatsObjects[index].troopsDied =
+                    playerStatsObjects[index].container.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+                playerStatsObjects[index].citiesOwned =
+                    playerStatsObjects[index].container.transform.GetChild(3).GetComponent<TextMeshProUGUI>();
+
+                playerStatsObjects[index].clientId = ClientCS.instance.myId;
+                playerStatsObjects[index].playerName.text = PlayerCS.instance.username;
+                playerStatsObjects[index].troopsKilled.text = PlayerCS.instance.troopsKilled.ToString();
+                playerStatsObjects[index].troopsDied.text = PlayerCS.instance.ownedTroopsKilled.ToString();
+                playerStatsObjects[index].citiesOwned.text = PlayerCS.instance.citiesOwned.ToString();
+
+                playerStatsObjects[index].troopsKilledInt = PlayerCS.instance.troopsKilled;
+                playerStatsObjects[index].troopsDiedInt = PlayerCS.instance.ownedTroopsKilled;
+                playerStatsObjects[index].citiesOwnedInt = PlayerCS.instance.citiesOwned;
+            }
+        }
+    }
+
+    public void UpdateStatsMenu()
+    {
+        int _currentId;
+
+        for (int index = 0; index < playerStatsObjects.Length; index++)
+        {
+            _currentId = playerStatsObjects[index].clientId;
+            if(_currentId != ClientCS.instance.myId)
+            {
+                playerStatsObjects[index].troopsKilled.text = ClientCS.allClients[_currentId].troopsKilled.ToString();
+                playerStatsObjects[index].troopsDied.text = ClientCS.allClients[_currentId].ownedTroopsKilled.ToString();
+                playerStatsObjects[index].citiesOwned.text = ClientCS.allClients[_currentId].citiesOwned.ToString();
+
+                playerStatsObjects[index].troopsKilledInt = ClientCS.allClients[_currentId].troopsKilled;
+                playerStatsObjects[index].troopsDiedInt = ClientCS.allClients[_currentId].ownedTroopsKilled;
+                playerStatsObjects[index].citiesOwnedInt = ClientCS.allClients[_currentId].citiesOwned;
+            }
+            else
+            {
+                playerStatsObjects[index].troopsKilled.text = PlayerCS.instance.troopsKilled.ToString();
+                playerStatsObjects[index].troopsDied.text = PlayerCS.instance.ownedTroopsKilled.ToString();
+                playerStatsObjects[index].citiesOwned.text = PlayerCS.instance.citiesOwned.ToString();
+
+                playerStatsObjects[index].troopsKilledInt = PlayerCS.instance.troopsKilled;
+                playerStatsObjects[index].troopsDiedInt = PlayerCS.instance.ownedTroopsKilled;
+                playerStatsObjects[index].citiesOwnedInt = PlayerCS.instance.citiesOwned;
+            }
+        }
+
+        SortStatsMenu();
+    }
+
+    public void SortStatsMenu()
+    {
+        bool _swapMade = true;
+
+        // Bubble sort
+        while (_swapMade)
+        {
+            _swapMade = false;
+            for (int _index = 0; _index < playerStatsObjects.Length - 1; _index++)
+            {
+                if (playerStatsObjects[_index].citiesOwnedInt > playerStatsObjects[_index + 1].citiesOwnedInt)
+                {
+                    _swapMade = true;
+                    SwapValues(playerStatsObjects, _index, _index + 1);
+                }
+            }
+        }
+
+        RepositionStatObjects();
+    }
+
+    public void RepositionStatObjects()
+    {
+        int _yPos = 125, _yIncrement = -50, _index;
+
+        // Reset Top Player Object
+        for (_index = playerStatsObjects.Length - 1; _index >= 0; _index--)
+        {
+            playerStatsObjects[_index].container.transform.localPosition = new Vector3(0, _yPos, 0);
+            _yPos += _yIncrement;
+        }
+    }
+
+    public void SwapValues(PlayerStatObject[] _array, int _indexOne, int _indexTwo)
+    {
+        PlayerStatObject _tempObject = _array[_indexOne];
+        _array[_indexOne] = _array[_indexTwo];
+        _array[_indexTwo] = _tempObject;
+    }
+
+    #endregion
 }

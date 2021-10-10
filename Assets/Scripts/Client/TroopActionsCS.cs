@@ -18,6 +18,8 @@ public class TroopActionsCS : MonoBehaviour
 
     private bool troopInAttackRange;
 
+    private int curretMovementCost;
+
     #region Set Up
 
     /// <summary>
@@ -41,16 +43,23 @@ public class TroopActionsCS : MonoBehaviour
     {
         if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
         int _index = 0;
-        int _movementCost = troopInfo.isBoat ? troopInfo.shipMovementCost : troopInfo.movementCost;
+        curretMovementCost = troopInfo.isBoat ? troopInfo.shipMovementCost : troopInfo.movementCost;
         int _attackRange = troopInfo.isBoat ? troopInfo.shipAttackRange: troopInfo.attackRange;
-        objecstToBeReset = new TileInfo[_movementCost + _attackRange];
+        objecstToBeReset = new TileInfo[curretMovementCost + _attackRange];
+
+        if (GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex].isRoad && troopInfo.potentialRoadMovementCost > 0)
+        {
+            curretMovementCost++;
+            troopInfo.potentialRoadMovementCost--;
+            troopInfo.roadMovementCostUsed++;
+        }
 
         // Create moveable tiles
         // Add/Minus 1 to for loop conditions to not include tile troop is currently on
         switch (troopInfo.rotation)
         {
             case 0:
-                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + _movementCost + 1; z++)
+                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + curretMovementCost + 1; z++)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
@@ -65,7 +74,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 90:
-                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + _movementCost + 1; x++)
+                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + curretMovementCost + 1; x++)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
@@ -80,7 +89,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 180:
-                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - _movementCost - 1; z--)
+                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - curretMovementCost - 1; z--)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
@@ -95,7 +104,7 @@ public class TroopActionsCS : MonoBehaviour
                 }
                 break;
             case 270:
-                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - _movementCost - 1; x--)
+                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - curretMovementCost - 1; x--)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
@@ -126,8 +135,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
-                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index);
-                        _index++;
+                        if(CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
+                            _index++;
                     }
                 }
                 break;
@@ -136,8 +145,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index);
-                        _index++;
+                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                            _index++;
                     }
                 }
                 break;
@@ -146,8 +155,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
-                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index);
-                        _index++;
+                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
+                            _index++;
                     }
                 }
                 break;
@@ -156,8 +165,8 @@ public class TroopActionsCS : MonoBehaviour
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index);
-                        _index++;
+                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                            _index++;
                     }
                 }
                 break;
@@ -192,6 +201,14 @@ public class TroopActionsCS : MonoBehaviour
     public bool CreateInteractableTilesHelperMovement(TileInfo _tile, int _index)
     {
         if (_tile.isOccupied || _tile.isObstacle) return false;
+
+        if(_tile.isRoad && troopInfo.potentialRoadMovementCost > 0)
+        {
+            curretMovementCost++;
+            troopInfo.potentialRoadMovementCost--;
+            troopInfo.roadMovementCostUsed++;
+        }
+
         if (_tile.isCity)
         {
             if (GameManagerCS.instance.cities[_tile.cityId].isTrainingTroops &&
@@ -250,13 +267,14 @@ public class TroopActionsCS : MonoBehaviour
         }
         
         objecstToBeReset[_index] = _tile;
+
         return true;
     }
 
     // set tile tags and layer for troop to be able to attack troop on said tile
-    public void CreateInteractableTilesHelperAttack(TileInfo _tile, int _index)
+    public bool CreateInteractableTilesHelperAttack(TileInfo _tile, int _index)
     {
-        if (_tile.isObstacle) return;
+        if (_tile.isObstacle) return false;
         if (_tile.isOccupied)
         {
             if (GameManagerCS.instance.troops[_tile.occupyingObjectId].ownerId != troopInfo.ownerId)
@@ -266,9 +284,12 @@ public class TroopActionsCS : MonoBehaviour
                 _tile.tile.tag = attackableTileTag;
                 _tile.attackUI.SetActive(true);
                 _tile.boxCollider.enabled = true;
+                objecstToBeReset[_index] = _tile;
+
+                return true;
             }
         }
-        objecstToBeReset[_index] = _tile;
+        return true;
     }
 
 
@@ -338,6 +359,7 @@ public class TroopActionsCS : MonoBehaviour
         // Move troop while doing the move animation
         PlayerCS.instance.isAnimInProgress = true;
         PlayerCS.instance.animationQueue.Enqueue(DescendTroopMoveAnim(_newTile.xIndex, _newTile.zIndex, false));
+        troopInfo.roadMovementCostUsed = 0;
 
         // Update new tile
         troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.zIndex - _oldTile.zIndex);
@@ -503,6 +525,9 @@ public class TroopActionsCS : MonoBehaviour
             else
                 troopInfo.rotation += 90;
         }
+        troopInfo.potentialRoadMovementCost += troopInfo.roadMovementCostUsed;
+        troopInfo.roadMovementCostUsed = 0;
+
         troopInfo.troop.transform.localRotation = Quaternion.Euler(troopInfo.troop.transform.localEulerAngles.x, troopInfo.rotation,
                                                                    troopInfo.troop.transform.localEulerAngles.z);
         GameManagerCS.instance.StoreModifiedTroopInfo(troopInfo, "Rotate");

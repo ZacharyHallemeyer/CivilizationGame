@@ -66,7 +66,18 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        //Play("BackgroundMusic");
+        Play("BackgroundMusic");
+    }
+
+    private void Update()
+    {
+        foreach (Sound _sound in sounds)
+        {
+            _sound.source.clip = _sound.clip;
+
+            _sound.source.pitch = _sound.pitch;
+            _sound.source.loop = _sound.looping;
+        }
     }
 
     /// <summary>
@@ -77,7 +88,6 @@ public class AudioManager : MonoBehaviour
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null) return;
         s.source.Play();
-        Debug.Log("Music should be playing");
     }
 
     /// <summary>

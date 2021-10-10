@@ -64,9 +64,12 @@ public class ClientSend : MonoBehaviour
         // Send Player stats to server
         using (Packet _packet = new Packet((int)ClientPackets.sendPlayerStats))
         {
+            Debug.Log("Sending cities: " + _player.citiesOwned);
             _packet.Write(_player.troopsKilled);
             _packet.Write(_player.ownedTroopsKilled);
             _packet.Write(_player.citiesOwned);
+
+            SendTCPData(_packet);
         }
 
         // Send all modfified troop info to Server

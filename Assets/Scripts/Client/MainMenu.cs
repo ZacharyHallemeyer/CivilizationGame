@@ -15,15 +15,17 @@ public class MainMenu : MonoBehaviour
     public Text joinPortPlaceholderText, joinPortFieldText;
     public Text ipFieldText, ipFieldPlaceholderText;
 
+    public Slider musicSlider, soundEffectSlider;
+
     public GameObject mainMenuFirstButton, gameSelectionHostFirstButton, gameSelectionJoinFirstButton;
     public GameObject optionsMenuFirstButton, statsMenuFirstButton, aboutMenuFirstButton;
 
     private void Start()
     {
         Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
-        MoveToMainMenu();
         SetUpUserNameField();
         SetUpIPField();
+        SetSliderUI();
     }
 
     #region Set Up
@@ -52,53 +54,6 @@ public class MainMenu : MonoBehaviour
         if (PlayerPrefs.GetString("HostIP", "NULL") == "NULL")
             PlayerPrefs.SetString("HostIP", "127.0.0.1");
         ipFieldPlaceholderText.text = PlayerPrefs.GetString("HostIP");
-    }
-
-    #endregion
-
-    #region Navigation
-    private void MoveToMainMenu()
-    {
-        SetCurrentEvent(null);
-        SetCurrentEvent(mainMenuFirstButton);
-        AudioManager.instance.Play(Constants.uiClickAudio);
-    }
-
-    private void MoveToGameModeSelectionHost()
-    {
-        SetCurrentEvent(null);
-        SetCurrentEvent(gameSelectionHostFirstButton);
-    }
-
-    private void MoveToGameModeSelectionJoin()
-    {
-        SetCurrentEvent(null);
-        SetCurrentEvent(gameSelectionJoinFirstButton);
-    }
-
-    private void MoveToOptionsMenu()
-    {
-        SetCurrentEvent(null);
-        SetCurrentEvent(optionsMenuFirstButton);
-    }
-
-    public void MoveToStatsMenu()
-    {
-        SetCurrentEvent(null);
-        SetCurrentEvent(statsMenuFirstButton);
-    }
-
-    public void MoveToAboutMenu()
-    {
-        SetCurrentEvent(null);
-        SetCurrentEvent(aboutMenuFirstButton);
-    }
-
-    public void SetCurrentEvent(GameObject currentObject)
-    {
-        EventSystem.current.SetSelectedGameObject(currentObject);
-        if(currentObject != null)
-            AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     #endregion
@@ -195,6 +150,41 @@ public class MainMenu : MonoBehaviour
 
     #endregion
 
+    #region Sliders
+
+    /// <summary>
+    /// Sets option sliders to player prefs values
+    /// </summary>
+    public virtual void SetSliderUI()
+    {
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .75f);
+        soundEffectSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", .75f);
+    }
+
+    /// <summary>
+    /// Sets player prefs and audio volume in regard to general volume
+    /// </summary>
+    public virtual void SetMusicVolumePreference(float volume)
+    {
+        PlayerPrefs.SetFloat("MusicVolume", volume);
+        if (AudioManager.instance == null)
+            AudioManager.instance = FindObjectOfType<AudioManager>();
+        AudioManager.instance.SetMusicVolume();
+    }
+
+    /// <summary>
+    /// Sets player prefs and audio volume in regard to general volume
+    /// </summary>
+    public virtual void SetSoundEffectsPreference(float volume)
+    {
+        PlayerPrefs.SetFloat("SoundEffectsVolume", volume);
+        if (AudioManager.instance == null)
+            AudioManager.instance = FindObjectOfType<AudioManager>();
+        AudioManager.instance.SetSoundEffectVolume();
+    }
+
+    #endregion
+
     #region Tools
 
     public string RandomUsernameGenerator(int _characterCount)
@@ -205,6 +195,11 @@ public class MainMenu : MonoBehaviour
             _username += (char)Random.Range(97, 123);
         }
         return _username;
+    }
+
+    public void PlayUISound()
+    {
+        AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
     #endregion

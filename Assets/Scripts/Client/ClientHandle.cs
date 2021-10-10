@@ -31,7 +31,7 @@ public class ClientHandle : MonoBehaviour
         string _clientUsername = _packet.ReadString();
         string _clientTribe = _packet.ReadString();
 
-        ClientCS.allClients.Add(_clientId, new RemotePlayer(_clientUsername, _clientTribe));
+        ClientCS.allClients.Add(_clientId, new RemotePlayer(_clientUsername, _clientTribe, _clientId));
         ClientCS.instance.lobby.InitLobbyUI();
     }
 
@@ -94,6 +94,7 @@ public class ClientHandle : MonoBehaviour
         // Turn on spawn king UI
         GameManagerCS.instance.startScreenUI.SetActive(true);
         GameManagerCS.instance.SpawnPlayer(_id, _username, _tribe);
+        PlayerCS.instance.playerUI.InitStatsMenu();
     }
     
     /// <summary>
@@ -171,7 +172,7 @@ public class ClientHandle : MonoBehaviour
             _id = _packet.ReadInt();
             ClientCS.allClients[_id].troopsKilled = _packet.ReadInt();
             ClientCS.allClients[_id].ownedTroopsKilled = _packet.ReadInt();
-            ClientCS.allClients[_id].citiesOWned = _packet.ReadInt();
+            ClientCS.allClients[_id].citiesOwned = _packet.ReadInt();
 
             _amountOfPlayers--;
         }
@@ -298,7 +299,6 @@ public class ClientHandle : MonoBehaviour
     /// <param name="_packet"> Packet containing modified troop info </param>
     public static void ReceiveDieTroopInfo(Packet _packet)
     {
-        Debug.Log("Received switch model info from server");
         TroopInfo _troop = GameManagerCS.instance.gameObject.AddComponent<TroopInfo>();
         _troop.id = _packet.ReadInt();
         string _command = _packet.ReadString();
@@ -651,5 +651,6 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.turnCount = _packet.ReadInt();
 
         GameManagerCS.instance.PlayPastMoves();
+        //PlayerCS.instance.playerUI.InitStatsMenu();
     }
 }

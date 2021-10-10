@@ -93,9 +93,9 @@ public class ServerHandle
 
     public static void RecievePlayerStats(int _fromClient, Packet _packet)
     {
-        Server.clients[_fromClient].player.troopsKilled = _packet.ReadInt();
-        Server.clients[_fromClient].player.ownedTroopsKilled = _packet.ReadInt();
-        Server.clients[_fromClient].player.citiesOwned = _packet.ReadInt();
+        ClientSS.allClients[_fromClient].player.troopsKilled = _packet.ReadInt();
+        ClientSS.allClients[_fromClient].player.ownedTroopsKilled = _packet.ReadInt();
+        ClientSS.allClients[_fromClient].player.citiesOwned = _packet.ReadInt();
     }
 
     #region Troop Info
@@ -644,6 +644,7 @@ public class ServerHandle
 
         // Start turn for next player
         ServerSend.SendPlayerStats(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
+        ServerSend.SendModifiedTroop(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
         ServerSend.SendModifiedTile(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
         ServerSend.SendModifiedCity(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
         ServerSend.PlayerStartTurn(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);

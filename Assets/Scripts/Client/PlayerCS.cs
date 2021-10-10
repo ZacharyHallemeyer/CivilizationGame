@@ -37,13 +37,14 @@ public class PlayerCS : MonoBehaviour
     // Camera movement
     public Mouse mouse;
     private bool isMoving = false;
-    public float dragSpeed = 2;
+    public float dragSpeed = 2f;
     private Vector2 dragOrigin;
     // Camera rotation
     public bool isRotating = false;
     public Vector3 originRotation;
     public Vector3 differenceRotation;
     public float camForce, camCounterForce;
+    public float rotationSpeed = 1f;
 
     // Status variables
     public bool isAnimInProgress = false;
@@ -72,6 +73,9 @@ public class PlayerCS : MonoBehaviour
         camRB = cam.GetComponent<Rigidbody>();
         mouse = Mouse.current;
         Cursor.lockState = CursorLockMode.Confined;
+
+        dragSpeed = PlayerPrefs.GetFloat("DragSpeed", 2);
+        rotationSpeed = PlayerPrefs.GetFloat("RotationSpeed", 2);
         // TESTING
         money = 100000;
         food = 100000;
@@ -295,16 +299,17 @@ public class PlayerCS : MonoBehaviour
 
     private void RotateCamera()
     {
+        float _rotateIncrement = 1f * rotationSpeed;
         if (differenceRotation.x - originRotation.x > .01)
         {
             cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                                           cam.transform.localEulerAngles.y + 1f,
+                                                           cam.transform.localEulerAngles.y + _rotateIncrement,
                                                            cam.transform.localEulerAngles.z);
         }
         else if (differenceRotation.x - originRotation.x < -.01)
         {
             cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                               cam.transform.localEulerAngles.y - 1f,
+                                               cam.transform.localEulerAngles.y - _rotateIncrement,
                                                cam.transform.localEulerAngles.z);
         }
     }

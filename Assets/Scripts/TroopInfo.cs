@@ -32,6 +32,7 @@ public class TroopInfo : MonoBehaviour
     public int attackRange;
     public int seeRange;
     public int potentialRoadMovementCost;
+    public int roadMovementCostUsed = 0;
 
     public bool canAttack;
     public bool canMultyKill;
@@ -134,6 +135,7 @@ public class TroopInfo : MonoBehaviour
         movementCost = _troopInfo.movementCost;
         attackRange = _troopInfo.attackRange;
         seeRange = _troopInfo.seeRange;
+        potentialRoadMovementCost = _troopInfo.potentialRoadMovementCost;
         lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
         canMultyKill = _troopInfo.canMultyKill;
         canMoveAfterKill = _troopInfo.canMoveAfterKill;
@@ -211,6 +213,7 @@ public class TroopInfo : MonoBehaviour
         movementCost = _troopInfo.movementCost;
         attackRange = _troopInfo.attackRange;
         seeRange = _troopInfo.seeRange;
+        potentialRoadMovementCost = _troopInfo.potentialRoadMovementCost;
         canMultyKill = _troopInfo.canMultyKill;
 
         lastTroopAttackedId = _troopInfo.lastTroopAttackedId;
