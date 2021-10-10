@@ -30,6 +30,10 @@ public class PlayerCS : MonoBehaviour
     public int wood = 1;
     public int food = 1;
 
+    public int troopsKilled = 0;
+    public int ownedTroopsKilled = 0;
+    public int citiesOwned = 0;
+
     // Camera movement
     public Mouse mouse;
     private bool isMoving = false;
@@ -40,8 +44,6 @@ public class PlayerCS : MonoBehaviour
     public Vector3 originRotation;
     public Vector3 differenceRotation;
     public float camForce, camCounterForce;
-
-
 
     // Status variables
     public bool isAnimInProgress = false;
@@ -370,7 +372,7 @@ public class PlayerCS : MonoBehaviour
             _city.cityActions.HideQuickMenu();
         currentSelectedCityId = -1;
         currentSelectedTroopId = -1;
-        ClientSend.SendEndOfTurnData(GameManagerCS.instance.isKingAlive);
+        ClientSend.SendEndOfTurnData(this, GameManagerCS.instance.isKingAlive);
         GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
         GameManagerCS.instance.ClearModifiedData();
         GameManagerCS.instance.isTurn = false;

@@ -130,6 +130,7 @@ public class Server
             { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
             { (int)ClientPackets.changeTribe, ServerHandle.UpdateTribeChoice },
             { (int)ClientPackets.startGame, ServerHandle.SendLobbyIntoGame },
+            { (int)ClientPackets.sendPlayerStats, ServerHandle.RecievePlayerStats },
             { (int)ClientPackets.sendSpawnTroopInfo, ServerHandle.RecieveTroopSpawnInfo },
             { (int)ClientPackets.sendMoveTroopInfo, ServerHandle.RecieveTroopMoveInfo },
             { (int)ClientPackets.sendRotateTroopInfo, ServerHandle.RecieveTroopRotateInfo },

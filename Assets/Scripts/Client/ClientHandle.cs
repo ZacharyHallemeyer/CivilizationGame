@@ -31,7 +31,7 @@ public class ClientHandle : MonoBehaviour
         string _clientUsername = _packet.ReadString();
         string _clientTribe = _packet.ReadString();
 
-        ClientCS.allClients.Add(_clientId, new Dictionary<string, string>() { { "Username", _clientUsername}, { "Tribe", _clientTribe } });
+        ClientCS.allClients.Add(_clientId, new RemotePlayer(_clientUsername, _clientTribe));
         ClientCS.instance.lobby.InitLobbyUI();
     }
 
@@ -52,7 +52,7 @@ public class ClientHandle : MonoBehaviour
     {
         int _clientId = _packet.ReadInt();
         // Set Tribe
-        ClientCS.allClients[_clientId]["Tribe"] = _packet.ReadString();
+        ClientCS.allClients[_clientId].tribe = _packet.ReadString();
         ClientCS.instance.lobby.InitLobbyUI();
     }
 
@@ -160,6 +160,21 @@ public class ClientHandle : MonoBehaviour
                                                     _metalResourcePerTurn, _foodResourcePerTurn,_moneyResourcesPerTurn, 
                                                     _populationResourcePerTurn, _xIndex, _zIndex, _level);
 
+    }
+
+    public static void RecievePlayerStats(Packet _packet)
+    {
+        int _id;
+        int _amountOfPlayers = _packet.ReadInt();
+        while(_amountOfPlayers > 0)
+        {
+            _id = _packet.ReadInt();
+            ClientCS.allClients[_id].troopsKilled = _packet.ReadInt();
+            ClientCS.allClients[_id].ownedTroopsKilled = _packet.ReadInt();
+            ClientCS.allClients[_id].citiesOWned = _packet.ReadInt();
+
+            _amountOfPlayers--;
+        }
     }
 
     #region Troop Info

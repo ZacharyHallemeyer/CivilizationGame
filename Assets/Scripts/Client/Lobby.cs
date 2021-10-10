@@ -69,18 +69,18 @@ public class Lobby : MonoBehaviour
             lobbyRows[_clientId - 1] = new LobbyRow();
             lobbyRows[_clientId - 1].lobbyRowGameObject = _lobbyRow;
             lobbyRows[_clientId - 1].username = _lobbyRow.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            lobbyRows[_clientId - 1].username.text = ClientCS.allClients[_clientId]["Username"];
+            lobbyRows[_clientId - 1].username.text = ClientCS.allClients[_clientId].username;
             lobbyRows[_clientId - 1].tribeContainer = _lobbyRow.transform.GetChild(1).gameObject;
             lobbyRows[_clientId - 1].tribe = lobbyRows[_clientId - 1].tribeContainer.transform.GetChild(0)
                                                                                     .GetComponent<TextMeshProUGUI>();
-            lobbyRows[_clientId - 1].tribe.text = ClientCS.allClients[_clientId]["Tribe"];
+            lobbyRows[_clientId - 1].tribe.text = ClientCS.allClients[_clientId].tribe;
             lobbyRows[_clientId - 1].tribeSkill = lobbyRows[_clientId - 1].tribeContainer.transform.GetChild(1)
                                                                                          .GetComponent<TextMeshProUGUI>();
-            lobbyRows[_clientId - 1].tribeSkill.text = "Skill: " + Constants.tribeSkills[ClientCS.allClients[_clientId]["Tribe"]];
+            lobbyRows[_clientId - 1].tribeSkill.text = "Skill: " + Constants.tribeSkills[ClientCS.allClients[_clientId].tribe];
             lobbyRows[_clientId - 1].tribeEnvironment = lobbyRows[_clientId - 1].tribeContainer.transform.GetChild(2)
                                                                                          .GetComponent<TextMeshProUGUI>();
             lobbyRows[_clientId - 1].tribeEnvironment.text = Constants.tribeNativeEnvironment[
-                                                                ClientCS.allClients[_clientId]["Tribe"]];
+                                                                ClientCS.allClients[_clientId].tribe];
 
             if (!_rightSide)
             {
@@ -107,7 +107,7 @@ public class Lobby : MonoBehaviour
             currentTribeIndex = 0;
 
         string _newTribe = GameManagerCS.instance.avaliableTribes[currentTribeIndex];
-        ClientSend.UpdateTribe(ClientCS.allClients[ClientCS.instance.myId]["Tribe"], _newTribe);
+        ClientSend.UpdateTribe(ClientCS.allClients[ClientCS.instance.myId].tribe, _newTribe);
 
     }
     public void DecrementTribeList()
@@ -117,7 +117,7 @@ public class Lobby : MonoBehaviour
             currentTribeIndex = GameManagerCS.instance.avaliableTribes.Count - 1;
 
         string _newTribe = GameManagerCS.instance.avaliableTribes[currentTribeIndex];
-        ClientSend.UpdateTribe(ClientCS.allClients[ClientCS.instance.myId]["Tribe"], _newTribe);
+        ClientSend.UpdateTribe(ClientCS.allClients[ClientCS.instance.myId].tribe, _newTribe);
     }
 
     static string GetPublicIPAddress()
@@ -152,7 +152,7 @@ public class Lobby : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
-        ClientCS.allClients = new Dictionary<int, Dictionary<string, string>>();
+        ClientCS.allClients = new Dictionary<int, RemotePlayer>();
         ClientSS.allClients = new Dictionary<int, ClientSS>();
         // If player is host than close server and network manager
         if (Server.clients.Count > 0)

@@ -59,8 +59,16 @@ public class ClientSend : MonoBehaviour
     /// <summary>
     /// Sends all end of turn data to server. This includes modified troop, tile, and city info
     /// </summary>
-    public static void SendEndOfTurnData(bool _isKingAlive)
+    public static void SendEndOfTurnData(PlayerCS _player, bool _isKingAlive)
     {
+        // Send Player stats to server
+        using (Packet _packet = new Packet((int)ClientPackets.sendPlayerStats))
+        {
+            _packet.Write(_player.troopsKilled);
+            _packet.Write(_player.ownedTroopsKilled);
+            _packet.Write(_player.citiesOwned);
+        }
+
         // Send all modfified troop info to Server
         foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerCS.instance.modifiedTroopInfo)
         {

@@ -450,6 +450,27 @@ public class ServerSend
         }
     }
 
+    public static void SendPlayerStats(int _playerId)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.sendClientOccupyChangeTileInfo))
+        {
+            _packet.Write(ClientSS.allClients.Count - 1);
+            foreach (ClientSS _client in ClientSS.allClients.Values)
+            {
+                if(_client.id != _playerId)
+                {
+                    _packet.Write(_client.id);
+                    _packet.Write(_client.player.troopsKilled);
+                    _packet.Write(_client.player.ownedTroopsKilled);
+                    _packet.Write(_client.player.citiesOwned);
+                }
+            }
+
+            SendTCPData(_playerId, _packet);
+        }
+
+    }
+
     /// <summary>
     /// Send all modified tile data to new player
     /// </summary>

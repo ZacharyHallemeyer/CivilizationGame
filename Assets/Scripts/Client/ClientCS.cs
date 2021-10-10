@@ -21,7 +21,7 @@ public class ClientCS : MonoBehaviour
     private bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
-    public static Dictionary<int, Dictionary<string, string>> allClients = new Dictionary<int, Dictionary<string, string>>();
+    public static Dictionary<int, RemotePlayer> allClients = new Dictionary<int, RemotePlayer>();
 
     public Lobby lobby;
 
@@ -301,6 +301,7 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.worldCreated, ClientHandle.WorldCreated },
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.sendTileInfo, ClientHandle.CreateNewTile},
+            { (int)ServerPackets.sendClientPlayerStats, ClientHandle.RecievePlayerStats},
             { (int)ServerPackets.sendNeutralCityInfo, ClientHandle.CreateNeutralCity},
             { (int)ServerPackets.sendClientSpawnTroopInfo, ClientHandle.ReceiveSpawnTroopInfo},
             { (int)ServerPackets.sendClientMoveTroopInfo, ClientHandle.ReceiveMoveTroopInfo},

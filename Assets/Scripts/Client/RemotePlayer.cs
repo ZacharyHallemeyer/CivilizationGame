@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSS : MonoBehaviour
+public class RemotePlayer
 {
-    public int id;
     public string username;
+    public string tribe;
 
     public int troopsKilled;
     public int ownedTroopsKilled;
-    public int citiesOwned;
+    public int citiesOWned;
 
-    public void InitPlayer(int _id, string _username)
+    public RemotePlayer(string _username, string _tribe)
     {
-        id = _id;
         username = _username;
+        tribe = _tribe;
     }
 }

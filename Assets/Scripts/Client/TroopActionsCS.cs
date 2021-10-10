@@ -7,9 +7,10 @@ public class TroopActionsCS : MonoBehaviour
 {
     public TileInfo[] objecstToBeReset;
     public int whatIsInteractableValue, whatIsDefaultValue;
-    private string moveableTileTag = "MoveableTile", attackableTileTag = "AttackableTile", defaultTileTag = "Tile";
-    private string conquerableCityTag = "ConquerableCity", cityTag = "City", moveableCityTag = "MoveableCity", portTag = "Port";
     public TroopInfo troopInfo;
+    private readonly string moveableTileTag = "MoveableTile", attackableTileTag = "AttackableTile", defaultTileTag = "Tile", 
+                            conquerableCityTag = "ConquerableCity", cityTag = "City", moveableCityTag = "MoveableCity", 
+                            portTag = "Port";
 
     // Quick Menu
     public GameObject quickMenuContainer;
@@ -562,7 +563,6 @@ public class TroopActionsCS : MonoBehaviour
         _city.InitConqueredCity();
         GameManagerCS.instance.StoreModifiedCityInfo(_city, "Conquer");
 
-        Dictionary<TileInfo, string> _tileData;
         for (int x = _city.xIndex - _city.ownerShipRange; x < _city.xIndex + _city.ownerShipRange + 1; x++)
         {
             for (int z = _city.zIndex - _city.ownerShipRange; z < _city.zIndex + _city.ownerShipRange + 1; z++)
@@ -578,7 +578,7 @@ public class TroopActionsCS : MonoBehaviour
                         _tile.ownerShipVisualObject.SetActive(true);
                         // Change color of ownership visual object
                         _tile.ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
-                            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
+                            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId].tribe];
                         GameManagerCS.instance.StoreModifiedTileInfo(_tile, "OwnershipChange");
                     }
                 }
@@ -586,6 +586,7 @@ public class TroopActionsCS : MonoBehaviour
         }
         // Update morale and education
         PlayerCS.instance.ResetMoraleAndEducation();
+        PlayerCS.instance.citiesOwned++;
         ResetAlteredTiles();
     }
 
@@ -631,7 +632,7 @@ public class TroopActionsCS : MonoBehaviour
         bool _attackedFromTheBack = _troop.rotation == troopInfo.rotation;
         int _distance = Mathf.Abs(_troop.xIndex - troopInfo.xIndex) + Mathf.Abs(_troop.zIndex - troopInfo.zIndex);
         int _troopAttackedEnvironmentBuff = _tile.biome
-                                            == Constants.tribeNativeEnvironment[ClientCS.allClients[_troop.ownerId]["Tribe"]]
+                                            == Constants.tribeNativeEnvironment[ClientCS.allClients[_troop.ownerId].tribe]
                                             ? 1 : 0;
         int _troopAttackingEnvironmentBuff = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex].biome 
                                              == PlayerCS.instance.tribe ? 1 : 0;
@@ -682,6 +683,7 @@ public class TroopActionsCS : MonoBehaviour
         // this troop killed the other troop
         if (_troop.health <= 0)
         {
+            PlayerCS.instance.troopsKilled++;
             _tile.isOccupied = false;
             GameManagerCS.instance.troops.Remove(_troop.id);
             GameManagerCS.instance.objectsToDestroy.Add(_troop.troop);
@@ -717,6 +719,7 @@ public class TroopActionsCS : MonoBehaviour
         // This troop was killed
         if (troopInfo.health <= 0)
         {
+            PlayerCS.instance.ownedTroopsKilled++;
             _tile = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex];
             _tile.isOccupied = false;
             DieAnim();

@@ -321,7 +321,7 @@ public class GameManagerCS : MonoBehaviour
         tiles[_tile.xIndex, _tile.zIndex].ownerShipVisualObject.SetActive(true);
         // Change Color to tribe color
         tiles[_tile.xIndex, _tile.zIndex].ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
-            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
+            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId].tribe];
     }
 
     #endregion
@@ -365,9 +365,9 @@ public class GameManagerCS : MonoBehaviour
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color = Constants.tribeBodyColors[PlayerCS.instance.tribe];
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].color = Constants.tribeEyeColors[PlayerCS.instance.tribe];
         _troopInfo.shipModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
-                                                        Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
+                                                        Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId].tribe];
         _troopInfo.rotationIndicationModel.GetComponent<MeshRenderer>().material.color = 
-                                                    Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
+                                                    Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId].tribe];
 
         troops.Add(currentTroopIndex, _troop.GetComponent<TroopInfo>());
         currentTroopIndex++;
@@ -422,10 +422,10 @@ public class GameManagerCS : MonoBehaviour
 
         // Change color to tribe color
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
-                                                                Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
+                                                                Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId].tribe];
         _troopInfo.troopModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].color = Constants.tribeEyeColors[PlayerCS.instance.tribe];
         _troopInfo.shipModel.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color =
-                                                                Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId]["Tribe"]];
+                                                                Constants.tribeBodyColors[ClientCS.allClients[_troopInfo.ownerId].tribe];
 
         troops.Add(_troopInfo.id, _troopInfo);
     }
@@ -772,7 +772,7 @@ public class GameManagerCS : MonoBehaviour
                         _tile.ownerShipVisualObject.SetActive(true);
                         // Change color of ownership visual object
                         _tile.ownerShipVisualObject.GetComponent<MeshRenderer>().material.color =
-                            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId]["Tribe"]];
+                            Constants.tribeBodyColors[ClientCS.allClients[_tile.ownerId].tribe];
                         StoreModifiedTileInfo(_tile, "OwnershipChange");
                     }
                 }
@@ -782,6 +782,8 @@ public class GameManagerCS : MonoBehaviour
     
     public void UpdateCityInfo(CityInfo _cityToCopy)
     {
+        if (cities[_cityToCopy.id].ownerId == ClientCS.instance.myId)
+            PlayerCS.instance.citiesOwned--;
         cities[_cityToCopy.id].UpdateCityInfo(_cityToCopy);
     }
 
