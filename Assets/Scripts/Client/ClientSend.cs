@@ -35,6 +35,11 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Send to server to update this player's tribe choice
+    /// </summary>
+    /// <param name="_oldTribe"> old tribe </param>
+    /// <param name="_newTribe"> new tribe </param>
     public static void UpdateTribe(string _oldTribe, string _newTribe)
     {
         using (Packet _packet = new Packet((int)ClientPackets.changeTribe))
@@ -46,6 +51,10 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Tell server to start game
+    /// </summary>
+    /// <param name="_sceneName"> Game to start </param>
     public static void StartGame(string _sceneName)
     {
         using ( Packet _packet = new Packet((int)ClientPackets.startGame))
@@ -64,7 +73,6 @@ public class ClientSend : MonoBehaviour
         // Send Player stats to server
         using (Packet _packet = new Packet((int)ClientPackets.sendPlayerStats))
         {
-            Debug.Log("Sending cities: " + _player.citiesOwned);
             _packet.Write(_player.troopsKilled);
             _packet.Write(_player.ownedTroopsKilled);
             _packet.Write(_player.citiesOwned);
@@ -448,6 +456,17 @@ public class ClientSend : MonoBehaviour
             _packet.Write(GameManagerCS.instance.currentCityIndex);
             _packet.Write(_isKingAlive);
 
+            SendTCPData(_packet);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static void EndGame()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.endGame))
+        {
             SendTCPData(_packet);
         }
     }

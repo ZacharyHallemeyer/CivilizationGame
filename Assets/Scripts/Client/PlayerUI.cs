@@ -33,6 +33,8 @@ public class PlayerUI : MonoBehaviour
                   schoolSkillPI, domeSkillPI, portSkillPI, warshipSkillPI, farmSkillPI, mineSkillPI,
                   lumberYardSkillPI;
 
+    public GameObject endGameButton;
+
     // Settings Menu
     public Slider musicSlider, soundEffectSlider, dragSpeedSlider,   rotationSpeedSlider;
 
@@ -207,6 +209,9 @@ public class PlayerUI : MonoBehaviour
                                + GameManagerCS.instance.GetCityResourcesAddedNextTurn("Population");
     }
 
+    /// <summary>
+    /// Opens player normal menu
+    /// </summary>
     public void OpenMenu()
     {
         AudioManager.instance.Play(Constants.uiClickAudio);
@@ -223,6 +228,9 @@ public class PlayerUI : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    /// <summary>
+    /// Closes player normal menu
+    /// </summary>
     public void CloseMenu()
     {
         AudioManager.instance.Play(Constants.uiClickAudio);
@@ -232,6 +240,10 @@ public class PlayerUI : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    /// <summary>
+    /// Purchases skill referenced in parems
+    /// </summary>
+    /// <param name="_skill"> skill to purchases </param>
     public void PurchaseSkill(string _skill)
     {
         PlayerCS.instance.money -= Constants.allSkills[_skill];
@@ -286,6 +298,9 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Opens skill tree and closes normal player menu
+    /// </summary>
     public void DisplaySkillTree()
     {
         skillTreeContainer.SetActive(true);
@@ -294,6 +309,9 @@ public class PlayerUI : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    /// <summary>
+    /// Closes skill tree and opens normal player menu
+    /// </summary>
     public void HideSkillTree()
     {
         skillTreeContainer.SetActive(false);
@@ -301,6 +319,9 @@ public class PlayerUI : MonoBehaviour
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
+    /// <summary>
+    /// Feed each city if player has enough resources
+    /// </summary>
     public void FeedCities()
     {
         bool _feedCompleted = true;
@@ -341,6 +362,9 @@ public class PlayerUI : MonoBehaviour
 
     #region Settings
 
+    /// <summary>
+    /// Opens settings menu and closes normal player menu
+    /// </summary>
     public void DisplaySettingsMenu()
     {
         settingsMenuContainer.SetActive(true);
@@ -349,6 +373,9 @@ public class PlayerUI : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    /// <summary>
+    /// Closes settings menu and opens normal player menu
+    /// </summary>
     public void CloseSettingsMenu()
     {
         settingsMenuContainer.SetActive(false);
@@ -416,6 +443,9 @@ public class PlayerUI : MonoBehaviour
 
     #region Stats
 
+    /// <summary>
+    /// Opens stats menu and closes normal player menu
+    /// </summary>
     public void OpenStatsMenu()
     {
         statsMenuContainer.SetActive(true);
@@ -425,6 +455,9 @@ public class PlayerUI : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    /// <summary>
+    /// Closes stats menu and opens normal player menu
+    /// </summary>
     public void CloseStatsMenu()
     {
         statsMenuContainer.SetActive(false);
@@ -432,6 +465,9 @@ public class PlayerUI : MonoBehaviour
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
+    /// <summary>
+    /// Creates all necessary stats objects for each client
+    /// </summary>
     public void InitStatsMenu()
     {
         int _currentId;
@@ -521,6 +557,9 @@ public class PlayerUI : MonoBehaviour
         SortStatsMenu();
     }
 
+    /// <summary>
+    /// Sorts stats object array in regard to amount of cities owned
+    /// </summary>
     public void SortStatsMenu()
     {
         bool _swapMade = true;
@@ -542,6 +581,9 @@ public class PlayerUI : MonoBehaviour
         RepositionStatObjects();
     }
 
+    /// <summary>
+    /// Repositions stats object array elements
+    /// </summary>
     public void RepositionStatObjects()
     {
         int _yPos = 125, _yIncrement = -50, _index;
@@ -554,6 +596,12 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Swaps values at index one and index two
+    /// </summary>
+    /// <param name="_array"> array to preform swap </param>
+    /// <param name="_indexOne"> index one </param>
+    /// <param name="_indexTwo"> index two </param>
     public void SwapValues(PlayerStatObject[] _array, int _indexOne, int _indexTwo)
     {
         PlayerStatObject _tempObject = _array[_indexOne];
@@ -562,4 +610,14 @@ public class PlayerUI : MonoBehaviour
     }
 
     #endregion
+
+    public void EnableEndGameButton()
+    {
+        endGameButton.SetActive(true);
+    }
+
+    public void EndGame()
+    {
+        ClientSend.EndGame();
+    }
 }

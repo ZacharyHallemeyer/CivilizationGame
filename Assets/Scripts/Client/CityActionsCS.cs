@@ -169,6 +169,9 @@ public class CityActionsCS : MonoBehaviour
                " P: " + _priceDict["Population"];
     }
 
+    /// <summary>
+    /// Places buttons for all possible troops to be trained
+    /// </summary>
     public void InitTroopMenu()
     {
         int _currentXCoord = -750, _currentYCoord = -425, _xIncrementor = 300, _yIncrementor = 125;
@@ -198,6 +201,9 @@ public class CityActionsCS : MonoBehaviour
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
+    /// <summary>
+    /// Places buttons for all possible buildings able to be constructed
+    /// </summary>
     public void InitBuildingMenu()
     {
         int _currentXCoord = -700, _currentYCoord = -425, _xIncrementor = 400, _yIncrementor = 125;
@@ -232,24 +238,12 @@ public class CityActionsCS : MonoBehaviour
     /// </summary>
     public void DisplayPossibleBuildings()
     {
-        // TODO: Refactor with loop
-
         if(cityInfo.isBeingConquered)
         {
             foreach (string _buildingKey in buildingButtons.Keys)
             {
                 buildingButtons[_buildingKey].enabled = false;
             }
-            /*
-            lumberYardButton.enabled = false;
-            farmButton.enabled = false;
-            mineButton.enabled = false;
-            housingButton.enabled = false;
-            schoolButton.enabled = false;
-            libraryButton.enabled = false;
-            domeButton.enabled = false;
-            marketButton.enabled = false;
-            */
             return;
         }
 
@@ -261,45 +255,6 @@ public class CityActionsCS : MonoBehaviour
                 buildingButtons[_buildingKey].enabled = false;
         }
 
-        /*
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["LumberYard"]))
-            lumberYardButton.enabled = true;
-        else 
-            lumberYardButton.enabled =  false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Farm"]))
-            farmButton.enabled = true;
-        else
-            farmButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Mine"]))
-            mineButton.enabled = true;
-        else
-            mineButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Housing"]))
-            housingButton.enabled = true;
-        else
-            housingButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["School"]))
-            schoolButton.enabled = true;
-        else
-            schoolButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Library"]))
-            libraryButton.enabled = true;
-        else
-            libraryButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Dome"]))
-            domeButton.enabled = true;
-        else
-            domeButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Market"]))
-            marketButton.enabled = true;
-        else
-            marketButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Port"]))
-            portButton.enabled = true;
-        else
-            portButton.enabled = false;
-        */
-
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
@@ -309,22 +264,12 @@ public class CityActionsCS : MonoBehaviour
     /// </summary>
     public void DisplayPossibleTroops()
     {
-        // TODO: Refactor with loop
         if(GameManagerCS.instance.tiles[cityInfo.xIndex, cityInfo.zIndex].isOccupied)
         {
             foreach( string _troopKey in troopButtons.Keys )
             {
                 troopButtons[_troopKey].enabled = false;
             }
-            /*
-            scoutButton.enabled = false;
-            militiaButton.enabled = false;
-            armyButton.enabled = false;
-            missleButton.enabled = false;
-            defenseButton.enabled = false;
-            stealthButton.enabled = false;
-            snipperButton.enabled = false;
-            */
             return;
         }
 
@@ -335,37 +280,6 @@ public class CityActionsCS : MonoBehaviour
             else
                 troopButtons[_troopKey].enabled = false;
         }
-
-        /*
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Scout"]))
-            scoutButton.enabled = true;
-        else
-            scoutButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Militia"]))
-            militiaButton.enabled = true;
-        else
-            militiaButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Army"]))
-            armyButton.enabled = true;
-        else
-            armyButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Missle"]))
-            missleButton.enabled = true;
-        else
-            missleButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Defense"]))
-            defenseButton.enabled = true;
-        else
-            defenseButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Stealth"]))
-            stealthButton.enabled = true;
-        else
-            stealthButton.enabled = false;
-        if (DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices["Snipper"]))
-            snipperButton.enabled = true;
-        else
-            snipperButton.enabled = false;
-        */
 
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
@@ -386,6 +300,9 @@ public class CityActionsCS : MonoBehaviour
 
     #region Level System
 
+    /// <summary>
+    /// Checks if city should level up. If so, increases level
+    /// </summary>
     public void CheckLevel()
     {
         if (cityInfo.level == 5) return;
@@ -397,6 +314,9 @@ public class CityActionsCS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Increases owenership range, changes city model, and increases resource gain
+    /// </summary>
     public void IncreaseLevel()
     {
         ChangeLevelModel();
@@ -410,6 +330,9 @@ public class CityActionsCS : MonoBehaviour
         GameManagerCS.instance.modifiedCityInfo.Add(_cityData);
     }
 
+    /// <summary>
+    /// Increases city ownership range
+    /// </summary>
     public void IncreaseOwnerShipRange()
     {
         if (cityInfo.level == 4 || cityInfo.level == 5) return;
@@ -417,6 +340,9 @@ public class CityActionsCS : MonoBehaviour
         GameManagerCS.instance.CreateOwnedTiles(cityInfo);
     }
 
+    /// <summary>
+    /// Increases resource gain per turn
+    /// </summary>
     public void IncreaseResourceGain()
     {
         cityInfo.foodResourcesPerTurn += cityInfo.foodResourcesPerTurn;
@@ -426,6 +352,9 @@ public class CityActionsCS : MonoBehaviour
         cityInfo.populationResourcesPerTurn += cityInfo.populationResourcesPerTurn;
     }
 
+    /// <summary>
+    /// Changes city model to reflect city level
+    /// </summary>
     public void ChangeLevelModel()
     {
         Destroy(cityInfo.cityModel);
@@ -479,6 +408,10 @@ public class CityActionsCS : MonoBehaviour
 
     #region Buildings
 
+    /// <summary>
+    /// Selects which building to build
+    /// </summary>
+    /// <param name="_buildingName"> Building requested </param>
     public void SelectBuildingToBuild(string _buildingName)
     {
         currentBuidlingToBuild = _buildingName;
@@ -496,6 +429,10 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.currentSelectedCityId = cityInfo.id;
     }
 
+    /// <summary>
+    /// Increases city resource gain based on building values and 'builds' building
+    /// </summary>
+    /// <param name="_tileInfo"></param>
     public void BuildBuilding(TileInfo _tileInfo)
     {
         if (_tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal)
@@ -527,6 +464,10 @@ public class CityActionsCS : MonoBehaviour
         ResetAlteredObjects();
     }
 
+    /// <summary>
+    /// 'Builds' a road 
+    /// </summary>
+    /// <param name="_tile"></param>
     public void BuildRoad(TileInfo _tile)
     {
         _tile.isRoad = true;
@@ -670,7 +611,13 @@ public class CityActionsCS : MonoBehaviour
         }
     }
 
-    // Find the end of a road path
+    /// <summary>
+    /// Creastes interactable tiles that roads can be built on
+    /// Follows roads through recoursion
+    /// </summary>
+    /// <param name="_tile"> Tile to actions preform on </param>
+    /// <param name="_index"> current index of objects to be reset array </param>
+    /// <returns></returns>
     private int CreateInteractableTileToBuildRoadsOnHelper(TileInfo _tile, int _index)
     {
         TileInfo _currentTile;
@@ -714,6 +661,9 @@ public class CityActionsCS : MonoBehaviour
         return _index;
     }
 
+    /// <summary>
+    /// Resizes altered objects array by doubling capacity
+    /// </summary>
     private void ResizeAlteredObjectsArray()
     {
         int _index;
@@ -764,14 +714,5 @@ public class CityActionsCS : MonoBehaviour
         }
         objecstToBeReset = null;
     }
-    #endregion
-
-    #region Morale and Education
-
-    public void Feed()
-    {
-        // TODO
-    }
-
     #endregion
 }

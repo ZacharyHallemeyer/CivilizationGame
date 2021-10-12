@@ -256,20 +256,44 @@ public class ServerSend
     }
 
     /// <summary>
+    /// Sends all other player stats to certain player
+    /// </summary>
+    /// <param name="_playerId"> Player to send player stats </param>
+    public static void SendPlayerStats(int _playerId)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.sendClientPlayerStats))
+        {
+            _packet.Write(ClientSS.allClients.Count - 1);
+            foreach (ClientSS _client in ClientSS.allClients.Values)
+            {
+                if (_client.id != _playerId)
+                {
+                    _packet.Write(_client.id);
+                    _packet.Write(_client.player.troopsKilled);
+                    _packet.Write(_client.player.ownedTroopsKilled);
+                    _packet.Write(_client.player.citiesOwned);
+                }
+            }
+
+            SendTCPData(_playerId, _packet);
+        }
+    }
+
+    /// <summary>
     /// Send all modified troop data to new player
     /// </summary>
     /// <param name="_playerId"> client id that this data is being sent to </param>
     public static void SendModifiedTroop(int _playerId)
     {
         List<Dictionary<TroopInfo, string>> _itemsToRemove = new List<Dictionary<TroopInfo, string>>();
-        List<TroopInfo> _itemsToDestroy = new  List<TroopInfo>();
+        List<TroopInfo> _itemsToDestroy = new List<TroopInfo>();
         foreach (Dictionary<TroopInfo, string> _troopDict in GameManagerSS.instance.modifiedTroopInfo)
         {
-            foreach(TroopInfo _troop in _troopDict.Keys)
+            foreach (TroopInfo _troop in _troopDict.Keys)
             {
-                
+
                 // Remove troop from list and remove component once troop info has been sent to call clients
-                if(_troop.idOfPlayerThatSentInfo == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
+                if (_troop.idOfPlayerThatSentInfo == GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId])
                 {
                     _itemsToRemove.Add(_troopDict);
                     _itemsToDestroy.Add(_troop);
@@ -444,32 +468,10 @@ public class ServerSend
         {
             GameManagerSS.instance.modifiedTroopInfo.Remove(_itemToRemove);
         }
-        foreach(TroopInfo _itemToDestroy in _itemsToDestroy)
+        foreach (TroopInfo _itemToDestroy in _itemsToDestroy)
         {
             GameManagerSS.instance.RemoveModifiedTroop(_itemToDestroy);
         }
-    }
-
-    public static void SendPlayerStats(int _playerId)
-    {
-        using (Packet _packet = new Packet((int)ServerPackets.sendClientPlayerStats))
-        {
-            _packet.Write(ClientSS.allClients.Count - 1);
-            foreach (ClientSS _client in ClientSS.allClients.Values)
-            {
-                if(_client.id != _playerId)
-                {
-                    _packet.Write(_client.id);
-                    _packet.Write(_client.player.troopsKilled);
-                    _packet.Write(_client.player.ownedTroopsKilled);
-                    _packet.Write(_client.player.citiesOwned);
-                    Debug.Log("Sending: " + _client.id + " Cities: " + _client.player.citiesOwned);
-                }
-            }
-
-            SendTCPData(_playerId, _packet);
-        }
-
     }
 
     /// <summary>
@@ -714,6 +716,10 @@ public class ServerSend
         }
     }
 
+    /// <summary>
+    /// Send to client to have player start their turn
+    /// </summary>
+    /// <param name="_playerId"> Player to start their turn </param>
     public static void PlayerStartTurn(int _playerId)
     {
         using (Packet _packet = new Packet((int)ServerPackets.startTurn))
@@ -721,8 +727,17 @@ public class ServerSend
             _packet.Write(GameManagerSS.instance.currentTroopId);
             _packet.Write(GameManagerSS.instance.currentCityId);
             _packet.Write(GameManagerSS.instance.turnCount);
+            _packet.Write(GameManagerSS.instance.playerIds.Count);
 
             SendTCPData(_playerId, _packet);
+        }
+    }
+
+    public static void EndGame()
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.endGame))
+        {
+            SendTCPDataToAll(_packet);
         }
     }
     #endregion

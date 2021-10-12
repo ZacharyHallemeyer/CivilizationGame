@@ -37,6 +37,7 @@ public enum ServerPackets
     sendClientLevelUpCityInfo,
     sendClientUpdatedCityInfo,
     startTurn,
+    endGame,
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -68,6 +69,7 @@ public enum ClientPackets
     sendUpdatedCityInfo,
     endTurn,
     removePlayer,
+    endGame,
 }
 
 public class Packet : IDisposable

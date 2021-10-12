@@ -76,12 +76,6 @@ public class PlayerCS : MonoBehaviour
 
         dragSpeed = PlayerPrefs.GetFloat("DragSpeed", 2);
         rotationSpeed = PlayerPrefs.GetFloat("RotationSpeed", 2);
-        // TESTING
-        money = 100000;
-        food = 100000;
-        metal = 100000;
-        wood = 100000;
-        // TESTING
     }
 
     private void OnEnable()
@@ -314,6 +308,9 @@ public class PlayerCS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reset all altered tiles
+    /// </summary>
     public void ResetAlteredTiles()
     {
         if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
@@ -322,6 +319,9 @@ public class PlayerCS : MonoBehaviour
             _city.cityActions.ResetAlteredObjects();
     }
 
+    /// <summary>
+    /// Hides all quick menus
+    /// </summary>
     public void HideQuckMenus()
     {
         if (GameManagerCS.instance.troops.TryGetValue(currentSelectedTroopId, out TroopInfo _troop))
@@ -347,6 +347,9 @@ public class PlayerCS : MonoBehaviour
         cam.transform.position = new Vector3(_newX, _newY, _newZ);
     }
 
+    /// <summary>
+    /// Resets morale and education at the start of every turn
+    /// </summary>
     public void ResetMoraleAndEducation()
     {
         morale = 0;
@@ -365,6 +368,10 @@ public class PlayerCS : MonoBehaviour
         GameManagerCS.instance.UpdatePrices();
     }
 
+
+    /// <summary>
+    /// End players turns
+    /// </summary>
     public void EndTurn()
     {
         enabled = false;

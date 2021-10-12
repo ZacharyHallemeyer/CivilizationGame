@@ -150,6 +150,7 @@ public class Server
             { (int)ClientPackets.sendLevelUpCityInfo, ServerHandle.RecieveLevelUpCityInfo },
             { (int)ClientPackets.sendUpdatedCityInfo, ServerHandle.RecieveUpdatedCityInfo },
             { (int)ClientPackets.endTurn, ServerHandle.EndTurn },
+            { (int)ClientPackets.endGame, ServerHandle.RecieveEndGame },
         };
         //Debug.Log("Initialized Server base packets.");
     }
@@ -161,5 +162,10 @@ public class Server
     {
         tcpListener.Stop();
         udpListener.Close();
+    }
+
+    public static void Reset()
+    {
+        clients = new Dictionary<int, ClientSS>();
     }
 }

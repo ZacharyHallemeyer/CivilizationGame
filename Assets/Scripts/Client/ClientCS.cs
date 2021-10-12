@@ -322,6 +322,7 @@ public class ClientCS : MonoBehaviour
             { (int)ServerPackets.sendClientLevelUpCityInfo, ClientHandle.ReceiveLevelUpCityInfo},
             { (int)ServerPackets.sendClientUpdatedCityInfo, ClientHandle.ReceiveUpdatedCityInfo},
             { (int)ServerPackets.startTurn, ClientHandle.PlayerStartTurn},
+            { (int)ServerPackets.endGame, ClientHandle.EndGame },
         };
         //Debug.Log("Initialized packets.");
     }
@@ -336,5 +337,11 @@ public class ClientCS : MonoBehaviour
 
             //Debug.Log("Diconnected from server.");
         }
+    }
+
+    public void ResetAndDestroy()
+    {
+        allClients = new Dictionary<int, RemotePlayer>();
+        Destroy(this);
     }
 }

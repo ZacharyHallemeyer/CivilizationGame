@@ -29,8 +29,6 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-
         if (instance == null)
             instance = this;
         else
@@ -38,6 +36,7 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        DontDestroyOnLoad(gameObject);
 
         // Set volumes pref if there is none
         if (PlayerPrefs.GetFloat("SoundEffectsVolume", 100) == 100)
@@ -67,17 +66,6 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         Play("BackgroundMusic");
-    }
-
-    private void Update()
-    {
-        foreach (Sound _sound in sounds)
-        {
-            _sound.source.clip = _sound.clip;
-
-            _sound.source.pitch = _sound.pitch;
-            _sound.source.loop = _sound.looping;
-        }
     }
 
     /// <summary>

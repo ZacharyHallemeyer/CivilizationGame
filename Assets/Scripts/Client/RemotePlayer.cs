@@ -12,6 +12,12 @@ public class RemotePlayer
     public int ownedTroopsKilled;
     public int citiesOwned;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="_username"> username of player </param>
+    /// <param name="_tribe"> tribe of player </param>
+    /// <param name="_clientId"> id of player </param>
     public RemotePlayer(string _username, string _tribe, int _clientId)
     {
         username = _username;

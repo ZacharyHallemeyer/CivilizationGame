@@ -60,6 +60,10 @@ public class MainMenu : MonoBehaviour
 
     #region Actions
 
+    /// <summary>
+    /// Changes the port to connect to
+    /// </summary>
+    /// <param name="_portString"> Port to connect to </param>
     public void ChangePort(string _portString)
     {
         int _portNum = int.Parse(_portString);
@@ -69,6 +73,10 @@ public class MainMenu : MonoBehaviour
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
+    /// <summary>
+    /// Changes player username
+    /// </summary>
+    /// <param name="_username"> new username </param>
     public void ChangeUsername(string _username)
     {
         PlayerPrefs.SetString("Username", _username);
@@ -77,6 +85,10 @@ public class MainMenu : MonoBehaviour
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
+    /// <summary>
+    /// Changes the ip to connect to
+    /// </summary>
+    /// <param name="_ip"></param>
     public void ChangeHostIP(string _ip)
     {
         PlayerPrefs.SetString("HostIP", _ip);
@@ -84,6 +96,10 @@ public class MainMenu : MonoBehaviour
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
+    /// <summary>
+    /// Switch game mode on server side
+    /// </summary>
+    /// <param name="_gameModeName"></param>
     public void ChangeServerGameMode(string _gameModeName)
     {
         AsyncOperation _asyncOperation = SceneManager.LoadSceneAsync(_gameModeName, LoadSceneMode.Additive);
@@ -99,6 +115,12 @@ public class MainMenu : MonoBehaviour
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
+    /// <summary>
+    /// When the scene is loaded, set it to active scene
+    /// </summary>
+    /// <param name="_asyncOperation"> the operation being completed </param>
+    /// <param name="_gameModeName"> game mode to switch client side to </param>
+    /// <returns></returns>
     public IEnumerator WaitAndSetActiveScene(AsyncOperation _asyncOperation, string _gameModeName)
     {
         yield return new WaitForEndOfFrame();
@@ -187,6 +209,11 @@ public class MainMenu : MonoBehaviour
 
     #region Tools
 
+    /// <summary>
+    /// Generates random username
+    /// </summary>
+    /// <param name="_characterCount"> username character count </param>
+    /// <returns></returns>
     public string RandomUsernameGenerator(int _characterCount)
     {
         string _username = "";
@@ -197,6 +224,9 @@ public class MainMenu : MonoBehaviour
         return _username;
     }
 
+    /// <summary>
+    /// Plays ui click sound
+    /// </summary>
     public void PlayUISound()
     {
         AudioManager.instance.Play(Constants.uiClickAudio);

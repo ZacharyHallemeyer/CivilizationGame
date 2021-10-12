@@ -636,6 +636,7 @@ public class ClientHandle : MonoBehaviour
     /// <param name="_packet"></param>
     public static void PlayerStartTurn(Packet _packet)
     {
+        int _activePlayerCount;
         if (!(GameManagerCS.instance.isAllTroopInfoReceived && GameManagerCS.instance.isAllTileInfoReceived
             && GameManagerCS.instance.isAllCityInfoReceived))
         {
@@ -649,8 +650,18 @@ public class ClientHandle : MonoBehaviour
         GameManagerCS.instance.currentTroopIndex = _packet.ReadInt();
         GameManagerCS.instance.currentCityIndex = _packet.ReadInt();
         GameManagerCS.instance.turnCount = _packet.ReadInt();
+        _activePlayerCount = _packet.ReadInt();
+
 
         GameManagerCS.instance.PlayPastMoves();
-        //PlayerCS.instance.playerUI.InitStatsMenu();
+        if(_activePlayerCount <= 1)
+        {
+            GameManagerCS.instance.PlayerWon();
+        }
+    }
+
+    public static void EndGame(Packet _packet)
+    {
+        GameManagerCS.instance.QuitGame();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
@@ -66,7 +67,9 @@ public class GameManagerCS : MonoBehaviour
 
     #region Set Up Functions
 
-    // Set instance or destroy if instance already exist
+    /// <summary>
+    /// Set instance or destroy if instance already exist
+    /// </summary>
     private void Awake()
     {
         if (instance == null)
@@ -111,7 +114,9 @@ public class GameManagerCS : MonoBehaviour
         };
     }
 
-    // Init needed data
+    /// <summary>
+    /// Init needed data
+    /// </summary>
     private void Start()
     {
         int _index = 0;
@@ -150,6 +155,9 @@ public class GameManagerCS : MonoBehaviour
         arrow.SetActive(false);
     }
 
+    /// <summary>
+    /// Creates starCount amount of stars
+    /// </summary>
     public void CreateStars()
     {
         for (int i = 0; i < starCount; i++)
@@ -430,6 +438,11 @@ public class GameManagerCS : MonoBehaviour
         troops.Add(_troopInfo.id, _troopInfo);
     }
 
+    /// <summary>
+    /// Spawns troop moddel for troop specified
+    /// </summary>
+    /// <param name="_troop"> Troop info object </param>
+    /// <param name="_troopName"> troop type </param>
     public void SpawnTroopModel(TroopInfo _troop, string _troopName)
     {
         foreach(string _troopKey in troopModels.Keys)
@@ -515,6 +528,11 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.runningCoroutine = null;
     }
 
+    /// <summary>
+    /// Updates troop info
+    /// </summary>
+    /// <param name="_troopInfo"> troop info to update with </param>
+    /// <returns> null </returns>
     public IEnumerator UpdateTroopInfo(TroopInfo _troopInfo)
     {
         troops[_troopInfo.id].UpdateTroopInfo(_troopInfo);
@@ -1039,6 +1057,10 @@ public class GameManagerCS : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates road models that come from server
+    /// </summary>
+    /// <param name="_tile"></param>
     public void UpdateRoadModelsFromServer(TileInfo _tile)
     {
         tiles[_tile.xIndex, _tile.zIndex].isRoad = _tile.isRoad;
@@ -1067,6 +1089,9 @@ public class GameManagerCS : MonoBehaviour
         modifiedCityInfo = new List<Dictionary<CityInfo, string>>();
     }
 
+    /// <summary>
+    /// Destroys temp objects at end of turn
+    /// </summary>
     public void DestroyObjectsToDestroyAtEndOfTurn()
     {
         foreach (GameObject _object in objectsToDestroy)
@@ -1231,6 +1256,9 @@ public class GameManagerCS : MonoBehaviour
         PlayerCS.instance.enabled = true;
     }
 
+    /// <summary>
+    /// Updates prices for buildings, troops, and skills
+    /// </summary>
     public void UpdatePrices()
     {
         foreach(string _priceKey in Constants.prices.Keys)
@@ -1265,6 +1293,11 @@ public class GameManagerCS : MonoBehaviour
 
     #region Tools
 
+    /// <summary>
+    /// Stores modified troop data in a dictionary
+    /// </summary>
+    /// <param name="_troop"> troop data to copy and store </param>
+    /// <param name="_command"> command associated with data </param>
     public void StoreModifiedTroopInfo(TroopInfo _troop, string _command)
     {
         TroopInfo _copiedTroop = dataStoringObject.AddComponent<TroopInfo>();
@@ -1274,6 +1307,11 @@ public class GameManagerCS : MonoBehaviour
         modifiedTroopInfo.Add(_troopData);
     }
 
+    /// <summary>
+    /// Stores modified tile data in a dictionary
+    /// </summary>
+    /// <param name="_tile"> tile data to copy and store </param>
+    /// <param name="_command"> command associated with data </param>
     public void StoreModifiedTileInfo(TileInfo _tile, string _command)
     {
         TileInfo _copiedTile = dataStoringObject.AddComponent<TileInfo>();
@@ -1283,6 +1321,11 @@ public class GameManagerCS : MonoBehaviour
         modifiedTileInfo.Add(_tileData);
     }
 
+    /// <summary>
+    /// Stores modified city data in a dictionary
+    /// </summary>
+    /// <param name="_city"> city data to copy and store </param>
+    /// <param name="_command"> command associated with data </param>
     public void StoreModifiedCityInfo(CityInfo _city, string _command)
     {
         CityInfo _copiedCity = dataStoringObject.AddComponent<CityInfo>();
@@ -1290,6 +1333,30 @@ public class GameManagerCS : MonoBehaviour
         Dictionary<CityInfo, string> _cityData = new Dictionary<CityInfo, string>()
             { {_copiedCity, _command} };
         modifiedCityInfo.Add(_cityData);
+    }
+
+    public void PlayerWon()
+    {
+        AudioManager.instance.Play(Constants.winMusic);
+        PlayerCS.instance.playerUI.EnableEndGameButton();
+    }
+
+    public void QuitGame()
+    {
+        // Check if there are more than one scene loaded
+        if(SceneManager.sceneCount > 1)
+        {
+            // Assume the second scene is server scene and unload 
+            Server.Reset();
+            ClientSS.Reset();
+            Destroy(NetworkManager.instance.gameObject);
+            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("ServerDomination"));
+        }
+        // Unload client scene
+        ClientCS.instance.ResetAndDestroy();
+        SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("ClientDomination"));
+        // Load Main Menu
+        SceneManager.LoadScene(0);
     }
 
     #endregion

@@ -263,4 +263,9 @@ public class ClientSS
         allClients.Remove(id);
         ServerSend.PlayerDisconnect(id);
     }
+
+    public static void Reset()
+    {
+        allClients = new Dictionary<int, ClientSS>();
+    }
 }

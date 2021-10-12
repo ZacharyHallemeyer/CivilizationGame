@@ -649,4 +649,15 @@ public class ServerHandle
         ServerSend.SendModifiedCity(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
         ServerSend.PlayerStartTurn(GameManagerSS.instance.playerIds[GameManagerSS.instance.currentPlayerTurnId]);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_fromClient"> Client id that wants to end turn </param>
+    /// <param name="_packet"> Packet from client </param>
+    public static void RecieveEndGame(int _fromClient, Packet _packet)
+    {
+        ServerSend.EndGame();
+        Server.Stop();
+    }
 }
