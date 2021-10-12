@@ -389,4 +389,9 @@ public class PlayerCS : MonoBehaviour
         GameManagerCS.instance.ClearModifiedData();
         GameManagerCS.instance.isTurn = false;
     }
+
+    public void Reset()
+    {
+        instance = null;
+    }
 }

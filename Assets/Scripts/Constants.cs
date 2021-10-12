@@ -1111,4 +1111,11 @@ public static class Constants
 
     // This dict is empty on purpose (Player is not able to build any buildings without first buying appropriate skill)
     public static List<string> avaliableBuildings = new List<string>();
+
+
+    public static void Reset()
+    {
+        avaliableBuildings = new List<string>();
+        avaliableTroops = new List<string>();
+    }
 }

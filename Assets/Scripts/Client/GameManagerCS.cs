@@ -1357,6 +1357,14 @@ public class GameManagerCS : MonoBehaviour
         SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("ClientDomination"));
         // Load Main Menu
         SceneManager.LoadScene(0);
+        Reset();
+        PlayerCS.instance.Reset();
+        Constants.Reset();
+    }
+
+    private void Reset()
+    {
+        instance = null;
     }
 
     #endregion
