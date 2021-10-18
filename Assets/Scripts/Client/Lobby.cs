@@ -170,7 +170,6 @@ public class Lobby : MonoBehaviour
         // If player is host than close server and network manager
         if (Server.clients.Count > 0)
         {
-            Debug.Log(Server.clients.Count > 0);
             Server.clients = new Dictionary<int, ClientSS>();
             Server.Stop();
             Destroy(FindObjectOfType<NetworkManager>().gameObject);

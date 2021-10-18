@@ -17,8 +17,11 @@ public class MainMenu : MonoBehaviour
 
     public Slider musicSlider, soundEffectSlider;
 
-    public GameObject mainMenuFirstButton, gameSelectionHostFirstButton, gameSelectionJoinFirstButton;
-    public GameObject optionsMenuFirstButton, statsMenuFirstButton, aboutMenuFirstButton;
+    // World Gen Options
+    public Slider biomeSlider, foodSlider, woodSlider, metalSlider, neutralCitySlider, obstacleSlider, xSizeSlider, zSizeSlider,
+                  waterLevelSlider;
+    public TextMeshProUGUI biomeText, foodText, woodText, metalText, neutralCityText, obstacleText, xSizeText, zSizeText,
+                           waterLevelText;
 
     private void Start()
     {
@@ -54,6 +57,35 @@ public class MainMenu : MonoBehaviour
         if (PlayerPrefs.GetString("HostIP", "NULL") == "NULL")
             PlayerPrefs.SetString("HostIP", "127.0.0.1");
         ipFieldPlaceholderText.text = PlayerPrefs.GetString("HostIP");
+    }
+
+    /// <summary>
+    /// Sets option sliders to player prefs values
+    /// </summary>
+    public virtual void SetSliderUI()
+    {
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .75f);
+        soundEffectSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", .75f);
+
+        biomeSlider.value = PlayerPrefs.GetInt("WorleyPoints", 250);
+        foodSlider.value = PlayerPrefs.GetInt("FoodTiles", 15);
+        woodSlider.value = PlayerPrefs.GetInt("WoodTiles", 15);
+        metalSlider.value = PlayerPrefs.GetInt("MetalTiles", 15);
+        obstacleSlider.value = PlayerPrefs.GetInt("Obstacles", 15);
+        neutralCitySlider.value = PlayerPrefs.GetInt("NeutralCities", 15);
+        xSizeSlider.value = PlayerPrefs.GetInt("XSize", 25);
+        zSizeSlider.value = PlayerPrefs.GetInt("XZize", 25);
+        waterLevelSlider.value = PlayerPrefs.GetFloat("WaterLevel", .25f);
+
+        biomeText.text = PlayerPrefs.GetInt("WorleyPoints", 250).ToString();
+        foodText.text = PlayerPrefs.GetInt("FoodTiles", 15).ToString();
+        woodText.text = PlayerPrefs.GetInt("WoodTiles", 15).ToString();
+        metalText.text = PlayerPrefs.GetInt("MetalTiles", 15).ToString();
+        obstacleText.text = PlayerPrefs.GetInt("Obstacles", 15).ToString();
+        neutralCityText.text = PlayerPrefs.GetInt("NeutralCities", 15).ToString();
+        xSizeText.text = PlayerPrefs.GetInt("XSize", 25).ToString();
+        zSizeText.text = PlayerPrefs.GetInt("XZize", 25).ToString();
+        waterLevelText.text = PlayerPrefs.GetFloat("WaterLevel", .25f).ToString("n2");
     }
 
     #endregion
@@ -92,7 +124,7 @@ public class MainMenu : MonoBehaviour
     public void ChangeHostIP(string _ip)
     {
         PlayerPrefs.SetString("HostIP", _ip);
-        SetUpUserNameField();
+        SetUpIPField();
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
@@ -175,20 +207,11 @@ public class MainMenu : MonoBehaviour
     #region Sliders
 
     /// <summary>
-    /// Sets option sliders to player prefs values
-    /// </summary>
-    public virtual void SetSliderUI()
-    {
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .75f);
-        soundEffectSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", .75f);
-    }
-
-    /// <summary>
     /// Sets player prefs and audio volume in regard to general volume
     /// </summary>
-    public virtual void SetMusicVolumePreference(float volume)
+    public virtual void SetMusicVolumePreference(float _volume)
     {
-        PlayerPrefs.SetFloat("MusicVolume", volume);
+        PlayerPrefs.SetFloat("MusicVolume", _volume);
         if (AudioManager.instance == null)
             AudioManager.instance = FindObjectOfType<AudioManager>();
         AudioManager.instance.SetMusicVolume();
@@ -197,13 +220,68 @@ public class MainMenu : MonoBehaviour
     /// <summary>
     /// Sets player prefs and audio volume in regard to general volume
     /// </summary>
-    public virtual void SetSoundEffectsPreference(float volume)
+    public virtual void SetSoundEffectsPreference(float _volume)
     {
-        PlayerPrefs.SetFloat("SoundEffectsVolume", volume);
+        PlayerPrefs.SetFloat("SoundEffectsVolume", _volume);
         if (AudioManager.instance == null)
             AudioManager.instance = FindObjectOfType<AudioManager>();
         AudioManager.instance.SetSoundEffectVolume();
     }
+
+    public virtual void SetBiome(float _value)
+    {
+        PlayerPrefs.SetInt("WorleyPoints", (int) _value);
+        biomeText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetFood(float _value)
+    {
+        PlayerPrefs.SetInt("FoodTiles", (int) _value);
+        foodText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetWood(float _value)
+    {
+        PlayerPrefs.SetInt("WoodTiles", (int) _value);
+        woodText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetMetal(float _value)
+    {
+        PlayerPrefs.SetInt("MetalTiles", (int) _value);
+        metalText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetObstacles(float _value)
+    {
+        PlayerPrefs.SetInt("ObstacleTiles", (int) _value);
+        obstacleText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetNeutralCities(float _value)
+    {
+        PlayerPrefs.SetInt("NeutralCities", (int) _value);
+        neutralCityText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetXSize(float _value)
+    {
+        PlayerPrefs.SetInt("XSize", (int) _value);
+        xSizeText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetZSize(float _value)
+    {
+        PlayerPrefs.SetInt("ZSize", (int) _value);
+        zSizeText.text = ((int)_value).ToString();
+    }
+
+    public virtual void SetWaterLevel(float _value)
+    {
+        PlayerPrefs.SetFloat("WaterLevel", _value);
+        waterLevelText.text = _value.ToString("n2");
+    }
+
 
     #endregion
 

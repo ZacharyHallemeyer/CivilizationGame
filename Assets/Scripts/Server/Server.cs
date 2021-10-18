@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class Server
 {
+    public static string ip = "192.168.0.24";
     public static int MaxPlayers { get; private set; }
     public static int Port { get; private set; }
     public static Dictionary<int, ClientSS> clients = new Dictionary<int, ClientSS>();
@@ -24,9 +25,11 @@ public class Server
         MaxPlayers = _maxPlayers;
         Port = _port;
 
-        //Debug.Log("Starting server...");
+        Debug.Log("Starting server...");
+        Debug.Log(IPAddress.Any.AddressFamily);
         InitializeServerData();
 
+        //tcpListener = new TcpListener(IPAddress.Any, Port);
         tcpListener = new TcpListener(IPAddress.Any, Port);
         tcpListener.Start();
         tcpListener.BeginAcceptTcpClient(TCPConnectCallback, null);
@@ -34,7 +37,7 @@ public class Server
         udpListener = new UdpClient(Port);
         udpListener.BeginReceive(UDPReceiveCallback, null);
 
-        //Debug.Log($"Server started on port {Port}.");
+        Debug.Log($"Server started on port {Port}.");
     }
 
     /// <summary>Handles new TCP connections.</summary>
@@ -42,7 +45,7 @@ public class Server
     {
         TcpClient _client = tcpListener.EndAcceptTcpClient(_result);
         tcpListener.BeginAcceptTcpClient(TCPConnectCallback, null);
-        //Debug.Log($"Incoming connection from {_client.Client.RemoteEndPoint}...");
+        Debug.Log($"Incoming connection from {_client.Client.RemoteEndPoint}...");
 
         for (int i = 1; i <= MaxPlayers; i++)
         {

@@ -14,7 +14,7 @@ public class WorldGeneratorSS : MonoBehaviour
     private int index = 0;
 
     public float groundXSize, groundZSize;
-    public float scale = 30, xPerlinOffset, yPerlinOffset;
+    public float scale = 10, xPerlinOffset, yPerlinOffset;
     [Range(0, 1)]
     public float waterLevel = .25f, landLevel = 1f;
     public int worleyPointCount = 250;
@@ -49,6 +49,17 @@ public class WorldGeneratorSS : MonoBehaviour
             biomeOptions[_index] = _biomeName;
             _index++;
         }
+
+        worleyPointCount = PlayerPrefs.GetInt("WorleyPoints", 250);
+        amountOfFoodTiles = PlayerPrefs.GetInt("FoodTiles", 15);
+        amountofWoodTiles = PlayerPrefs.GetInt("WoodTiles", 15);
+        amountOfMetalTiles = PlayerPrefs.GetInt("MetalTiles", 15);
+        amountOfObstacles = PlayerPrefs.GetInt("Obstacles", 15);
+        amountOfNeutralCities = PlayerPrefs.GetInt("NeutralCities", 15);
+        groundXSize = PlayerPrefs.GetInt("XSize", 25);
+        groundZSize = PlayerPrefs.GetInt("XZize", 25);
+        waterLevel = PlayerPrefs.GetFloat("WaterLevel", .25f);
+
     }
 
     /// <summary>
