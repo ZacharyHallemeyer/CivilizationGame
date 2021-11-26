@@ -1,14 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using System.Collections;
+using UnityEngine.UI;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// Script handles all player UI
+/// </summary>
 public class PlayerUI : MonoBehaviour
 {
-    public Canvas canvas;
-    public CanvasScaler canvasScaler;
+    #region Globals
 
     public GameObject playerUIContainer, mainContainer, skillTreeContainer, quickMenuContainer, menuButton, feedButton,
                       settingsMenuContainer, statsMenuContainer;
@@ -16,7 +19,7 @@ public class PlayerUI : MonoBehaviour
     // Resource
     public TextMeshProUGUI foodText, woodText, metalText, moneyText, moraleText, educationText, populationText;
 
-    // SKill Tree
+    // Skill Tree
     public Button roadSkillButton, wallSkillButton, armySkillButton, snipperSkillButton, missleSkillButton, defenseSkillButton,
                   stealthSkillButton, heavyHitterButton, watchTowerButton, marketSkillButton, housingSkillButton, 
                   librarySkillButton, schoolSkillButton, domeSkillButton, portSkillButton, warshipSkillButton, 
@@ -26,6 +29,13 @@ public class PlayerUI : MonoBehaviour
                   stealthSkillText, heavyHitterText, watchTowerText, marketSkillText, housingSkillText, librarySkillText, 
                   schoolSkillText, domeSkillText, portSkillText, warshipSkillText, farmSkillText, mineSkillText, 
                   lumberYardSkillText;
+
+    // Skill Tree Tool Tip
+    public GameObject toolTip;
+    public TextMeshProUGUI toolTipText;
+    private RectTransform toolTipRect;
+    private List<SkillToolTip> toolTipsList = new List<SkillToolTip>();
+
 
     // Purchase Indicator = PI
     public RawImage roadSkillPI, wallSkillPI, armySkillPI, snipperSkillPI, missleSkillPI, defenseSkillPI,
@@ -59,6 +69,8 @@ public class PlayerUI : MonoBehaviour
     public Dictionary<string, Button> skillButtons = new Dictionary<string, Button>();
     public Dictionary<string, TextMeshProUGUI> skillText = new Dictionary<string, TextMeshProUGUI>();
     public Dictionary<string, RawImage> skillPurchaseIndicators = new Dictionary<string, RawImage>();
+
+    #endregion
 
     public void Start()
     {
@@ -129,8 +141,20 @@ public class PlayerUI : MonoBehaviour
             { "Mine", mineSkillPI },
             { "LumberYard", lumberYardSkillPI },
         };
+
+        
+        // Init skill tool tips
+        toolTipRect = toolTip.GetComponent<RectTransform>();
+        foreach(string _key in skillButtons.Keys)
+        {
+            Debug.Log(skillButtons[_key] == null);
+            toolTipsList.Add(skillButtons[_key].gameObject.GetComponent<SkillToolTip>());
+        }
+
         InitSkillTree();
     }
+
+    #region Resource UI
 
     /// <summary>
     /// Set player resource UI
@@ -208,6 +232,10 @@ public class PlayerUI : MonoBehaviour
         populationText.text = "Population: " + _populationAmount + " + " 
                                + GameManagerCS.instance.GetCityResourcesAddedNextTurn("Population");
     }
+
+    #endregion
+
+    #region Menus
 
     /// <summary>
     /// Opens player normal menu
@@ -296,6 +324,12 @@ public class PlayerUI : MonoBehaviour
                 }
             }
         }
+
+        // Start/Init Tool tips
+        foreach(SkillToolTip _skillToolTip in toolTipsList)
+        {
+            _skillToolTip.StartToolTip();
+        }
     }
 
     /// <summary>
@@ -303,10 +337,12 @@ public class PlayerUI : MonoBehaviour
     /// </summary>
     public void DisplaySkillTree()
     {
+        InitSkillTree();
         skillTreeContainer.SetActive(true);
         CloseMenu();
         AudioManager.instance.Play(Constants.uiClickAudio);
         Time.timeScale = 0;
+        enabled = true;
     }
 
     /// <summary>
@@ -317,6 +353,37 @@ public class PlayerUI : MonoBehaviour
         skillTreeContainer.SetActive(false);
         OpenMenu();
         AudioManager.instance.Play(Constants.uiClickAudio);
+        enabled = false;
+
+        // Stop skill tool tips
+        // Start/Init Tool tips
+        foreach (SkillToolTip _skillToolTip in toolTipsList)
+        {
+            _skillToolTip.StopToolTip();
+        }
+    }
+
+    public void DisplayToolTip(string _newMessage, int _skillPrice, Vector3 _position)
+    {
+        toolTip.SetActive(true);
+        //MoveToolTipToCursor(_position);
+        ChangeToolTip(_skillPrice, _newMessage);
+    }
+
+    public void HideToolTip()
+    {
+        toolTip.SetActive(false);
+    }
+
+    public void ChangeToolTip(int _skillPrice, string _newString)
+    {
+        toolTipText.text = _newString + _skillPrice;
+    }
+
+    public void MoveToolTipToCursor(Vector3 _position)
+    {
+        _position.y += 25;
+        toolTipRect.anchoredPosition = _position;
     }
 
     /// <summary>
@@ -359,6 +426,8 @@ public class PlayerUI : MonoBehaviour
             feedButton.SetActive(false);
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
+
+    #endregion
 
     #region Settings
 

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Script handles player controls as well as store player data
+/// </summary>
 public class PlayerCS : MonoBehaviour
 {
     public int id;
@@ -125,7 +128,6 @@ public class PlayerCS : MonoBehaviour
     private void FixedUpdate()
     {
         // Move Camera
-        //MoveCamera(inputMaster.Player.Move.ReadValue<Vector2>());
         if (isMoving && isAbleToCommitActions)
             MoveCamera();
     }
@@ -140,11 +142,11 @@ public class PlayerCS : MonoBehaviour
         // Rotate Camera
         if (inputMaster.Player.RightClick.ReadValue<float>() != 0 && camRB.velocity.magnitude < 1f)
         {
-            differenceRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
+            differenceRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - camTransform.position;
             if (!isRotating)
             {
                 isRotating = true;
-                originRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - cam.transform.position;
+                originRotation = cam.ScreenToViewportPoint(mouse.position.ReadValue()) - camTransform.position;
             }
         }
         else
@@ -296,15 +298,15 @@ public class PlayerCS : MonoBehaviour
         float _rotateIncrement = 1f * rotationSpeed;
         if (differenceRotation.x - originRotation.x > .01)
         {
-            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                                           cam.transform.localEulerAngles.y + _rotateIncrement,
-                                                           cam.transform.localEulerAngles.z);
+            camTransform.localRotation = Quaternion.Euler(camTransform.localEulerAngles.x,
+                                                camTransform.localEulerAngles.y + _rotateIncrement,
+                                                camTransform.localEulerAngles.z);
         }
         else if (differenceRotation.x - originRotation.x < -.01)
         {
-            cam.transform.localRotation = Quaternion.Euler(cam.transform.localEulerAngles.x,
-                                               cam.transform.localEulerAngles.y - _rotateIncrement,
-                                               cam.transform.localEulerAngles.z);
+            camTransform.localRotation = Quaternion.Euler(camTransform.localEulerAngles.x,
+                                                camTransform.localEulerAngles.y - _rotateIncrement,
+                                                camTransform.localEulerAngles.z);
         }
     }
 

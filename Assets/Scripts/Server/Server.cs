@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Server
 {
-    public static string ip = "192.168.0.24";
+    public static string ip = "127.0.0.1";
     public static int MaxPlayers { get; private set; }
     public static int Port { get; private set; }
     public static Dictionary<int, ClientSS> clients = new Dictionary<int, ClientSS>();

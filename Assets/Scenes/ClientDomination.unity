@@ -3282,7 +3282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tribe: 
-  ip: 192.168.0.1
+  ip: 127.0.0.1
   port: 26950
   myId: 0
   lobby: {fileID: 878983592}

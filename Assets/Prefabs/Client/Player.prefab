@@ -245,6 +245,7 @@ GameObject:
   - component: {fileID: 9034473430438173691}
   - component: {fileID: 2412140197734646209}
   - component: {fileID: 2908493469471029909}
+  - component: {fileID: 2690992856651984264}
   m_Layer: 8
   m_Name: Defense
   m_TagString: Untagged
@@ -362,6 +363,19 @@ MonoBehaviour:
           m_StringArgument: Defense
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2690992856651984264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251457333390646741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Defense
 --- !u!1 &277314985205180857
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +488,7 @@ GameObject:
   - component: {fileID: 6713370507643255455}
   - component: {fileID: 2361377407278772356}
   - component: {fileID: 3255635433760242709}
+  - component: {fileID: 3571210935821461324}
   m_Layer: 8
   m_Name: Warship
   m_TagString: Untagged
@@ -591,6 +606,19 @@ MonoBehaviour:
           m_StringArgument: Warship
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3571210935821461324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 287636251303442739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Warship
 --- !u!1 &327003831541640715
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,6 +1312,163 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &559441186126324602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5683365888375960556}
+  - component: {fileID: 8261567440488858957}
+  - component: {fileID: 8563502587387369182}
+  m_Layer: 5
+  m_Name: ToolTipText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5683365888375960556
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559441186126324602}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7411393408887917571}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -33, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8261567440488858957
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559441186126324602}
+  m_CullTransparentMesh: 0
+--- !u!114 &8563502587387369182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559441186126324602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 'Money: 0'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: fd550d85bb9c2774b95abcb75c0d4362, type: 2}
+  m_sharedMaterial: {fileID: 5480358618065604451, guid: fd550d85bb9c2774b95abcb75c0d4362,
+    type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4286414205
+  m_fontColor: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_outlineColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_textAlignment: 258
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 0
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_firstOverflowCharacterIndex: -1
+  m_linkedTextComponent: {fileID: 0}
+  m_isLinkedTextComponent: 0
+  m_isTextTruncated: 0
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_ignoreRectMaskCulling: 0
+  m_ignoreCulling: 1
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_VertexBufferAutoSizeReduction: 1
+  m_firstVisibleCharacter: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_textInfo:
+    textComponent: {fileID: 8563502587387369182}
+    characterCount: 8
+    spriteCount: 0
+    spaceCount: 1
+    wordCount: 2
+    linkCount: 0
+    lineCount: 1
+    pageCount: 1
+    materialCount: 1
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_spriteAnimator: {fileID: 0}
+  m_hasFontAssetChanged: 0
+  m_subTextObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &649096177003412682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1399,6 +1584,7 @@ GameObject:
   - component: {fileID: 6779826798035641700}
   - component: {fileID: 9172822453643217621}
   - component: {fileID: 7573780088453090590}
+  - component: {fileID: 889744113487102508}
   m_Layer: 8
   m_Name: WatchTower
   m_TagString: Untagged
@@ -1516,6 +1702,19 @@ MonoBehaviour:
           m_StringArgument: WatchTower
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &889744113487102508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657432040514844476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: WatchTower
 --- !u!1 &658309690150126262
 GameObject:
   m_ObjectHideFlags: 0
@@ -2067,6 +2266,7 @@ GameObject:
   - component: {fileID: 3112671396669457393}
   - component: {fileID: 4546162883531989185}
   - component: {fileID: 7747994372026170974}
+  - component: {fileID: 8333171313145847335}
   m_Layer: 8
   m_Name: Port
   m_TagString: Untagged
@@ -2184,6 +2384,19 @@ MonoBehaviour:
           m_StringArgument: Port
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8333171313145847335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003274130465496087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Port
 --- !u!1 &1077122107824169096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2196,6 +2409,7 @@ GameObject:
   - component: {fileID: 2194721148240827431}
   - component: {fileID: 1803551908843111443}
   - component: {fileID: 8893111725373804825}
+  - component: {fileID: 8206444877022809301}
   m_Layer: 8
   m_Name: LumberYard
   m_TagString: Untagged
@@ -2313,6 +2527,19 @@ MonoBehaviour:
           m_StringArgument: LumberYard
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8206444877022809301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077122107824169096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: LumberYard
 --- !u!1 &1130639219443795008
 GameObject:
   m_ObjectHideFlags: 0
@@ -3331,6 +3558,42 @@ RectTransform:
   m_AnchoredPosition: {x: 2.5, y: 0}
   m_SizeDelta: {x: -5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1898443676277830966
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7411393408887917571}
+  m_Layer: 5
+  m_Name: ToolTip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &7411393408887917571
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898443676277830966}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5683365888375960556}
+  m_Father: {fileID: 748370422714687535}
+  m_RootOrder: 40
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -458}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2033710025768265294
 GameObject:
   m_ObjectHideFlags: 0
@@ -3570,6 +3833,7 @@ GameObject:
   - component: {fileID: 8006730016255300887}
   - component: {fileID: 7977025491371904585}
   - component: {fileID: 1882243265198329471}
+  - component: {fileID: 576809494569416728}
   m_Layer: 8
   m_Name: Dome
   m_TagString: Untagged
@@ -3687,6 +3951,19 @@ MonoBehaviour:
           m_StringArgument: Dome
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &576809494569416728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2134249331767525666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Dome
 --- !u!1 &2353883945306813602
 GameObject:
   m_ObjectHideFlags: 0
@@ -3846,6 +4123,7 @@ GameObject:
   - component: {fileID: 1644651216658045841}
   - component: {fileID: 6063137117088287144}
   - component: {fileID: 655264236142782585}
+  - component: {fileID: 8954600928427332729}
   m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
@@ -3963,6 +4241,19 @@ MonoBehaviour:
           m_StringArgument: Walls
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8954600928427332729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490352246584685043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Walls
 --- !u!1 &2603503349085994761
 GameObject:
   m_ObjectHideFlags: 0
@@ -3975,6 +4266,7 @@ GameObject:
   - component: {fileID: 7253209378287882027}
   - component: {fileID: 4730241092226513689}
   - component: {fileID: 326889795853191140}
+  - component: {fileID: 76742627241878769}
   m_Layer: 8
   m_Name: Stealth
   m_TagString: Untagged
@@ -4092,6 +4384,19 @@ MonoBehaviour:
           m_StringArgument: Stealth
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &76742627241878769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603503349085994761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Stealth
 --- !u!1 &2670484160366457343
 GameObject:
   m_ObjectHideFlags: 0
@@ -4140,6 +4445,7 @@ GameObject:
   - component: {fileID: 7476820791421839254}
   - component: {fileID: 478106250122723016}
   - component: {fileID: 886800571929907939}
+  - component: {fileID: 4979701502158010279}
   m_Layer: 8
   m_Name: Mine
   m_TagString: Untagged
@@ -4257,6 +4563,19 @@ MonoBehaviour:
           m_StringArgument: Mine
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4979701502158010279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2687088085448555065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Mine
 --- !u!1 &2716639779345922962
 GameObject:
   m_ObjectHideFlags: 0
@@ -4340,6 +4659,7 @@ GameObject:
   - component: {fileID: 2106841389613745057}
   - component: {fileID: 1225544330160806345}
   - component: {fileID: 4826182645330579966}
+  - component: {fileID: 8892237689177475707}
   m_Layer: 8
   m_Name: Snipper
   m_TagString: Untagged
@@ -4457,6 +4777,19 @@ MonoBehaviour:
           m_StringArgument: Snipper
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8892237689177475707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2734304368312012789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Snipper
 --- !u!1 &2803179648721337852
 GameObject:
   m_ObjectHideFlags: 0
@@ -4630,6 +4963,7 @@ GameObject:
   - component: {fileID: 9187981872661632736}
   - component: {fileID: 6133315368788004475}
   - component: {fileID: 7008946562169324445}
+  - component: {fileID: 7308948511351877510}
   m_Layer: 8
   m_Name: Roads
   m_TagString: Untagged
@@ -4747,6 +5081,19 @@ MonoBehaviour:
           m_StringArgument: Roads
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7308948511351877510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2966056711054586758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Roads
 --- !u!1 &3051823801304694557
 GameObject:
   m_ObjectHideFlags: 0
@@ -4830,6 +5177,7 @@ GameObject:
   - component: {fileID: 2091872682363695059}
   - component: {fileID: 3763183530705511124}
   - component: {fileID: 572452386450193011}
+  - component: {fileID: 2446616714592737858}
   m_Layer: 8
   m_Name: School
   m_TagString: Untagged
@@ -4947,6 +5295,19 @@ MonoBehaviour:
           m_StringArgument: School
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2446616714592737858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3057296095053156283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: School
 --- !u!1 &3199372253637680259
 GameObject:
   m_ObjectHideFlags: 0
@@ -5425,8 +5786,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 551e6dd11cbdb094c81b2bfb99c1bc91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 1783714657920599225}
-  canvasScaler: {fileID: 9119401454148195839}
   playerUIContainer: {fileID: 649096177003412682}
   mainContainer: {fileID: 3199372253637680259}
   skillTreeContainer: {fileID: 3752906167975631854}
@@ -5480,6 +5839,8 @@ MonoBehaviour:
   farmSkillText: {fileID: 3070336617235200913}
   mineSkillText: {fileID: 4660805377985339390}
   lumberYardSkillText: {fileID: 3740498976697427244}
+  toolTip: {fileID: 1898443676277830966}
+  toolTipText: {fileID: 8563502587387369182}
   roadSkillPI: {fileID: 1562942909167527991}
   wallSkillPI: {fileID: 7941488535105358007}
   armySkillPI: {fileID: 8963434724569136039}
@@ -5626,6 +5987,7 @@ GameObject:
   - component: {fileID: 118893068022574230}
   - component: {fileID: 8813800156412306775}
   - component: {fileID: 5047661902230419658}
+  - component: {fileID: 2687476127780898411}
   m_Layer: 8
   m_Name: HeavyHitter
   m_TagString: Untagged
@@ -5743,6 +6105,19 @@ MonoBehaviour:
           m_StringArgument: HeavyHitter
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2687476127780898411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3717257590232190896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: HeavyHitter
 --- !u!1 &3752906167975631854
 GameObject:
   m_ObjectHideFlags: 0
@@ -5810,6 +6185,7 @@ RectTransform:
   - {fileID: 2875851523515021559}
   - {fileID: 3032811162743368745}
   - {fileID: 1473873429788517775}
+  - {fileID: 7411393408887917571}
   m_Father: {fileID: 3154343165406098676}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6231,6 +6607,7 @@ GameObject:
   - component: {fileID: 4228347032364767491}
   - component: {fileID: 5487816822133370532}
   - component: {fileID: 4112230917848283099}
+  - component: {fileID: 627982332802808506}
   m_Layer: 8
   m_Name: Missle
   m_TagString: Untagged
@@ -6348,6 +6725,19 @@ MonoBehaviour:
           m_StringArgument: Missle
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &627982332802808506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4141728900116369312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Missle
 --- !u!1 &4262396153319798645
 GameObject:
   m_ObjectHideFlags: 0
@@ -7170,6 +7560,7 @@ GameObject:
   - component: {fileID: 4870030984034445843}
   - component: {fileID: 8613108854600167756}
   - component: {fileID: 1717318110664890146}
+  - component: {fileID: 7409638703807430783}
   m_Layer: 8
   m_Name: Army
   m_TagString: Untagged
@@ -7287,6 +7678,19 @@ MonoBehaviour:
           m_StringArgument: Army
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7409638703807430783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4864834966504920002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Army
 --- !u!1 &4981443811097177354
 GameObject:
   m_ObjectHideFlags: 0
@@ -8409,6 +8813,7 @@ GameObject:
   - component: {fileID: 8738061165787526329}
   - component: {fileID: 6209611286167212515}
   - component: {fileID: 9099065524892266479}
+  - component: {fileID: 5996408750942245523}
   m_Layer: 8
   m_Name: Housing
   m_TagString: Untagged
@@ -8526,6 +8931,19 @@ MonoBehaviour:
           m_StringArgument: Housing
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5996408750942245523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6128916537247481827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Housing
 --- !u!1 &6167148578870371185
 GameObject:
   m_ObjectHideFlags: 0
@@ -11265,6 +11683,7 @@ GameObject:
   - component: {fileID: 7990983795806413404}
   - component: {fileID: 1821322128019121253}
   - component: {fileID: 2120680855375093427}
+  - component: {fileID: 7885320136881090986}
   m_Layer: 8
   m_Name: Market
   m_TagString: Untagged
@@ -11382,6 +11801,19 @@ MonoBehaviour:
           m_StringArgument: Market
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7885320136881090986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7413144415733318302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Market
 --- !u!1 &7497623888486198899
 GameObject:
   m_ObjectHideFlags: 0
@@ -12764,6 +13196,7 @@ GameObject:
   - component: {fileID: 1312050008521586423}
   - component: {fileID: 8646787242727206159}
   - component: {fileID: 8870836185610245784}
+  - component: {fileID: 6134733410975801356}
   m_Layer: 8
   m_Name: Farm
   m_TagString: Untagged
@@ -12881,6 +13314,19 @@ MonoBehaviour:
           m_StringArgument: Farm
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6134733410975801356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8101132392757420788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Farm
 --- !u!1 &8128315497979510732
 GameObject:
   m_ObjectHideFlags: 0
@@ -13828,6 +14274,7 @@ GameObject:
   - component: {fileID: 9135166155409144852}
   - component: {fileID: 3949243853926295858}
   - component: {fileID: 4588941013273939956}
+  - component: {fileID: 9173327187612925217}
   m_Layer: 8
   m_Name: Library
   m_TagString: Untagged
@@ -13945,6 +14392,19 @@ MonoBehaviour:
           m_StringArgument: Library
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &9173327187612925217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8788858992505020109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904882af34a2b5543999e30c62c852a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Library
 --- !u!1 &8845975679457415537
 GameObject:
   m_ObjectHideFlags: 0
