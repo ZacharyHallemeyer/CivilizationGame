@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Handles audio
+/// Handles game audio
 /// </summary>
 public class AudioManager : MonoBehaviour
 {

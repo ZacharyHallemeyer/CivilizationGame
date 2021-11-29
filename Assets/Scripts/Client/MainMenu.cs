@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 using TMPro;
 
 
+/// <summary>
+/// Script for everything main menu
+/// </summary>
 public class MainMenu : MonoBehaviour
 {
     public Text hostUserNameFieldText, joinUserNameFieldText;

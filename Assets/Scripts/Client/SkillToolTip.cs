@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Class is added to skill tree buttons in unity editor. This allows for each skill to have it's price displayed
+/// </summary>
 public class SkillToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public string skillName;
     private int skillPrice;
-    private bool mouseOver;
+    private bool isPurchased = false;
 
     private Vector3 anchoredPosition;
 
@@ -16,43 +19,49 @@ public class SkillToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
     }
 
-    private void Update()
-    {
-        if(mouseOver)
-        {
-            PlayerCS.instance.playerUI.DisplayToolTip("Money", skillPrice, anchoredPosition);
-        }
-    }
-
     public void StartToolTip()
     {
-        // Get current skill price
-        foreach (string _key in Constants.allSkills.Keys)
+        int _index;
+
+        // Check if skill is already purchased
+        if (!isPurchased)
         {
-            if (_key == skillName)
+            // Check if skill has been purchased since the last time tool tip has been started
+            for (_index = 0; _index < Constants.avaliableTroops.Count; _index++)
             {
-                skillPrice = Constants.allSkills[_key];
+                if (Constants.avaliableTroops[_index] == skillName)
+                    isPurchased = true;
+            }
+
+            for (_index = 0; _index < Constants.avaliableBuildings.Count; _index++)
+            {
+                if (Constants.avaliableBuildings[_index] == skillName)
+                    isPurchased = true;
+            }
+
+            if (!isPurchased)
+            {
+                // Get current skill price
+                foreach (string _key in Constants.allSkills.Keys)
+                {
+                    if (_key == skillName)
+                    {
+                        skillPrice = Constants.allSkills[_key];
+                    }
+                }
             }
         }
-
-        // Enable update function
-        enabled = true;
-    }
-
-    public void StopToolTip()
-    {
-        // Disable update function and set mouse over to false
-        enabled = false;
-        mouseOver = false;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        PlayerCS.instance.playerUI.DisplayToolTip("Money ", skillPrice, anchoredPosition);
+        if(!isPurchased)
+            PlayerCS.instance.playerUI.DisplayToolTip("Money ", skillPrice, anchoredPosition);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        PlayerCS.instance.playerUI.HideToolTip();
+        if(!isPurchased)
+            PlayerCS.instance.playerUI.HideToolTip();
     }
 }

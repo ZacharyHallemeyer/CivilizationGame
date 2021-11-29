@@ -6,8 +6,13 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 
+/// <summary>
+/// This script handles game functions and turn functions. This also contains data and functions to be used in other scripts
+/// </summary>
 public class GameManagerCS : MonoBehaviour
 {
+    #region Globals
+
     public static GameManagerCS instance;
 
     public bool recievedAllNewTileData = false, recievedAllNewNeutralCityData = false, isTurn = false;
@@ -64,6 +69,8 @@ public class GameManagerCS : MonoBehaviour
     public Dictionary<string, GameObject> buildingPrefabs;
     public Dictionary<string, GameObject> shipModels;
     public Dictionary<string, GameObject> troopModels;
+
+    #endregion
 
     #region Set Up Functions
 
@@ -1254,6 +1261,7 @@ public class GameManagerCS : MonoBehaviour
 
         AddCityResourcesAtStartOfTurn();
         PlayerCS.instance.enabled = true;
+        PlayerCS.instance.isAbleToCommitActions = true;
     }
 
     /// <summary>
@@ -1268,6 +1276,7 @@ public class GameManagerCS : MonoBehaviour
             Constants.prices[_priceKey]["Wood"] = Constants.basePrices[_priceKey]["Wood"] - (int)(PlayerCS.instance.morale * Constants.moraleMultiplier);
             Constants.prices[_priceKey]["Money"] = Constants.basePrices[_priceKey]["Money"] - (int)(PlayerCS.instance.morale * Constants.moraleMultiplier);
             
+            // Make sure no prices are less than 1 (50 for money)
             if (Constants.prices[_priceKey]["Food"] < 1)
                 Constants.prices[_priceKey]["Food"] = 1;
             if (Constants.prices[_priceKey]["Metal"] < 1)
@@ -1280,13 +1289,18 @@ public class GameManagerCS : MonoBehaviour
 
         List<string> _skillPriceKeys = Constants.allSkills.Keys.ToList();
 
+        // Reduce/Raise prices skill prices depending on player education
         foreach(string _priceKey in _skillPriceKeys)
         {
             Constants.allSkills[_priceKey] = Constants.allSkillsBasePrice[_priceKey]
                                              - (int)(PlayerCS.instance.education * Constants.educationMultiplier);
+            // Make sure no skill price is less than 50
             if (Constants.allSkills[_priceKey] < 50)
                 Constants.allSkills[_priceKey] = 50;
         }
+
+        // Start turn indicator
+        PlayerCS.instance.playerUI.StartTurnIndicator(1f);
     }
 
     #endregion

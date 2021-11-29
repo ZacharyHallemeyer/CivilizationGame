@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Script handles troop quick menu and troop actions including movement and attack
+/// </summary>
 public class TroopActionsCS : MonoBehaviour
 {
     public TileInfo[] objecstToBeReset;
+    private int objectsToBeResetSize, objectsToBeResetCapacity = 100;
+
     public int whatIsInteractableValue, whatIsDefaultValue;
     public TroopInfo troopInfo;
     private readonly string moveableTileTag = "MoveableTile", attackableTileTag = "AttackableTile", defaultTileTag = "Tile", 
@@ -31,6 +36,8 @@ public class TroopActionsCS : MonoBehaviour
         whatIsInteractableValue = LayerMask.NameToLayer("Interactable");
         whatIsDefaultValue = LayerMask.NameToLayer("Default");
         troopInfo = _troopInfo;
+        objecstToBeReset = new TileInfo[objectsToBeResetCapacity];
+        objectsToBeResetSize = 0;
     }
     #endregion
 
@@ -42,10 +49,10 @@ public class TroopActionsCS : MonoBehaviour
     public void CreateInteractableTiles()
     {
         if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
-        int _index = 0;
-        curretMovementCost = troopInfo.isBoat ? troopInfo.shipMovementCost : troopInfo.movementCost;
+
+        bool _conflictFound = false;
         int _attackRange = troopInfo.isBoat ? troopInfo.shipAttackRange: troopInfo.attackRange;
-        objecstToBeReset = new TileInfo[curretMovementCost + _attackRange];
+        curretMovementCost = troopInfo.isBoat ? troopInfo.shipMovementCost : troopInfo.movementCost;
 
         if (GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex].isRoad && troopInfo.potentialRoadMovementCost > 0)
         {
@@ -59,66 +66,61 @@ public class TroopActionsCS : MonoBehaviour
         switch (troopInfo.rotation)
         {
             case 0:
-                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + curretMovementCost + 1; z++)
+                int z = troopInfo.zIndex + 1;
+                while (!_conflictFound && z < troopInfo.zIndex + curretMovementCost + 1)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
-                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z]))
                         {
-                            if (objecstToBeReset[_index] != null)
-                                _index++;
-                            break;
+                            _conflictFound = true;
                         }
-                        _index++;
                     }
+                    z++;
                 }
                 break;
             case 90:
-                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + curretMovementCost + 1; x++)
+                int x = troopInfo.xIndex + 1;
+                while (!_conflictFound && x < troopInfo.xIndex + curretMovementCost + 1)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex]))
                         {
-                            if (objecstToBeReset[_index] != null)
-                                _index++;
-                            break;
+                            _conflictFound = true;
                         }
-                        _index++;
                     }
+                    x++;
                 }
                 break;
             case 180:
-                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - curretMovementCost - 1; z--)
+                z = troopInfo.zIndex - 1;
+                while (!_conflictFound && z > troopInfo.zIndex - curretMovementCost - 1)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
-                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[troopInfo.xIndex, z]))
                         {
-                            if (objecstToBeReset[_index] != null)
-                                _index++;
-                            break;
+                            _conflictFound = true;
                         }
-                        _index++;
                     }
+                    z--;
                 }
                 break;
             case 270:
-                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - curretMovementCost - 1; x--)
+                x = troopInfo.xIndex - 1;
+                while (!_conflictFound && x > troopInfo.xIndex - curretMovementCost - 1)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
+                        if (!CreateInteractableTilesHelperMovement(GameManagerCS.instance.tiles[x, troopInfo.zIndex]))
                         {
-                            if (objecstToBeReset[_index] != null)
-                                _index++;
-                            break;
+                            _conflictFound = true;
                         }
-                        _index++;
                     }
+                    x--;
                 }
                 break;
-
             default:
                 Debug.LogError("Troop " + troopInfo.id + " rotation is not compatible");
                 break;
@@ -131,43 +133,59 @@ public class TroopActionsCS : MonoBehaviour
         switch (troopInfo.rotation)
         {
             case 0:
-                for (int z = troopInfo.zIndex + 1; z < troopInfo.zIndex + _attackRange + 1; z++)
+                int z = troopInfo.zIndex + 1;
+                while (!_conflictFound && z < troopInfo.zIndex + _attackRange + 1)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
-                        if(CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
-                            _index++;
+                        if(CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z]))
+                        {
+                            _conflictFound = true;
+                        }
                     }
+                    z++;
                 }
                 break;
             case 90:
-                for (int x = troopInfo.xIndex + 1; x < troopInfo.xIndex + _attackRange + 1; x++)
+                int x = troopInfo.xIndex + 1;
+                while (!_conflictFound && x < troopInfo.xIndex + _attackRange + 1)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
-                            _index++;
+                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex]))
+                        {
+                            _conflictFound = true;
+                        }
                     }
+                    x++;
                 }
                 break;
             case 180:
-                for (int z = troopInfo.zIndex - 1; z > troopInfo.zIndex - _attackRange - 1; z--)
+                z = troopInfo.zIndex - 1;
+                while (!_conflictFound && z > troopInfo.zIndex - _attackRange - 1)
                 {
                     if (CheckTileExists(troopInfo.xIndex, z))
                     {
-                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z], _index))
-                            _index++;
+                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[troopInfo.xIndex, z]))
+                        {
+                            _conflictFound = true;
+                        }
                     }
+                    z--;
                 }
                 break;
             case 270:
-                for (int x = troopInfo.xIndex - 1; x > troopInfo.xIndex - _attackRange - 1; x--)
+                x = troopInfo.xIndex - 1;
+                while (!_conflictFound && x > troopInfo.xIndex - _attackRange - 1)
                 {
                     if (CheckTileExists(x, troopInfo.zIndex))
                     {
-                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex], _index))
-                            _index++;
+                        if (CreateInteractableTilesHelperAttack(GameManagerCS.instance.tiles[x, troopInfo.zIndex]))
+                        {
+                            _conflictFound = true;
+                        }
                     }
+                    x--;
                 }
                 break;
 
@@ -198,7 +216,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     /// <param name="_tile"> tile to be modified </param>
     /// <param name="_index"> current index of objectsToBeReset array </param>
-    public bool CreateInteractableTilesHelperMovement(TileInfo _tile, int _index)
+    public bool CreateInteractableTilesHelperMovement(TileInfo _tile)
     {
         if (_tile.isOccupied || _tile.isObstacle) return false;
 
@@ -245,7 +263,8 @@ public class TroopActionsCS : MonoBehaviour
                 // Only allow boat to move onto coast line
                 if (!_tile.isWater && troopInfo.isBoat)
                 {
-                    objecstToBeReset[_index] = _tile;
+                    objecstToBeReset[objectsToBeResetSize] = _tile;
+                    objectsToBeResetSize++;
                     return false;
                 }
             }
@@ -261,18 +280,20 @@ public class TroopActionsCS : MonoBehaviour
             // Only allow boat to move onto coast line
             if (troopInfo.isBoat)
             {
-                objecstToBeReset[_index] = _tile;
+                objecstToBeReset[objectsToBeResetSize] = _tile;
+                objectsToBeResetSize++;
                 return false;
             }
         }
         
-        objecstToBeReset[_index] = _tile;
+        objecstToBeReset[objectsToBeResetSize] = _tile;
+        objectsToBeResetSize++;
 
         return true;
     }
 
     // set tile tags and layer for troop to be able to attack troop on said tile
-    public bool CreateInteractableTilesHelperAttack(TileInfo _tile, int _index)
+    public bool CreateInteractableTilesHelperAttack(TileInfo _tile)
     {
         if (_tile.isObstacle) return false;
         if (_tile.isOccupied)
@@ -284,7 +305,8 @@ public class TroopActionsCS : MonoBehaviour
                 _tile.tile.tag = attackableTileTag;
                 _tile.attackUI.SetActive(true);
                 _tile.boxCollider.enabled = true;
-                objecstToBeReset[_index] = _tile;
+                objecstToBeReset[objectsToBeResetSize] = _tile;
+                objectsToBeResetSize++;
 
                 return true;
             }
@@ -308,23 +330,25 @@ public class TroopActionsCS : MonoBehaviour
     public void ResetAlteredTiles()
     {
         if (objecstToBeReset == null) return;
-        foreach (TileInfo _tile in objecstToBeReset)
-        {
-            if (_tile != null)
-            {
-                if (_tile.isCity)
-                    _tile.tile.tag = cityTag;
-                else
-                    _tile.tile.tag = defaultTileTag;
 
-                _tile.tile.layer = whatIsDefaultValue;
-                _tile.moveUI.SetActive(false);
-                _tile.attackUI.SetActive(false);
-                if(!_tile.fixedCell)
-                    _tile.boxCollider.enabled = false;
-            }
+        TileInfo _tile;
+
+        for(int index = 0; index < objectsToBeResetSize; index++)
+        {
+            _tile = objecstToBeReset[index];
+
+            if (_tile.isCity)
+                _tile.tile.tag = cityTag;
+            else
+                _tile.tile.tag = defaultTileTag;
+
+            _tile.tile.layer = whatIsDefaultValue;
+            _tile.moveUI.SetActive(false);
+            _tile.attackUI.SetActive(false);
+            if (!_tile.fixedCell)
+                _tile.boxCollider.enabled = false;
         }
-        objecstToBeReset = null;
+        objectsToBeResetSize = 0;
     }
 
     #endregion
@@ -661,6 +685,7 @@ public class TroopActionsCS : MonoBehaviour
                                             ? 1 : 0;
         int _troopAttackingEnvironmentBuff = GameManagerCS.instance.tiles[troopInfo.xIndex, troopInfo.zIndex].biome 
                                              == PlayerCS.instance.tribe ? 1 : 0;
+        int _attackValue;
 
         HideQuickMenu();
         ResetAlteredTiles();
@@ -690,21 +715,25 @@ public class TroopActionsCS : MonoBehaviour
         if (_attackedFromTheBack)
         {
             if(troopInfo.isBoat)
-                _troop.health -= troopInfo.shipStealthAttack + _troopAttackingEnvironmentBuff
+                _attackValue = troopInfo.shipStealthAttack + _troopAttackingEnvironmentBuff
                                  - _troop.baseDefense - _troopAttackedEnvironmentBuff;
             else
-                _troop.health -= troopInfo.stealthAttack + _troopAttackingEnvironmentBuff 
+                _attackValue = troopInfo.stealthAttack + _troopAttackingEnvironmentBuff 
                                  - _troop.baseDefense - _troopAttackedEnvironmentBuff;
         }
         else
         {
             if(troopInfo.isBoat)
-                _troop.health -= troopInfo.shipAttack + _troopAttackingEnvironmentBuff 
+                _attackValue = troopInfo.shipAttack + _troopAttackingEnvironmentBuff 
                                  - _troop.facingDefense - _troopAttackedEnvironmentBuff;
-            else 
-                _troop.health -= troopInfo.baseAttack + _troopAttackingEnvironmentBuff 
+            else
+                _attackValue = troopInfo.baseAttack + _troopAttackingEnvironmentBuff 
                                  - _troop.facingDefense - _troopAttackedEnvironmentBuff;
         }
+
+        // Subtract attack value if it is more than 0. Else subtract 1 health point
+        _troop.health -= _attackValue > 0 ? _attackValue : 1;
+
         // this troop killed the other troop
         if (_troop.health <= 0)
         {
@@ -734,8 +763,9 @@ public class TroopActionsCS : MonoBehaviour
             {
                 // If attack was a melee and not a ranged attack then counter attack (counter attack can not be a ranged attack)
                 if(_distance == 1)
-                    troopInfo.health -= _troop.counterAttack + _troopAttackedEnvironmentBuff 
+                    _attackValue = _troop.counterAttack + _troopAttackedEnvironmentBuff 
                                         - troopInfo.baseDefense - _troopAttackingEnvironmentBuff;
+                troopInfo.health -= _attackValue > 0 ? _attackValue : 1;
             }
             // Play hurt animation
             _troop.troopActions.HurtAnimLocal();

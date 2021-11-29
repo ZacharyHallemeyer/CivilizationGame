@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// This class contains all the data related to troops
+/// </summary>
 public class TroopInfo : MonoBehaviour
 {
     public GameObject troop;

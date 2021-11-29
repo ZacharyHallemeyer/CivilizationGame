@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// Script handles city quick menu and the according actions
+/// </summary>
 public class CityActionsCS : MonoBehaviour
 {
     public GameObject quickMenuContainer, mainContainer, troopContainer, constructContainer, statsContainer;
@@ -475,6 +478,7 @@ public class CityActionsCS : MonoBehaviour
         PlayerCS.instance.wood -= Constants.prices[currentBuidlingToBuild]["Wood"];
         PlayerCS.instance.metal -= Constants.prices[currentBuidlingToBuild]["Metal"];
         PlayerCS.instance.money -= Constants.prices[currentBuidlingToBuild]["Money"];
+        PlayerCS.instance.playerUI.SetAllIntResourceUI();
         GameManagerCS.instance.UpdateRoadModels(_tile.xIndex, _tile.zIndex);
         GameManagerCS.instance.StoreModifiedTileInfo(_tile, "BuildRoad");
         ResetAlteredObjects();

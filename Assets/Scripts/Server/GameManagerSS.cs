@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This script controls turn flow and contains game functions 
+/// </summary>
 public class GameManagerSS : MonoBehaviour
 {
     public static GameManagerSS instance;

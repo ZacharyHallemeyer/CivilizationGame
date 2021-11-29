@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This script prevents a gameobject from being destroyed and only allows one object to be active with this script attached to it
+/// </summary>
 public class DoNotDestoryOnLoadScript : MonoBehaviour
 {
     public DoNotDestoryOnLoadScript instance;

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class contains all data of a city
+/// </summary>
 public class CityInfo : MonoBehaviour
 {
     public GameObject city;

@@ -7,7 +7,7 @@ using UnityEngine;
 using TMPro;
 
 /// <summary>
-/// Script handles all player UI
+/// Script handles all player UI including game menu, resource UI, skill tree, etc.
 /// </summary>
 public class PlayerUI : MonoBehaviour
 {
@@ -69,6 +69,9 @@ public class PlayerUI : MonoBehaviour
     public Dictionary<string, Button> skillButtons = new Dictionary<string, Button>();
     public Dictionary<string, TextMeshProUGUI> skillText = new Dictionary<string, TextMeshProUGUI>();
     public Dictionary<string, RawImage> skillPurchaseIndicators = new Dictionary<string, RawImage>();
+
+    // Turn UI
+    public GameObject startTurnIndicatorObject;
 
     #endregion
 
@@ -147,7 +150,6 @@ public class PlayerUI : MonoBehaviour
         toolTipRect = toolTip.GetComponent<RectTransform>();
         foreach(string _key in skillButtons.Keys)
         {
-            Debug.Log(skillButtons[_key] == null);
             toolTipsList.Add(skillButtons[_key].gameObject.GetComponent<SkillToolTip>());
         }
 
@@ -169,6 +171,20 @@ public class PlayerUI : MonoBehaviour
         SetMoraleAmount(_moraleAmount);
         SetEducationText(_educationAmount);
         SetPopulationText(_populationAmount);
+    }
+
+    /// <summary>
+    /// Set player resource UI
+    /// </summary>
+    public void SetAllResourceUI()
+    {
+        SetFoodAmountUI(PlayerCS.instance.food);
+        SetWoodAmountUI(PlayerCS.instance.wood);
+        SetMetalAmountUI(PlayerCS.instance.metal);
+        SetMoneyAmount(PlayerCS.instance.money);
+        SetMoraleAmount(PlayerCS.instance.morale);
+        SetEducationText(PlayerCS.instance.education);
+        SetPopulationText(PlayerCS.instance.population);
     }
 
     /// <summary>
@@ -271,19 +287,54 @@ public class PlayerUI : MonoBehaviour
     /// <summary>
     /// Purchases skill referenced in parems
     /// </summary>
-    /// <param name="_skill"> skill to purchases </param>
+    /// <param name="_skill"> skill to purchase </param>
     public void PurchaseSkill(string _skill)
     {
+        int _index;
+
+        List<string> _buildings = new List<string>()
+        {
+            "Farm",
+            "Mine",
+            "LumberYard",
+            "Dome",
+            "Library",
+            "School",
+            "Housing",
+            "Market",
+            "Port",
+            "Walls",
+            "Roads",
+        };
+
+        List<string> _troops = new List<string>()
+        {
+            "Army",
+            "Snipper",
+            "Missle",
+            "Defense",
+            "Stealth",
+            "HeavyHitter",
+            "WatchTower",
+        };
+
         PlayerCS.instance.money -= Constants.allSkills[_skill];
         PlayerCS.instance.skills.Add(_skill);
         SetMoneyAmount(PlayerCS.instance.money);
 
-        if (_skill == "Army" || _skill == "Snipper" || _skill == "Missle" || _skill == "Defense" || _skill == "Stealth" 
-            || _skill == "Stealh" || _skill == "HeavyHitter" || _skill == "WatchTower" )
-            Constants.avaliableTroops.Add(_skill);
-        else if (_skill == "Dome" || _skill == "Library" || _skill == "School" || _skill == "Housing" || _skill == "Market" || 
-                 _skill == "Port" || _skill == "Walls" || _skill == "Roads")
-            Constants.avaliableBuildings.Add(_skill);
+        // Check if skill is a troop
+        for(_index = 0; _index < _troops.Count; _index++)
+        {
+            if (_troops[_index] == _skill)
+                Constants.avaliableTroops.Add(_skill);
+        }
+
+        // Check if skill is a building
+        for(_index = 0; _index < _buildings.Count; _index++)
+        {
+            if (_buildings[_index] == _skill)
+                Constants.avaliableBuildings.Add(_skill);
+        }
 
         InitSkillTree();
         AudioManager.instance.Play(Constants.uiClickAudio);
@@ -306,11 +357,14 @@ public class PlayerUI : MonoBehaviour
             else
             {
                 _neededSkills = Constants.neededSkillsForCertainSkills[_key];
+                
+                // Check if skill has its previous skill purchased (tree structure)
                 foreach(string _neededSkill in _neededSkills)
                 {
                     if (!PlayerCS.instance.skills.Contains(_neededSkill))
                         _hasPreviousSkills = false;
                 }
+
                 // Check if player has enough money to purchase skill
                 if (PlayerCS.instance.money >= Constants.allSkills[_key] && _hasPreviousSkills)
                 {
@@ -354,13 +408,6 @@ public class PlayerUI : MonoBehaviour
         OpenMenu();
         AudioManager.instance.Play(Constants.uiClickAudio);
         enabled = false;
-
-        // Stop skill tool tips
-        // Start/Init Tool tips
-        foreach (SkillToolTip _skillToolTip in toolTipsList)
-        {
-            _skillToolTip.StopToolTip();
-        }
     }
 
     public void DisplayToolTip(string _newMessage, int _skillPrice, Vector3 _position)
@@ -424,6 +471,8 @@ public class PlayerUI : MonoBehaviour
         }
         if (_feedCompleted)
             feedButton.SetActive(false);
+
+        SetAllResourceUI();
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
@@ -680,13 +729,50 @@ public class PlayerUI : MonoBehaviour
 
     #endregion
 
+    #region Turn UI
+
+    /// <summary>
+    /// Displays text that indicates start of turn and hides said text after set amount of time
+    /// 
+    /// Calls StartTurnIndicatorHelper
+    /// </summary>
+    /// <param name="_displayTime">Amount of time to display start turn text</param>
+    public void StartTurnIndicator(float _displayTime)
+    {
+        StartCoroutine(StartTurnIndicatorHelper(_displayTime));
+    }
+
+    /// <summary>
+    /// Displays start turn text and hides said text after set amount of time
+    /// </summary>
+    /// <param name="_displayTime">Amount of time to display start turn text</param>
+    /// <returns></returns>
+    private IEnumerator StartTurnIndicatorHelper(float _displayTime)
+    {
+        startTurnIndicatorObject.SetActive(true);
+
+        yield return new WaitForSecondsRealtime(_displayTime);
+        
+        startTurnIndicatorObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Enables button that ends game. (Only called when all except one king is dead)
+    /// </summary>
     public void EnableEndGameButton()
     {
         endGameButton.SetActive(true);
     }
 
+    /// <summary>
+    /// Ends game
+    /// 
+    /// Calls ClientSend.EndGame
+    /// </summary>
     public void EndGame()
     {
         ClientSend.EndGame();
     }
+
+    #endregion
 }

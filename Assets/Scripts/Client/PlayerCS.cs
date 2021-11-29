@@ -128,7 +128,7 @@ public class PlayerCS : MonoBehaviour
     private void FixedUpdate()
     {
         // Move Camera
-        if (isMoving && isAbleToCommitActions)
+        if (isMoving)
             MoveCamera();
     }
 
@@ -156,6 +156,20 @@ public class PlayerCS : MonoBehaviour
         if (isRotating)
         {
             RotateCamera();
+        }
+
+        // Check if player is holding select button and no object has been selected (Ray did not hit collider in previous if statment)
+        if (inputMaster.Player.Select.ReadValue<float>() != 0 && !_objectSelected)
+        {
+            if (!isMoving)
+            {
+                isMoving = true;
+                dragOrigin = mouse.position.ReadValue();
+            }
+        }
+        else
+        {
+            isMoving = false;
         }
 
         // Troops can not commit actions while an animation is in progress
@@ -253,20 +267,6 @@ public class PlayerCS : MonoBehaviour
             {
                 ResetAlteredTiles();
             }
-        }
-
-        // Check if player is holding select button and no object has been selected (Ray did not hit collider in previous if statment)
-        if(inputMaster.Player.Select.ReadValue<float>() != 0 && !_objectSelected)
-        {
-            if (!isMoving)
-            {
-                isMoving = true;
-                dragOrigin = mouse.position.ReadValue();
-            }
-        }
-        else
-        {
-            isMoving = false;
         }
 
         // Rotate current selected troop
@@ -376,7 +376,7 @@ public class PlayerCS : MonoBehaviour
     /// </summary>
     public void EndTurn()
     {
-        enabled = false;
+        //enabled = false;
         ResetAlteredTiles();
         playerUI.FeedCities();
         // Turn off any quick menus
@@ -390,6 +390,7 @@ public class PlayerCS : MonoBehaviour
         GameManagerCS.instance.DestroyObjectsToDestroyAtEndOfTurn();
         GameManagerCS.instance.ClearModifiedData();
         GameManagerCS.instance.isTurn = false;
+        isAbleToCommitActions = false;
     }
 
     public void Reset()

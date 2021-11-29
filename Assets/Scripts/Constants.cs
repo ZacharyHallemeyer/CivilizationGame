@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class contains constants and data for use across scripts
+/// </summary>
 public static class Constants
 {
     public static float troopYPosition = .899f;

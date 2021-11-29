@@ -8,6 +8,9 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using System.Net;
 
+/// <summary>
+/// Script handles all things lobby related
+/// </summary>
 public class Lobby : MonoBehaviour
 {
     public class LobbyRow

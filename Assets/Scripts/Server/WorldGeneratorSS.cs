@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script generates board using perlin and werley noise
+/// </summary>
 public class WorldGeneratorSS : MonoBehaviour
 {
     public static WorldGeneratorSS instance;

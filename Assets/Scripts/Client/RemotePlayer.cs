@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class simply stores data of remote players on local machine
+/// </summary>
 public class RemotePlayer
 {
     public string username;
