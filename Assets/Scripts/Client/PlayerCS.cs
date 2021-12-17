@@ -132,6 +132,9 @@ public class PlayerCS : MonoBehaviour
             MoveCamera();
     }
 
+    /// <summary>
+    /// Handles all things 
+    /// </summary>
     private void PlayerInput()
     {
         bool _objectSelected = false;
@@ -277,6 +280,7 @@ public class PlayerCS : MonoBehaviour
                 _troop.troopActions.RotateLocal(1);
             }
         }
+
         // End Turn
         if (inputMaster.Player.EndTurn.triggered)
         {

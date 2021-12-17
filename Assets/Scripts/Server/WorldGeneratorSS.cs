@@ -268,8 +268,8 @@ public class WorldGeneratorSS : MonoBehaviour
     /// <returns></returns>
     public float GeneratePerlinNoise(float x, float z)
     {
-        float xCoord = (float)x / groundXSize * scale + xPerlinOffset;
-        float zCoord = (float)z / groundZSize * scale + yPerlinOffset;
+        float xCoord = (float) x / groundXSize * scale + xPerlinOffset;
+        float zCoord = (float) z / groundZSize * scale + yPerlinOffset;
 
         return Mathf.Clamp(Mathf.PerlinNoise(xCoord, zCoord), 0, 1);
     }

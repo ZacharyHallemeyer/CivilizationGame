@@ -1569,6 +1569,7 @@ GameObject:
   - component: {fileID: 7114286211939373033}
   - component: {fileID: 727073323804710211}
   - component: {fileID: 5595636580900834248}
+  - component: {fileID: 3716320875382628744}
   m_Layer: 8
   m_Name: School
   m_TagString: Untagged
@@ -1699,6 +1700,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3716320875382628744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768642615933327786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: School
 --- !u!1 &1795391590010906791
 GameObject:
   m_ObjectHideFlags: 0
@@ -1711,6 +1725,7 @@ GameObject:
   - component: {fileID: 4777510622660063143}
   - component: {fileID: 7011577410398171238}
   - component: {fileID: 6236674776478248971}
+  - component: {fileID: 4196948824500190305}
   m_Layer: 8
   m_Name: HeavyHitter
   m_TagString: Untagged
@@ -1841,6 +1856,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4196948824500190305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795391590010906791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: HeavyHitter
 --- !u!1 &1862616118452458384
 GameObject:
   m_ObjectHideFlags: 0
@@ -2010,6 +2038,7 @@ GameObject:
   - component: {fileID: 8187518674784203414}
   - component: {fileID: 2314256600208111183}
   - component: {fileID: 4635908797117162467}
+  - component: {fileID: 3954836945342103708}
   m_Layer: 8
   m_Name: Defense
   m_TagString: Untagged
@@ -2140,6 +2169,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3954836945342103708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1924013176448996300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: Defense
 --- !u!1 &1968438165553647943
 GameObject:
   m_ObjectHideFlags: 0
@@ -2696,6 +2738,7 @@ GameObject:
   - component: {fileID: 5074649557307002080}
   - component: {fileID: 1737340690292607335}
   - component: {fileID: 739295143835704096}
+  - component: {fileID: 7005121016525216231}
   m_Layer: 8
   m_Name: Missle
   m_TagString: Untagged
@@ -2826,6 +2869,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7005121016525216231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2735157599040695913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: Missle
 --- !u!1 &3414302491818512826
 GameObject:
   m_ObjectHideFlags: 0
@@ -2995,6 +3051,7 @@ GameObject:
   - component: {fileID: 4348645682802706794}
   - component: {fileID: 1616430573772551877}
   - component: {fileID: 2167450913002088750}
+  - component: {fileID: 6690607143614754898}
   m_Layer: 8
   m_Name: Scout
   m_TagString: Untagged
@@ -3125,6 +3182,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6690607143614754898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3511236088533141941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: Scout
 --- !u!1 &3585833760390831230
 GameObject:
   m_ObjectHideFlags: 0
@@ -3451,6 +3521,7 @@ GameObject:
   - component: {fileID: 8707505027141588623}
   - component: {fileID: 1747289391822518639}
   - component: {fileID: 9032973967493969788}
+  - component: {fileID: 5820198168985993070}
   m_Layer: 8
   m_Name: Farm
   m_TagString: Untagged
@@ -3581,6 +3652,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5820198168985993070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3894700325340122803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Farm
 --- !u!1 &4154028329676399170
 GameObject:
   m_ObjectHideFlags: 0
@@ -4378,6 +4462,7 @@ GameObject:
   - component: {fileID: 999815234470536043}
   - component: {fileID: 6740436077248105760}
   - component: {fileID: 5945065098165159093}
+  - component: {fileID: 5753954319846940197}
   m_Layer: 8
   m_Name: Dome
   m_TagString: Untagged
@@ -4508,6 +4593,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5753954319846940197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4443053475627225566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Dome
 --- !u!1 &4486305057933451184
 GameObject:
   m_ObjectHideFlags: 0
@@ -4520,6 +4618,7 @@ GameObject:
   - component: {fileID: 583657597186579218}
   - component: {fileID: 659627367454485886}
   - component: {fileID: 5554855104308827890}
+  - component: {fileID: 7197206983136749158}
   m_Layer: 8
   m_Name: Library
   m_TagString: Untagged
@@ -4650,6 +4749,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7197206983136749158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4486305057933451184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Library
 --- !u!1 &4575848818115092613
 GameObject:
   m_ObjectHideFlags: 0
@@ -4819,6 +4931,7 @@ GameObject:
   - component: {fileID: 7389977430488327115}
   - component: {fileID: 4321503857641993485}
   - component: {fileID: 3416710300151221943}
+  - component: {fileID: 3171799906723706666}
   m_Layer: 8
   m_Name: Mine
   m_TagString: Untagged
@@ -4949,6 +5062,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3171799906723706666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4577347575829650726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Mine
 --- !u!1 &4727865056741686733
 GameObject:
   m_ObjectHideFlags: 0
@@ -7471,6 +7597,7 @@ GameObject:
   - component: {fileID: 6649271219776695427}
   - component: {fileID: 1430419835565286391}
   - component: {fileID: 7566115731116123964}
+  - component: {fileID: 6906565460707619404}
   m_Layer: 8
   m_Name: Stealth
   m_TagString: Untagged
@@ -7601,6 +7728,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6906565460707619404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802621931656473433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: Stealth
 --- !u!1 &6809809171662591988
 GameObject:
   m_ObjectHideFlags: 0
@@ -7613,6 +7753,7 @@ GameObject:
   - component: {fileID: 6581152458548811043}
   - component: {fileID: 7467660314913907787}
   - component: {fileID: 5299574669116673930}
+  - component: {fileID: 3001442735618714769}
   m_Layer: 8
   m_Name: Market
   m_TagString: Untagged
@@ -7743,6 +7884,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3001442735618714769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809809171662591988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Market
 --- !u!1 &6824140772086672998
 GameObject:
   m_ObjectHideFlags: 0
@@ -7755,6 +7909,7 @@ GameObject:
   - component: {fileID: 48910830843495689}
   - component: {fileID: 5661706381540144265}
   - component: {fileID: 1162284404176829505}
+  - component: {fileID: 2420522607529881276}
   m_Layer: 8
   m_Name: Militia
   m_TagString: Untagged
@@ -7885,6 +8040,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2420522607529881276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6824140772086672998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: Militia
 --- !u!1 &7098482720784643737
 GameObject:
   m_ObjectHideFlags: 0
@@ -7897,6 +8065,7 @@ GameObject:
   - component: {fileID: 311577310279825092}
   - component: {fileID: 8084203654101463989}
   - component: {fileID: 2697534345505257870}
+  - component: {fileID: 7052166472975594118}
   m_Layer: 8
   m_Name: LumberYard
   m_TagString: Untagged
@@ -8027,6 +8196,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7052166472975594118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7098482720784643737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: LumberYard
 --- !u!1 &7124698906283491943
 GameObject:
   m_ObjectHideFlags: 0
@@ -8039,6 +8221,7 @@ GameObject:
   - component: {fileID: 3574967010678349472}
   - component: {fileID: 5254761765311344879}
   - component: {fileID: 5136469523107392902}
+  - component: {fileID: 3976509005755712970}
   m_Layer: 8
   m_Name: Housing
   m_TagString: Untagged
@@ -8169,6 +8352,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3976509005755712970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7124698906283491943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Housing
 --- !u!1 &7220866062521928246
 GameObject:
   m_ObjectHideFlags: 0
@@ -9083,6 +9279,7 @@ GameObject:
   - component: {fileID: 7743040345017288717}
   - component: {fileID: 1378545767670190247}
   - component: {fileID: 2977177913095978190}
+  - component: {fileID: 2951849901276350456}
   m_Layer: 8
   m_Name: Army
   m_TagString: Untagged
@@ -9213,6 +9410,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2951849901276350456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7681392578308336772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: Army
 --- !u!1 &7748158500905409604
 GameObject:
   m_ObjectHideFlags: 0
@@ -10518,6 +10728,7 @@ GameObject:
   - component: {fileID: 6513312475034228501}
   - component: {fileID: 6511030226315291690}
   - component: {fileID: 3784483533978711939}
+  - component: {fileID: 7896450119604181453}
   m_Layer: 8
   m_Name: WatchTower
   m_TagString: Untagged
@@ -10648,6 +10859,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7896450119604181453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8452346109833187908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: WatchTower
 --- !u!1 &8736798950566746309
 GameObject:
   m_ObjectHideFlags: 0
@@ -10660,6 +10884,7 @@ GameObject:
   - component: {fileID: 2846689846790341136}
   - component: {fileID: 849362331521150074}
   - component: {fileID: 8903049128301725600}
+  - component: {fileID: 705031821474200512}
   m_Layer: 8
   m_Name: Port
   m_TagString: Untagged
@@ -10790,6 +11015,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &705031821474200512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8736798950566746309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada5c5d542e50b145a1bf0bd30039ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Port
 --- !u!1 &8847763715849253103
 GameObject:
   m_ObjectHideFlags: 0
@@ -10959,6 +11197,7 @@ GameObject:
   - component: {fileID: 2896119179287328997}
   - component: {fileID: 1865648080374779793}
   - component: {fileID: 4798919365421481434}
+  - component: {fileID: 183488710960325423}
   m_Layer: 8
   m_Name: Snipper
   m_TagString: Untagged
@@ -11089,6 +11328,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &183488710960325423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9060234500706404383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad699d8a570687f48a298f69420072ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopName: Snipper
 --- !u!1 &9078740264089737364
 GameObject:
   m_ObjectHideFlags: 0

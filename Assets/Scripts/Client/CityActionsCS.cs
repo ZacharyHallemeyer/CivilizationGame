@@ -113,7 +113,6 @@ public class CityActionsCS : MonoBehaviour
     public void HideQuickMenu()
     {
         ResetQuickMenu();
-        PlayerCS.instance.isAbleToCommitActions = true;
         quickMenuContainer.SetActive(false);
         PlayerCS.instance.playerUI.menuButton.SetActive(true);
         AudioManager.instance.Play(Constants.uiClickAudio);
@@ -121,7 +120,6 @@ public class CityActionsCS : MonoBehaviour
 
     public void ShowQuickMenu()
     {
-        PlayerCS.instance.isAbleToCommitActions = false;
         PlayerCS.instance.HideQuckMenus();
         quickMenuContainer.SetActive(true);
         PlayerCS.instance.playerUI.menuButton.SetActive(false);
@@ -134,7 +132,6 @@ public class CityActionsCS : MonoBehaviour
         troopContainer.SetActive(false);
         constructContainer.SetActive(false);
         statsContainer.SetActive(false);
-        PlayerCS.instance.isAbleToCommitActions = false;
         AudioManager.instance.Play(Constants.uiClickAudio);
     }
 
@@ -473,6 +470,7 @@ public class CityActionsCS : MonoBehaviour
     /// <param name="_tile"></param>
     public void BuildRoad(TileInfo _tile)
     {
+
         _tile.isRoad = true;
         PlayerCS.instance.food -= Constants.prices[currentBuidlingToBuild]["Food"];
         PlayerCS.instance.wood -= Constants.prices[currentBuidlingToBuild]["Wood"];
@@ -482,7 +480,11 @@ public class CityActionsCS : MonoBehaviour
         GameManagerCS.instance.UpdateRoadModels(_tile.xIndex, _tile.zIndex);
         GameManagerCS.instance.StoreModifiedTileInfo(_tile, "BuildRoad");
         ResetAlteredObjects();
-        SelectedRoadToBuild();
+        
+        if(DoesPlayerHaveEnoughResources(PlayerCS.instance, Constants.prices[currentBuidlingToBuild]))
+        {
+            SelectedRoadToBuild();
+        }
     }
 
     #endregion

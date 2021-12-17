@@ -33,6 +33,7 @@ public class GameManagerSS : MonoBehaviour
             Destroy(this);
         }
         avaliableTribe = Constants.tribes;
+        //PlayerCS.instance.name  = "Abbi" 
     }
 
     /// <summary>

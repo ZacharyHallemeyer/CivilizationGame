@@ -48,6 +48,7 @@ public class TroopActionsCS : MonoBehaviour
     /// </summary>
     public void CreateInteractableTiles()
     {
+        // Check if player can either commit actions or move
         if (troopInfo.movementCost <= 0 && troopInfo.canAttack == false) return;
 
         bool _conflictFound = false;
@@ -383,10 +384,11 @@ public class TroopActionsCS : MonoBehaviour
         // Move troop while doing the move animation
         PlayerCS.instance.isAnimInProgress = true;
         PlayerCS.instance.animationQueue.Enqueue(DescendTroopMoveAnim(_newTile.xIndex, _newTile.zIndex, false));
-        troopInfo.roadMovementCostUsed = 0;
 
+        troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.zIndex - _oldTile.zIndex) - troopInfo.roadMovementCostUsed;
+        troopInfo.roadMovementCostUsed = 0;
+        
         // Update new tile
-        troopInfo.movementCost -= Mathf.Abs(_newTile.xIndex - _oldTile.xIndex) + Mathf.Abs(_newTile.zIndex - _oldTile.zIndex);
         _newTile.isOccupied = true;
         _newTile.occupyingObjectId = troopInfo.id;
         // Add tile data to send to server

@@ -36,6 +36,10 @@ public class PlayerUI : MonoBehaviour
     private RectTransform toolTipRect;
     private List<SkillToolTip> toolTipsList = new List<SkillToolTip>();
 
+    // Troops/Building Stats Tool Tip
+    public GameObject statsToolTipContainer;
+    public TextMeshProUGUI statsToolTipText;
+
 
     // Purchase Indicator = PI
     public RawImage roadSkillPI, wallSkillPI, armySkillPI, snipperSkillPI, missleSkillPI, defenseSkillPI,
@@ -725,6 +729,34 @@ public class PlayerUI : MonoBehaviour
         PlayerStatObject _tempObject = _array[_indexOne];
         _array[_indexOne] = _array[_indexTwo];
         _array[_indexTwo] = _tempObject;
+    }
+
+    #endregion
+
+    #region Troop & Buildings Tool Tip
+
+    /// <summary>
+    /// Sets stats tool tip container to active
+    /// </summary>
+    public void ShowStatsToolTip()
+    {
+        statsToolTipContainer.SetActive(true);
+    }
+
+    /// <summary>
+    /// Sets stats tool tip container to inactive
+    /// </summary>
+    public void HideStatsToolTip()
+    {
+        statsToolTipContainer.SetActive(false);
+    }
+
+    /// <summary>
+    /// Changes the stats tool tip's text
+    /// </summary>
+    public void ChangeStatsToolTipText(string _newText)
+    {
+        statsToolTipText.text = _newText;
     }
 
     #endregion

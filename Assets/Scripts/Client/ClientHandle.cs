@@ -14,7 +14,7 @@ public class ClientHandle : MonoBehaviour
         string _msg = _packet.ReadString();
         int _myId = _packet.ReadInt();
 
-        Debug.Log($"Message from server: {_msg}");
+        //Debug.Log($"Message from server: {_msg}");
         ClientCS.instance.myId = _myId;
         ClientSend.WelcomeReceived();
 
@@ -80,7 +80,7 @@ public class ClientHandle : MonoBehaviour
     /// <param name="_packet"> Packet from server </param>
     public static void SpawnPlayer(Packet _packet)
     {
-        Debug.Log("Spwaning player");
+        //Debug.Log("Spwaning player");
         int _id = _packet.ReadInt();
         string _username = _packet.ReadString();
         int _xSizeOfTiles = _packet.ReadInt();

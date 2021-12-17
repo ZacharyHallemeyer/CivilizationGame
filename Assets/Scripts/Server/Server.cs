@@ -29,7 +29,6 @@ public class Server
         Debug.Log(IPAddress.Any.AddressFamily);
         InitializeServerData();
 
-        //tcpListener = new TcpListener(IPAddress.Any, Port);
         tcpListener = new TcpListener(IPAddress.Any, Port);
         tcpListener.Start();
         tcpListener.BeginAcceptTcpClient(TCPConnectCallback, null);
