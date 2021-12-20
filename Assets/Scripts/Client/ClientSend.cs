@@ -35,6 +35,14 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void SendCreateWorld()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.sendCreateWorld))
+        {
+            SendTCPData(_packet);
+        }
+    }
+
     /// <summary>
     /// Send to server to update this player's tribe choice
     /// </summary>

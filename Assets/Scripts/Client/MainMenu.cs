@@ -77,7 +77,7 @@ public class MainMenu : MonoBehaviour
         obstacleSlider.value = PlayerPrefs.GetInt("Obstacles", 15);
         neutralCitySlider.value = PlayerPrefs.GetInt("NeutralCities", 15);
         xSizeSlider.value = PlayerPrefs.GetInt("XSize", 25);
-        zSizeSlider.value = PlayerPrefs.GetInt("XZize", 25);
+        zSizeSlider.value = PlayerPrefs.GetInt("ZSize", 25);
         waterLevelSlider.value = PlayerPrefs.GetFloat("WaterLevel", .25f);
 
         biomeText.text = PlayerPrefs.GetInt("WorleyPoints", 250).ToString();
@@ -87,7 +87,7 @@ public class MainMenu : MonoBehaviour
         obstacleText.text = PlayerPrefs.GetInt("Obstacles", 15).ToString();
         neutralCityText.text = PlayerPrefs.GetInt("NeutralCities", 15).ToString();
         xSizeText.text = PlayerPrefs.GetInt("XSize", 25).ToString();
-        zSizeText.text = PlayerPrefs.GetInt("XZize", 25).ToString();
+        zSizeText.text = PlayerPrefs.GetInt("ZSize", 25).ToString();
         waterLevelText.text = PlayerPrefs.GetFloat("WaterLevel", .25f).ToString("n2");
     }
 
@@ -183,11 +183,13 @@ public class MainMenu : MonoBehaviour
         yield return new WaitForEndOfFrame();
         if (__asyncOperation.isDone)
         {
+            /*
             if (SceneManager.GetActiveScene().name.Substring(6) == "Domination")
             {
                 if (WorldGeneratorSS.instance != null)
                     WorldGeneratorSS.instance.GenerateWorld();
             }
+            */
             UnloadScene(_sceneToUnload);
         }
         else

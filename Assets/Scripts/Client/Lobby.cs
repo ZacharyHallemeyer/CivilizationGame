@@ -35,10 +35,18 @@ public class Lobby : MonoBehaviour
     public TextMeshProUGUI localIP;
 
     public Button startButton;
+    public Button createWorldButton;
 
     private void Awake()
     {
         startButton.enabled = false;
+
+        // Check if player is not host
+        if(GameManagerSS.instance == null)
+        {
+            // Do not allow player to create world
+            createWorldButton.enabled = false;
+        }
     }
 
     /// <summary>
@@ -151,6 +159,13 @@ public class Lobby : MonoBehaviour
         address = address.Substring(first, last - first);
 
         return address;
+    }
+
+    public void SendCreateWorldToServer()
+    {
+        ClientSend.SendCreateWorld();
+        createWorldButton.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(true);
     }
 
     /// <summary>

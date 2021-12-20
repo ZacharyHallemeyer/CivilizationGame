@@ -853,7 +853,7 @@ public static class Constants
                 { "Food", 0 },
                 { "Metal", 0 },
                 { "Wood", 0 },
-                { "Money", 00 },
+                { "Money", 0 },
                 { "Population", 5 },
                 { "Morale", 0 },
                 { "Education", 1 },

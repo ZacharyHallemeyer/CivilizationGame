@@ -154,6 +154,7 @@ public class GameManagerCS : MonoBehaviour
         GameObject _player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         _player.GetComponent<PlayerCS>().InitPlayer(_id, _username, _tribe);
         CreateStars();
+
         // Spawn weapons
         sword = Instantiate(swordPrefab, Vector3.zero, swordPrefab.transform.localRotation);
         sword.SetActive(false);
@@ -348,8 +349,8 @@ public class GameManagerCS : MonoBehaviour
     /// </summary>
     /// <param name="_ownerId"> client id that wants to spawn new troop </param>
     /// <param name="_troopName"> troop name to use when grabbing init troop data </param>
-    /// <param name="_xCoord"> x coord to spawn troop </param>
-    /// <param name="_zCoord"> z coord to spawn troop </param>
+    /// <param name="_xIndex"> x coord to spawn troop </param>
+    /// <param name="_zIndex"> z coord to spawn troop </param>
     /// <param name="_rotation"> rotation of new troop </param>
     public void SpawnLocalTroop(int _ownerId, string _troopName, int _xIndex, int _zIndex, int _rotation, bool _canUseThisWave)
     {
@@ -482,34 +483,25 @@ public class GameManagerCS : MonoBehaviour
                                                     PlayerCS.instance.population);
         // Find king spawn
         int _xPos = 0, _yPos = 0;
-        int _distanceLimiterX = tiles.GetLength(0) / ClientCS.allClients.Count;
-        int _distanceLimiterY = tiles.GetLength(1) / ClientCS.allClients.Count;
-        bool _isSpawnPointGood = false;
-        while(!_isSpawnPointGood)
+        CityInfo _randCity;
+
+        do
         {
-            _isSpawnPointGood = true;
-            _xPos = Random.Range(0, tiles.GetLength(0));
-            _yPos = Random.Range(0, tiles.GetLength(1));
-
-            // Check if random tile is water, a city, or an obstacle
-            if(tiles[_xPos, _yPos].isWater || tiles[_xPos, _yPos].isCity || tiles[_xPos, _yPos].isObstacle)
-            {
-                _isSpawnPointGood = false;
-            }
-
-            // Check each troop spawned in to make sure the king is far away enough from others
-            for(int _index = 0; _index < troops.Count; _index++)
-            {
-                if( Mathf.Abs(troops[_index].xIndex - _xPos) < _distanceLimiterX 
-                    || Mathf.Abs(troops[_index].zIndex - _yPos) < _distanceLimiterY)
-                {
-                    _isSpawnPointGood = false;
-                }
-            }
+            _randCity = cities[Random.Range(0, cities.Count)];
         }
+        while (_randCity.isBeingConquered);
+
+        _xPos = _randCity.xIndex;
+        _yPos = _randCity.zIndex;
 
         SpawnLocalTroop(ClientCS.instance.myId, "King", _xPos, _yPos, 0, true);
-        
+
+        _randCity.ownerId = ClientCS.instance.myId;
+        _randCity.InitConqueredCity();
+        StoreModifiedCityInfo(_randCity, "Conquer");
+        CreateOwnedTiles(_randCity);
+        PlayerCS.instance.playerUI.SetAllResourceUI();
+
         startScreenUI.SetActive(false);
     }
 

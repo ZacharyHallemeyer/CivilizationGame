@@ -34,6 +34,11 @@ public class ServerHandle
         ServerSend.SendAvaliableTribes(GameManagerSS.instance.avaliableTribe);
     }
 
+    public static void CreateWorld(int _fromClient, Packet _packet)
+    {
+        WorldGeneratorSS.instance.GenerateWorld();
+    }
+
     /// <summary>
     /// Sends all client in lobby into game
     /// </summary>

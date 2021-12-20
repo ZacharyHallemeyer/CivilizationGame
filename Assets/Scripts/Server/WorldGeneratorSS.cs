@@ -60,7 +60,7 @@ public class WorldGeneratorSS : MonoBehaviour
         amountOfObstacles = PlayerPrefs.GetInt("Obstacles", 15);
         amountOfNeutralCities = PlayerPrefs.GetInt("NeutralCities", 15);
         groundXSize = PlayerPrefs.GetInt("XSize", 25);
-        groundZSize = PlayerPrefs.GetInt("XZize", 25);
+        groundZSize = PlayerPrefs.GetInt("ZSize", 25);
         waterLevel = PlayerPrefs.GetFloat("WaterLevel", .25f);
 
     }
@@ -189,7 +189,6 @@ public class WorldGeneratorSS : MonoBehaviour
             while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal ||
                    _xIndex == 0 || _xIndex == tiles.GetLength(0) || _zIndex == 0 || _zIndex == tiles.GetLength(1));
             _tileInfo.isObstacle = true;
-            GameManagerSS.instance.currentCityId++;
         }
     }
 
@@ -198,23 +197,153 @@ public class WorldGeneratorSS : MonoBehaviour
         int _xIndex, _zIndex;
         TileInfo _tileInfo;
 
+        // Check if amount of neutral cities is less than amount of players
+        if (amountOfNeutralCities < ClientSS.allClients.Count)
+        {
+            amountOfNeutralCities = ClientSS.allClients.Count;
+        }
+
         // Create neutral cities
         for (int i = 0; i < amountOfNeutralCities; i++)
         {
+            // Get valid tile to create city on
             do
             {
                 _xIndex = Random.Range(0, (int)groundXSize);
                 _zIndex = Random.Range(0, (int)groundZSize);
                 _tileInfo = tiles[_xIndex, _zIndex];
             }
-            while (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal
-                   || _tileInfo.isObstacle || _tileInfo.isCity);
+            while (!CheckIfValidCityTile(_tileInfo));
+
+            // Create city
             _tileInfo.isCity = true;
             _tileInfo.cityId = GameManagerSS.instance.currentCityId;
             CityInfo _city = gameObject.AddComponent<CityInfo>();
             _city.InitCityServerSide(_tileInfo.biome, GameManagerSS.instance.currentCityId, -1, _xIndex, _zIndex);
             neutralCities.Add(_city);
             GameManagerSS.instance.currentCityId++;
+            MakeCityValid(_tileInfo);
+        }
+    }
+
+    private bool CheckIfValidCityTile(TileInfo _tileInfo)
+    {
+        int _xIndex, _zIndex;
+
+        // Return false if tile is a resource tile, water tile, obstacle tile, or city tile
+        if (_tileInfo.isWater || _tileInfo.isFood || _tileInfo.isWood || _tileInfo.isMetal
+                   || _tileInfo.isObstacle || _tileInfo.isCity)
+            return false;
+
+        // Check if there is 
+        for(_xIndex = _tileInfo.xIndex - 3; _xIndex < _tileInfo.xIndex + 3; _xIndex++)
+        {
+            for(_zIndex = _tileInfo.zIndex - 3; _zIndex < _tileInfo.zIndex + 3; _zIndex++)
+            {
+                // Check if tile exists and current tile is not tile from param
+                if(_xIndex >= 0 && _xIndex < groundXSize && _zIndex >= 0 && _zIndex < groundZSize
+                    && !(_xIndex == _tileInfo.xIndex && _zIndex == _tileInfo.zIndex))
+                {
+                    if (tiles[_xIndex, _zIndex].isCity)
+                        return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private void MakeCityValid(TileInfo _cityTile)
+    {
+        int _surroundingTileAmount = 0, _surroundingResourceAmount = 0, xIndex, zIndex, _randNum;
+        TileInfo _currentTile;
+
+        // Find out how many resource tiles as well as normal ground tiles surround city
+        for (xIndex = _cityTile.xIndex - 1; xIndex <= _cityTile.xIndex + 1; xIndex++)
+        {
+            for (zIndex = _cityTile.zIndex - 1; zIndex <= _cityTile.zIndex + 1; zIndex++)
+            {
+                // Check if tile exists
+                if (xIndex >= 0 && xIndex < groundXSize && zIndex >= 0 && zIndex < groundZSize)
+                {
+                    _currentTile = tiles[xIndex, zIndex];
+                    if (!_currentTile.isWater && !_currentTile.isObstacle && !_currentTile.isCity)
+                    {
+                        _surroundingTileAmount++;
+                    }
+                    if (_currentTile.isFood || _currentTile.isMetal || _currentTile.isWood)
+                    {
+                        _surroundingResourceAmount++;
+                    }
+                }
+            }
+        }
+
+        // Add up to 3 normal ground tiles if there are less than 3 surronding ground tiles
+        xIndex = _cityTile.xIndex - 1;
+        while(_surroundingTileAmount < 3 && xIndex <= _cityTile.xIndex + 1)
+        {
+            zIndex = _cityTile.zIndex - 1;
+            while(_surroundingTileAmount < 3 && zIndex <= _cityTile.zIndex + 1)
+            {
+                if( !(xIndex == _cityTile.xIndex && zIndex == _cityTile.zIndex)
+                    && xIndex >= 0 && xIndex < groundXSize && zIndex >= 0 && zIndex < groundZSize)
+                {
+                    _currentTile = tiles[xIndex, zIndex];
+                    if (_currentTile.isWater)
+                    {
+                        _currentTile.isWater = false;
+                        _currentTile.biome = biomes[GenerateWorleyNoise(xIndex, zIndex)];
+                        _surroundingTileAmount++;
+                    }
+
+                    if (_currentTile.isObstacle)
+                    {
+                        _currentTile.isObstacle = false;
+                        _surroundingTileAmount++;
+                    }
+                }
+
+                zIndex++;
+            }
+            xIndex++;
+        }
+
+        // Add a resource tile if amount of surrounding resources is less than one
+        xIndex = _cityTile.xIndex - 1;
+        while (_surroundingResourceAmount < 1 && xIndex <= _cityTile.xIndex + 1)
+        {
+            zIndex = _cityTile.zIndex - 1;
+            while (_surroundingResourceAmount < 1 && zIndex <= _cityTile.zIndex + 1)
+            {
+                if (!(xIndex == _cityTile.xIndex && zIndex == _cityTile.zIndex)
+                    && xIndex >= 0 && xIndex < groundXSize && zIndex >= 0 && zIndex < groundZSize)
+                {
+                    _currentTile = tiles[xIndex, zIndex];
+
+                    if(!(_currentTile.isWater || _currentTile.isObstacle || _currentTile.isCity))
+                    {
+                        // Set the current tile to a random resource
+                        _randNum = Random.Range(0, 3);
+                        if (_randNum == 0)
+                        {
+                            _currentTile.isFood = true;
+                        }
+                        else if (_randNum == 1)
+                        {
+                            _currentTile.isWood = true;
+                        }
+                        else
+                        {
+                            _currentTile.isMetal = true;
+                        }
+                        _surroundingResourceAmount++;
+                    }
+                }
+
+                zIndex++;
+            }
+            xIndex++;
         }
     }
 
